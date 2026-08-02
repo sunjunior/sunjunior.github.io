@@ -16,7 +16,7 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="theme-version" content="1.2.3">
     <meta name="root" content="/">
-    <link rel="dns-prefetch" href="http://sunjunior.cn">
+    <link rel="dns-prefetch" href="https://sunjunior.github.io">
     <!--SEO-->
 
 <meta name="keywords" content="编程实践" />
@@ -98,7 +98,7 @@
                         <span class="sr-only"></span>
                         <i class="fa fa-bars"></i>
                     </span>
-                    <a class="navbar-brand" href="http://sunjunior.cn">
+                    <a class="navbar-brand" href="https://sunjunior.github.io">
                         sunjunior的个人技术博客</a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-menu">
@@ -175,7 +175,7 @@
     </div>
     
     <div class="post-body post-content">
-        <p>​        程序员出门在外，经常会带着笔记本电脑学习。然而，笔记本电脑也有很多不便利的地方，比如重量较重，普通的笔记本一般也有2.5KG左右，长期背或者挎在身上，也是不小的负担。另外笔记本比较耗电，一般笔记本支撑3~5小时左右就差不多没有电了。而在外面的读书室或者图书馆也很少有供电的插头提供给读者。这里我们将普通的<strong>安卓手机</strong>打造成一台便携式Linux主机，就会解决以上的问题。安卓手机一般耗电较少，如果觉得不够，带上一个充电宝，基本可以支撑一天左右的时间。不过，安卓手机作为开发主机也有其缺点：首先只能用控制台进行程序开发，无法用图形界面，可以简单理解为一台无图形界面的Linux服务器。我们可以通过ssh协议远程登录上这台主机上去进行各类软件开发；另外一个缺点就是屏幕太小，如果手机没有达到5英寸以上，一般也不适合开发，因此推荐DIY的安卓手机<strong>屏幕在5.5英寸以上</strong>（最少5英寸）就可以了。考虑到市面上大部分安卓手机都在5英寸以上，因此都可以DIY成一台Linux开发主机。本人之前在博文《<a href="http://sunjunior.cn/2017/12/30/Archlinuxarm/">安卓手机安装Archlinux系统搭建web服务</a>》中谈到了如何将安卓手机变成一台web服务器。这里我们将基于该博文，将更多地DIY细节展现出来，方便感兴趣的同学参考。先放上DIY成功后的一张安卓主机图片，这样是不是很炫酷，而且基本也满足了日常的开发要求。</p>
+        <p>​        程序员出门在外，经常会带着笔记本电脑学习。然而，笔记本电脑也有很多不便利的地方，比如重量较重，普通的笔记本一般也有2.5KG左右，长期背或者挎在身上，也是不小的负担。另外笔记本比较耗电，一般笔记本支撑3~5小时左右就差不多没有电了。而在外面的读书室或者图书馆也很少有供电的插头提供给读者。这里我们将普通的<strong>安卓手机</strong>打造成一台便携式Linux主机，就会解决以上的问题。安卓手机一般耗电较少，如果觉得不够，带上一个充电宝，基本可以支撑一天左右的时间。不过，安卓手机作为开发主机也有其缺点：首先只能用控制台进行程序开发，无法用图形界面，可以简单理解为一台无图形界面的Linux服务器。我们可以通过ssh协议远程登录上这台主机上去进行各类软件开发；另外一个缺点就是屏幕太小，如果手机没有达到5英寸以上，一般也不适合开发，因此推荐DIY的安卓手机<strong>屏幕在5.5英寸以上</strong>（最少5英寸）就可以了。考虑到市面上大部分安卓手机都在5英寸以上，因此都可以DIY成一台Linux开发主机。本人之前在博文《<a href="http://sunjunior.cn/2017/12/30/Archlinuxarm/" target="_blank" rel="noopener">安卓手机安装Archlinux系统搭建web服务</a>》中谈到了如何将安卓手机变成一台web服务器。这里我们将基于该博文，将更多地DIY细节展现出来，方便感兴趣的同学参考。先放上DIY成功后的一张安卓主机图片，这样是不是很炫酷，而且基本也满足了日常的开发要求。</p>
 <p><img src="/img/laptop/laptop1.jpg" alt="Linux开发主机"></p>
 <p>​        下面重点介绍一下如何打造成满足日常开发的便携式Linux主机，我们知道安卓手机后台就是运行的Linux操作系统，因此只需要进入到该Linux操作系统，做相关配置之后就可以满足要求了。首先我们需要在安卓手机上安装如下几款软件，为后面DIY做好铺垫（如下图）：</p>
 <p><img src="/img/laptop/laptop2.jpeg" alt="DIY软件安装介绍"></p>
