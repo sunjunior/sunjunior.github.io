@@ -1,0 +1,703 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://sunjunior.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="逆向工程" />
+
+
+<meta name="description" content="
+目标游戏：Batman (U) (Sunsoft, 1989)目标：修改 NES ROM，使玩家在游戏中永远不会掉血（无限生命 / Infinite Health）交付物：打补丁的 ROM、I..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    蝙蝠侠（NES / FC）无限生命 Hack 技术文档 |
+    
+    sunjunior的个人技术博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
+    /./img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='sunjunior'>
+            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
+            
+            <h2>
+                技术控，爱折腾
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://sunjunior.github.io">
+                        sunjunior的个人技术博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="蝙蝠侠（NES / FC）无限生命 Hack 技术文档">
+            
+            蝙蝠侠（NES / FC）无限生命 Hack 技术文档
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2026/08/02</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <blockquote>
+<p>目标游戏：<strong>Batman (U) (Sunsoft, 1989)</strong><br>目标：修改 NES ROM，使玩家在游戏中永远不会掉血（无限生命 / Infinite Health）<br>交付物：打补丁的 ROM、IPS 补丁、Mesen2 作弊码（双重保险）<br>日期：2026-08-01</p>
+</blockquote>
+<hr>
+<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>《蝙蝠侠》是 Sunsoft 于 1989 年推出的 FC/NES 横版动作游戏。玩家操控蝙蝠侠闯关，生命值（体力）随被敌人攻击而减少，归零即死亡。</p>
+<p>本次任务的破解目标非常具体：</p>
+<ol>
+<li>找到控制生命值的 RAM 地址。</li>
+<li>定位所有”扣血”的代码位置。</li>
+<li>修改 ROM，使扣血逻辑失效（无限生命）。</li>
+<li>提供可直接使用的交付物：<ul>
+<li>已打补丁的 ROM 文件；</li>
+<li>标准 IPS 补丁（可分享、可校验）；</li>
+<li>一套不依赖改 ROM 的 Mesen 作弊码作为”双保险”。</li>
+</ul>
+</li>
+</ol>
+<p>最终成果：<strong>玩家无论如何挨打，生命值始终保持满格 <code>$08</code></strong>。</p>
+<hr>
+<h2 id="2-ROM-与游戏信息"><a href="#2-ROM-与游戏信息" class="headerlink" title="2. ROM 与游戏信息"></a>2. ROM 与游戏信息</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件名</td>
+<td><code>Batman (U).nes</code></td>
+</tr>
+<tr>
+<td>文件大小</td>
+<td>262,160 字节</td>
+</tr>
+<tr>
+<td>MD5</td>
+<td><code>62da40d0eafa92d8e4e17612bfd6ff7f</code></td>
+</tr>
+<tr>
+<td>iNES Header</td>
+<td><code>4E 45 53 1A 08 10 41 00 ...</code></td>
+</tr>
+<tr>
+<td>格式</td>
+<td>iNES，Mapper <strong>4（MMC3）</strong>，垂直镜像</td>
+</tr>
+<tr>
+<td>PRG ROM</td>
+<td>0x08 × 16KB = 128KB（<code>0x20000</code> 字节）</td>
+</tr>
+<tr>
+<td>CHR ROM</td>
+<td>0x10 × 8KB = 128KB（<code>0x20000</code> 字节）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="关键地址约定"><a href="#关键地址约定" class="headerlink" title="关键地址约定"></a>关键地址约定</h3><ul>
+<li><strong>PRG 偏移</strong>：指相对 PRG 数据起始（文件偏移 = PRG 偏移 + 16 字节 iNES 头）。</li>
+<li>MMC3 采用银行切换（bank switching），CPU 地址空间 <code>$8000-$FFFF</code> 由多个 bank 映射。同一条指令在不同时刻可能处于不同的 CPU 地址上，因此<strong>以 PRG 偏移为唯一基准</strong>。</li>
+<li>攻击/命中标记：零页 <code>$00CC</code> 的第 7 位（<code>$80</code>）在每次被击中时置位。</li>
+</ul>
+<hr>
+<h2 id="3-分析环境与工具"><a href="#3-分析环境与工具" class="headerlink" title="3. 分析环境与工具"></a>3. 分析环境与工具</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td><strong>Mesen2 v2.1.1</strong>（Linux），无头测试模式 <code>--testRunner</code></td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>自写 6502 反汇编脚本（读 ROM，按 PRG 偏移输出指令）</td>
+</tr>
+<tr>
+<td>内存/执行跟踪</td>
+<td>Mesen Lua API（<code>addMemoryCallback</code>、<code>addEventCallback</code>）</td>
+</tr>
+<tr>
+<td>补丁生成</td>
+<td>自写脚本生成补丁 ROM + 标准 IPS 文件</td>
+</tr>
+<tr>
+<td>配置</td>
+<td><code>~/.config/Mesen2/settings.json</code>（UTF-8 BOM，需用 <code>utf-8-sig</code> 解析）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>注：本次使用的临时脚本位于 <code>/tmp</code>，会话结束后已被清理。文档中保留完整的方法论，可直接复现。</p>
+</blockquote>
+<hr>
+<h2 id="4-破解总体思路"><a href="#4-破解总体思路" class="headerlink" title="4. 破解总体思路"></a>4. 破解总体思路</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">反汇编静态扫描</span><br><span class="line">   ↓  找零页 $00B7 的 DEC&#x2F;STA（扣血嫌疑）</span><br><span class="line">写跟踪动态验证</span><br><span class="line">   ↓  用 debug 回调抓每次写 $00B7 的 PC，确认伤害例程</span><br><span class="line">伤害点地图</span><br><span class="line">   ↓  区分「扣血」与「初始化血量」两类写</span><br><span class="line">ROM 补丁</span><br><span class="line">   ↓  把扣血指令 NOP 掉，保留初始化逻辑</span><br><span class="line">双保险（作弊码）</span><br><span class="line">   ↓  用 CheatCode 强制读 $00B7 恒为 $08</span><br><span class="line">无头自动化验证</span><br><span class="line">   ↓  长时间模拟 + 人为注入受伤事件，确认血量不降</span><br></pre></td></tr></table></figure>
+<p>核心思想是<strong>两条腿走路</strong>：</p>
+<ul>
+<li><strong>ROM 层</strong>：从源头掐断扣血写操作（改补丁，对任何模拟器/烧录卡都有效）。</li>
+<li><strong>作弊层</strong>：用 Mesen 的 CheatCode 强制 <code>$00B7</code> 读取恒为 <code>$08</code>（不改文件，双保险，万一补丁遗漏某个分支也能兜底）。</li>
+</ul>
+<hr>
+<h2 id="5-详细分析过程"><a href="#5-详细分析过程" class="headerlink" title="5. 详细分析过程"></a>5. 详细分析过程</h2><h3 id="5-1-定位生命值地址"><a href="#5-1-定位生命值地址" class="headerlink" title="5.1 定位生命值地址"></a>5.1 定位生命值地址</h3><p>通过”受伤后观察 RAM”的差分方法定位生命值：</p>
+<ol>
+<li>进入游戏（见 §8 输入注入方法）。</li>
+<li>快照零页 + RAM（<code>$0000-$07FF</code>）。</li>
+<li>让蝙蝠侠被击中一次，再次快照。</li>
+<li>差分找出变化字节。</li>
+</ol>
+<p>结果：<strong><code>$00B7</code></strong> 为生命值，满血 = <code>$08</code>，受伤逐级递减（<code>8 → 7 → 6 ...</code>），归零死亡。同帧内 <code>$00CC</code> 第 7 位置位（命中标记）。</p>
+<h3 id="5-2-静态反汇编定位扣血指令"><a href="#5-2-静态反汇编定位扣血指令" class="headerlink" title="5.2 静态反汇编定位扣血指令"></a>5.2 静态反汇编定位扣血指令</h3><p>用反汇编脚本扫描 PRG 中所有对 <code>$00B7</code> 的操作，重点嫌疑：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>机器码</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEC $B7</code></td>
+<td><code>C6 B7</code></td>
+<td>生命值 -1（扣血主嫌疑）</td>
+</tr>
+<tr>
+<td><code>STA $B7</code></td>
+<td><code>85 B7</code></td>
+<td>写入生命值（需看上下文）</td>
+</tr>
+<tr>
+<td><code>INC $B7</code> / <code>ADC</code> / <code>SBC</code></td>
+<td>—</td>
+<td>增加/减算（补充检查）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>扫描发现 5 处 <code>DEC $B7</code> 和 9 处 <code>STA $B7</code>。</p>
+<h3 id="5-3-动态写跟踪（Debug-回调验证）"><a href="#5-3-动态写跟踪（Debug-回调验证）" class="headerlink" title="5.3 动态写跟踪（Debug 回调验证）"></a>5.3 动态写跟踪（Debug 回调验证）</h3><p>仅靠静态扫描无法区分”扣血”与”初始化血量”。用 Mesen Lua 的<strong>写内存回调</strong>抓每次写 <code>$00B7</code> 时的 PC：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x00B7</span>, <span class="number">0x00B7</span>,</span><br><span class="line">                      emu.cpuType.nes, emu.memType.nesInternalRam)</span><br></pre></td></tr></table></figure>
+<p>回调里把 <code>lastPC</code>（配合 PRG 执行回调实时记录）和写入值记入日志，再在游戏里主动挨打，日志即能列出<strong>真正执行过的扣血点</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">frame,pc,value(hex),comment</span><br><span class="line"> 120,$FA10,$07   -- 被打，血量 8→7</span><br><span class="line"> 132,$FA10,$06   -- 再被打，7→6</span><br></pre></td></tr></table></figure>
+<p>据此确认伤害例程位于 PRG 偏移 <code>$FA10</code>（对应 CPU <code>$9A10</code>，bank 7 @ <code>$8000</code>），再结合静态扫描补齐全部伤害点。</p>
+<h3 id="5-4-伤害点完整地图（PRG-偏移）"><a href="#5-4-伤害点完整地图（PRG-偏移）" class="headerlink" title="5.4 伤害点完整地图（PRG 偏移）"></a>5.4 伤害点完整地图（PRG 偏移）</h3><p><strong>扣血指令（需要 NOP）——共 7 处：</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>PRG 偏移</th>
+<th>原指令（机器码）</th>
+<th>作用</th>
+<th>补丁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>0x009426</code></td>
+<td><code>DEC $B7</code> (<code>C6 B7</code>)</td>
+<td>伤害扣 1 格</td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>0x00944F</code></td>
+<td><code>DEC $B7</code> (<code>C6 B7</code>)</td>
+<td>伤害扣 1 格</td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>0x009B0A</code></td>
+<td><code>DEC $B7</code> (<code>C6 B7</code>)</td>
+<td>伤害扣 1 格</td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>0x00FA10</code></td>
+<td><code>DEC $B7</code> (<code>C6 B7</code>)</td>
+<td>伤害扣 1 格（主扣血例程）</td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>0x011E31</code></td>
+<td><code>DEC $B7</code> (<code>C6 B7</code>)</td>
+<td>伤害扣 1 格</td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>0x01EBF3</code></td>
+<td><code>STA $B7</code> (<code>85 B7</code>)</td>
+<td>重伤害：<code>SBC #$03</code> 后写回</td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>0x01EBF9</code></td>
+<td><code>STA $B7</code> (<code>85 B7</code>)</td>
+<td>低血钳制：<code>LDA #$00</code> 后写回（秒杀）</td>
+<td><code>EA EA</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>初始化血量 <code>STA $B7</code>（保留不动）：</strong><br><code>$FE82</code>、<code>$FE8A</code>、<code>$15EE8</code>、<code>$17D17</code>、<code>$17E82</code>、<code>$17E8A</code>、<code>$1C6CA</code>、<code>$1DC91</code>、<code>$1DEE8</code>。</p>
+<blockquote>
+<p>说明：6、7 两处是把扣减/清零结果<strong>写回</strong>生命值的 <code>STA $B7</code>。NOP 掉这两条写指令后，前面的运算结果（<code>A</code> 寄存器）不再落地，等效于免伤；若只 NOP 前面的 <code>SBC #$03</code>/<code>LDA #$00</code>，则 <code>STA $B7</code> 会原样写回当前血量，同样安全。本方案选择 NOP 写回指令，逻辑更干净。</p>
+</blockquote>
+<hr>
+<h2 id="6-补丁实现"><a href="#6-补丁实现" class="headerlink" title="6. 补丁实现"></a>6. 补丁实现</h2><h3 id="6-1-ROM-补丁"><a href="#6-1-ROM-补丁" class="headerlink" title="6.1 ROM 补丁"></a>6.1 ROM 补丁</h3><p>把上述 7 处指令全部替换为 <code>EA EA</code>（NOP NOP），共改动 14 字节：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件偏移（含头）</th>
+<th>PRG 偏移</th>
+<th>原字节</th>
+<th>新字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x009436</code></td>
+<td><code>0x009426</code></td>
+<td><code>C6 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td><code>0x00945F</code></td>
+<td><code>0x00944F</code></td>
+<td><code>C6 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td><code>0x009B1A</code></td>
+<td><code>0x009B0A</code></td>
+<td><code>C6 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td><code>0x00FA20</code></td>
+<td><code>0x00FA10</code></td>
+<td><code>C6 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td><code>0x011E41</code></td>
+<td><code>0x011E31</code></td>
+<td><code>C6 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td><code>0x01EC03</code></td>
+<td><code>0x01EBF3</code></td>
+<td><code>85 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+<tr>
+<td><code>0x01EC09</code></td>
+<td><code>0x01EBF9</code></td>
+<td><code>85 B7</code></td>
+<td><code>EA EA</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-2-IPS-补丁"><a href="#6-2-IPS-补丁" class="headerlink" title="6.2 IPS 补丁"></a>6.2 IPS 补丁</h3><p>IPS（International Patching System）为标准 ROM 补丁格式，与模拟器/平台无关：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件头：&quot;PATCH&quot;</span><br><span class="line">记录：偏移(3B 大端) + 长度(2B 大端) + 数据</span><br><span class="line">结尾：&quot;EOF&quot;</span><br></pre></td></tr></table></figure>
+<p>生成的 <code>Batman (U) - Infinite Health.ips</code>（57 字节）包含 7 条记录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@0x009436 size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">@0x00945F size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">@0x009B1A size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">@0x00FA20 size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">@0x011E41 size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">@0x01EC03 size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">@0x01EC09 size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>校验方法：把 IPS 打到原版 ROM 上，结果必须与补丁 ROM <strong>逐字节一致</strong>（已在验证阶段确认）。</p>
+<hr>
+<h2 id="7-双保险：Mesen-作弊码"><a href="#7-双保险：Mesen-作弊码" class="headerlink" title="7. 双保险：Mesen 作弊码"></a>7. 双保险：Mesen 作弊码</h2><h3 id="7-1-原理"><a href="#7-1-原理" class="headerlink" title="7.1 原理"></a>7.1 原理</h3><p>Mesen 的 <code>NesCustom</code> 作弊码格式为 <code>XXXX:YY</code>（地址:值），实现方式是<strong>拦截对指定地址的读取</strong>，一律返回设定值。配合”从源头 NOP 掉扣血写”的 ROM 补丁，即便将来发现漏网的分支，作弊码也能兜底。</p>
+<p>作弊码：<code>00B7:08</code>（生命值恒为满格）。</p>
+<h3 id="7-2-读取路径的坑（重要）"><a href="#7-2-读取路径的坑（重要）" class="headerlink" title="7.2 读取路径的坑（重要）"></a>7.2 读取路径的坑（重要）</h3><p>Mesen Lua 对同一地址存在两条读取路径，结果可能不同：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>路径</th>
+<th>是否经过作弊码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emu.read(addr, emu.memType.nesInternalRam)</code></td>
+<td>直接读 RAM 缓冲</td>
+<td><strong>否</strong>（绕过）</td>
+</tr>
+<tr>
+<td><code>emu.read(addr, emu.memType.nesMemory)</code> (= 8)</td>
+<td>走 <code>DebugRead</code> → 内存管理器</td>
+<td><strong>是</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>实测：作弊码生效时，CPU 执行读与 <code>nesMemory</code> 读取均返回 <code>$08</code>，而 <code>nesInternalRam</code> 读到的是原始 RAM 值（作弊前被扣到 <code>$07</code>）。因此：</p>
+<ul>
+<li><strong>验证作弊码是否生效</strong>要用 <code>nesMemory</code>；</li>
+<li><strong>观察真实血量</strong>要用 <code>nesInternalRam</code>（两者对照即知”作弊层是否真的在兜底”）。</li>
+</ul>
+<h3 id="7-3-作弊码文件格式"><a href="#7-3-作弊码文件格式" class="headerlink" title="7.3 作弊码文件格式"></a>7.3 作弊码文件格式</h3><p>Mesen2 会在加载 ROM 时自动应用 <code>~/.config/Mesen2/Cheats/&lt;RomName&gt;.json</code>（RomName = ROM 文件名去掉扩展名）。JSON 字段为 PascalCase，枚举以字符串保存：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"Cheats"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"Description"</span>: <span class="string">"Infinite Health (health always 08)"</span>,</span><br><span class="line">      <span class="attr">"Type"</span>: <span class="string">"NesCustom"</span>,</span><br><span class="line">      <span class="attr">"Enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">"Codes"</span>: <span class="string">"00B7:08"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本次为两个 ROM 都配了作弊文件（原版与补丁版，文件名不同）：</p>
+<ul>
+<li><code>~/.config/Mesen2/Cheats/Batman (U).json</code></li>
+<li><code>~/.config/Mesen2/Cheats/Batman (U) - Infinite Health.json</code></li>
+</ul>
+<hr>
+<h2 id="8-测试方法（无头自动化）"><a href="#8-测试方法（无头自动化）" class="headerlink" title="8. 测试方法（无头自动化）"></a>8. 测试方法（无头自动化）</h2><p>模拟器的 Lua API 配合 <code>--testRunner</code> 可实现完全无头（headless）的自动化测试，是本次验证的支柱。</p>
+<h3 id="8-1-testRunner-基本用法"><a href="#8-1-testRunner-基本用法" class="headerlink" title="8.1 testRunner 基本用法"></a>8.1 testRunner 基本用法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mesen --testRunner /tmp/test.lua <span class="string">"/path/to/game.nes"</span> --timeout=60</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>脚本正常结束（调用了 <code>emu.stop(0)</code>）</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>检测到掉血（测试失败）</td>
+</tr>
+<tr>
+<td><code>255</code></td>
+<td>Lua 错误 / 未加载 ROM</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>重要坑：</strong></p>
+<ol>
+<li><strong>必须传 ROM 位置参数</strong>（<code>FilesToLoad</code> 校验：恰好 1 个），否则直接失败。</li>
+<li><code>--timeout</code> 是<strong>毫秒</strong>；<code>--timeout=0</code> 会让等待循环立即结束、模拟器马上被停掉，脚本回调几乎不会执行。<strong>务必给足超时（如 60）</strong>，脚本内部用 <code>emu.stop(code)</code> 提前正常退出。</li>
+<li>testRunner 不保存设置（<code>DisableSaveSettings = true</code>），不会污染用户配置。</li>
+<li>杀进程用 <code>pkill -x mesen</code>，不要用 <code>pkill -f mesen</code>（<code>-f</code> 会匹配到调用它的 shell 本身）。</li>
+</ol>
+<h3 id="8-2-输入注入（进入游戏的关键）"><a href="#8-2-输入注入（进入游戏的关键）" class="headerlink" title="8.2 输入注入（进入游戏的关键）"></a>8.2 输入注入（进入游戏的关键）</h3><p>直接调用 <code>emu.setInput</code> 按键<strong>不会生效</strong>——每个输入扫描周期模拟器都会用键盘/手柄状态覆盖输入。正确做法是把 <code>setInput</code> 放进 <strong><code>inputPolled</code> 事件回调</strong>：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">    <span class="comment">-- 每轮控制器轮询都会执行，写入的输入能稳定被游戏读到</span></span><br><span class="line">    emu.setInput(&#123; start = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">end</span>, emu.eventType.inputPolled)</span><br></pre></td></tr></table></figure>
+<p>用法示例（进度控制）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> frame &lt; <span class="number">200</span> <span class="keyword">then</span></span><br><span class="line">    emu.setInput(&#123; start = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>)   <span class="comment">-- 长按 Start 通过标题画面</span></span><br><span class="line"><span class="keyword">elseif</span> frame &lt; <span class="number">240</span> <span class="keyword">then</span></span><br><span class="line">    emu.setInput(&#123;&#125;, <span class="number">0</span>, <span class="number">0</span>)                  <span class="comment">-- 松手</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    emu.setInput(&#123; right = <span class="literal">true</span>, b = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>)  <span class="comment">-- 开始移动/攻击</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>实测约第 200 帧进入游戏，生命值初始化为 <code>$08</code>。</p>
+<h3 id="8-3-内存回调"><a href="#8-3-内存回调" class="headerlink" title="8.3 内存回调"></a>8.3 内存回调</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 写跟踪：抓每次写生命值</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x00B7</span>, <span class="number">0x00B7</span>,</span><br><span class="line">                      emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"><span class="comment">-- PC 跟踪：记录当前指令地址</span></span><br><span class="line">emu.addMemoryCallback(onExec,  emu.callbackType.exec, <span class="number">0x0000</span>, <span class="number">0x1FFFF</span>,</span><br><span class="line">                      emu.cpuType.nes, emu.memType.nesPrgRom)</span><br><span class="line"><span class="comment">-- 帧结束：帧计数 / 周期性采样</span></span><br><span class="line">emu.addEventCallback(onEndFrame, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<h3 id="8-4-Lua-API-参数顺序（易踩坑）"><a href="#8-4-Lua-API-参数顺序（易踩坑）" class="headerlink" title="8.4 Lua API 参数顺序（易踩坑）"></a>8.4 Lua API 参数顺序（易踩坑）</h3><p>Mesen 的 Lua 桥按”栈顶先读”取参数，<strong>最后一个 Lua 参数被最先消费</strong>，常见调用：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">emu.<span class="built_in">read</span>(addr, memType)                      <span class="comment">-- 读内存</span></span><br><span class="line">emu.<span class="built_in">write</span>(addr, val, memType)                <span class="comment">-- 写内存</span></span><br><span class="line">emu.setInput(&#123;...&#125;, port, inputIndex)        <span class="comment">-- 注入输入</span></span><br><span class="line">emu.addCheat(cheatType, code)                <span class="comment">-- 作弊类型参数在前！</span></span><br><span class="line">emu.addEventCallback(fn, eventType)</span><br><span class="line">emu.addMemoryCallback(cb, callbackType, start, <span class="keyword">end</span>, cpuType, memType)</span><br></pre></td></tr></table></figure>
+<p>例如 <code>emu.addCheat(2, &quot;00B7:08&quot;)</code>：<code>cheatType = 2</code> 是 <code>CheatType.NesCustom</code>，必须写在前面。</p>
+<hr>
+<h2 id="9-验证结果"><a href="#9-验证结果" class="headerlink" title="9. 验证结果"></a>9. 验证结果</h2><h3 id="9-1-补丁-ROM"><a href="#9-1-补丁-ROM" class="headerlink" title="9.1 补丁 ROM"></a>9.1 补丁 ROM</h3><ul>
+<li>常规运行：<strong>20,000 帧</strong>，<code>$00B7</code> 始终保持 <code>$08</code>，仅 2 次初始化写入，<strong>0 次掉血</strong>。</li>
+<li>压力测试：<strong>21,000+ 帧</strong>内人为注入 <strong>22 次受伤事件</strong>（每次在伤害例程 <code>$9A14</code> 处强制 <code>$00CC = $80</code> 置命中标记），<code>$00B7</code> <strong>从未下降</strong>。</li>
+</ul>
+<h3 id="9-2-作弊码（作用于原版-ROM）"><a href="#9-2-作弊码（作用于原版-ROM）" class="headerlink" title="9.2 作弊码（作用于原版 ROM）"></a>9.2 作弊码（作用于原版 ROM）</h3><ul>
+<li><strong>12,000+ 帧</strong>，原始 RAM 中 <code>$B7</code> 被 <code>DEC</code> 到 <code>$07</code> 累计 <strong>300+ 次</strong>（证明伤害事件真实发生），但游戏每一次读取 <code>$B7</code> 都返回 <code>$08</code>，<strong>从未死亡</strong>。</li>
+<li>作弊码读取路径对照：<code>nesInternalRam</code> 读到 <code>$00</code>（真实值）vs <code>nesMemory</code> 读到 <code>$08</code>（作弊值）；<code>clearCheats</code> 后恢复 <code>$00</code>。</li>
+</ul>
+<h3 id="9-3-IPS-回环校验"><a href="#9-3-IPS-回环校验" class="headerlink" title="9.3 IPS 回环校验"></a>9.3 IPS 回环校验</h3><p>IPS 打到原版 ROM 的产物与补丁 ROM 逐字节一致。</p>
+<hr>
+<h2 id="10-交付物与使用方式"><a href="#10-交付物与使用方式" class="headerlink" title="10. 交付物与使用方式"></a>10. 交付物与使用方式</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Batman (U) - Infinite Health.nes</code></td>
+<td>已打补丁的无限生命 ROM，直接用模拟器/烧录卡加载</td>
+</tr>
+<tr>
+<td><code>Batman (U) - Infinite Health.ips</code></td>
+<td>标准 IPS 补丁，可分享给他人打在原版上</td>
+</tr>
+<tr>
+<td><code>~/.config/Mesen2/Cheats/Batman (U).json</code> 等</td>
+<td>Mesen 作弊码（<code>00B7:08</code>），随 ROM 自动加载</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>使用任选其一即可：</p>
+<ol>
+<li><strong>直接玩补丁 ROM</strong>（推荐）；</li>
+<li>或原版 ROM + Mesen 自动作弊码；</li>
+<li>双保险：补丁 ROM + 作弊码同时生效。</li>
+</ol>
+<hr>
+<h2 id="11-踩坑与经验总结"><a href="#11-踩坑与经验总结" class="headerlink" title="11. 踩坑与经验总结"></a>11. 踩坑与经验总结</h2><ol>
+<li><strong>静态分析必须配动态验证</strong>：仅凭反汇编分不清”扣血”与”初始化”，写回调日志一锤定音。</li>
+<li><strong>MMC3 银行切换</strong>：定位代码务必记录 PRG 偏移而非 CPU 地址，否则换 bank 后地址对不上。</li>
+<li><strong>NOP 的粒度</strong>：优先 NOP 掉 <code>STA $B7</code>（写回指令）而不是前面的运算指令，逻辑最干净、误伤最小。</li>
+<li><strong>输入注入必须放 <code>inputPolled</code> 回调</strong>，直接 <code>setInput</code> 会被每帧覆盖。</li>
+<li><strong><code>--timeout=0</code> 会瞬间停模拟器</strong>，脚本根本跑不起来，这是最常见的假”失败”。</li>
+<li><strong>作弊码读取路径分叉</strong>：验证作弊必须走 <code>nesMemory</code>（<code>DebugRead</code>），原始 RAM 读取会绕过作弊。</li>
+<li><strong>杀 Mesen 用 <code>pkill -x</code></strong>，避免误杀当前 shell。</li>
+</ol>
+<hr>
+<h2 id="附录-A：复现测试的骨架脚本"><a href="#附录-A：复现测试的骨架脚本" class="headerlink" title="附录 A：复现测试的骨架脚本"></a>附录 A：复现测试的骨架脚本</h2><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 无头验证：补丁 ROM 长时间运行 + 压力注入</span></span><br><span class="line"><span class="keyword">local</span> LOG = <span class="string">"/tmp/verify.log"</span></span><br><span class="line"><span class="keyword">local</span> frame, bad = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onPoll</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">if</span> frame &lt; <span class="number">180</span> <span class="keyword">then</span> emu.setInput(&#123; start = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">elseif</span> frame &lt; <span class="number">240</span> <span class="keyword">then</span> emu.setInput(&#123;&#125;, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span> emu.setInput(&#123; right = <span class="literal">true</span>, b = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, val)</span></span></span><br><span class="line">    <span class="keyword">if</span> val &lt; <span class="number">0x08</span> <span class="keyword">then</span> bad = bad + <span class="number">1</span> <span class="keyword">end</span>   <span class="comment">-- 任何低于满血的值都算失败</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onEndFrame</span><span class="params">()</span></span></span><br><span class="line">    frame = frame + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> frame &gt; <span class="number">60000</span> <span class="keyword">or</span> bad &gt; <span class="number">5</span> <span class="keyword">then</span> emu.stop(bad &gt; <span class="number">0</span> <span class="keyword">and</span> <span class="number">3</span> <span class="keyword">or</span> <span class="number">0</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addEventCallback(onPoll, emu.eventType.inputPolled)</span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x00B7</span>, <span class="number">0x00B7</span>,</span><br><span class="line">                      emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line">emu.addEventCallback(onEndFrame, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mesen --testRunner /tmp/verify.lua <span class="string">"/path/to/Batman (U) - Infinite Health.nes"</span> --timeout=60</span><br><span class="line"><span class="comment"># 退出码 0 = 通过（血量始终 $08）；3 = 失败</span></span><br></pre></td></tr></table></figure>
+<h2 id="附录-B：相关文件清单"><a href="#附录-B：相关文件清单" class="headerlink" title="附录 B：相关文件清单"></a>附录 B：相关文件清单</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;home&#x2F;sunjunior&#x2F;Projects&#x2F;Test&#x2F;</span><br><span class="line">├── Batman (U).nes                         原版 ROM</span><br><span class="line">├── Batman (U).zip                         原版压缩包</span><br><span class="line">├── Batman (U) - Infinite Health.nes       交付物：补丁 ROM</span><br><span class="line">└── Batman (U) - Infinite Health.ips       交付物：IPS 补丁</span><br><span class="line"></span><br><span class="line">~&#x2F;.config&#x2F;Mesen2&#x2F;Cheats&#x2F;</span><br><span class="line">├── Batman (U).json                        原版自动作弊码</span><br><span class="line">└── Batman (U) - Infinite Health.json      补丁版自动作弊码</span><br></pre></td></tr></table></figure>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赠人玫瑰，手留余香
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 ©
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2025/09/06/%E7%AE%80%E5%8D%95%E7%94%A8GTest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/" class="next-post btn btn-default" title='简单用GTest单元测试框架编写测试用例'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            简单用GTest单元测试框架编写测试用例</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-破解总体思路"><span class="toc-text">4. 破解总体思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-详细分析过程"><span class="toc-text">5. 详细分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-定位生命值地址"><span class="toc-text">5.1 定位生命值地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-静态反汇编定位扣血指令"><span class="toc-text">5.2 静态反汇编定位扣血指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-动态写跟踪（Debug-回调验证）"><span class="toc-text">5.3 动态写跟踪（Debug 回调验证）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-伤害点完整地图（PRG-偏移）"><span class="toc-text">5.4 伤害点完整地图（PRG 偏移）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-补丁实现"><span class="toc-text">6. 补丁实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-ROM-补丁"><span class="toc-text">6.1 ROM 补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-IPS-补丁"><span class="toc-text">6.2 IPS 补丁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-双保险：Mesen-作弊码"><span class="toc-text">7. 双保险：Mesen 作弊码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-原理"><span class="toc-text">7.1 原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-读取路径的坑（重要）"><span class="toc-text">7.2 读取路径的坑（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-作弊码文件格式"><span class="toc-text">7.3 作弊码文件格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-测试方法（无头自动化）"><span class="toc-text">8. 测试方法（无头自动化）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-testRunner-基本用法"><span class="toc-text">8.1 testRunner 基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-输入注入（进入游戏的关键）"><span class="toc-text">8.2 输入注入（进入游戏的关键）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-内存回调"><span class="toc-text">8.3 内存回调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-Lua-API-参数顺序（易踩坑）"><span class="toc-text">8.4 Lua API 参数顺序（易踩坑）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-验证结果"><span class="toc-text">9. 验证结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-补丁-ROM"><span class="toc-text">9.1 补丁 ROM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-作弊码（作用于原版-ROM）"><span class="toc-text">9.2 作弊码（作用于原版 ROM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-IPS-回环校验"><span class="toc-text">9.3 IPS 回环校验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-交付物与使用方式"><span class="toc-text">10. 交付物与使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-踩坑与经验总结"><span class="toc-text">11. 踩坑与经验总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-A：复现测试的骨架脚本"><span class="toc-text">附录 A：复现测试的骨架脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-B：相关文件清单"><span class="toc-text">附录 B：相关文件清单</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
