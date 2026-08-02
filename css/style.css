@@ -762,6 +762,12 @@ pre {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   word-wrap: break-word;
 }
+.post-content td code,
+.post-content th code {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
 .post-content pre {
   margin: 1.64em 0;
   border: none;
