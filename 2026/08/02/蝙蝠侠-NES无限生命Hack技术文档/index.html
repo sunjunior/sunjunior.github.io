@@ -540,6 +540,10 @@
 <li>常规运行：<strong>20,000 帧</strong>，<code>$00B7</code> 始终保持 <code>$08</code>，仅 2 次初始化写入，<strong>0 次掉血</strong>。</li>
 <li>压力测试：<strong>21,000+ 帧</strong>内人为注入 <strong>22 次受伤事件</strong>（每次在伤害例程 <code>$9A14</code> 处强制 <code>$00CC = $80</code> 置命中标记），<code>$00B7</code> <strong>从未下降</strong>。</li>
 </ul>
+<p><img src="/img/batman-hacker.gif" alt="敌人持续攻击，生命值始终保持满格"></p>
+<blockquote>
+<p>上图为补丁 ROM 的实机运行录屏：蝙蝠侠被敌人持续攻击，但血条始终保持满格（<code>$08</code>），证明补丁已彻底拦截伤害。</p>
+</blockquote>
 <h3 id="9-2-作弊码（作用于原版-ROM）"><a href="#9-2-作弊码（作用于原版-ROM）" class="headerlink" title="9.2 作弊码（作用于原版 ROM）"></a>9.2 作弊码（作用于原版 ROM）</h3><ul>
 <li><strong>12,000+ 帧</strong>，原始 RAM 中 <code>$B7</code> 被 <code>DEC</code> 到 <code>$07</code> 累计 <strong>300+ 次</strong>（证明伤害事件真实发生），但游戏每一次读取 <code>$B7</code> 都返回 <code>$08</code>，<strong>从未死亡</strong>。</li>
 <li>作弊码读取路径对照：<code>nesInternalRam</code> 读到 <code>$00</code>（真实值）vs <code>nesMemory</code> 读到 <code>$08</code>（作弊值）；<code>clearCheats</code> 后恢复 <code>$00</code>。</li>
