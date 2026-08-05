@@ -526,6 +526,10 @@
 <li><strong>捕获弹窗彻底消失</strong>：实机游玩中敌人靠近/接触主角，不再弹出约 8 秒的”逮捕”过场。根因确认——弹窗确实由 <code>$C6B4</code> 写 <code>$3B=0x10</code> 触发，NOP 掉整块后该写不再发生。</li>
 <li>配合 V2/V3/V14 的遗留补丁（<code>$5F</code> 掩码保留、<code>$6A</code> 短路、<code>$D6</code> 不写），角色可用性不再被清除。</li>
 </ul>
+<p><img src="/img/luban.gif" alt="敌人靠近主角，不再进入捕获界面"></p>
+<blockquote>
+<p>上图为 V15 补丁 ROM 的实机录屏：敌人靠近主角后不再弹出”逮捕”过场，角色不会进入捕获界面，可继续游玩。</p>
+</blockquote>
 <h3 id="7-2-当前遗留问题（未解决）"><a href="#7-2-当前遗留问题（未解决）" class="headerlink" title="7.2 当前遗留问题（未解决）"></a>7.2 当前遗留问题（未解决）</h3><ul>
 <li>敌人靠近主角之后，<strong>游戏画面会被刷新</strong>（回到选择/标题或重载关卡）。这说明捕获的<strong>“结算”逻辑在 <code>$C672</code> 之外仍会执行</strong>，V15 只是跳过了界面动画，并没有真正取消”这次接触 = 捕获”的事件本身。</li>
 <li>要做成真正的”永不捕获、停留当前关卡”，还需要处理结算路径：追踪 <code>$C672</code> RTS 之后主循环对 <code>$37/$5F/$AD</code> 的消费逻辑，或在 <code>$C672</code> 内把结算一并短路。这属于下一步工作，本版暂以”弹窗消除”为交付结论。</li>
@@ -699,7 +703,22 @@
 
 
 
-<script src="/js/app.js?rev=@@hash.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/js/app.js?rev=@@hash.js"></script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
