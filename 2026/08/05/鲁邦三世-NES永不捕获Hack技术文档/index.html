@@ -23,7 +23,10 @@
 
 
 <meta name="description" content="
-目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）目标：永不捕获 + 道具数量不减少最终交付物：鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减...." />
+目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）目标：使用道具时，槽位道具数量不减少交付物：IPS 补丁（打在原版 ROM 上即可）
+
+
+1...." />
 
 
 <meta name="robots" content="all" />
@@ -34,7 +37,7 @@
 
 <title>
     
-    鲁邦三世（NES / FC 汉化版）永不捕获 + 道具不减 Hack 技术文档 |
+    鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档 |
     
     sunjunior的个人技术博客
 </title>
@@ -133,9 +136,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="鲁邦三世（NES / FC 汉化版）永不捕获 + 道具不减 Hack 技术文档">
+        <h1 id="鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档">
             
-            鲁邦三世（NES / FC 汉化版）永不捕获 + 道具不减 Hack 技术文档
+            鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档
             
         </h1>
         <div class="post-meta">
@@ -171,59 +174,12 @@
     
     <div class="post-body post-content">
         <blockquote>
-<p>目标游戏：<strong>鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）</strong><br>目标：永不捕获 + 道具数量不减少<br>最终交付物：<code>鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减.nes</code><br>日期：2026-08-05</p>
+<p>目标游戏：<strong>鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）</strong><br>目标：使用道具时，槽位道具数量不减少<br>交付物：IPS 补丁（打在原版 ROM 上即可）</p>
 </blockquote>
 <hr>
-<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>本作是鲁邦三世主题的 FC/NES 游戏。游戏包含”捕获”机制（角色被逮捕后不可用）和”道具使用”机制（使用道具后数量减少）。</p>
-<p>本次任务包含两个破解目标：</p>
-<ol>
-<li><strong>永不捕获</strong>：修改 ROM 使角色永远不会被捕获。</li>
-<li><strong>道具数量不减少</strong>：使用道具时，槽位道具数量维持不变。</li>
-</ol>
-<p>最终交付物包含两个补丁的整合 ROM。</p>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减 1。需求：使用道具时数量维持不变。</p>
 <hr>
-<h2 id="2-ROM-与游戏信息"><a href="#2-ROM-与游戏信息" class="headerlink" title="2. ROM 与游戏信息"></a>2. ROM 与游戏信息</h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>项目</th>
-<th>值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>文件名</td>
-<td><code>鲁邦三世-潘多拉的遗产.nes</code></td>
-</tr>
-<tr>
-<td>文件大小</td>
-<td>524,304 字节</td>
-</tr>
-<tr>
-<td>iNES Header</td>
-<td><code>4E 45 53 1A 10 20 41 00 ...</code></td>
-</tr>
-<tr>
-<td>格式</td>
-<td>iNES，Mapper 4（MMC3），垂直镜像</td>
-</tr>
-<tr>
-<td>PRG ROM</td>
-<td>0x10 × 16KB = 256KB</td>
-</tr>
-<tr>
-<td>CHR ROM</td>
-<td>0x20 × 8KB = 256KB</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="关键地址约定"><a href="#关键地址约定" class="headerlink" title="关键地址约定"></a>关键地址约定</h3><ul>
-<li><strong>文件偏移</strong> = PRG 偏移 + 16 字节 iNES 头。</li>
-<li>MMC3 银行切换：<code>$C000</code> 窗口映射 bank15（文件 <code>0x3C010-0x40010</code>），CPU 地址 = 文件偏移 − <code>0x30010</code>。</li>
-</ul>
-<hr>
-<h2 id="3-分析环境与工具"><a href="#3-分析环境与工具" class="headerlink" title="3. 分析环境与工具"></a>3. 分析环境与工具</h2><div class="table-container">
+<h2 id="2-分析环境"><a href="#2-分析环境" class="headerlink" title="2. 分析环境"></a>2. 分析环境</h2><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -234,72 +190,25 @@
 <tbody>
 <tr>
 <td>模拟器</td>
-<td><strong>Mesen2 v2.x</strong>（Linux），GUI + Lua Console</td>
+<td>Mesen2，Lua Console</td>
 </tr>
 <tr>
 <td>反汇编</td>
-<td>自写 6502 反汇编脚本（完整 opcode 表）</td>
+<td>自写 6502 反汇编脚本</td>
 </tr>
 <tr>
-<td>内存/执行跟踪</td>
-<td>Mesen Lua API（<code>addMemoryCallback</code>、<code>addEventCallback</code>、<code>emu.getState</code>）</td>
+<td>内存跟踪</td>
+<td><code>addMemoryCallback</code> + <code>emu.getState</code></td>
 </tr>
 <tr>
 <td>补丁生成</td>
-<td>自写脚本生成标准 IPS 文件</td>
-</tr>
-<tr>
-<td>Diff 快照</td>
-<td>Lua 全 RAM 快照对比脚本</td>
+<td>标准 IPS 格式</td>
 </tr>
 </tbody>
 </table>
 </div>
 <hr>
-<h2 id="4-破解一：永不捕获（V2）"><a href="#4-破解一：永不捕获（V2）" class="headerlink" title="4. 破解一：永不捕获（V2）"></a>4. 破解一：永不捕获（V2）</h2><h3 id="4-1-真实捕获的判定"><a href="#4-1-真实捕获的判定" class="headerlink" title="4.1 真实捕获的判定"></a>4.1 真实捕获的判定</h3><p>用户实际游玩 7501 帧，监控脚本自动检出多次捕获事件。关键发现：</p>
-<ul>
-<li>演示模式（无输入）的捕获通过 <code>$3D</code> 状态机触发（<code>$C55B</code> 写入 <code>$FF</code>）。</li>
-<li><strong>真实游戏</strong>（用户操作角色移动、撞敌人）的捕获通过 <code>$5F</code>（角色可用性掩码）提交。</li>
-</ul>
-<p><code>$5F</code> 位含义：低 2 位 = 已捕获计数，bit3/bit5/bit7 = 三名角色的”可用位”（清零=被捕）。</p>
-<h3 id="4-2-真实捕获提交代码"><a href="#4-2-真实捕获提交代码" class="headerlink" title="4.2 真实捕获提交代码"></a>4.2 真实捕获提交代码</h3><p>全 ROM 搜索 <code>STA $5F</code> 共 6 处，真实提交链位于 bank15（CPU <code>$C000</code> 窗口）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">C1F9  A9 A0       LDA #$A0</span><br><span class="line">C1FB  85 3C       STA $3C</span><br><span class="line">C1FD  20 57 DF    JSR $DF57        ; A &#x3D; $5F &amp; 3（已捕获数）</span><br><span class="line">C200  A8          TAY</span><br><span class="line">C201  A9 FD       LDA #$FD</span><br><span class="line">C203  A6 39       LDX $39</span><br><span class="line">C205  E0 81       CPX #$81</span><br><span class="line">C207  F0 05       BEQ +5</span><br><span class="line">C209  20 8D EF    JSR $EF8D</span><br><span class="line">C20C  A9 FC       LDA #$FC</span><br><span class="line">C20E  38          SEC</span><br><span class="line">C20F  2A          ROL              ; 按 Y 循环生成掩码</span><br><span class="line">C210  2A          ROL</span><br><span class="line">C211  88          DEY</span><br><span class="line">C212  10 FB       BPL $C20F</span><br><span class="line">C214  25 5F       AND $5F          ; ★ 掩码 &amp; $5F → 清掉对应可用位</span><br><span class="line">C216  85 5F       STA $5F          ; 提交写入</span><br><span class="line">C218  29 A8       AND #$A8         ; 检查 bit3&#x2F;5&#x2F;7</span><br><span class="line">C21A  F0 20       BEQ $C23C        ; 全清 → 游戏结束</span><br><span class="line">C21C  24 6D       BIT $6D</span><br></pre></td></tr></table></figure>
-<h3 id="4-3-V2-补丁（单字节修复）"><a href="#4-3-V2-补丁（单字节修复）" class="headerlink" title="4.3 V2 补丁（单字节修复）"></a>4.3 V2 补丁（单字节修复）</h3><p><strong>核心洞察</strong>：<code>$C214</code> 的 <code>AND $5F</code> 生成清位掩码。将其改为 <code>LDA $5F</code>（直接读回原值），则后续 <code>STA $5F</code> 为无效写（回写原值），角色可用位永不丢失。</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>文件偏移</th>
-<th>CPU 地址</th>
-<th>原字节</th>
-<th>新字节</th>
-<th>效果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0x3C224</code></td>
-<td><code>$C214</code></td>
-<td><code>25 5F</code>（AND $5F）</td>
-<td><code>A5 5F</code>（LDA $5F）</td>
-<td>A=原 $5F，不生成清位掩码</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>补丁后指令流：<code>C214: LDA $5F / C216: STA $5F</code>（回写原值），随后 <code>AND #$A8</code> 在 A=原值上计算。<code>$5F</code> 永不改变 → 永不捕获、永不游戏结束。</p>
-<hr>
-<h2 id="5-破解二：道具数量不减少"><a href="#5-破解二：道具数量不减少" class="headerlink" title="5. 破解二：道具数量不减少"></a>5. 破解二：道具数量不减少</h2><h3 id="5-1-目标"><a href="#5-1-目标" class="headerlink" title="5.1 目标"></a>5.1 目标</h3><p>游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减 1。需求：使用道具时数量维持不变（数量大于 0 的道具一直保持）。</p>
-<h3 id="5-2-分析思路"><a href="#5-2-分析思路" class="headerlink" title="5.2 分析思路"></a>5.2 分析思路</h3><p>采用<strong>动态分析为主、静态反汇编为辅</strong>的策略：</p>
-<ol>
-<li>确定道具槽的 RAM 布局（<code>$0410</code> 起，8 槽 × 21 字节）。</li>
-<li>通过 Lua 内存写监控，定位”使用道具时数量减少”的字节。</li>
-<li>通过全 RAM 快照对比，精确定位数量字节地址。</li>
-<li>通过内存写回调获取 CPU 指令地址，反汇编定位扣减代码。</li>
-<li>制作 ROM 补丁。</li>
-<li>用 Lua 写拦截回调验证方案。</li>
-</ol>
-<h3 id="5-3-道具槽布局探索"><a href="#5-3-道具槽布局探索" class="headerlink" title="5.3 道具槽布局探索"></a>5.3 道具槽布局探索</h3><p>通过反汇编 bank2 入口 <code>$8D80</code>（道具槽遍历例程）确认道具槽结构：<code>$0410</code> 起，8 槽，每槽 21 字节，步长 <code>0x15</code>。</p>
+<h2 id="3-分析过程"><a href="#3-分析过程" class="headerlink" title="3. 分析过程"></a>3. 分析过程</h2><h3 id="3-1-道具槽布局"><a href="#3-1-道具槽布局" class="headerlink" title="3.1 道具槽布局"></a>3.1 道具槽布局</h3><p>通过反汇编确认道具槽位于 <code>$0410</code>，8 槽 × 21 字节：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -344,26 +253,24 @@
 </tbody>
 </table>
 </div>
-<h3 id="5-4-全-RAM-前后快照对比-——-定位数量字节"><a href="#5-4-全-RAM-前后快照对比-——-定位数量字节" class="headerlink" title="5.4 全 RAM 前后快照对比 —— 定位数量字节"></a>5.4 全 RAM 前后快照对比 —— 定位数量字节</h3><p><strong>方法</strong>：用键盘 F 键（不映射到 NES 手柄）触发快照。用户操作：</p>
+<h3 id="3-2-定位数量字节"><a href="#3-2-定位数量字节" class="headerlink" title="3.2 定位数量字节"></a>3.2 定位数量字节</h3><p>用 Lua 全 RAM 快照对比定位数量字节。操作流程：</p>
 <ol>
 <li>选好道具 → 按 F 记录 snapA（使用前）</li>
 <li>按 Q（Select）选择道具（数量 -1）</li>
 <li>再按 F 记录 snapB（使用后）</li>
-<li>自动 diff 全内存 <code>$0000-$07FF</code></li>
+<li>diff 全内存 <code>$0000-$07FF</code></li>
 </ol>
-<p><strong>Lua 脚本</strong>：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">r</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesInternalRam) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">takeSnapshot</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> snap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> a = <span class="number">0x0000</span>, <span class="number">0x07FF</span> <span class="keyword">do</span> snap[a] = r(a) <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">return</span> snap</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onFrame</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> fPressed = <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> <span class="keyword">return</span> emu.isKeyPressed(<span class="string">"F"</span>) <span class="keyword">end</span>)</span><br><span class="line">    <span class="keyword">if</span> fPressed <span class="keyword">and</span> <span class="keyword">not</span> lastF <span class="keyword">then</span></span><br><span class="line">        <span class="comment">-- 记录快照或 diff</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    lastF = fPressed</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addEventCallback(onFrame, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
-<p><strong>结果</strong>：两次确认 <code>$0204: 06→05</code> 和 <code>$0204: 05→04</code>。</p>
-<p><strong>锁定</strong>：<strong>道具数量字节 = <code>$0204</code></strong>（CPU 内部 RAM）。</p>
-<h3 id="5-5-写回调捕获-PC-地址"><a href="#5-5-写回调捕获-PC-地址" class="headerlink" title="5.5 写回调捕获 PC 地址"></a>5.5 写回调捕获 PC 地址</h3><p><strong>方法</strong>：用 <code>addMemoryCallback</code> 拦截 <code>$0204</code> 写入，在回调中调用 <code>emu.getState()</code> 获取 <code>cpu.pc</code>。</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emu.addMemoryCallback(cb, emu.callbackType.<span class="built_in">write</span>, addr, endAddr, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"><span class="comment">-- 回调签名: function(addr, value)  -- 返回值覆盖写入值</span></span><br></pre></td></tr></table></figure>
-<p><strong>结果</strong>：<code>WRITE $0204=01  PC=$CD16 A=04 X=04 Y=03</code></p>
-<p>回调中 PC 显示的是 DEC 指令后的下一条指令地址。真正的扣减指令在 <code>$CD13</code>。</p>
-<h3 id="5-6-反汇编确认"><a href="#5-6-反汇编确认" class="headerlink" title="5.6 反汇编确认"></a>5.6 反汇编确认</h3><p>反汇编 bank15（<code>$C000</code> 窗口）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$CD13: DEC  $0200,X  ; ★ 扣减道具数量（X&#x3D;4 时 DEC $0204）</span><br><span class="line">$CD16: LDA  #$20</span><br><span class="line">$CD18: STA  $020A,X  ; 设置相关参数</span><br><span class="line">$CD1B: RTS</span><br></pre></td></tr></table></figure>
-<p><strong>核心发现</strong>：这是一个共享的”使用道具”例程，通过 X 寄存器索引不同的道具槽位。<code>$CD13: DEC $0200,X</code> 是所有道具扣减的唯一点（全 ROM 仅 1 处 <code>DEC $0200,X</code>）。</p>
-<h3 id="5-7-补丁方案"><a href="#5-7-补丁方案" class="headerlink" title="5.7 补丁方案"></a>5.7 补丁方案</h3><p>将 <code>$CD13</code> 的 <code>DEC $0200,X</code>（3 字节 <code>DE 00 02</code>）替换为 <code>EA EA EA</code>（NOP NOP NOP）。</p>
-<div class="table-container">
+<p>两次确认 <code>$0204: 06→05</code> 和 <code>$0204: 05→04</code>，<strong>锁定数量字节 = <code>$0204</code></strong>。</p>
+<h3 id="3-3-定位扣减代码"><a href="#3-3-定位扣减代码" class="headerlink" title="3.3 定位扣减代码"></a>3.3 定位扣减代码</h3><p>用 <code>addMemoryCallback</code> 拦截 <code>$0204</code> 写入，在回调中调用 <code>emu.getState()</code> 获取 <code>cpu.pc</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WRITE $0204&#x3D;01  PC&#x3D;$CD16 A&#x3D;04 X&#x3D;04 Y&#x3D;03</span><br></pre></td></tr></table></figure>
+<p>反汇编 <code>$CD13</code> 附近：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$CD13: DEC  $0200,X  ; ★ 扣减道具数量（X&#x3D;4 时 DEC $0204）</span><br><span class="line">$CD16: LDA  #$20</span><br><span class="line">$CD18: STA  $020A,X</span><br><span class="line">$CD1B: RTS</span><br></pre></td></tr></table></figure>
+<p>全 ROM 仅 1 处 <code>DEC $0200,X</code>，是共享的扣减例程。</p>
+<h3 id="3-4-Lua-验证"><a href="#3-4-Lua-验证" class="headerlink" title="3.4 Lua 验证"></a>3.4 Lua 验证</h3><p>在制作补丁前，先用写回调拦截验证：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> current = emu.<span class="built_in">read</span>(<span class="number">0x0204</span>, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> value ~= current <span class="keyword">then</span> <span class="keyword">return</span> current <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br></pre></td></tr></table></figure>
+<p>验证结果：数量保持不变。</p>
+<hr>
+<h2 id="4-补丁"><a href="#4-补丁" class="headerlink" title="4. 补丁"></a>4. 补丁</h2><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -385,43 +292,9 @@
 </tbody>
 </table>
 </div>
-<h3 id="5-8-Lua-拦截验证"><a href="#5-8-Lua-拦截验证" class="headerlink" title="5.8 Lua 拦截验证"></a>5.8 Lua 拦截验证</h3><p>在制作 ROM 补丁前，先用 Lua 写回调拦截验证方案：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> current = emu.<span class="built_in">read</span>(<span class="number">0x0204</span>, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> value ~= current <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> current  <span class="comment">-- 返回旧值覆盖写入，阻止减少</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br></pre></td></tr></table></figure>
-<p><strong>验证结果</strong>：用户实机测试——“执行之前数量为 1，执行了之后还是 1”，方案生效。</p>
+<p>将 <code>$CD13</code> 的 <code>DEC $0200,X</code>（3 字节）替换为 <code>EA EA EA</code>（NOP）。</p>
 <hr>
-<h2 id="6-补丁总览"><a href="#6-补丁总览" class="headerlink" title="6. 补丁总览"></a>6. 补丁总览</h2><h3 id="6-1-两处修改"><a href="#6-1-两处修改" class="headerlink" title="6.1 两处修改"></a>6.1 两处修改</h3><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>序号</th>
-<th>文件偏移</th>
-<th>CPU 地址</th>
-<th>原字节</th>
-<th>新字节</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><code>0x3C224</code></td>
-<td><code>$C214</code></td>
-<td><code>25 5F</code></td>
-<td><code>A5 5F</code></td>
-<td>永不捕获</td>
-</tr>
-<tr>
-<td>2</td>
-<td><code>0x3CD23</code></td>
-<td><code>$CD13</code></td>
-<td><code>DE 00 02</code></td>
-<td><code>EA EA EA</code></td>
-<td>道具不减少</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="6-2-交付物"><a href="#6-2-交付物" class="headerlink" title="6.2 交付物"></a>6.2 交付物</h3><div class="table-container">
+<h2 id="5-交付物"><a href="#5-交付物" class="headerlink" title="5. 交付物"></a>5. 交付物</h2><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -431,30 +304,21 @@
 </thead>
 <tbody>
 <tr>
-<td><code>鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减.nes</code></td>
-<td>最终交付 ROM（含永不捕获 + 道具不减）</td>
-</tr>
-<tr>
-<td><code>鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减.ips</code></td>
-<td>IPS 补丁（含 2 条记录）</td>
+<td><code>鲁邦三世-潘多拉的遗产-道具不减.ips</code></td>
+<td>IPS 补丁（1 条记录，16 字节）</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>打在原版 ROM <code>鲁邦三世-潘多拉的遗产.nes</code> 上即可。</p>
 <hr>
-<h2 id="7-经验总结"><a href="#7-经验总结" class="headerlink" title="7. 经验总结"></a>7. 经验总结</h2><ol>
-<li><p><strong>数量字节不在道具槽内</strong>：道具槽 <code>$0410-$04B7</code> 只存 ID、冷却计时器、动画参数，数量在 <code>$0204</code>（OAM 区的独立字节）。</p>
-</li>
-<li><p><strong>全 RAM 快照对比是最直接的方法</strong>：在可控条件下做使用前/后快照，diff 全内存，比持续监控更干净。</p>
-</li>
-<li><p><strong>回调返回值可覆盖写入</strong>：<code>addMemoryCallback</code> 的写回调若返回整数，会覆盖原写入值，可用来做运行时拦截验证。</p>
-</li>
-<li><p><strong><code>emu.getState()</code> 可获取 PC</strong>：在内存回调中调用 <code>emu.getState()</code> 得到 <code>cpu.pc</code>，用于定位写入指令的 ROM 地址。</p>
-</li>
-<li><p><strong><code>DEC $0200,X</code> 是共享扣减例程</strong>：全 ROM 仅 1 处，NOP 掉即可阻止所有道具数量减少。</p>
-</li>
-<li><p><strong><code>addMemoryCallback</code> API 参数必须写全</strong>：缺 <code>cpuType</code>/<code>memType</code> 会 core dump。枚举是 <code>emu.callbackType.write</code>（不是 <code>memCallbackType</code>）。</p>
-</li>
+<h2 id="6-经验总结"><a href="#6-经验总结" class="headerlink" title="6. 经验总结"></a>6. 经验总结</h2><ol>
+<li><strong>数量字节不在道具槽内</strong>：道具槽 <code>$0410-$04B7</code> 只存 ID、冷却计时器、动画参数，数量在 <code>$0204</code>。</li>
+<li><strong>全 RAM 快照对比最直接</strong>：使用前/后快照 diff 全内存，比持续监控更干净。</li>
+<li><strong>回调可覆盖写入</strong>：<code>addMemoryCallback</code> 写回调返回值覆盖原写入，可做运行时验证。</li>
+<li><strong><code>emu.getState()</code> 取 PC</strong>：在回调中调用获取 <code>cpu.pc</code>，定位写入指令的 ROM 地址。</li>
+<li><strong><code>DEC $0200,X</code> 是唯一点</strong>：全 ROM 仅 1 处，NOP 掉即可阻止所有道具减少。</li>
+<li><strong>API 参数必须写全</strong>：缺 <code>cpuType</code>/<code>memType</code> 会 core dump，枚举是 <code>emu.callbackType.write</code>。</li>
 </ol>
 
     </div>
@@ -511,7 +375,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-破解一：永不捕获（V2）"><span class="toc-text">4. 破解一：永不捕获（V2）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-真实捕获的判定"><span class="toc-text">4.1 真实捕获的判定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-真实捕获提交代码"><span class="toc-text">4.2 真实捕获提交代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-V2-补丁（单字节修复）"><span class="toc-text">4.3 V2 补丁（单字节修复）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-破解二：道具数量不减少"><span class="toc-text">5. 破解二：道具数量不减少</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-目标"><span class="toc-text">5.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-分析思路"><span class="toc-text">5.2 分析思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-道具槽布局探索"><span class="toc-text">5.3 道具槽布局探索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-全-RAM-前后快照对比-——-定位数量字节"><span class="toc-text">5.4 全 RAM 前后快照对比 —— 定位数量字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-写回调捕获-PC-地址"><span class="toc-text">5.5 写回调捕获 PC 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-反汇编确认"><span class="toc-text">5.6 反汇编确认</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-7-补丁方案"><span class="toc-text">5.7 补丁方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-Lua-拦截验证"><span class="toc-text">5.8 Lua 拦截验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-补丁总览"><span class="toc-text">6. 补丁总览</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-两处修改"><span class="toc-text">6.1 两处修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-交付物"><span class="toc-text">6.2 交付物</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-经验总结"><span class="toc-text">7. 经验总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析过程"><span class="toc-text">3. 分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-道具槽布局"><span class="toc-text">3.1 道具槽布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-定位数量字节"><span class="toc-text">3.2 定位数量字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-定位扣减代码"><span class="toc-text">3.3 定位扣减代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Lua-验证"><span class="toc-text">3.4 Lua 验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-补丁"><span class="toc-text">4. 补丁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-交付物"><span class="toc-text">5. 交付物</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-经验总结"><span class="toc-text">6. 经验总结</span></a></li></ol>
         
     </div>
 </aside>
