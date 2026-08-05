@@ -293,6 +293,8 @@
 </table>
 </div>
 <p>将 <code>$CD13</code> 的 <code>DEC $0200,X</code>（3 字节）替换为 <code>EA EA EA</code>（NOP）。</p>
+<h3 id="4-1-效果演示"><a href="#4-1-效果演示" class="headerlink" title="4.1 效果演示"></a>4.1 效果演示</h3><p><img src="/img/lupin.gif" alt="道具不减 + 遇敌不捕获效果演示"></p>
+<p>上图为补丁生效后的实机录屏：在生命道具护持下，遇敌后不再进入捕获界面，且道具数量维持不变。</p>
 <hr>
 <h2 id="5-交付物"><a href="#5-交付物" class="headerlink" title="5. 交付物"></a>5. 交付物</h2><div class="table-container">
 <table>
@@ -375,7 +377,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析过程"><span class="toc-text">3. 分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-道具槽布局"><span class="toc-text">3.1 道具槽布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-定位数量字节"><span class="toc-text">3.2 定位数量字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-定位扣减代码"><span class="toc-text">3.3 定位扣减代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Lua-验证"><span class="toc-text">3.4 Lua 验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-补丁"><span class="toc-text">4. 补丁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-交付物"><span class="toc-text">5. 交付物</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-经验总结"><span class="toc-text">6. 经验总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析过程"><span class="toc-text">3. 分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-道具槽布局"><span class="toc-text">3.1 道具槽布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-定位数量字节"><span class="toc-text">3.2 定位数量字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-定位扣减代码"><span class="toc-text">3.3 定位扣减代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Lua-验证"><span class="toc-text">3.4 Lua 验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-补丁"><span class="toc-text">4. 补丁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-效果演示"><span class="toc-text">4.1 效果演示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-交付物"><span class="toc-text">5. 交付物</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-经验总结"><span class="toc-text">6. 经验总结</span></a></li></ol>
         
     </div>
 </aside>
