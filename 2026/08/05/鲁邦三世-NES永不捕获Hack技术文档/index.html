@@ -23,7 +23,7 @@
 
 
 <meta name="description" content="
-目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）目标：修改 NES ROM，使角色永远不会被捕获（不触发剧情中的”逮捕”结局）交付物：已打补丁..." />
+目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）目标：永不捕获 + 道具数量不减少最终交付物：鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减...." />
 
 
 <meta name="robots" content="all" />
@@ -34,7 +34,7 @@
 
 <title>
     
-    鲁邦三世（NES / FC 汉化版）永不捕获 Hack 技术文档 |
+    鲁邦三世（NES / FC 汉化版）永不捕获 + 道具不减 Hack 技术文档 |
     
     sunjunior的个人技术博客
 </title>
@@ -133,9 +133,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="鲁邦三世（NES / FC 汉化版）永不捕获 Hack 技术文档">
+        <h1 id="鲁邦三世（NES / FC 汉化版）永不捕获 + 道具不减 Hack 技术文档">
             
-            鲁邦三世（NES / FC 汉化版）永不捕获 Hack 技术文档
+            鲁邦三世（NES / FC 汉化版）永不捕获 + 道具不减 Hack 技术文档
             
         </h1>
         <div class="post-meta">
@@ -171,18 +171,16 @@
     
     <div class="post-body post-content">
         <blockquote>
-<p>目标游戏：<strong>鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）</strong><br>目标：修改 NES ROM，使角色永远不会被捕获（不触发剧情中的”逮捕”结局）<br>交付物：已打补丁的 ROM、标准 IPS 补丁（V15）<br>日期：2026-08-05</p>
+<p>目标游戏：<strong>鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）</strong><br>目标：永不捕获 + 道具数量不减少<br>最终交付物：<code>鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减.nes</code><br>日期：2026-08-05</p>
 </blockquote>
 <hr>
-<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>本作是鲁邦三世主题的 FC/NES 游戏，按”选人 → 关卡（剧情叙事屏）→ 捕获（该角色被逮捕，可用角色 -1）→ 选人”的循环自动推进。游戏里敌人靠近并接触主角时，会弹出一个约 8 秒的”逮捕”过场，结束后该角色被判定捕获。</p>
-<p>本次任务的破解目标：</p>
+<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>本作是鲁邦三世主题的 FC/NES 游戏。游戏包含”捕获”机制（角色被逮捕后不可用）和”道具使用”机制（使用道具后数量减少）。</p>
+<p>本次任务包含两个破解目标：</p>
 <ol>
-<li>找到”捕获”这一判定在内存中的落点。</li>
-<li>定位触发捕获提交的代码位置。</li>
-<li>修改 ROM，使捕获提交永远不发生（永不捕获）。</li>
-<li>提供可直接使用的交付物：已打补丁的 ROM、标准 IPS 补丁。</li>
+<li><strong>永不捕获</strong>：修改 ROM 使角色永远不会被捕获。</li>
+<li><strong>道具数量不减少</strong>：使用道具时，槽位道具数量维持不变。</li>
 </ol>
-<p>最终成果：<strong>捕获弹窗彻底消失（V15）</strong>，但敌人靠近后游戏仍会刷新画面（捕获结算仍在执行，见 §7）。</p>
+<p>最终交付物包含两个补丁的整合 ROM。</p>
 <hr>
 <h2 id="2-ROM-与游戏信息"><a href="#2-ROM-与游戏信息" class="headerlink" title="2. ROM 与游戏信息"></a>2. ROM 与游戏信息</h2><div class="table-container">
 <table>
@@ -202,37 +200,27 @@
 <td>524,304 字节</td>
 </tr>
 <tr>
-<td>MD5</td>
-<td><code>018c2bb15d2fe159014cb14b7889c70b</code></td>
-</tr>
-<tr>
 <td>iNES Header</td>
 <td><code>4E 45 53 1A 10 20 41 00 ...</code></td>
 </tr>
 <tr>
 <td>格式</td>
-<td>iNES，Mapper <strong>4（MMC3）</strong>，垂直镜像</td>
+<td>iNES，Mapper 4（MMC3），垂直镜像</td>
 </tr>
 <tr>
 <td>PRG ROM</td>
-<td>0x10 × 16KB = 256KB（<code>0x40000</code> 字节）</td>
+<td>0x10 × 16KB = 256KB</td>
 </tr>
 <tr>
 <td>CHR ROM</td>
-<td>0x20 × 8KB = 256KB（<code>0x40000</code> 字节）</td>
-</tr>
-<tr>
-<td>汉化</td>
-<td>基于日版汉化，关卡文字为中文叙事文本</td>
+<td>0x20 × 8KB = 256KB</td>
 </tr>
 </tbody>
 </table>
 </div>
 <h3 id="关键地址约定"><a href="#关键地址约定" class="headerlink" title="关键地址约定"></a>关键地址约定</h3><ul>
-<li><strong>PRG 偏移</strong>：指相对 PRG 数据起始（文件偏移 = PRG 偏移 + 16 字节 iNES 头）。</li>
-<li>MMC3 采用银行切换（bank switching），同一段代码可能映射在不同 CPU 地址。本文以<strong>文件偏移</strong>为唯一基准，CPU 地址仅作辅助引用。</li>
-<li>关卡逻辑所在的 <strong>bank15 半体 30</strong> 映射到 CPU <code>$C000-$DFFF</code>（文件 <code>0x3C010-0x3DFFF</code>），故 <strong>CPU 地址 = 文件偏移 − <code>0x30010</code></strong>。该公式已被实机 exec 回调逐字节验证。</li>
-<li>捕获相关零页：<code>$3B</code> 捕获/指令代码、<code>$3D</code> 捕获状态机、<code>$5F</code> 敌属性/角色可用掩码、<code>$24</code> 关卡编号、<code>$AD</code> 敌位号、<code>$46</code> 关卡代码、<code>$37</code> 门开关、<code>$D4</code> 当前选人。</li>
+<li><strong>文件偏移</strong> = PRG 偏移 + 16 字节 iNES 头。</li>
+<li>MMC3 银行切换：<code>$C000</code> 窗口映射 bank15（文件 <code>0x3C010-0x40010</code>），CPU 地址 = 文件偏移 − <code>0x30010</code>。</li>
 </ul>
 <hr>
 <h2 id="3-分析环境与工具"><a href="#3-分析环境与工具" class="headerlink" title="3. 分析环境与工具"></a>3. 分析环境与工具</h2><div class="table-container">
@@ -246,328 +234,194 @@
 <tbody>
 <tr>
 <td>模拟器</td>
-<td><strong>Mesen2 v2.x</strong>（Linux），无头测试模式 <code>--testRunner</code> + <strong>GUI 实机追踪</strong></td>
+<td><strong>Mesen2 v2.x</strong>（Linux），GUI + Lua Console</td>
 </tr>
 <tr>
 <td>反汇编</td>
-<td>自写 6502 反汇编脚本（读 ROM，按文件偏移输出指令）</td>
+<td>自写 6502 反汇编脚本（完整 opcode 表）</td>
 </tr>
 <tr>
 <td>内存/执行跟踪</td>
-<td>Mesen Lua API（<code>addMemoryCallback</code> 写/exec 回调、<code>addEventCallback</code>）</td>
+<td>Mesen Lua API（<code>addMemoryCallback</code>、<code>addEventCallback</code>、<code>emu.getState</code>）</td>
 </tr>
 <tr>
 <td>补丁生成</td>
-<td>自写脚本生成补丁 ROM + 标准 IPS 文件</td>
+<td>自写脚本生成标准 IPS 文件</td>
 </tr>
 <tr>
-<td>栈取证</td>
-<td>exec 回调内读取 <code>$0100-$01FF</code> 栈区，解析 JSR 返回地址</td>
+<td>Diff 快照</td>
+<td>Lua 全 RAM 快照对比脚本</td>
 </tr>
 </tbody>
 </table>
 </div>
-<blockquote>
-<p>关键前提：<strong>真实捕获必须交互游玩才能触发</strong>，而本作的交互触发只能靠人工撞敌人。因此这一轮的所有决定性证据都来自 <strong>GUI 里用 Lua 控制台跑实机追踪</strong>，无头脚本只用来覆盖演示/回放路径（详见 §8）。</p>
-</blockquote>
 <hr>
-<h2 id="4-破解总体思路"><a href="#4-破解总体思路" class="headerlink" title="4. 破解总体思路"></a>4. 破解总体思路</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">反汇编静态扫描</span><br><span class="line">   ↓  找出所有对 $3B &#x2F; $3D 的写入（捕获嫌疑点）</span><br><span class="line">写跟踪 + exec 跟踪</span><br><span class="line">   ↓  实机游玩中抓每次写 $3B&#x2F;$3D 的 PC，锁定&quot;真正执行过的&quot;触发点</span><br><span class="line">栈取证</span><br><span class="line">   ↓  在触发点抓调用栈，确认调用链</span><br><span class="line">触发点地图</span><br><span class="line">   ↓  区分演示模式路径 vs 真实游戏路径</span><br><span class="line">ROM 补丁</span><br><span class="line">   ↓  把真实触发块整段 NOP（V15）</span><br><span class="line">实机验证</span><br><span class="line">   ↓  GUI 实机游玩：确认弹窗不再出现</span><br></pre></td></tr></table></figure>
-<p>核心思想：<strong>先做静态扫描缩小嫌疑范围，再用实机执行 + 写跟踪把”真凶”从”长得很像”的代码里挑出来</strong>。本作的教训就是——候选触发点多达三个，肉眼和静态分析根本无法区分，必须靠实机证据一锤定音。</p>
-<hr>
-<h2 id="5-详细分析过程"><a href="#5-详细分析过程" class="headerlink" title="5. 详细分析过程"></a>5. 详细分析过程</h2><h3 id="5-1-两套”捕获”系统：演示模式-vs-真实游戏"><a href="#5-1-两套”捕获”系统：演示模式-vs-真实游戏" class="headerlink" title="5.1 两套”捕获”系统：演示模式 vs 真实游戏"></a>5.1 两套”捕获”系统：演示模式 vs 真实游戏</h3><p>本作存在<strong>两套互不相干的捕获路径</strong>，这是整个破解最大的坑：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>路径</th>
-<th>触发条件</th>
-<th>关键地址</th>
-<th>标志</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>演示模式</td>
-<td>无输入自动演示（attract / 剧情屏）</td>
-<td>CPU <code>$C53C</code> 状态机（文件 <code>0x3C54C</code>）</td>
-<td><code>$3D: 0→1→2→$FF</code>，写 <code>$3B=91</code></td>
-</tr>
-<tr>
-<td>真实游戏</td>
-<td>玩家主动撞敌人</td>
-<td>CPU <code>$C6B4</code>（文件 <code>0x3C6C4</code>）</td>
-<td>写 <code>$3B=0x10</code>（捕获界面）</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>实机日志里的两套证据（帧 = 一局完整游玩的帧计数）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 演示模式路径（与真实游戏无关）</span><br><span class="line">W f&#x3D;216  3D:00-&gt;01</span><br><span class="line">W f&#x3D;645  3D:01-&gt;02</span><br><span class="line">W f&#x3D;774  3D:02-&gt;FF   3B:91-&gt;00   ← 演示模式&quot;提交捕获&quot;</span><br><span class="line"></span><br><span class="line"># 真实游戏路径（真正的目标）</span><br><span class="line">W f&#x3D;1219 3B:00-&gt;80   3D:FF-&gt;00   AD:B7-&gt;8F   ← 敌人靠近</span><br><span class="line">W f&#x3D;1367 3D:00-&gt;01   D4:01-&gt;FC</span><br><span class="line">W f&#x3D;1368 3D:01-&gt;00   AD:8F-&gt;00</span><br><span class="line">EXEC $C6B4 f&#x3D;1368 3B&#x3D;80 5F&#x3D;FC D4&#x3D;FC 2C&#x3D;92    ← ★ 命中！真实触发点</span><br><span class="line">  STACK: C0 9B C6 B1 ...</span><br><span class="line">W f&#x3D;1368 3B:80-&gt;10                            ← 捕获界面被打开</span><br><span class="line">...</span><br><span class="line">EXEC $C6C4 f&#x3D;1838 3B&#x3D;10 3D&#x3D;7F                 ← 界面倒计时结束，收尾</span><br><span class="line">W f&#x3D;1838 3B:10-&gt;00</span><br><span class="line">...</span><br><span class="line">EXEC $C6B4 f&#x3D;3290 3B&#x3D;00 ...                   ← 第二次捕获，同样命中</span><br><span class="line">W f&#x3D;3290 3B:00-&gt;10</span><br></pre></td></tr></table></figure>
-<h3 id="5-2-第一轮尝试（V1–V4）：盯错了状态机"><a href="#5-2-第一轮尝试（V1–V4）：盯错了状态机" class="headerlink" title="5.2 第一轮尝试（V1–V4）：盯错了状态机"></a>5.2 第一轮尝试（V1–V4）：盯错了状态机</h3><p>最早用无头脚本追踪 <code>$3D</code>，发现 <code>$3D: 0→1→2→$FF</code> 的状态机（CPU <code>$C53C</code>），<code>$FF</code> 被视为”提交捕获”。据此把状态机里写 <code>$3D=$FF</code> 的指令（文件 <code>0x3C56B</code>，<code>85 3D→EA EA</code>）NOP 掉。</p>
-<p>结果：<strong>演示模式的捕获被消灭，但真实游戏依然会弹窗</strong>。V2–V4 继续在 <code>$3D</code> 周围的”死代码链”上打补丁（<code>$5F</code>、<code>$6A</code>、<code>$C0</code>），全部无效——因为这些地址根本不参与真实游戏的捕获触发。</p>
-<h3 id="5-3-第二轮尝试（V5–V14）：又盯错了提交点"><a href="#5-3-第二轮尝试（V5–V14）：又盯错了提交点" class="headerlink" title="5.3 第二轮尝试（V5–V14）：又盯错了提交点"></a>5.3 第二轮尝试（V5–V14）：又盯错了提交点</h3><p>静态扫描全 ROM 找对 <code>$3B</code> 的写入，发现三处 <code>A9 10 85 3B</code>（<code>LDA #$10; STA $3B</code>）：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>文件偏移</th>
-<th>CPU</th>
-<th>归属</th>
-<th>真实路径？</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0x1B9C4</code></td>
-<td>bank13 <code>$B9B4</code></td>
-<td>另一个 PRG bank，独立小例程（<code>...60</code> 即返回）</td>
-<td><strong>否</strong>（V5–V14 反复改这里，实机仍弹）</td>
-</tr>
-<tr>
-<td><code>0x3C6C2</code></td>
-<td><code>$C6B2</code>（bank15）</td>
-<td>捕获例程 <code>$C672</code> 内</td>
-<td><strong>是</strong>（最终命中的就是它）</td>
-</tr>
-<tr>
-<td><code>0x3CC68</code></td>
-<td><code>$CC58</code>（bank15）</td>
-<td>另一个跳转表命令</td>
-<td>否（trace 从未命中）</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>V5 把 bank13 的 <code>85 3B→EA EA</code>（文件 <code>0x1B9C6</code>），<strong>单次实机游玩”通过”</strong>，曾一度被认为是最终方案。但随后 V6–V14 连续多轮实机游玩仍复现弹窗——V5 的”通过”是<strong>假阳性</strong>（那一局恰好没触发真实捕获路径）。V11–V14 反复在 bank13 提交点附近做变体（NOP 提交写、改立即数、改跳转绕过、NOP <code>$D6</code> 写入），全部无效。</p>
-<h3 id="5-4-实机执行-写追踪：锁定真实触发点"><a href="#5-4-实机执行-写追踪：锁定真实触发点" class="headerlink" title="5.4 实机执行 + 写追踪：锁定真实触发点"></a>5.4 实机执行 + 写追踪：锁定真实触发点</h3><p>决定性的一步：写 Lua 脚本对 <code>$3B/$3D/$5F/$AD/$D4/$6A</code> 挂<strong>写回调</strong>，对候选地址挂 <strong>exec 回调</strong>，并在 exec 命中时<strong>抓取 6502 栈区</strong>还原调用链。在 GUI 里实机撞敌人，日志直接给出了真凶：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EXEC $C6B4 f&#x3D;1368 3B&#x3D;80 5F&#x3D;FC D4&#x3D;FC 2C&#x3D;92</span><br><span class="line">  STACK: C0 9B C6 B1 ...</span><br><span class="line">W f&#x3D;1368 3B:80-&gt;10</span><br></pre></td></tr></table></figure>
+<h2 id="4-破解一：永不捕获（V2）"><a href="#4-破解一：永不捕获（V2）" class="headerlink" title="4. 破解一：永不捕获（V2）"></a>4. 破解一：永不捕获（V2）</h2><h3 id="4-1-真实捕获的判定"><a href="#4-1-真实捕获的判定" class="headerlink" title="4.1 真实捕获的判定"></a>4.1 真实捕获的判定</h3><p>用户实际游玩 7501 帧，监控脚本自动检出多次捕获事件。关键发现：</p>
 <ul>
-<li><code>$C6B4</code> 就是<strong>真实捕获触发点</strong>：<code>STA $3B</code> 写入 <code>0x10</code>，打开捕获界面。</li>
-<li>栈顶 <code>C0 9B</code> = 主循环 <code>JSR $C672</code> 压入的返回地址（调用点位于文件 <code>0x3C0A9</code>，CPU <code>$C099-$C09B</code>）。</li>
-<li>栈内 <code>C6 B1</code> = <code>JSR $C853</code>（<code>$C6AF</code>）的返回地址，确认执行顺序与静态反汇编一致。</li>
+<li>演示模式（无输入）的捕获通过 <code>$3D</code> 状态机触发（<code>$C55B</code> 写入 <code>$FF</code>）。</li>
+<li><strong>真实游戏</strong>（用户操作角色移动、撞敌人）的捕获通过 <code>$5F</code>（角色可用性掩码）提交。</li>
 </ul>
-<p>第二次捕获（f=3290）同样命中 <code>EXEC $C6B4</code>，栈顶同样 <code>C0 9B</code>。至此根因闭环：<strong>弹窗 = <code>$C672</code> 例程内 <code>$C6B4</code> 把 <code>$3B</code> 写成 <code>0x10</code></strong>，与 bank13 那个 V5 目标毫无关系。</p>
-<h3 id="5-5-捕获例程逐指令分析"><a href="#5-5-捕获例程逐指令分析" class="headerlink" title="5.5 捕获例程逐指令分析"></a>5.5 捕获例程逐指令分析</h3><p><code>$C672</code> 例程（文件 <code>0x3C682</code> 起，CPU 地址 = 文件偏移 − <code>0x30010</code>）反汇编：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">$C672  20 2F C6   JSR $C62F        ; 例程入口（三个调用点汇入）</span><br><span class="line">; —— 初始化若干全局变量（$12&#x2F;$13&#x2F;$00&#x2F;$1A&#x2F;$19&#x2F;$0631&#x2F;$067B）——</span><br><span class="line">$C69F  85 3D      STA $3D          ; 3D &#x3D; 0，复位状态</span><br><span class="line">$C6A1  AA         TAX              ; X &#x3D; 0</span><br><span class="line">$C6A2  A5 5F      LDA $5F          ; 读敌属性&#x2F;掩码</span><br><span class="line">$C6A4  6A         ROR              ; 右移 4 次，把最低位移入进位 C</span><br><span class="line">$C6A8  B0 03      BCS $C6AD        ; 该位为 1 → 退出扫描</span><br><span class="line">$C6AA  E8         INX              ; 位号 +1</span><br><span class="line">$C6AB  D0 F9      BNE $C6A6        ; 未扫完 4 位则回跳</span><br><span class="line">$C6AD  86 AD      STX $AD          ; 敌位号 → $AD</span><br><span class="line">$C6AF  20 53 C8   JSR $C853        ; 更新计数（栈证据 $C6B1）</span><br><span class="line">$C6B2  A9 10      LDA #$10         ; 捕获界面值</span><br><span class="line">$C6B4  85 3B      STA $3B          ; ★ 触发捕获（exec 回调命中点）</span><br><span class="line">$C6B6  20 1E C5   JSR $C51E        ; 捕获界面初始化（栈证据 $C6B8）</span><br><span class="line">$C6B9  A5 3D      LDA $3D</span><br><span class="line">$C6BB  F0 FC      BEQ $C6B9        ; 等 3D ≠ 0（界面动画）</span><br><span class="line">$C6BD  A5 3D      LDA $3D</span><br><span class="line">$C6BF  30 FC      BMI $C6BD        ; 等 3D 变正（倒计时结束）</span><br><span class="line">$C6C1  20 13 C3   JSR $C313        ; 收尾</span><br><span class="line">$C6C4  20 05 C3   JSR $C305        ; 收尾（exec 回调命中点）</span><br><span class="line">$C6C7  A9 00      LDA #$00</span><br><span class="line">$C6C9  AA         TAX</span><br><span class="line">$C6CA  A4 46      LDY $46</span><br><span class="line">$C6CC  C0 1A      CPY #$1A         ; 按关卡代码 $46 判定 3B&#x3D;0 还是 1</span><br><span class="line">$C6CE  90 07      BCC $C6D7</span><br><span class="line">$C6D0  C0 1F      CPY #$1F</span><br><span class="line">$C6D2  B0 03      BCS $C6D7</span><br><span class="line">$C6D4  A9 32      LDA #$32</span><br><span class="line">$C6D6  E8         INX</span><br><span class="line">$C6D7  8D B6 06   STA $06B6</span><br><span class="line">$C6DA  86 3B      STX $3B          ; 退出：3B &#x3D; 0 或 1</span><br><span class="line">$C6DC  60         RTS              ; 返回主循环</span><br></pre></td></tr></table></figure>
-<p><code>$5F</code> 的 4 个 bit 是”当前在场敌人”的位掩码。<code>$5F=FC</code>（二进制 <code>1111 1100</code>，低 4 位全 1）时，<code>ROR</code> 第一轮就产生进位，<code>X</code> 停在 0，直接 <code>STX $AD</code> 后进入捕获——所以<strong>只要敌人在场，<code>$C6A2</code> 的扫描几乎必然落到 <code>$C6B4</code> 的写</strong>。</p>
-<h3 id="5-6-触发模型总结"><a href="#5-6-触发模型总结" class="headerlink" title="5.6 触发模型总结"></a>5.6 触发模型总结</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">敌人触碰主角 → 游戏置 $37&#x3D;00（开&quot;门&quot;）+ $5F&#x3D;FC（敌位掩码）</span><br><span class="line">   → 主循环 $C096: LDA $37</span><br><span class="line">   → $C098: BMI $C09D（门未开则跳过）</span><br><span class="line">   → $C09A: JSR $C672            （调用点文件 0x3C0A9）</span><br><span class="line">   → $C6A2 用 $5F 做 ROR 位扫描（FC → 首轮进位即出，X&#x3D;0）</span><br><span class="line">   → $C6AD: STX $AD；$C6AF: JSR $C853</span><br><span class="line">   → $C6B4: STA $3B &#x3D; 0x10  → ★ 打开捕获界面</span><br><span class="line">   → $C6B6 JSR $C51E → $C6B9&#x2F;$C6BD 等 $3D 倒计时</span><br><span class="line">   → $C6C1&#x2F;$C6C4 收尾 → $C6DA STX $3B（0&#x2F;1）→ RTS</span><br></pre></td></tr></table></figure>
-<p><code>JSR $C672</code> 共有 3 个调用点，全部汇入同一个 <code>$C6B4</code> 写：</p>
+<p><code>$5F</code> 位含义：低 2 位 = 已捕获计数，bit3/bit5/bit7 = 三名角色的”可用位”（清零=被捕）。</p>
+<h3 id="4-2-真实捕获提交代码"><a href="#4-2-真实捕获提交代码" class="headerlink" title="4.2 真实捕获提交代码"></a>4.2 真实捕获提交代码</h3><p>全 ROM 搜索 <code>STA $5F</code> 共 6 处，真实提交链位于 bank15（CPU <code>$C000</code> 窗口）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">C1F9  A9 A0       LDA #$A0</span><br><span class="line">C1FB  85 3C       STA $3C</span><br><span class="line">C1FD  20 57 DF    JSR $DF57        ; A &#x3D; $5F &amp; 3（已捕获数）</span><br><span class="line">C200  A8          TAY</span><br><span class="line">C201  A9 FD       LDA #$FD</span><br><span class="line">C203  A6 39       LDX $39</span><br><span class="line">C205  E0 81       CPX #$81</span><br><span class="line">C207  F0 05       BEQ +5</span><br><span class="line">C209  20 8D EF    JSR $EF8D</span><br><span class="line">C20C  A9 FC       LDA #$FC</span><br><span class="line">C20E  38          SEC</span><br><span class="line">C20F  2A          ROL              ; 按 Y 循环生成掩码</span><br><span class="line">C210  2A          ROL</span><br><span class="line">C211  88          DEY</span><br><span class="line">C212  10 FB       BPL $C20F</span><br><span class="line">C214  25 5F       AND $5F          ; ★ 掩码 &amp; $5F → 清掉对应可用位</span><br><span class="line">C216  85 5F       STA $5F          ; 提交写入</span><br><span class="line">C218  29 A8       AND #$A8         ; 检查 bit3&#x2F;5&#x2F;7</span><br><span class="line">C21A  F0 20       BEQ $C23C        ; 全清 → 游戏结束</span><br><span class="line">C21C  24 6D       BIT $6D</span><br></pre></td></tr></table></figure>
+<h3 id="4-3-V2-补丁（单字节修复）"><a href="#4-3-V2-补丁（单字节修复）" class="headerlink" title="4.3 V2 补丁（单字节修复）"></a>4.3 V2 补丁（单字节修复）</h3><p><strong>核心洞察</strong>：<code>$C214</code> 的 <code>AND $5F</code> 生成清位掩码。将其改为 <code>LDA $5F</code>（直接读回原值），则后续 <code>STA $5F</code> 为无效写（回写原值），角色可用位永不丢失。</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
 <th>文件偏移</th>
-<th>CPU</th>
-<th>场景</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0x3C0A9</code></td>
-<td><code>$C099</code></td>
-<td>主循环（栈证据 <code>C0 9B</code>）</td>
-</tr>
-<tr>
-<td><code>0x3C168</code></td>
-<td><code>$C158</code></td>
-<td>门处理</td>
-</tr>
-<tr>
-<td><code>0x3C1CD</code></td>
-<td><code>$C1BD</code></td>
-<td>提交链</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="6-版本迭代补丁对照表（V1–V15）"><a href="#6-版本迭代补丁对照表（V1–V15）" class="headerlink" title="6. 版本迭代补丁对照表（V1–V15）"></a>6. 版本迭代补丁对照表（V1–V15）</h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>版本</th>
-<th>文件偏移</th>
+<th>CPU 地址</th>
 <th>原字节</th>
 <th>新字节</th>
-<th>说明</th>
-<th>实机结果</th>
+<th>效果</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>V1</td>
-<td><code>0x3C56B</code></td>
-<td><code>85 3D</code></td>
-<td><code>EA EA</code></td>
-<td>演示屏状态机提交 NOP</td>
-<td>无效（真实游戏仍弹）</td>
-</tr>
-<tr>
-<td>V2</td>
 <td><code>0x3C224</code></td>
-<td><code>25</code></td>
-<td><code>A5</code></td>
-<td>改 <code>$5F</code> 相关指令</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V3</td>
-<td>+<code>0x3C1E8</code></td>
-<td><code>A5 6A</code></td>
-<td><code>A9 00</code></td>
-<td>捕获界面分支提前短路</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V4</td>
-<td>+<code>0x3C24A</code></td>
-<td><code>95</code></td>
-<td><code>C0</code></td>
-<td>消去一条 STA 写入</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V5</td>
-<td><code>0x1B9C6</code></td>
-<td><code>85 3B</code></td>
-<td><code>EA EA</code></td>
-<td>bank13 提交点 NOP</td>
-<td>单次”通过”（假阳性）</td>
-</tr>
-<tr>
-<td>V6</td>
-<td>= V3</td>
-<td>—</td>
-<td>—</td>
-<td>重复件</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V7</td>
-<td>+<code>0x3C256</code></td>
-<td><code>A9 20</code></td>
-<td><code>A9 00</code></td>
-<td>另一处”被捕界面”值改 0</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V8</td>
-<td>+<code>0x1B9C5</code></td>
-<td><code>10</code></td>
-<td><code>00</code></td>
-<td>bank13 立即数 10→00</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V9</td>
-<td>+<code>0x1B992</code></td>
-<td><code>B0 45 A5</code></td>
-<td><code>4C C9 B9</code></td>
-<td>改跳转绕过提交</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V10</td>
-<td><code>0x1B9BD</code> / <code>0x1B9C5</code></td>
-<td><code>A9 FC 85 D4</code> / <code>10</code></td>
-<td><code>EA EA EA EA</code> / <code>00</code></td>
-<td>NOP 提交 + 改立即数</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V11</td>
-<td><code>0x1B9C6</code></td>
-<td><code>85 3B</code></td>
-<td><code>EA EA</code></td>
-<td>bank13 提交 NOP（回归）</td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V12</td>
-<td>V11 + <code>0x3C1E8</code></td>
-<td><code>A5 6A</code></td>
-<td><code>A9 00</code></td>
-<td></td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V13</td>
-<td>V11 + <code>0x3C224</code></td>
-<td><code>25</code></td>
-<td><code>A5</code></td>
-<td></td>
-<td>无效</td>
-</tr>
-<tr>
-<td>V14</td>
-<td>V13 + <code>0x3C166</code>/<code>0x3C204</code></td>
-<td><code>85 D6</code></td>
-<td><code>EA EA</code></td>
-<td><code>$D6</code> 两处 NOP</td>
-<td>无效（实机仍弹）</td>
-</tr>
-<tr>
-<td><strong>V15</strong></td>
-<td><strong><code>0x3C6C2-0x3C6D0</code></strong></td>
-<td><strong><code>A9 10 85 3B 20 1E C5 A5 3D F0 FC A5 3D 30 FC</code></strong></td>
-<td><strong><code>EA</code>×15</strong></td>
-<td><strong>真实触发块整段 NOP</strong></td>
-<td><strong>弹窗消除 ✓</strong></td>
+<td><code>$C214</code></td>
+<td><code>25 5F</code>（AND $5F）</td>
+<td><code>A5 5F</code>（LDA $5F）</td>
+<td>A=原 $5F，不生成清位掩码</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><strong>V15 的改动（15 字节 NOP）</strong>：不再写 <code>$3B=0x10</code>、不调 <code>$C51E</code> 界面初始化、跳过 <code>$3D</code> 忙等，直接落到 <code>$C6C1/$C6C4</code> 收尾 → <code>$C6DA STX $3B</code>（0 或 1）→ <code>RTS</code>。这样既不打开界面，又不会因跳过了 <code>$3D</code> 写入而在 <code>$C6B9/$C6BD</code> 死等。</p>
-<p><strong>IPS 补丁</strong>（<code>鲁邦三世-永不捕获V15-跳过捕获触发块.ips</code>，69 字节，7 条记录）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@0x01B9C6 size&#x3D;2 data&#x3D;EAEA   ← bank13 提交点 NOP（遗留）</span><br><span class="line">@0x03C166 size&#x3D;2 data&#x3D;EAEA   ← $D6 写 NOP（遗留）</span><br><span class="line">@0x03C1E8 size&#x3D;2 data&#x3D;A900   ← V3（遗留）</span><br><span class="line">@0x03C204 size&#x3D;2 data&#x3D;EAEA   ← $D6 写 NOP（遗留）</span><br><span class="line">@0x03C224 size&#x3D;1 data&#x3D;A5     ← V2（遗留）</span><br><span class="line">@0x03C56B size&#x3D;2 data&#x3D;853D   ← 恢复演示屏状态机（还原 V1）</span><br><span class="line">@0x03C6C2 size&#x3D;15 data&#x3D;EA×15 ← ★ 真实触发块</span><br></pre></td></tr></table></figure>
-<p>该 IPS 对<strong>原版 ROM</strong> 和 <strong>V1 基座 ROM</strong> 均能正确应用，产物与 V15 ROM 逐字节一致（回环校验通过）。</p>
+<p>补丁后指令流：<code>C214: LDA $5F / C216: STA $5F</code>（回写原值），随后 <code>AND #$A8</code> 在 A=原值上计算。<code>$5F</code> 永不改变 → 永不捕获、永不游戏结束。</p>
 <hr>
-<h2 id="7-V15-验证结果与当前结论"><a href="#7-V15-验证结果与当前结论" class="headerlink" title="7. V15 验证结果与当前结论"></a>7. V15 验证结果与当前结论</h2><h3 id="7-1-结果"><a href="#7-1-结果" class="headerlink" title="7.1 结果"></a>7.1 结果</h3><ul>
-<li><strong>捕获弹窗彻底消失</strong>：实机游玩中敌人靠近/接触主角，不再弹出约 8 秒的”逮捕”过场。根因确认——弹窗确实由 <code>$C6B4</code> 写 <code>$3B=0x10</code> 触发，NOP 掉整块后该写不再发生。</li>
-<li>配合 V2/V3/V14 的遗留补丁（<code>$5F</code> 掩码保留、<code>$6A</code> 短路、<code>$D6</code> 不写），角色可用性不再被清除。</li>
-</ul>
-<p><img src="/img/luban.gif" alt="敌人靠近主角，不再进入捕获界面"></p>
-<blockquote>
-<p>上图为 V15 补丁 ROM 的实机录屏：敌人靠近主角后不再弹出”逮捕”过场，角色不会进入捕获界面，可继续游玩。</p>
-</blockquote>
-<h3 id="7-2-当前遗留问题（未解决）"><a href="#7-2-当前遗留问题（未解决）" class="headerlink" title="7.2 当前遗留问题（未解决）"></a>7.2 当前遗留问题（未解决）</h3><ul>
-<li>敌人靠近主角之后，<strong>游戏画面会被刷新</strong>（回到选择/标题或重载关卡）。这说明捕获的<strong>“结算”逻辑在 <code>$C672</code> 之外仍会执行</strong>，V15 只是跳过了界面动画，并没有真正取消”这次接触 = 捕获”的事件本身。</li>
-<li>要做成真正的”永不捕获、停留当前关卡”，还需要处理结算路径：追踪 <code>$C672</code> RTS 之后主循环对 <code>$37/$5F/$AD</code> 的消费逻辑，或在 <code>$C672</code> 内把结算一并短路。这属于下一步工作，本版暂以”弹窗消除”为交付结论。</li>
-</ul>
-<h3 id="7-3-交付物校验"><a href="#7-3-交付物校验" class="headerlink" title="7.3 交付物校验"></a>7.3 交付物校验</h3><div class="table-container">
+<h2 id="5-破解二：道具数量不减少"><a href="#5-破解二：道具数量不减少" class="headerlink" title="5. 破解二：道具数量不减少"></a>5. 破解二：道具数量不减少</h2><h3 id="5-1-目标"><a href="#5-1-目标" class="headerlink" title="5.1 目标"></a>5.1 目标</h3><p>游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减 1。需求：使用道具时数量维持不变（数量大于 0 的道具一直保持）。</p>
+<h3 id="5-2-分析思路"><a href="#5-2-分析思路" class="headerlink" title="5.2 分析思路"></a>5.2 分析思路</h3><p>采用<strong>动态分析为主、静态反汇编为辅</strong>的策略：</p>
+<ol>
+<li>确定道具槽的 RAM 布局（<code>$0410</code> 起，8 槽 × 21 字节）。</li>
+<li>通过 Lua 内存写监控，定位”使用道具时数量减少”的字节。</li>
+<li>通过全 RAM 快照对比，精确定位数量字节地址。</li>
+<li>通过内存写回调获取 CPU 指令地址，反汇编定位扣减代码。</li>
+<li>制作 ROM 补丁。</li>
+<li>用 Lua 写拦截回调验证方案。</li>
+</ol>
+<h3 id="5-3-道具槽布局探索"><a href="#5-3-道具槽布局探索" class="headerlink" title="5.3 道具槽布局探索"></a>5.3 道具槽布局探索</h3><p>通过反汇编 bank2 入口 <code>$8D80</code>（道具槽遍历例程）确认道具槽结构：<code>$0410</code> 起，8 槽，每槽 21 字节，步长 <code>0x15</code>。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th>文件</th>
-<th>MD5</th>
+<th>槽</th>
+<th>基址</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>原版 ROM <code>鲁邦三世-潘多拉的遗产.nes</code></td>
-<td><code>018c2bb15d2fe159014cb14b7889c70b</code></td>
+<td>slot0</td>
+<td><code>$0410</code></td>
 </tr>
 <tr>
-<td>V15 ROM <code>鲁邦三世-潘多拉的遗产-永不捕获V15-跳过捕获触发块.nes</code></td>
-<td><code>f4eb63e88f54bd00b71d88edc4f4b18d</code></td>
+<td>slot1</td>
+<td><code>$0425</code></td>
 </tr>
 <tr>
-<td>V14 ROM（对比用）</td>
-<td><code>81e8814a580572090732cd3a6638a0df</code></td>
+<td>slot2</td>
+<td><code>$043A</code></td>
+</tr>
+<tr>
+<td>slot3</td>
+<td><code>$044F</code></td>
+</tr>
+<tr>
+<td>slot4</td>
+<td><code>$0464</code></td>
+</tr>
+<tr>
+<td>slot5</td>
+<td><code>$0479</code></td>
+</tr>
+<tr>
+<td>slot6</td>
+<td><code>$048E</code></td>
+</tr>
+<tr>
+<td>slot7</td>
+<td><code>$04A3</code></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>IPS → 原版 ROM 的结果与 V15 ROM 逐字节一致。</p>
-<hr>
-<h2 id="8-无头测试的局限（重要踩坑）"><a href="#8-无头测试的局限（重要踩坑）" class="headerlink" title="8. 无头测试的局限（重要踩坑）"></a>8. 无头测试的局限（重要踩坑）</h2><p>Mesen2 的 <code>--testRunner</code> 无头模式在本项目上踩了一个大坑：</p>
+<h3 id="5-4-全-RAM-前后快照对比-——-定位数量字节"><a href="#5-4-全-RAM-前后快照对比-——-定位数量字节" class="headerlink" title="5.4 全 RAM 前后快照对比 —— 定位数量字节"></a>5.4 全 RAM 前后快照对比 —— 定位数量字节</h3><p><strong>方法</strong>：用键盘 F 键（不映射到 NES 手柄）触发快照。用户操作：</p>
 <ol>
-<li><strong>exec 回调从不触发</strong>：无头模式下 write/endFrame 回调正常（实测 600 帧内 write 回调 27648 次），但<strong>exec 回调一条都不触发</strong>（对候选地址的探测日志为 0 字节）。</li>
-<li><strong>真实捕获无法无头触发</strong>：真实捕获必须交互游玩（主动撞敌人），无头脚本只能通过 <code>setInput</code> 驱动到 f=1186 附近的”回合准备”（<code>37:FF-&gt;00</code>），永远到不了 <code>3B=0x10</code>。</li>
-<li>因此，<strong>本作的验证必须依赖 GUI + Lua 控制台实机追踪</strong>；无头只适合演示模式 / 状态机级别的粗验证（这正是 V1 阶段”看着通过、实则无效”的原因之一）。</li>
+<li>选好道具 → 按 F 记录 snapA（使用前）</li>
+<li>按 Q（Select）选择道具（数量 -1）</li>
+<li>再按 F 记录 snapB（使用后）</li>
+<li>自动 diff 全内存 <code>$0000-$07FF</code></li>
 </ol>
+<p><strong>Lua 脚本</strong>：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">r</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesInternalRam) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">takeSnapshot</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> snap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> a = <span class="number">0x0000</span>, <span class="number">0x07FF</span> <span class="keyword">do</span> snap[a] = r(a) <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">return</span> snap</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onFrame</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> fPressed = <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> <span class="keyword">return</span> emu.isKeyPressed(<span class="string">"F"</span>) <span class="keyword">end</span>)</span><br><span class="line">    <span class="keyword">if</span> fPressed <span class="keyword">and</span> <span class="keyword">not</span> lastF <span class="keyword">then</span></span><br><span class="line">        <span class="comment">-- 记录快照或 diff</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    lastF = fPressed</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addEventCallback(onFrame, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<p><strong>结果</strong>：两次确认 <code>$0204: 06→05</code> 和 <code>$0204: 05→04</code>。</p>
+<p><strong>锁定</strong>：<strong>道具数量字节 = <code>$0204</code></strong>（CPU 内部 RAM）。</p>
+<h3 id="5-5-写回调捕获-PC-地址"><a href="#5-5-写回调捕获-PC-地址" class="headerlink" title="5.5 写回调捕获 PC 地址"></a>5.5 写回调捕获 PC 地址</h3><p><strong>方法</strong>：用 <code>addMemoryCallback</code> 拦截 <code>$0204</code> 写入，在回调中调用 <code>emu.getState()</code> 获取 <code>cpu.pc</code>。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emu.addMemoryCallback(cb, emu.callbackType.<span class="built_in">write</span>, addr, endAddr, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"><span class="comment">-- 回调签名: function(addr, value)  -- 返回值覆盖写入值</span></span><br></pre></td></tr></table></figure>
+<p><strong>结果</strong>：<code>WRITE $0204=01  PC=$CD16 A=04 X=04 Y=03</code></p>
+<p>回调中 PC 显示的是 DEC 指令后的下一条指令地址。真正的扣减指令在 <code>$CD13</code>。</p>
+<h3 id="5-6-反汇编确认"><a href="#5-6-反汇编确认" class="headerlink" title="5.6 反汇编确认"></a>5.6 反汇编确认</h3><p>反汇编 bank15（<code>$C000</code> 窗口）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$CD13: DEC  $0200,X  ; ★ 扣减道具数量（X&#x3D;4 时 DEC $0204）</span><br><span class="line">$CD16: LDA  #$20</span><br><span class="line">$CD18: STA  $020A,X  ; 设置相关参数</span><br><span class="line">$CD1B: RTS</span><br></pre></td></tr></table></figure>
+<p><strong>核心发现</strong>：这是一个共享的”使用道具”例程，通过 X 寄存器索引不同的道具槽位。<code>$CD13: DEC $0200,X</code> 是所有道具扣减的唯一点（全 ROM 仅 1 处 <code>DEC $0200,X</code>）。</p>
+<h3 id="5-7-补丁方案"><a href="#5-7-补丁方案" class="headerlink" title="5.7 补丁方案"></a>5.7 补丁方案</h3><p>将 <code>$CD13</code> 的 <code>DEC $0200,X</code>（3 字节 <code>DE 00 02</code>）替换为 <code>EA EA EA</code>（NOP NOP NOP）。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件偏移</th>
+<th>CPU 地址</th>
+<th>原字节</th>
+<th>新字节</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x3CD23</code></td>
+<td><code>$CD13</code></td>
+<td><code>DE 00 02</code></td>
+<td><code>EA EA EA</code></td>
+<td>跳过扣减，数量维持不变</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="5-8-Lua-拦截验证"><a href="#5-8-Lua-拦截验证" class="headerlink" title="5.8 Lua 拦截验证"></a>5.8 Lua 拦截验证</h3><p>在制作 ROM 补丁前，先用 Lua 写回调拦截验证方案：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> current = emu.<span class="built_in">read</span>(<span class="number">0x0204</span>, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> value ~= current <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> current  <span class="comment">-- 返回旧值覆盖写入，阻止减少</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br></pre></td></tr></table></figure>
+<p><strong>验证结果</strong>：用户实机测试——“执行之前数量为 1，执行了之后还是 1”，方案生效。</p>
 <hr>
-<h2 id="9-交付物与使用方式"><a href="#9-交付物与使用方式" class="headerlink" title="9. 交付物与使用方式"></a>9. 交付物与使用方式</h2><div class="table-container">
+<h2 id="6-补丁总览"><a href="#6-补丁总览" class="headerlink" title="6. 补丁总览"></a>6. 补丁总览</h2><h3 id="6-1-两处修改"><a href="#6-1-两处修改" class="headerlink" title="6.1 两处修改"></a>6.1 两处修改</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>文件偏移</th>
+<th>CPU 地址</th>
+<th>原字节</th>
+<th>新字节</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>0x3C224</code></td>
+<td><code>$C214</code></td>
+<td><code>25 5F</code></td>
+<td><code>A5 5F</code></td>
+<td>永不捕获</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>0x3CD23</code></td>
+<td><code>$CD13</code></td>
+<td><code>DE 00 02</code></td>
+<td><code>EA EA EA</code></td>
+<td>道具不减少</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-2-交付物"><a href="#6-2-交付物" class="headerlink" title="6.2 交付物"></a>6.2 交付物</h3><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -577,41 +431,31 @@
 </thead>
 <tbody>
 <tr>
-<td><code>鲁邦三世-潘多拉的遗产-永不捕获V15-跳过捕获触发块.nes</code></td>
-<td>已打补丁的 ROM，直接用模拟器/烧录卡加载</td>
+<td><code>鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减.nes</code></td>
+<td>最终交付 ROM（含永不捕获 + 道具不减）</td>
 </tr>
 <tr>
-<td><code>鲁邦三世-永不捕获V15-跳过捕获触发块.ips</code></td>
-<td>标准 IPS 补丁，打在原版 ROM 上即得 V15</td>
-</tr>
-<tr>
-<td><code>鲁邦三世-永不捕获V10.ips</code> ~ <code>V14.ips</code></td>
-<td>各实验版 IPS（V1–V14 过程件，仅追溯用）</td>
+<td><code>鲁邦三世-潘多拉的遗产-永不捕获V2_道具不减.ips</code></td>
+<td>IPS 补丁（含 2 条记录）</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>使用任选其一：</p>
-<ol>
-<li><strong>直接玩 V15 ROM</strong>（推荐）；</li>
-<li>原版 ROM + V15 IPS。</li>
+<hr>
+<h2 id="7-经验总结"><a href="#7-经验总结" class="headerlink" title="7. 经验总结"></a>7. 经验总结</h2><ol>
+<li><p><strong>数量字节不在道具槽内</strong>：道具槽 <code>$0410-$04B7</code> 只存 ID、冷却计时器、动画参数，数量在 <code>$0204</code>（OAM 区的独立字节）。</p>
+</li>
+<li><p><strong>全 RAM 快照对比是最直接的方法</strong>：在可控条件下做使用前/后快照，diff 全内存，比持续监控更干净。</p>
+</li>
+<li><p><strong>回调返回值可覆盖写入</strong>：<code>addMemoryCallback</code> 的写回调若返回整数，会覆盖原写入值，可用来做运行时拦截验证。</p>
+</li>
+<li><p><strong><code>emu.getState()</code> 可获取 PC</strong>：在内存回调中调用 <code>emu.getState()</code> 得到 <code>cpu.pc</code>，用于定位写入指令的 ROM 地址。</p>
+</li>
+<li><p><strong><code>DEC $0200,X</code> 是共享扣减例程</strong>：全 ROM 仅 1 处，NOP 掉即可阻止所有道具数量减少。</p>
+</li>
+<li><p><strong><code>addMemoryCallback</code> API 参数必须写全</strong>：缺 <code>cpuType</code>/<code>memType</code> 会 core dump。枚举是 <code>emu.callbackType.write</code>（不是 <code>memCallbackType</code>）。</p>
+</li>
 </ol>
-<hr>
-<h2 id="10-踩坑与经验总结"><a href="#10-踩坑与经验总结" class="headerlink" title="10. 踩坑与经验总结"></a>10. 踩坑与经验总结</h2><ol>
-<li><strong>静态分析必须配动态验证</strong>：三个 <code>A9 10 85 3B</code> 长得一模一样，只有 exec + 写回调能分出谁是”真实执行过的”。V5 就是反例。</li>
-<li><strong>“验证通过”要有对照、要多轮</strong>：V5 单次实测通过是假阳性，V6–V14 连续复现才把它推翻。实机验证应固定操作序列重复多局。</li>
-<li><strong>演示路径 ≠ 真实路径</strong>：<code>$3D</code> 状态机只是演示模式的捕获，改它不影响真实游戏。要先分清”你抓到的是哪条路径”。</li>
-<li><strong>无头 exec 回调不触发</strong>：<code>--testRunner</code> 下 write/endFrame 正常、exec 从不触发，关键验证必须 GUI 实机。</li>
-<li><strong>MMC3 半体映射不能混用</strong>：<code>$C000</code> 窗口 = 半体 30（文件 <code>0x3C010</code>），CPU = 文件 − <code>0x30010</code>；bank13 的 <code>$A000</code> 窗口则是 CPU = 文件 − <code>0x10010</code>。</li>
-<li><strong>栈返回地址 = JSR 第三字节</strong>：本模拟器压栈的是指令第三字节（返回地址 − 1），解析栈帧时返回点要 +1（如 <code>JSR $C853</code> 压 <code>$C6B1</code>，真实返回 <code>$C6B2</code>）。</li>
-<li><strong>NOP 的粒度</strong>：整块 NOP 触发块（含 <code>$3D</code> 忙等）比只 NOP <code>STA $3B</code> 更安全——后者会留下 8 秒的空转死等。</li>
-</ol>
-<hr>
-<h2 id="附录-A：实机追踪脚本骨架"><a href="#附录-A：实机追踪脚本骨架" class="headerlink" title="附录 A：实机追踪脚本骨架"></a>附录 A：实机追踪脚本骨架</h2><p>在 Mesen2 GUI 里用 <strong>Tools → Console</strong> 粘贴运行（撞一次敌人即命中）：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> LOG = <span class="string">"/tmp/lupin-trace.log"</span></span><br><span class="line"><span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(LOG, <span class="string">"w"</span>)</span><br><span class="line">f:<span class="built_in">close</span>()</span><br><span class="line"><span class="keyword">local</span> lastPC, frame = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">log</span><span class="params">(s)</span></span></span><br><span class="line">    <span class="keyword">local</span> g = <span class="built_in">io</span>.<span class="built_in">open</span>(LOG, <span class="string">"a"</span>)</span><br><span class="line">    g:<span class="built_in">write</span>(s .. <span class="string">"\n"</span>); g:<span class="built_in">close</span>()</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 记录当前 PC（exec 回调，仅 GUI 生效）</span></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">    lastPC = val</span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0x0000</span>, <span class="number">0x1FFFF</span>, emu.cpuType.nes, emu.memType.nesPrgRom)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 候选触发点：命中时抓栈</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">watch</span><span class="params">(pc, name)</span></span></span><br><span class="line">    emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">        <span class="keyword">if</span> val == pc <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">local</span> stack = &#123;&#125;</span><br><span class="line">            <span class="keyword">for</span> i = <span class="number">0</span>, <span class="number">8</span> <span class="keyword">do</span></span><br><span class="line">                stack[#stack + <span class="number">1</span>] = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"%02X"</span>, emu.<span class="built_in">read</span>(<span class="number">0x100</span> + i, emu.memType.nesInternalRam))</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="built_in">log</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"EXEC %s f=%d 3B=%02X 3D=%02X 5F=%02X STACK=%s"</span>,</span><br><span class="line">                name, frame, emu.<span class="built_in">read</span>(<span class="number">0x3B</span>, emu.memType.nesInternalRam),</span><br><span class="line">                emu.<span class="built_in">read</span>(<span class="number">0x3D</span>, emu.memType.nesInternalRam),</span><br><span class="line">                emu.<span class="built_in">read</span>(<span class="number">0x5F</span>, emu.memType.nesInternalRam),</span><br><span class="line">                <span class="built_in">table</span>.<span class="built_in">concat</span>(stack, <span class="string">" "</span>)))</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>, emu.callbackType.exec, val, val, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">watch(<span class="number">0xC6B4</span>, <span class="string">"$C6B4"</span>)   <span class="comment">-- 真实捕获触发点（STA $3B）</span></span><br><span class="line">watch(<span class="number">0xC6C4</span>, <span class="string">"$C6C4"</span>)   <span class="comment">-- 收尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 写 $3B 跟踪</span></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">    <span class="keyword">local</span> old = emu.<span class="built_in">read</span>(<span class="number">0x3B</span>, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> val ~= old <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">log</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"W f=%d 3B:%02X-&gt;%02X PC=%04X"</span>, frame, old, val, lastPC))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x3B</span>, <span class="number">0x3B</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">    frame = frame + <span class="number">1</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
-<p>日志中的 <code>EXEC $C6B4</code> + <code>W 3B:80-&gt;10</code> 即捕获触发铁证。</p>
-<hr>
-<h2 id="附录-B：相关文件清单"><a href="#附录-B：相关文件清单" class="headerlink" title="附录 B：相关文件清单"></a>附录 B：相关文件清单</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;home&#x2F;sunjunior&#x2F;Projects&#x2F;Test&#x2F;</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产.nes                 原版 ROM（在 patch&#x2F; 下）</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产-永不捕获.nes        V1 基座 ROM（含 V1 的 EA EA）</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产-永不捕获V2~V14.nes  实验版（均无效，实机仍弹）</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产-永不捕获V15-跳过捕获触发块.nes</span><br><span class="line">│                                            交付物 V15 ROM（弹窗消除）</span><br><span class="line">├── 鲁邦三世-永不捕获V15-跳过捕获触发块.ips   交付物 V15 IPS（7 条记录）</span><br><span class="line">├── 鲁邦三世-永不捕获V2~V11.ips              实验版 IPS</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产-永不捕获V12-仅跳被捕界面.ips&#x2F;.nes</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产-永不捕获V13-仅全角色可选.ips&#x2F;.nes</span><br><span class="line">├── 鲁邦三世-潘多拉的遗产-永不捕获V14.ips&#x2F;.nes</span><br><span class="line">└── 鲁邦三世-永不捕获-Hack技术文档.md         完整技术文档（含 V1–V15 全部过程）</span><br></pre></td></tr></table></figure>
 
     </div>
     
@@ -667,7 +511,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-破解总体思路"><span class="toc-text">4. 破解总体思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-详细分析过程"><span class="toc-text">5. 详细分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-两套”捕获”系统：演示模式-vs-真实游戏"><span class="toc-text">5.1 两套”捕获”系统：演示模式 vs 真实游戏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-第一轮尝试（V1–V4）：盯错了状态机"><span class="toc-text">5.2 第一轮尝试（V1–V4）：盯错了状态机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-第二轮尝试（V5–V14）：又盯错了提交点"><span class="toc-text">5.3 第二轮尝试（V5–V14）：又盯错了提交点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-实机执行-写追踪：锁定真实触发点"><span class="toc-text">5.4 实机执行 + 写追踪：锁定真实触发点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-捕获例程逐指令分析"><span class="toc-text">5.5 捕获例程逐指令分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-触发模型总结"><span class="toc-text">5.6 触发模型总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-版本迭代补丁对照表（V1–V15）"><span class="toc-text">6. 版本迭代补丁对照表（V1–V15）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-V15-验证结果与当前结论"><span class="toc-text">7. V15 验证结果与当前结论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-结果"><span class="toc-text">7.1 结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-当前遗留问题（未解决）"><span class="toc-text">7.2 当前遗留问题（未解决）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-交付物校验"><span class="toc-text">7.3 交付物校验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-无头测试的局限（重要踩坑）"><span class="toc-text">8. 无头测试的局限（重要踩坑）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-交付物与使用方式"><span class="toc-text">9. 交付物与使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-踩坑与经验总结"><span class="toc-text">10. 踩坑与经验总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-A：实机追踪脚本骨架"><span class="toc-text">附录 A：实机追踪脚本骨架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-B：相关文件清单"><span class="toc-text">附录 B：相关文件清单</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-破解一：永不捕获（V2）"><span class="toc-text">4. 破解一：永不捕获（V2）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-真实捕获的判定"><span class="toc-text">4.1 真实捕获的判定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-真实捕获提交代码"><span class="toc-text">4.2 真实捕获提交代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-V2-补丁（单字节修复）"><span class="toc-text">4.3 V2 补丁（单字节修复）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-破解二：道具数量不减少"><span class="toc-text">5. 破解二：道具数量不减少</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-目标"><span class="toc-text">5.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-分析思路"><span class="toc-text">5.2 分析思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-道具槽布局探索"><span class="toc-text">5.3 道具槽布局探索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-全-RAM-前后快照对比-——-定位数量字节"><span class="toc-text">5.4 全 RAM 前后快照对比 —— 定位数量字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-写回调捕获-PC-地址"><span class="toc-text">5.5 写回调捕获 PC 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-反汇编确认"><span class="toc-text">5.6 反汇编确认</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-7-补丁方案"><span class="toc-text">5.7 补丁方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-Lua-拦截验证"><span class="toc-text">5.8 Lua 拦截验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-补丁总览"><span class="toc-text">6. 补丁总览</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-两处修改"><span class="toc-text">6.1 两处修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-交付物"><span class="toc-text">6.2 交付物</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-经验总结"><span class="toc-text">7. 经验总结</span></a></li></ol>
         
     </div>
 </aside>
