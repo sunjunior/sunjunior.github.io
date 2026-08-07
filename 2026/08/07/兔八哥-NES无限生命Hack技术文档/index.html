@@ -1,0 +1,693 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://sunjunior.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="逆向工程" />
+
+
+<meta name="description" content="
+目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989）目标：修改 NES ROM，使玩家在游戏中永远不会死亡（无限生命 / Infinite..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    兔八哥（NES / FC）无限生命 Hack 技术文档 |
+    
+    sunjunior的个人技术博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
+    /./img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='sunjunior'>
+            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
+            
+            <h2>
+                技术控，爱折腾
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://sunjunior.github.io">
+                        sunjunior的个人技术博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="兔八哥（NES / FC）无限生命 Hack 技术文档">
+            
+            兔八哥（NES / FC）无限生命 Hack 技术文档
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2026/08/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <blockquote>
+<p>目标游戏：<strong>The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989）</strong><br>目标：修改 NES ROM，使玩家在游戏中永远不会死亡（无限生命 / Infinite Lives）<br>交付物：打补丁的 ROM、IPS 补丁、Mesen2 作弊码（双重保险）<br>日期：2026-08-07</p>
+</blockquote>
+<hr>
+<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>《兔八哥疯狂城堡》是 Kemco 于 1989 年推出的 FC/NES 迷宫动作游戏。玩家操控兔八哥在城堡中收集胡萝卜并躲避敌人，每死亡一次扣 1 条生命，生命归零则游戏结束（GAME OVER）回到标题。</p>
+<p>本次任务的破解目标：</p>
+<ol>
+<li>找到控制生命数的 RAM 地址。</li>
+<li>定位所有”扣命”的代码位置。</li>
+<li>修改 ROM，使扣命逻辑失效（无限生命）。</li>
+<li>提供可直接使用的交付物：<ul>
+<li>已打补丁的 ROM 文件；</li>
+<li>标准 IPS 补丁（可分享、可校验）；</li>
+<li>一套不依赖改 ROM 的 Mesen 作弊码作为”双保险”。</li>
+</ul>
+</li>
+</ol>
+<p>最终成果：<strong>玩家无论死亡多少次，生命数始终保持 <code>$05</code></strong>，永不触发 GAME OVER。</p>
+<hr>
+<h2 id="2-ROM-与游戏信息"><a href="#2-ROM-与游戏信息" class="headerlink" title="2. ROM 与游戏信息"></a>2. ROM 与游戏信息</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件名</td>
+<td><code>The Bugs Bunny Crazy Castle.nes</code></td>
+</tr>
+<tr>
+<td>文件大小</td>
+<td>98,320 字节</td>
+</tr>
+<tr>
+<td>文件 CRC32</td>
+<td><code>DB0C3656</code></td>
+</tr>
+<tr>
+<td>PRG CRC32</td>
+<td><code>B10429AA</code></td>
+</tr>
+<tr>
+<td>格式</td>
+<td>iNES，Mapper <strong>1（MMC1）</strong>，水平镜像</td>
+</tr>
+<tr>
+<td>PRG ROM</td>
+<td>0x04 × 16KB = 64KB（4 个 bank）</td>
+</tr>
+<tr>
+<td>CHR ROM</td>
+<td>0x04 × 8KB = 32KB</td>
+</tr>
+<tr>
+<td>Board / Chip</td>
+<td>NES-SBROM / MMC1B1-H，NTSC</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="关键地址约定"><a href="#关键地址约定" class="headerlink" title="关键地址约定"></a>关键地址约定</h3><ul>
+<li><strong>文件偏移</strong>：含 16 字节 iNES 头，补丁落点以它为基准。</li>
+<li>MMC1 采用银行切换，64KB PRG 分成 4×16KB。最后一个 bank（bank 3）固定映射在 CPU <code>$C000-$FFFF</code>，因此<strong>文件偏移 <code>0xC12C</code>（PRG 偏移 <code>0xC11C</code>）对应 CPU 地址 <code>$C11C</code></strong>。</li>
+<li>生命数：零页 <strong><code>$007C</code></strong>，初始值 5，显示于 HUD。</li>
+</ul>
+<hr>
+<h2 id="3-分析环境与工具"><a href="#3-分析环境与工具" class="headerlink" title="3. 分析环境与工具"></a>3. 分析环境与工具</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td><strong>Mesen2</strong>（Linux），无头测试模式 <code>--testRunner</code></td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>自写 6502 反汇编脚本（按 PRG bank 输出指令）</td>
+</tr>
+<tr>
+<td>内存/执行跟踪</td>
+<td>Mesen Lua API（<code>addMemoryCallback</code>、<code>addEventCallback</code>）</td>
+</tr>
+<tr>
+<td>补丁生成</td>
+<td>自写脚本生成补丁 ROM + 标准 IPS 文件</td>
+</tr>
+<tr>
+<td>屏幕取证</td>
+<td>自写 <code>screen_ascii.py</code> 把截图 dump 渲染成 ASCII</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="4-破解总体思路"><a href="#4-破解总体思路" class="headerlink" title="4. 破解总体思路"></a>4. 破解总体思路</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">反汇编静态扫描</span><br><span class="line">   ↓  找零页 $007C 的 DEC&#x2F;INC&#x2F;STA（扣命 &#x2F; 奖励 &#x2F; 初始化）</span><br><span class="line">写跟踪动态验证</span><br><span class="line">   ↓  用 debug 回调抓每次写 $007C 的 PC，确认死亡扣命例程</span><br><span class="line">扣命点地图</span><br><span class="line">   ↓  区分「扣命」与「初始化 &#x2F; 奖励」两类写</span><br><span class="line">ROM 补丁</span><br><span class="line">   ↓  把唯一一条扣命指令 NOP 掉，保留初始化与奖励逻辑</span><br><span class="line">双保险（作弊码）</span><br><span class="line">   ↓  用 CheatCode 强制读 $007C 恒为 $05</span><br><span class="line">无头自动化验证</span><br><span class="line">   ↓  长时间模拟 + 人为注入死亡事件，确认生命不降</span><br></pre></td></tr></table></figure>
+<p>核心思想是<strong>两条腿走路</strong>：</p>
+<ul>
+<li><strong>ROM 层</strong>：从源头掐断扣命写操作（改补丁，对任何模拟器/烧录卡都有效）。</li>
+<li><strong>作弊层</strong>：用 Mesen 的 CheatCode 强制 <code>$007C</code> 读取恒为 <code>$05</code>（不改文件，双保险）。</li>
+</ul>
+<hr>
+<h2 id="5-详细分析过程"><a href="#5-详细分析过程" class="headerlink" title="5. 详细分析过程"></a>5. 详细分析过程</h2><h3 id="5-1-无头进入真实可玩关卡（本次最大的坑）"><a href="#5-1-无头进入真实可玩关卡（本次最大的坑）" class="headerlink" title="5.1 无头进入真实可玩关卡（本次最大的坑）"></a>5.1 无头进入真实可玩关卡（本次最大的坑）</h3><p>本作没有”生命值”概念，只有”命数”，且标题→菜单→关卡牌→游戏有复杂的输入状态机，必须先在无头脚本里稳定进入真实关卡，后续一切分析才有意义。</p>
+<p>最终方案（<code>enter_game.lua</code> / <code>in_game3.lua</code>）：</p>
+<ol>
+<li><strong>标题画面</strong>：每 120 帧按一次 START，直到 <code>$007C == 5</code>。</li>
+<li><strong>菜单确认</strong>：<code>$007C == 5</code> 标志着菜单 START 确认已执行 <code>$C032 STA $7C</code>（LDA #$05），此时进入关卡牌流程。</li>
+<li><strong>关卡牌</strong>：<code>ofs_000_91F9_02_load_stage</code> 显示关卡牌后进入等待循环 <code>$9216-$922C</code>，条件是 <code>ram_btn_press AND #con_btns_SAB</code>（<code>$D0</code>，即 Select/A/B 任一）后 <code>BNE</code> 跳出。约 90 帧后按 START 进入。</li>
+<li><strong>游戏开始判定</strong>：<strong>RAM 判定</strong>而非 PC 采样（原因见 §5.3）——玩家对象 <code>$0500</code> 的第 7 位置位即代表角色生成、游戏真正开始。</li>
+</ol>
+<p>关键事件帧数（两次运行一致）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">frame 153  $7C&#x3D;5   菜单确认完成</span><br><span class="line">frame 743  关卡牌 START 按下</span><br><span class="line">frame 768  游戏开始 ($0500&#x3D;80, 玩家 x&#x3D;64&#x2F;y&#x3D;184)</span><br></pre></td></tr></table></figure>
+<p>游戏画面经 <code>screen_ascii.py</code> 渲染确认：迷宫墙/梯子、兔八哥位于屏幕中部下方、白色敌人位于右上，确系第 1 关。</p>
+<h3 id="5-2-定位生命地址-007C"><a href="#5-2-定位生命地址-007C" class="headerlink" title="5.2 定位生命地址 $007C"></a>5.2 定位生命地址 <code>$007C</code></h3><p>进入游戏后快照全 RAM，人为触发死亡后再快照，差分锁定变化字节。玩家实体布局：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>RAM</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$0500</code></td>
+<td>玩家对象，bit7=存在（<code>$80</code>）</td>
+</tr>
+<tr>
+<td><code>$0501</code> / <code>$0502</code></td>
+<td>玩家 X 低 / 高</td>
+</tr>
+<tr>
+<td><code>$0503</code></td>
+<td>玩家 Y</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>死亡时序（未补丁实测）：清零 <code>$0500</code> → 约 30 帧后扣命指令执行 → <code>$7C</code> 从 5 → 4。</p>
+<h3 id="5-3-静态反汇编定位扣命指令"><a href="#5-3-静态反汇编定位扣命指令" class="headerlink" title="5.3 静态反汇编定位扣命指令"></a>5.3 静态反汇编定位扣命指令</h3><p>扫描 64KB PRG 中对 <code>$007C</code> 的所有操作，全 ROM <strong>仅 1 处 <code>DEC</code></strong>：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件偏移</th>
+<th>CPU 地址</th>
+<th>机器码</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xC042</code></td>
+<td><code>$C032</code></td>
+<td><code>85 7C</code></td>
+<td>新游戏初始化生命 = 5（前一条 <code>A9 05</code>）</td>
+</tr>
+<tr>
+<td><code>0xC12C</code></td>
+<td><code>$C11C</code></td>
+<td><code>C6 7C</code></td>
+<td><strong>★ 扣命（死亡）</strong></td>
+</tr>
+<tr>
+<td><code>0xC155</code></td>
+<td><code>$C145</code></td>
+<td><code>E6 7C</code></td>
+<td>吃 +1 命道具</td>
+</tr>
+<tr>
+<td><code>0xC16C</code></td>
+<td><code>$C15C</code></td>
+<td><code>85 7C</code></td>
+<td>奖励关结算 +3 命写回</td>
+</tr>
+<tr>
+<td><code>0x93B6</code></td>
+<td><code>$93A6</code></td>
+<td><code>A5 7C</code></td>
+<td>HUD 显示生命数（读）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>扣命点 <code>$C11C</code> 的完整上下文（关卡结束/死亡后的结算例程）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$C116  LDA ram_stage_id_1</span><br><span class="line">$C118  CMP #$3C</span><br><span class="line">$C11A  BCS bra_C15F_it_is_bonus_stage   ; 奖励关(≥0x3C)不扣命</span><br><span class="line">$C11C  DEC ram_lives                    ; ★ 扣命（唯一）</span><br><span class="line">$C11E  LDA ram_lives</span><br><span class="line">$C120  BEQ bra_C129_no_more_lives       ; 归零 → GAME OVER</span><br><span class="line">$C122  LDA ram_sign_item_id</span><br><span class="line">$C124  BNE bra_C17A</span><br><span class="line">$C126  JMP loc_C04B_loop</span><br></pre></td></tr></table></figure>
+<h3 id="5-4-动态写跟踪（Debug-回调验证）"><a href="#5-4-动态写跟踪（Debug-回调验证）" class="headerlink" title="5.4 动态写跟踪（Debug 回调验证）"></a>5.4 动态写跟踪（Debug 回调验证）</h3><p>仅靠静态扫描仍要排除”静态存在但实际不执行”。用 Mesen Lua 的<strong>写内存回调</strong>抓每次写 <code>$007C</code> 的时机，再配合强制死亡注入：</p>
+<ul>
+<li>未补丁：清零 <code>$0500</code> 强制死亡 → 约 30 帧后 <code>$C11C</code> 执行 → <code>$7C</code> 5→4，与反汇编一致。</li>
+<li>死亡后回到关卡牌，START 重进，<code>$7C</code> 延续 4 → 完整验证”死亡→扣命→再战”闭环。</li>
+</ul>
+<p><strong>为什么用 RAM 判定而不是 PC 采样</strong>：在 <code>endFrame</code> 回调里采样 CPU 的 PC，结果恒为 NMI 等待点 <code>$EED5</code>（中断服务例程），拿不到游戏主循环的真实 PC；改为观测 <code>$7C==5</code>（菜单确认标记）与 <code>$0500</code> bit7（玩家生成标记）两个 RAM 状态即可 100% 判定当前所处阶段。</p>
+<hr>
+<h2 id="6-补丁实现"><a href="#6-补丁实现" class="headerlink" title="6. 补丁实现"></a>6. 补丁实现</h2><h3 id="6-1-ROM-补丁"><a href="#6-1-ROM-补丁" class="headerlink" title="6.1 ROM 补丁"></a>6.1 ROM 补丁</h3><p>把唯一扣命指令 <code>$C11C DEC $7C</code> 替换为 <code>EA EA</code>（NOP NOP），共改动 2 字节：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件偏移</th>
+<th>PRG 偏移</th>
+<th>CPU 地址</th>
+<th>原字节</th>
+<th>新字节</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xC12C</code></td>
+<td><code>0xC11C</code></td>
+<td><code>$C11C</code></td>
+<td><code>C6 7C</code></td>
+<td><code>EA EA</code></td>
+<td>扣命失效，生命恒为 <code>$05</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>保留后续的 <code>LDA</code>/<code>BEQ</code> 判定：因为 <code>$7C</code> 永远等于 5，GAME OVER 分支（<code>$C129</code>）永远走不到，逻辑最干净、误伤最小。初始化（<code>$C032</code>）、+1 道具（<code>$C145</code>）、奖励关 +3（<code>$C15C</code>）全部保留不动。</p>
+</blockquote>
+<p>补丁后 ROM：<code>The Bugs Bunny Crazy Castle (Infinite Lives).nes</code>，98,320 字节不变，文件 CRC32 <code>D21C2AE1</code>、PRG CRC32 <code>BB666A4B</code>。</p>
+<h3 id="6-2-IPS-补丁"><a href="#6-2-IPS-补丁" class="headerlink" title="6.2 IPS 补丁"></a>6.2 IPS 补丁</h3><p>IPS（International Patching System）为标准 ROM 补丁格式，与模拟器/平台无关：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件头：&quot;PATCH&quot;</span><br><span class="line">记录：偏移(3B 大端) + 长度(2B 大端) + 数据</span><br><span class="line">结尾：&quot;EOF&quot;</span><br></pre></td></tr></table></figure>
+<p>生成的 <code>The Bugs Bunny Crazy Castle Infinite Lives.ips</code>（<strong>15 字节</strong>）包含 1 条记录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@0xC12C size&#x3D;2 data&#x3D;EAEA</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>校验方法：把 IPS 打到原版 ROM 上，结果必须与补丁 ROM <strong>逐字节一致</strong>（已在验证阶段确认）。</p>
+<hr>
+<h2 id="7-双保险：Mesen-作弊码"><a href="#7-双保险：Mesen-作弊码" class="headerlink" title="7. 双保险：Mesen 作弊码"></a>7. 双保险：Mesen 作弊码</h2><h3 id="7-1-原理"><a href="#7-1-原理" class="headerlink" title="7.1 原理"></a>7.1 原理</h3><p>Mesen 的 <code>NesCustom</code> 作弊码格式为 <code>AAAA:VV</code>（地址:值），实现方式是<strong>拦截对指定地址的读取</strong>，一律返回设定值。配合”从源头 NOP 掉扣命写”的 ROM 补丁，即便将来发现漏网的分支，作弊码也能兜底。</p>
+<p>作弊码：<code>007C:05</code>（生命数读取恒为 5）。</p>
+<h3 id="7-2-读取路径的坑（重要）"><a href="#7-2-读取路径的坑（重要）" class="headerlink" title="7.2 读取路径的坑（重要）"></a>7.2 读取路径的坑（重要）</h3><p>Mesen Lua 对同一地址存在两条读取路径，结果可能不同：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>路径</th>
+<th>是否经过作弊码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emu.read(addr, emu.memType.nesInternalRam)</code></td>
+<td>直接读 RAM 缓冲</td>
+<td><strong>否</strong>（绕过）</td>
+</tr>
+<tr>
+<td><code>emu.read(addr, emu.memType.nesMemory)</code> (= 8)</td>
+<td>走 <code>DebugRead</code> → 内存管理器</td>
+<td><strong>是</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>实测：作弊码生效时，游戏读 <code>$7C</code> 恒为 <code>$05</code>，而 <code>nesInternalRam</code> 读到的是真实 RAM 值（被扣到 <code>$04</code>）。因此：</p>
+<ul>
+<li><strong>验证作弊码是否生效</strong>要用 <code>nesMemory</code>；</li>
+<li><strong>观察真实生命</strong>要用 <code>nesInternalRam</code>（两者对照即知”作弊层是否真的在兜底”）。</li>
+</ul>
+<h3 id="7-3-作弊码文件格式"><a href="#7-3-作弊码文件格式" class="headerlink" title="7.3 作弊码文件格式"></a>7.3 作弊码文件格式</h3><p>Mesen2 会在 GUI 加载 ROM 时自动应用 <code>~/.config/Mesen2/Cheats/&lt;RomName&gt;.json</code>（RomName = ROM 文件名去掉扩展名，由 <code>GetRomName()</code> 得到）。JSON 字段为 PascalCase，枚举以字符串保存，序列化器启用了 <code>UseStringEnumConverter</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"Cheats"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"Description"</span>: <span class="string">"Infinite Lives (lives always 05)"</span>,</span><br><span class="line">      <span class="attr">"Type"</span>: <span class="string">"NesCustom"</span>,</span><br><span class="line">      <span class="attr">"Enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">"Codes"</span>: <span class="string">"007C:05"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本次为两个 ROM 都配了作弊文件（文件名不同）：</p>
+<ul>
+<li><code>~/.config/Mesen2/Cheats/The Bugs Bunny Crazy Castle.json</code></li>
+<li><code>~/.config/Mesen2/Cheats/The Bugs Bunny Crazy Castle (Infinite Lives).json</code></li>
+</ul>
+<blockquote>
+<p>注意：<strong>作弊码自动加载只在 GUI 生效</strong>。<code>--testRunner</code> 模式直接通过 <code>EmuApi.LoadRom</code> 加载 ROM，绕过了 GUI 的 <code>GameLoaded</code> 通知（<code>MainWindow.axaml.cs</code> 中 <code>CheatCodes.ApplyCheats()</code> 的触发点），因此无头验证作弊码需用 <code>emu.addCheat(2, &quot;007C:05&quot;)</code> 显式注入，与作弊文件走的是同一套 <code>SetCheats</code> 底层机制。</p>
+</blockquote>
+<hr>
+<h2 id="8-测试方法（无头自动化）"><a href="#8-测试方法（无头自动化）" class="headerlink" title="8. 测试方法（无头自动化）"></a>8. 测试方法（无头自动化）</h2><p>模拟器的 Lua API 配合 <code>--testRunner</code> 可实现完全无头（headless）的自动化测试，是本次验证的支柱。</p>
+<h3 id="8-1-testRunner-基本用法"><a href="#8-1-testRunner-基本用法" class="headerlink" title="8.1 testRunner 基本用法"></a>8.1 testRunner 基本用法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">timeout 150 mesen --testRunner cycle_test2.lua <span class="string">"&lt;ROM&gt;"</span> --timeout=140 --enableStdout</span><br><span class="line"><span class="comment"># 退出码 0 = 通过；脚本内用 emu.stop(code) 提前结束</span></span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>脚本正常结束（调用了 <code>emu.stop(0)</code>）</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>检测到掉血（测试失败）</td>
+</tr>
+<tr>
+<td><code>255</code></td>
+<td>Lua 错误 / 未加载 ROM</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>重要坑：</strong></p>
+<ol>
+<li><strong>必须传 ROM 位置参数</strong>（<code>FilesToLoad</code> 校验：恰好 1 个），否则直接失败。</li>
+<li><code>--timeout</code> 是<strong>毫秒</strong>；<code>--timeout=0</code> 会让等待循环立即结束、模拟器马上被停掉，脚本回调几乎不会执行。<strong>务必给足超时</strong>，脚本内部用 <code>emu.stop(code)</code> 提前正常退出。</li>
+<li>testRunner 不保存设置（<code>DisableSaveSettings = true</code>），不会污染用户配置。</li>
+<li>杀进程用 <code>pkill -x mesen</code>，不要用 <code>pkill -f mesen</code>（<code>-f</code> 会匹配到调用它的 shell 本身）。</li>
+</ol>
+<h3 id="8-2-输入注入（进入游戏的关键）"><a href="#8-2-输入注入（进入游戏的关键）" class="headerlink" title="8.2 输入注入（进入游戏的关键）"></a>8.2 输入注入（进入游戏的关键）</h3><p>直接调用 <code>emu.setInput</code> 按键<strong>不会生效</strong>——每个输入扫描周期模拟器都会用键盘/手柄状态覆盖输入。正确做法是把 <code>setInput</code> 放进 <strong><code>inputPolled</code> 事件回调</strong>：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">if</span> f &lt;= hold_until <span class="keyword">then</span></span><br><span class="line">        emu.setInput(&#123; start = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>)   <span class="comment">-- 帧内持续按</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        emu.setInput(&#123;&#125;, <span class="number">0</span>, <span class="number">0</span>)                  <span class="comment">-- 松手</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.inputPolled)</span><br></pre></td></tr></table></figure>
+<h3 id="8-3-内存回调与写覆盖"><a href="#8-3-内存回调与写覆盖" class="headerlink" title="8.3 内存回调与写覆盖"></a>8.3 内存回调与写覆盖</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 写跟踪：抓每次写生命值</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x007C</span>, <span class="number">0x007C</span>,</span><br><span class="line">                      emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"><span class="comment">-- 帧结束：帧计数 / 周期性采样（进度状态机在这里推进）</span></span><br><span class="line">emu.addEventCallback(onFrame, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<p>Mesen 写回调还能<strong>返回值覆盖原写入</strong>（本作没用上，但用于验证补丁方案很顺手）。</p>
+<h3 id="8-4-Lua-API-参数顺序（易踩坑）"><a href="#8-4-Lua-API-参数顺序（易踩坑）" class="headerlink" title="8.4 Lua API 参数顺序（易踩坑）"></a>8.4 Lua API 参数顺序（易踩坑）</h3><p>Mesen 的 Lua 桥按”栈顶先读”取参数，<strong>最后一个 Lua 参数被最先消费</strong>，常见调用：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">emu.<span class="built_in">read</span>(addr, memType)                      <span class="comment">-- 读内存</span></span><br><span class="line">emu.<span class="built_in">write</span>(addr, val, memType)                <span class="comment">-- 写内存</span></span><br><span class="line">emu.setInput(&#123;...&#125;, port, inputIndex)        <span class="comment">-- 注入输入</span></span><br><span class="line">emu.addCheat(cheatType, code)                <span class="comment">-- 作弊类型参数在前！</span></span><br><span class="line">emu.addEventCallback(fn, eventType)</span><br><span class="line">emu.addMemoryCallback(cb, callbackType, start, <span class="keyword">end</span>, cpuType, memType)</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="9-验证结果"><a href="#9-验证结果" class="headerlink" title="9. 验证结果"></a>9. 验证结果</h2><h3 id="9-1-补丁-ROM（死亡周期压力测试）"><a href="#9-1-补丁-ROM（死亡周期压力测试）" class="headerlink" title="9.1 补丁 ROM（死亡周期压力测试）"></a>9.1 补丁 ROM（死亡周期压力测试）</h3><p><code>cycle_test2.lua</code> 对<strong>未补丁 / 补丁</strong>两个 ROM 分别跑三轮”进游戏 → 40 帧后强制死亡（清零 <code>$0500</code>）→ 关卡牌 START 重进 → 记录 <code>$7C</code>“：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>运行</th>
+<th>cycle 1</th>
+<th>cycle 2</th>
+<th>cycle 3</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未补丁 ROM</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>每死一次真实扣 1 命</td>
+</tr>
+<tr>
+<td><strong>补丁 ROM</strong></td>
+<td><strong>5</strong></td>
+<td><strong>5</strong></td>
+<td><strong>5</strong></td>
+<td><strong>扣命完全失效，无限生命</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>输出（补丁 ROM）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GAMEPLAY #1 at frame 768, lives&#x3D;5</span><br><span class="line">forced death at frame 808</span><br><span class="line">GAMEPLAY #2 at frame 1023, lives&#x3D;5</span><br><span class="line">...</span><br><span class="line">result cycle 3 lives&#x3D;5</span><br><span class="line">RESULT: PATCHED OK - lives stay 5</span><br></pre></td></tr></table></figure>
+<p><img src="/img/bugs.gif" alt="补丁 ROM 实机验证录屏"></p>
+<blockquote>
+<p>上图为补丁 ROM 的实机运行录屏：玩家遇敌阵亡后，重新进入开始界面时生命数仍为初始的 <strong>5 条</strong>，证明扣命逻辑（<code>$C11C DEC $7C</code>）已被彻底拦截，破解生效。</p>
+</blockquote>
+<h3 id="9-2-作弊码（作用于原版-ROM）"><a href="#9-2-作弊码（作用于原版-ROM）" class="headerlink" title="9.2 作弊码（作用于原版 ROM）"></a>9.2 作弊码（作用于原版 ROM）</h3><p>对<strong>原版 ROM</strong> 注入 <code>007C:05</code>，跑同样的三轮死亡周期：真实 RAM 中 <code>$7C</code> 从 5 → 4 → 3（证明死亡事件真实发生），但游戏每一次读 <code>$7C</code> 都返回 <code>$05</code>，<strong>永不 GAME OVER</strong>，且重进游戏保持 5 命：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GAMEPLAY #1 frame 768  real$7C&#x3D;05 cheat$7C&#x3D;05</span><br><span class="line">forced death ... real$7C&#x3D;05</span><br><span class="line">GAMEPLAY #2 frame 1023 real$7C&#x3D;04 cheat$7C&#x3D;05   ← 真实已扣，作弊读恒 5</span><br><span class="line">GAMEPLAY #3 frame 1278 real$7C&#x3D;04 cheat$7C&#x3D;05</span><br><span class="line">RESULT: CHEAT OK - game sees lives&#x3D;5 throughout</span><br></pre></td></tr></table></figure>
+<h3 id="9-3-IPS-回环校验"><a href="#9-3-IPS-回环校验" class="headerlink" title="9.3 IPS 回环校验"></a>9.3 IPS 回环校验</h3><p>IPS 打到原版 ROM 的产物与补丁 ROM <strong>逐字节一致</strong>。</p>
+<h3 id="9-4-画面取证"><a href="#9-4-画面取证" class="headerlink" title="9.4 画面取证"></a>9.4 画面取证</h3><p><code>ht_play.dat</code> 经 <code>screen_ascii.py</code> 渲染确认进入的是第 1 关：迷宫墙/梯子、兔八哥位于屏幕中部下方、白色敌人位于右上，与 ROM 数据库识别结果一致。</p>
+<hr>
+<h2 id="10-交付物与使用方式"><a href="#10-交付物与使用方式" class="headerlink" title="10. 交付物与使用方式"></a>10. 交付物与使用方式</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The Bugs Bunny Crazy Castle.nes</code></td>
+<td>原版 ROM</td>
+</tr>
+<tr>
+<td><code>The Bugs Bunny Crazy Castle (Infinite Lives).nes</code></td>
+<td>已打补丁的无限生命 ROM，直接用模拟器/烧录卡加载</td>
+</tr>
+<tr>
+<td><code>The Bugs Bunny Crazy Castle Infinite Lives.ips</code></td>
+<td>标准 IPS 补丁（15 B），可打在原版上</td>
+</tr>
+<tr>
+<td><code>~/.config/Mesen2/Cheats/The Bugs Bunny Crazy Castle.json</code> 等</td>
+<td>Mesen 作弊码（<code>007C:05</code>），随 ROM 自动加载</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>使用任选其一即可：</p>
+<ol>
+<li><strong>直接玩补丁 ROM</strong>（推荐）；</li>
+<li>或原版 ROM + Mesen 自动作弊码；</li>
+<li>双保险：补丁 ROM + 作弊码同时生效。</li>
+</ol>
+<hr>
+<h2 id="11-关键技术结论"><a href="#11-关键技术结论" class="headerlink" title="11. 关键技术结论"></a>11. 关键技术结论</h2><ol>
+<li><strong>生命地址 <code>$007C</code></strong>：零页一字节，初始 5，死亡递减，归零进 GAME OVER。</li>
+<li><strong>唯一扣命点 <code>$C11C</code></strong>：全 64KB PRG 仅 1 处 <code>DEC $7C</code>（比蝙蝠侠的 5 处简单得多），NOP 掉即无限生命。初始化/奖励写点全部保留。</li>
+<li><strong>奖励逻辑无冲突</strong>：+1 道具（<code>$C145 INC</code>）与奖励关 +3（<code>$C15C ADC #$03</code>）照常生效，补丁不影响正向收益。</li>
+<li><strong>NOP 的粒度</strong>：只 NOP 掉 <code>DEC</code> 一条，保留其后 <code>LDA/BEQ</code> 判定——生命恒 5，GAME OVER 分支天然不可达。</li>
+<li><strong>进入真实关卡是最难的环节</strong>：本作标题/菜单/关卡牌是多级输入状态机，需要 <code>$7C==5</code>（菜单确认）+ <code>$0500</code> bit7（玩家生成）双 RAM 状态判定，逐级注入输入。</li>
+<li><strong>关卡牌等待循环 <code>$9216-$922C</code></strong>：判定 <code>ram_btn_press AND #$D0</code>（Select/A/B 任一），A/B 也算进入条件。</li>
+<li><strong>endFrame 里 PC 采样不可用</strong>：恒为 NMI 等待点 <code>$EED5</code>，必须改用 RAM 状态判定。</li>
+<li><strong>输入注入必须放 <code>inputPolled</code> 回调</strong>，直接 <code>setInput</code> 会被每帧覆盖。</li>
+<li><strong>作弊码读取路径分叉</strong>：验证作弊必须走 <code>nesMemory</code>，原始 RAM 读取会绕过。</li>
+<li><strong>testRunner 不自动加载作弊文件</strong>：只走 GUI 的 <code>GameLoaded</code> 通知；无头验证用 <code>emu.addCheat</code> 显式注入（同底层 <code>SetCheats</code>）。</li>
+<li><strong><code>--timeout=0</code> 会瞬间停模拟器</strong>，脚本根本跑不起来，这是最常见的假”失败”。</li>
+</ol>
+<hr>
+<h2 id="附录-A：复现测试的骨架脚本"><a href="#附录-A：复现测试的骨架脚本" class="headerlink" title="附录 A：复现测试的骨架脚本"></a>附录 A：复现测试的骨架脚本</h2><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- cycle_test2.lua（节选）：补丁 ROM 三轮死亡周期验证</span></span><br><span class="line"><span class="keyword">local</span> f = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> lives5, lives5_at = <span class="literal">false</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> stage_pressed, retry_at = <span class="literal">false</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> gameon, prev_game = <span class="literal">false</span>, <span class="literal">false</span></span><br><span class="line"><span class="keyword">local</span> hold_until, next_press = <span class="number">0</span>, <span class="number">150</span></span><br><span class="line"><span class="keyword">local</span> death_at = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> results = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">(x)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(x, emu.memType.nesInternalRam) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">(x, v)</span></span> emu.<span class="built_in">write</span>(x, v, emu.memType.nesInternalRam) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onPoll</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">if</span> f &lt;= hold_until <span class="keyword">then</span> emu.setInput(&#123; start = <span class="literal">true</span> &#125;, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span> emu.setInput(&#123;&#125;, <span class="number">0</span>, <span class="number">0</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onFrame</span><span class="params">()</span></span></span><br><span class="line">    f = f + <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> lives = <span class="built_in">read</span>(<span class="number">0x7C</span>)</span><br><span class="line">    <span class="keyword">local</span> o500 = <span class="built_in">read</span>(<span class="number">0x0500</span>)</span><br><span class="line">    <span class="keyword">local</span> now_game = (o500 &amp; <span class="number">0x80</span>) ~= <span class="number">0</span></span><br><span class="line">    <span class="keyword">local</span> rose = now_game <span class="keyword">and</span> <span class="keyword">not</span> prev_game</span><br><span class="line">    prev_game = now_game</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> lives5 <span class="keyword">and</span> lives == <span class="number">5</span> <span class="keyword">then</span></span><br><span class="line">        lives5, lives5_at, stage_pressed = <span class="literal">true</span>, f, <span class="literal">false</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> lives5 <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> f &gt;= next_press <span class="keyword">then</span> hold_until, next_press = f + <span class="number">2</span>, f + <span class="number">120</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">elseif</span> <span class="keyword">not</span> gameon <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">not</span> stage_pressed <span class="keyword">and</span> f &gt;= lives5_at + <span class="number">90</span>) <span class="keyword">or</span> (stage_pressed <span class="keyword">and</span> f &gt;= retry_at) <span class="keyword">then</span></span><br><span class="line">            hold_until, stage_pressed, retry_at = f + <span class="number">2</span>, <span class="literal">true</span>, f + <span class="number">70</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">if</span> rose <span class="keyword">then</span></span><br><span class="line">            gameon = <span class="literal">true</span></span><br><span class="line">            <span class="built_in">table</span>.<span class="built_in">insert</span>(results, lives)</span><br><span class="line">            death_at = f + <span class="number">40</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">elseif</span> f &gt;= death_at <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">write</span>(<span class="number">0x0500</span>, <span class="number">0x00</span>)          <span class="comment">-- 强制死亡</span></span><br><span class="line">        gameon, retry_at = <span class="literal">false</span>, f + <span class="number">120</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> #results &gt;= <span class="number">3</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">local</span> ok = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">for</span> _, lv <span class="keyword">in</span> <span class="built_in">ipairs</span>(results) <span class="keyword">do</span> <span class="keyword">if</span> lv ~= <span class="number">5</span> <span class="keyword">then</span> ok = <span class="literal">false</span> <span class="keyword">end</span> <span class="keyword">end</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"RESULT: "</span> .. (ok <span class="keyword">and</span> <span class="string">"PATCHED OK - lives stay 5"</span> <span class="keyword">or</span> <span class="string">"UNPATCHED - lives dropped"</span>))</span><br><span class="line">        emu.stop(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addEventCallback(onPoll, emu.eventType.inputPolled)</span><br><span class="line">emu.addEventCallback(onFrame, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">timeout 150 mesen --testRunner cycle_test2.lua <span class="string">"The Bugs Bunny Crazy Castle (Infinite Lives).nes"</span> --timeout=140 --enableStdout</span><br><span class="line"><span class="comment"># 退出码 0 = 通过（三轮生命恒 5）</span></span><br></pre></td></tr></table></figure>
+<h2 id="附录-B：相关文件清单"><a href="#附录-B：相关文件清单" class="headerlink" title="附录 B：相关文件清单"></a>附录 B：相关文件清单</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;home&#x2F;sunjunior&#x2F;Projects&#x2F;Test&#x2F;</span><br><span class="line">├── The Bugs Bunny Crazy Castle.nes                 原版 ROM</span><br><span class="line">├── The Bugs Bunny Crazy Castle (Infinite Lives).nes  交付物：补丁 ROM</span><br><span class="line">└── The Bugs Bunny Crazy Castle Infinite Lives.ips  交付物：IPS 补丁（15 B）</span><br><span class="line"></span><br><span class="line">~&#x2F;.config&#x2F;Mesen2&#x2F;Cheats&#x2F;</span><br><span class="line">├── The Bugs Bunny Crazy Castle.json                原版自动作弊码 (007C:05)</span><br><span class="line">└── The Bugs Bunny Crazy Castle (Infinite Lives).json  补丁版自动作弊码</span><br></pre></td></tr></table></figure>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赠人玫瑰，手留余香
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 ©
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2026/08/05/%E9%B2%81%E9%82%A6%E4%B8%89%E4%B8%96-NES%E6%B0%B8%E4%B8%8D%E6%8D%95%E8%8E%B7Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="next-post btn btn-default" title='鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-破解总体思路"><span class="toc-text">4. 破解总体思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-详细分析过程"><span class="toc-text">5. 详细分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-无头进入真实可玩关卡（本次最大的坑）"><span class="toc-text">5.1 无头进入真实可玩关卡（本次最大的坑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-定位生命地址-007C"><span class="toc-text">5.2 定位生命地址 $007C</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-静态反汇编定位扣命指令"><span class="toc-text">5.3 静态反汇编定位扣命指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-动态写跟踪（Debug-回调验证）"><span class="toc-text">5.4 动态写跟踪（Debug 回调验证）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-补丁实现"><span class="toc-text">6. 补丁实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-ROM-补丁"><span class="toc-text">6.1 ROM 补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-IPS-补丁"><span class="toc-text">6.2 IPS 补丁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-双保险：Mesen-作弊码"><span class="toc-text">7. 双保险：Mesen 作弊码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-原理"><span class="toc-text">7.1 原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-读取路径的坑（重要）"><span class="toc-text">7.2 读取路径的坑（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-作弊码文件格式"><span class="toc-text">7.3 作弊码文件格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-测试方法（无头自动化）"><span class="toc-text">8. 测试方法（无头自动化）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-testRunner-基本用法"><span class="toc-text">8.1 testRunner 基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-输入注入（进入游戏的关键）"><span class="toc-text">8.2 输入注入（进入游戏的关键）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-内存回调与写覆盖"><span class="toc-text">8.3 内存回调与写覆盖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-Lua-API-参数顺序（易踩坑）"><span class="toc-text">8.4 Lua API 参数顺序（易踩坑）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-验证结果"><span class="toc-text">9. 验证结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-补丁-ROM（死亡周期压力测试）"><span class="toc-text">9.1 补丁 ROM（死亡周期压力测试）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-作弊码（作用于原版-ROM）"><span class="toc-text">9.2 作弊码（作用于原版 ROM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-IPS-回环校验"><span class="toc-text">9.3 IPS 回环校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-画面取证"><span class="toc-text">9.4 画面取证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-交付物与使用方式"><span class="toc-text">10. 交付物与使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-关键技术结论"><span class="toc-text">11. 关键技术结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-A：复现测试的骨架脚本"><span class="toc-text">附录 A：复现测试的骨架脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-B：相关文件清单"><span class="toc-text">附录 B：相关文件清单</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
