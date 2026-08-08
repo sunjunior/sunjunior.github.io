@@ -474,6 +474,11 @@
 <td>三阶</td>
 <td>基地被摧毁不结束游戏，4 字节修改</td>
 </tr>
+<tr>
+<td><code>坦克大战2008加速汉化版_三合一.nes</code></td>
+<td>全阶</td>
+<td>无敌 + 基地保护 + 基地不死，合并</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -483,6 +488,60 @@
 <li>iNES 头（前 16 字节）完全一致</li>
 <li>修改字节数与反汇编地址一一对应</li>
 </ul>
+<h3 id="8-4-三合一合并版"><a href="#8-4-三合一合并版" class="headerlink" title="8.4 三合一合并版"></a>8.4 三合一合并版</h3><p>将三个补丁合并到同一 ROM 中，形成<strong>三合一终极版</strong>，同时具备玩家无敌、基地永久保护、基地摧毁不死三大特性。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>破解</th>
+<th>偏移</th>
+<th>修改</th>
+<th>所属</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无敌</td>
+<td><code>0x229C</code></td>
+<td><code>D6 89</code> → <code>EA EA</code></td>
+<td>一阶</td>
+</tr>
+<tr>
+<td>基地保护A</td>
+<td><code>0x00F8</code></td>
+<td><code>F5 CA</code> → <code>9E CB</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地保护B</td>
+<td><code>0x01ED</code></td>
+<td><code>F5 CA</code> → <code>9E CB</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地保护C</td>
+<td><code>0x0423</code></td>
+<td><code>F5 CA</code> → <code>9E CB</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地保护D</td>
+<td><code>0x22B9</code></td>
+<td>41字节计时器 → <code>JSR $CB9E</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地不死</td>
+<td><code>0x26BA</code></td>
+<td><code>A5 68 F0 18</code> → <code>4C BA E6 EA</code></td>
+<td>三阶</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>文件</strong>：<code>坦克大战2008加速汉化版_三合一.nes</code></p>
+<p>六个补丁分布于不同的 ROM 偏移，互不重叠，因此合并是安全的。</p>
+<p><img src="/img/tank4.gif" alt="三合一终极版效果演示"></p>
 <hr>
 <h2 id="9-总结与心得"><a href="#9-总结与心得" class="headerlink" title="9. 总结与心得"></a>9. 总结与心得</h2><ol>
 <li><p><strong>由浅入深，层层递进</strong>：三个破解分别对应”变量 → 状态机 → 控制流”三个层次，难度递增但思路连贯。先在小范围内熟悉代码结构，再逐步深入核心逻辑。</p>
@@ -573,7 +632,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-ROM-结构"><span class="toc-text">3. ROM 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-第一阶段：玩家坦克无敌"><span class="toc-text">4. 第一阶段：玩家坦克无敌</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-目标"><span class="toc-text">4.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-定位护盾计时器"><span class="toc-text">4.2 定位护盾计时器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-定位代码中的递减操作"><span class="toc-text">4.3 定位代码中的递减操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-修改方案"><span class="toc-text">4.4 修改方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-效果"><span class="toc-text">4.5 效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-第二阶段：基地永久保护"><span class="toc-text">5. 第二阶段：基地永久保护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-目标"><span class="toc-text">5.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-护盾计时器机制"><span class="toc-text">5.2 护盾计时器机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-两种护盾绘制"><span class="toc-text">5.3 两种护盾绘制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-修改方案"><span class="toc-text">5.4 修改方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-效果"><span class="toc-text">5.5 效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-第三阶段：基地被摧毁后游戏继续"><span class="toc-text">6. 第三阶段：基地被摧毁后游戏继续</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-目标"><span class="toc-text">6.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-定位-EAGLE-摧毁检测"><span class="toc-text">6.2 定位 EAGLE 摧毁检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-理清游戏结束状态机"><span class="toc-text">6.3 理清游戏结束状态机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-两种修改方案"><span class="toc-text">6.4 两种修改方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-A：简单-NOP（基地不死版）"><span class="toc-text">方案 A：简单 NOP（基地不死版）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-B：JMP-跳过（基地不死-敌人全灭结束版）"><span class="toc-text">方案 B：JMP 跳过（基地不死_敌人全灭结束版）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-方案对比"><span class="toc-text">6.5 方案对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-补丁字节"><span class="toc-text">6.6 补丁字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-效果"><span class="toc-text">6.7 效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-三阶破解的递进关系"><span class="toc-text">7. 三阶破解的递进关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-交付物"><span class="toc-text">8. 交付物</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-已打补丁的-ROM"><span class="toc-text">8.1 已打补丁的 ROM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-IPS-补丁"><span class="toc-text">8.2 IPS 补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-验证"><span class="toc-text">8.3 验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-总结与心得"><span class="toc-text">9. 总结与心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录：关键-Lua-脚本"><span class="toc-text">附录：关键 Lua 脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-1-无敌模式脚本"><span class="toc-text">A.1 无敌模式脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-2-基地摧毁分析探针"><span class="toc-text">A.2 基地摧毁分析探针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-3-看门狗探针"><span class="toc-text">A.3 看门狗探针</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-ROM-结构"><span class="toc-text">3. ROM 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-第一阶段：玩家坦克无敌"><span class="toc-text">4. 第一阶段：玩家坦克无敌</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-目标"><span class="toc-text">4.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-定位护盾计时器"><span class="toc-text">4.2 定位护盾计时器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-定位代码中的递减操作"><span class="toc-text">4.3 定位代码中的递减操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-修改方案"><span class="toc-text">4.4 修改方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-效果"><span class="toc-text">4.5 效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-第二阶段：基地永久保护"><span class="toc-text">5. 第二阶段：基地永久保护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-目标"><span class="toc-text">5.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-护盾计时器机制"><span class="toc-text">5.2 护盾计时器机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-两种护盾绘制"><span class="toc-text">5.3 两种护盾绘制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-修改方案"><span class="toc-text">5.4 修改方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-效果"><span class="toc-text">5.5 效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-第三阶段：基地被摧毁后游戏继续"><span class="toc-text">6. 第三阶段：基地被摧毁后游戏继续</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-目标"><span class="toc-text">6.1 目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-定位-EAGLE-摧毁检测"><span class="toc-text">6.2 定位 EAGLE 摧毁检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-理清游戏结束状态机"><span class="toc-text">6.3 理清游戏结束状态机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-两种修改方案"><span class="toc-text">6.4 两种修改方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-A：简单-NOP（基地不死版）"><span class="toc-text">方案 A：简单 NOP（基地不死版）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-B：JMP-跳过（基地不死-敌人全灭结束版）"><span class="toc-text">方案 B：JMP 跳过（基地不死_敌人全灭结束版）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-方案对比"><span class="toc-text">6.5 方案对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-补丁字节"><span class="toc-text">6.6 补丁字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-效果"><span class="toc-text">6.7 效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-三阶破解的递进关系"><span class="toc-text">7. 三阶破解的递进关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-交付物"><span class="toc-text">8. 交付物</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-已打补丁的-ROM"><span class="toc-text">8.1 已打补丁的 ROM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-IPS-补丁"><span class="toc-text">8.2 IPS 补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-验证"><span class="toc-text">8.3 验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-三合一合并版"><span class="toc-text">8.4 三合一合并版</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-总结与心得"><span class="toc-text">9. 总结与心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录：关键-Lua-脚本"><span class="toc-text">附录：关键 Lua 脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-1-无敌模式脚本"><span class="toc-text">A.1 无敌模式脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-2-基地摧毁分析探针"><span class="toc-text">A.2 基地摧毁分析探针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-3-看门狗探针"><span class="toc-text">A.3 看门狗探针</span></a></li></ol></li></ol>
         
     </div>
 </aside>
