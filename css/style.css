@@ -32,6 +32,8 @@ html {
   background: #ebebeb;
   position: relative;
   overflow-y: scroll;
+  scrollbar-color: #e67e22 #e0e0e0;
+  scrollbar-width: auto;
   font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 }
 body {
