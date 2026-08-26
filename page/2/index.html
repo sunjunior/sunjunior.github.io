@@ -259,7 +259,7 @@
     
     <div class="post-media">
         <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/backtrack/backtrack3.png" alt="回溯算法的基本原理及代码框架">
+            <img class="img-ajax" src="/img/loading.gif" data-src="/img/backtrack/backtrack1.png" alt="回溯算法的基本原理及代码框架">
         </a>
     </div>
     
@@ -317,7 +317,7 @@
     
     <div class="post-media">
         <a href="/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/dfs/path.png" alt="图的遍历搜索算法之BFS和DFS">
+            <img class="img-ajax" src="/img/loading.gif" data-src="/img/dfs/result.png" alt="图的遍历搜索算法之BFS和DFS">
         </a>
     </div>
     
@@ -658,7 +658,7 @@
     
     <div class="post-media">
         <a href="/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/books/book4.jpg" alt="程序员必读技术书籍推荐">
+            <img class="img-ajax" src="/img/loading.gif" data-src="/img/books/book17.jpg" alt="程序员必读技术书籍推荐">
         </a>
     </div>
     
@@ -842,19 +842,15 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <div class="busuanzi">
-    
+                
+<div class="busuanzi">
     访问量:
-    <strong id="busuanzi_value_site_pv">
-        <i class="fa fa-spinner fa-spin"></i>
-    </strong>
+    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
     &nbsp; | &nbsp;
     访客数:
-    <strong id="busuanzi_value_site_uv">
-        <i class="fa fa-spinner fa-spin"></i>
-    </strong>
-    
+    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
 </div>
+
             </div>
             <div class="col-sm-12">
                 <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
@@ -870,7 +866,27 @@
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+(function () {
+  var api = 'https://blog-counter.sunjun19860214.workers.dev';
+  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
+  localStorage.setItem('cf_uid', vid);
+
+  function fill(elId, slug, inc, extra) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
+    fetch(api + '/?' + q)
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
+      .catch(function (e) { console.warn('counter:', e); });
+  }
+
+  fill('page-pv', window.location.pathname, true);
+  fill('site-pv', 'site_pv', true);
+  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
+})();
+</script>
 
 
 <script src="/js/app.js?rev=@@hash.js"></script>

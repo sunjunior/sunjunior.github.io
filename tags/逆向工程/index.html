@@ -432,19 +432,15 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <div class="busuanzi">
-    
+                
+<div class="busuanzi">
     访问量:
-    <strong id="busuanzi_value_site_pv">
-        <i class="fa fa-spinner fa-spin"></i>
-    </strong>
+    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
     &nbsp; | &nbsp;
     访客数:
-    <strong id="busuanzi_value_site_uv">
-        <i class="fa fa-spinner fa-spin"></i>
-    </strong>
-    
+    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
 </div>
+
             </div>
             <div class="col-sm-12">
                 <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
@@ -460,7 +456,27 @@
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+(function () {
+  var api = 'https://blog-counter.sunjun19860214.workers.dev';
+  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
+  localStorage.setItem('cf_uid', vid);
+
+  function fill(elId, slug, inc, extra) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
+    fetch(api + '/?' + q)
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
+      .catch(function (e) { console.warn('counter:', e); });
+  }
+
+  fill('page-pv', window.location.pathname, true);
+  fill('site-pv', 'site_pv', true);
+  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
+})();
+</script>
 
 
 <script src="/js/app.js?rev=@@hash.js"></script>
