@@ -1,0 +1,395 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://sunjunior.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="Flutter,软件技术" />
+
+
+<meta name="description" content="背景：电驴版「小熊油耗」的空白家里那台电动自行车，平时在小区充电桩充电——桩是按时长计费的（比如 2 元/3 小时），回老家在插座上充是包月，商场快充又按度数计费。同样是「充满一次电」，三种场景..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    VoltTrack：给电动自行车做一款电耗记账 App 的完整实践 |
+    
+    sunjunior的个人技术博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
+    /./img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='sunjunior'>
+            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
+            
+            <h2>
+                技术控，爱折腾
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://sunjunior.github.io">
+                        sunjunior的个人技术博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="VoltTrack：给电动自行车做一款电耗记账 App 的完整实践">
+            
+            VoltTrack：给电动自行车做一款电耗记账 App 的完整实践
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Flutter/" rel="tag">Flutter</a> <a class="tag-link" href="/tags/%E8%BD%AF%E4%BB%B6%E6%8A%80%E6%9C%AF/" rel="tag">软件技术</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2026/08/30</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="背景：电驴版「小熊油耗」的空白"><a href="#背景：电驴版「小熊油耗」的空白" class="headerlink" title="背景：电驴版「小熊油耗」的空白"></a>背景：电驴版「小熊油耗」的空白</h2><p>家里那台电动自行车，平时在小区充电桩充电——桩是按<strong>时长</strong>计费的（比如 2 元/3 小时），回老家在插座上充是<strong>包月</strong>，商场快充又按<strong>度数</strong>计费。同样是「充满一次电」，三种场景的成本差异巨大，而我完全说不清自己的车每公里到底花多少钱、百公里耗几度电、电池用了两年还剩几分健康度。</p>
+<p>油车的油耗记录有「小熊油耗」这样成熟的应用，但电动自行车领域一直没有趁手的工具。市面上的充电类 App 要么绑定特定运营商的桩，要么只有记金额没有算电耗。于是决定自己写一个：<strong>VoltTrack</strong>，一款纯本地的电动自行车电耗记账 App。本文记录从需求梳理、算法设计到工程实现、发布安装的完整过程。</p>
+<h2 id="需求梳理：MVP-只做核心闭环"><a href="#需求梳理：MVP-只做核心闭环" class="headerlink" title="需求梳理：MVP 只做核心闭环"></a>需求梳理：MVP 只做核心闭环</h2><p>先明确用户故事：<strong>记录每一次充电（金额、时长、电量），自动算出百公里电耗、每公里成本、续航预测和电池健康度</strong>。据此划定 MVP 四个模块：</p>
+<ol>
+<li><strong>车辆与电池档案</strong>——车辆信息 + 电池组（支持更换历史，同一时刻只有一块「生效电池」）；</li>
+<li><strong>充电记账与日志</strong>——三种计费模式的记账向导 + 记录列表（可删除）；</li>
+<li><strong>电耗分析与算账</strong>——百公里电耗、每公里成本、续航预测、SOH 电池健康度、续航达成率；</li>
+<li><strong>辅助工具</strong>——充电费用计算器（对比「按时长档位」与「按度计费」两种桩，算出哪种更省）。</li>
+</ol>
+<p>社区分享、云同步、保养提醒这些后置——MVP 阶段它们只会稀释核心价值。</p>
+<h2 id="核心算法：把「充电」变成「事件流」"><a href="#核心算法：把「充电」变成「事件流」" class="headerlink" title="核心算法：把「充电」变成「事件流」"></a>核心算法：把「充电」变成「事件流」</h2><p>这是整个应用最有技术含量的部分。难点在于：<strong>充电记录里往往没有度数</strong>（小区桩按时长计费，你只知道充了 2 小时花了 4 块钱），而且不是每次充电都骑到没电，「这一箱电骑了多远」没有天然的边界。</p>
+<h3 id="事件流-里程窗口"><a href="#事件流-里程窗口" class="headerlink" title="事件流 + 里程窗口"></a>事件流 + 里程窗口</h3><p>设计上把每次充电当作事件流中的一条记录，其中带里程的记录（顺手记一下当前里程表读数）充当<strong>锚点</strong>。相邻两个锚点 A→B 构成一个「窗口」：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">区间骑行耗电  E_ride &#x3D; Σ窗口内充入度数 − C × (SOC_B到达 − SOC_A到达)</span><br><span class="line">区间里程      L      &#x3D; 里程_B − 里程_A</span><br><span class="line">百公里电耗     &#x3D; E_ride &#x2F; L × 100         (kWh&#x2F;100km)</span><br><span class="line">每公里电费     &#x3D; Σ窗口充电金额 &#x2F; L        (元&#x2F;km)</span><br></pre></td></tr></table></figure>
+<p>几个容易忽略的口径细节（都踩过坑）：</p>
+<ul>
+<li><strong>区间取 <code>[t_A, t_B)</code></strong>：起点 A 的充电归属本段骑行，终点 B 的充电归属下一段，保证每条记录只归属一个窗口、不重不漏；</li>
+<li><strong>SOC 取「到达电量」</strong>（即各记录的 <code>socBeforePct</code>），而不是「充后电量」；</li>
+<li><strong>两锚点都填了到达电量才启用 ΔSOC 校正</strong>，否则退化为 <code>E_ride = Σ充入度数</code>——数据不完整时宁可用粗口径，也不拒绝服务。</li>
+</ul>
+<p>用设计文档里的样例验证一下：48V20Ah 电池（0.96 kWh），在里程 1000km 处充 0.72 度（SOC 30%→100%），骑到 1060km 处剩 45%：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E_ride &#x3D; 0.72 − 0.96 × (45% − 30%) &#x3D; 0.576 kWh</span><br><span class="line">百公里电耗 &#x3D; 0.576 &#x2F; 60 × 100 &#x3D; 0.96 kWh&#x2F;100km ✓</span><br></pre></td></tr></table></figure>
+<p>0.96 度/百公里，正好在电动自行车 0.8～1.5 的合理区间——公式闭环。</p>
+<h3 id="三种模式的度数推算"><a href="#三种模式的度数推算" class="headerlink" title="三种模式的度数推算"></a>三种模式的度数推算</h3><p>「充电充了多少度」按模式各有推算优先级：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>推算优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>按度/金额</td>
+<td>手输度数 → 金额 ÷ 单价</td>
+</tr>
+<tr>
+<td>按时长</td>
+<td>功率(W) × 时长(h) ÷ 1000 × 效率系数（默认 0.85）</td>
+</tr>
+<tr>
+<td>家用插座</td>
+<td>有前后 SOC → ΔSOC × 容量 ÷ 效率（反推）→ 手输估算</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>其中<strong>充电效率系数 0.85</strong> 是关键参数：充电器不可能把市电 100% 灌进电池，发热、浮充都有损耗。按时长模式下 300W 充 2 小时，实际入电池的是 0.51 度而不是 0.6 度。</p>
+<h3 id="SOH-与续航预测"><a href="#SOH-与续航预测" class="headerlink" title="SOH 与续航预测"></a>SOH 与续航预测</h3><ul>
+<li><strong>电池健康度 SOH</strong>：只取「低电量（≤10%）→ 充满（≥95%）」的完整充电事件，<code>实际充入 ÷ 理论容量</code>。随用随充的碎片化补电会污染估算，必须设门槛；</li>
+<li><strong>续航预测</strong>：<code>当前SOC × 容量 × 0.9（保守系数） ÷ 加权平均电耗</code>；</li>
+<li><strong>续航达成率</strong>：满电→低电窗口的平均实际续航 ÷ 电池档案里的官方续航——这是感受电池衰减最直观的指标。</li>
+</ul>
+<h2 id="技术选型与架构"><a href="#技术选型与架构" class="headerlink" title="技术选型与架构"></a>技术选型与架构</h2><p>技术栈：<strong>Flutter + Riverpod + drift(SQLite) + fl_chart + intl</strong>，纯本地存储，不依赖任何服务端。</p>
+<p>架构上刻意做成了四层，让<strong>算法与 UI、存储完全解耦</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lib&#x2F;</span><br><span class="line">├── core&#x2F;</span><br><span class="line">│   ├── models&#x2F;        # 领域模型与枚举</span><br><span class="line">│   └── engine&#x2F;        # 纯函数计算引擎（无 Flutter 依赖）</span><br><span class="line">├── data&#x2F;              # drift 表定义、Repository、Riverpod providers</span><br><span class="line">├── features&#x2F;          # 按页面组织的 UI（home&#x2F;charging&#x2F;stats&#x2F;vehicle&#x2F;calculator）</span><br><span class="line">└── shared&#x2F;            # 通用组件（如 EmptyState）</span><br></pre></td></tr></table></figure>
+<p><code>core/engine</code> 是 TDD 的主战场：窗口构建、ΔSOC 校正、度数推算、SOH、达成率全部是纯函数，输入输出明确，测试不需要任何 mock。UI 层只做两件事——从 provider 读数据、把用户输入交给引擎。数据层用 drift 的响应式流（<code>watch</code>），数据库一变 UI 自动刷新。</p>
+<h2 id="工程实践：子代理驱动开发（SDD）"><a href="#工程实践：子代理驱动开发（SDD）" class="headerlink" title="工程实践：子代理驱动开发（SDD）"></a>工程实践：子代理驱动开发（SDD）</h2><p>这次实现采用了一种有意思的工作流：<strong>计划先行 + 子代理驱动</strong>。先把 15 个任务写成带完整代码骨架的实现计划（每个任务都有失败测试→实现→提交的 TDD 步骤），然后每个任务派给一个全新的 AI 子代理执行，任务完成后由另一个独立子代理做「规格合规性 + 代码质量」双维度审查。</p>
+<p>几个数据点：</p>
+<ul>
+<li>15 个任务全部通过任务级审查，其中 3 个任务审查发现了测试缺口，由修复子代理补齐（还做了<strong>变异测试</strong>验证——故意把实现改错，确认新测试真的能抓到）；</li>
+<li>全部任务完成后做了一次<strong>整分支宽范围审查</strong>，这一步抓到了任务级审查漏掉的规格缺口：记录列表没做、车辆建档没有入口、续航预测因子恒为 null 不工作等 2 个关键 + 6 个重要问题，分两批修复后复审通过；</li>
+<li>最终 <strong>55 个测试全绿、analyzer 0 告警</strong>、release 包构建成功。</li>
+</ul>
+<p>体验下来，这种模式的价值在于「每个任务一个全新上下文」——子代理不会被历史对话污染，而审查者与实现者相互独立，避免了自己查自己的盲区。</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><ul>
+<li><strong>flutter doctor 报 license status unknown</strong>：新版 Android cmdline-tools 的 <code>sdkmanager --licenses</code> 输出变了，flutter 解析不到期望的确认文案。换装旧版 cmdline-tools 12.0 后正常；</li>
+<li><strong>drift 内存库测试挂起</strong>：<code>addTearDown(db.close)</code> 会因 drift 内部的 pending timer 让 widget 测试超时，把 <code>await db.close()</code> 挪到测试体内即可；</li>
+<li><strong>riverpod 2.6 的 <code>AsyncValue.guard</code> 返回 <code>Future</code></strong>：不能同步 return 进 Provider 体，需改用 try/catch 手工构造 <code>AsyncValue</code>；</li>
+<li><strong>drift 生成类遮蔽核心模型</strong>：<code>Batteries</code> 表生成的数据类叫 <code>Battery</code>，和 core 里的领域模型 <code>Battery</code> 同名，消费方一律用 drift 类型，容量计算收敛到一个 extension 上避免五处复制；</li>
+<li><strong>荣耀手机 adb 连不上</strong>：荣耀新机型 USB 厂商 ID 是 <code>339b</code>，不在 <code>android-udev</code> 包的规则表里（只收录了老华为 <code>12d1</code>），需要自定义 udev 规则授权；另外荣耀在「仅充电」模式下不暴露 ADB 接口，要切到「传输文件」模式。</li>
+</ul>
+<h2 id="交付件"><a href="#交付件" class="headerlink" title="交付件"></a>交付件</h2><ul>
+<li><strong>代码</strong>：Flutter 工程（<code>code/</code>），四层架构，55 个测试，<code>flutter analyze</code> 0 issues；</li>
+<li><strong>文档</strong>：设计文档 + 15 任务实现计划（含每任务 TDD 步骤与代码骨架）；</li>
+<li><strong>构建产物</strong>：正式签名 release APK——通用包 59MB，分 ABI 后 <strong>arm64 包仅 20.4MB</strong>（debug 包 160MB，release + split-per-abi 瘦身 8 倍）；</li>
+<li><strong>签名配置</strong>：keystore 存放在仓库外，<code>key.properties</code> 由 gitignore 排除，构建脚本在缺失配置时自动回退 debug 签名。</li>
+</ul>
+<p>真机验证：adb 安装 → 启动 → 走完「建档 → 记账 → 统计」全流程，数据全部落在本地 SQLite。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>一个周末级别的个人项目，从「电费糊涂账」的抱怨出发，最终产出一个测试齐全、算法有据可依的完整应用。最大的收获不是 App 本身，而是验证了两件事：一是<strong>把领域算法做成纯函数引擎</strong>，测试和演进都会非常轻松；二是<strong>审查环节独立于实现环节</strong>时，规格缺口几乎没有漏网——哪怕是 AI 子代理写的代码，把关逻辑同样成立。</p>
+<p>云同步与社区功能留待后续，先把每一度电都记明白。</p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赠人玫瑰，手留余香
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 ©
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="next-post btn btn-default" title='封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景：电驴版「小熊油耗」的空白"><span class="toc-text">背景：电驴版「小熊油耗」的空白</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求梳理：MVP-只做核心闭环"><span class="toc-text">需求梳理：MVP 只做核心闭环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心算法：把「充电」变成「事件流」"><span class="toc-text">核心算法：把「充电」变成「事件流」</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事件流-里程窗口"><span class="toc-text">事件流 + 里程窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三种模式的度数推算"><span class="toc-text">三种模式的度数推算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOH-与续航预测"><span class="toc-text">SOH 与续航预测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术选型与架构"><span class="toc-text">技术选型与架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工程实践：子代理驱动开发（SDD）"><span class="toc-text">工程实践：子代理驱动开发（SDD）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#踩坑记录"><span class="toc-text">踩坑记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交付件"><span class="toc-text">交付件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-text">后记</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                
+<div class="busuanzi">
+    访问量:
+    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
+    &nbsp; | &nbsp;
+    访客数:
+    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+(function () {
+  var api = 'https://blog-counter.sunjun19860214.workers.dev';
+  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
+  localStorage.setItem('cf_uid', vid);
+
+  function fill(elId, slug, inc, extra) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
+    fetch(api + '/?' + q)
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
+      .catch(function (e) { console.warn('counter:', e); });
+  }
+
+  fill('page-pv', window.location.pathname, true);
+  fill('site-pv', 'site_pv', true);
+  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
+})();
+</script>
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
