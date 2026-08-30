@@ -253,6 +253,13 @@
 <li><strong>签名配置</strong>：keystore 存放在仓库外，<code>key.properties</code> 由 gitignore 排除，构建脚本在缺失配置时自动回退 debug 签名。</li>
 </ul>
 <p>真机验证：adb 安装 → 启动 → 走完「建档 → 记账 → 统计」全流程，数据全部落在本地 SQLite。</p>
+<h2 id="交付验收"><a href="#交付验收" class="headerlink" title="交付验收"></a>交付验收</h2><p>v0.1 版本已推送到手机完成真机验收：安装（adb install）→ 启动 → 走通「车辆建档 → 电池登记 → 三种模式记账 → 记录删除 → 统计图表 → 费用计算器」全流程，数据全部落在本地 SQLite，无崩溃、无卡顿。以下为真机实拍截图：</p>
+<p><img src="/img/volttrack/volttrack1.jpg" alt="VoltTrack 真机验收截图 1"></p>
+<p><img src="/img/volttrack/volttrack2.jpg" alt="VoltTrack 真机验收截图 2"></p>
+<p><img src="/img/volttrack/volttrack3.jpg" alt="VoltTrack 真机验收截图 3"></p>
+<p><img src="/img/volttrack/volttrack4.jpg" alt="VoltTrack 真机验收截图 4"></p>
+<p><img src="/img/volttrack/volttrack5.jpg" alt="VoltTrack 真机验收截图 5"></p>
+<p><img src="/img/volttrack/volttrack6.jpg" alt="VoltTrack 真机验收截图 6"></p>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>一个周末级别的个人项目，从「电费糊涂账」的抱怨出发，最终产出一个测试齐全、算法有据可依的完整应用。最大的收获不是 App 本身，而是验证了两件事：一是<strong>把领域算法做成纯函数引擎</strong>，测试和演进都会非常轻松；二是<strong>审查环节独立于实现环节</strong>时，规格缺口几乎没有漏网——哪怕是 AI 子代理写的代码，把关逻辑同样成立。</p>
 <p>云同步与社区功能留待后续，先把每一度电都记明白。</p>
 
@@ -310,7 +317,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景：电驴版「小熊油耗」的空白"><span class="toc-text">背景：电驴版「小熊油耗」的空白</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求梳理：MVP-只做核心闭环"><span class="toc-text">需求梳理：MVP 只做核心闭环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心算法：把「充电」变成「事件流」"><span class="toc-text">核心算法：把「充电」变成「事件流」</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事件流-里程窗口"><span class="toc-text">事件流 + 里程窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三种模式的度数推算"><span class="toc-text">三种模式的度数推算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOH-与续航预测"><span class="toc-text">SOH 与续航预测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术选型与架构"><span class="toc-text">技术选型与架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工程实践：子代理驱动开发（SDD）"><span class="toc-text">工程实践：子代理驱动开发（SDD）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#踩坑记录"><span class="toc-text">踩坑记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交付件"><span class="toc-text">交付件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-text">后记</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景：电驴版「小熊油耗」的空白"><span class="toc-text">背景：电驴版「小熊油耗」的空白</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求梳理：MVP-只做核心闭环"><span class="toc-text">需求梳理：MVP 只做核心闭环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心算法：把「充电」变成「事件流」"><span class="toc-text">核心算法：把「充电」变成「事件流」</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事件流-里程窗口"><span class="toc-text">事件流 + 里程窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三种模式的度数推算"><span class="toc-text">三种模式的度数推算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOH-与续航预测"><span class="toc-text">SOH 与续航预测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术选型与架构"><span class="toc-text">技术选型与架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工程实践：子代理驱动开发（SDD）"><span class="toc-text">工程实践：子代理驱动开发（SDD）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#踩坑记录"><span class="toc-text">踩坑记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交付件"><span class="toc-text">交付件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交付验收"><span class="toc-text">交付验收</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-text">后记</span></a></li></ol>
         
     </div>
 </aside>
