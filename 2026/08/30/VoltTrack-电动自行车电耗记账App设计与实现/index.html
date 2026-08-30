@@ -177,7 +177,7 @@
         <h2 id="背景：电驴版「小熊油耗」的空白"><a href="#背景：电驴版「小熊油耗」的空白" class="headerlink" title="背景：电驴版「小熊油耗」的空白"></a>背景：电驴版「小熊油耗」的空白</h2><p>家里那台电动自行车，平时在小区充电桩充电——桩是按<strong>时长</strong>计费的（比如 2 元/3 小时），回老家在插座上充是<strong>包月</strong>，商场快充又按<strong>度数</strong>计费。同样是「充满一次电」，三种场景的成本差异巨大，而我完全说不清自己的车每公里到底花多少钱、百公里耗几度电、电池用了两年还剩几分健康度。</p>
 <p>油车的油耗记录有「小熊油耗」这样成熟的应用，但电动自行车领域一直没有趁手的工具。市面上的充电类 App 要么绑定特定运营商的桩，要么只有记金额没有算电耗。于是决定自己写一个：<strong>VoltTrack</strong>，一款纯本地的电动自行车电耗记账 App。本文记录从需求梳理、算法设计到工程实现、发布安装的完整过程。</p>
 <blockquote>
-<p>项目已开源：<strong><a href="https://github.com/sunjunior/volttrack" target="_blank" rel="noopener">github.com/sunjunior/volttrack</a></strong>，本文全部代码与交付件（含可下载的签名 APK）均可在仓库及其 <a href="https://github.com/sunjunior/volttrack/releases" target="_blank" rel="noopener">Releases</a> 页面获取，协议 MIT。<br>APK 下载：<a href="/downloads/app-arm64-v8a-release.apk">app-arm64-v8a-release.apk（20.4MB）</a></p>
+<p>项目已开源：<strong><a href="https://github.com/sunjunior/volttrack" target="_blank" rel="noopener">github.com/sunjunior/volttrack</a></strong>，本文全部代码与交付件（含可下载的签名 APK）均可在仓库及其 <a href="https://github.com/sunjunior/volttrack/releases" target="_blank" rel="noopener">Releases</a> 页面获取，协议 MIT。</p>
 </blockquote>
 <h2 id="需求梳理：MVP-只做核心闭环"><a href="#需求梳理：MVP-只做核心闭环" class="headerlink" title="需求梳理：MVP 只做核心闭环"></a>需求梳理：MVP 只做核心闭环</h2><p>先明确用户故事：<strong>记录每一次充电（金额、时长、电量），自动算出百公里电耗、每公里成本、续航预测和电池健康度</strong>。据此划定 MVP 四个模块：</p>
 <ol>
@@ -253,7 +253,6 @@
 <ul>
 <li><strong>代码</strong>：仓库根目录即 Flutter 工程（四层架构：<code>core/models</code> 领域模型、<code>core/engine</code> 纯函数计算引擎、<code>data</code> drift 数据层、<code>features</code> 页面 UI），55 个测试，<code>flutter analyze</code> 0 issues；</li>
 <li><strong>构建产物</strong>：正式签名 release APK 已挂载在 <a href="https://github.com/sunjunior/volttrack/releases/tag/v0.1" target="_blank" rel="noopener">v0.1 Release</a>——<strong>arm64 包 20.4MB</strong>（主流机型推荐）、armeabi-v7a 17.8MB（32 位老设备）、x86_64 21.9MB（模拟器），release + split-per-abi 相比 debug 包瘦身约 8 倍；</li>
-<li><strong>APK 附件直下</strong>：<a href="/downloads/app-arm64-v8a-release.apk">app-arm64-v8a-release.apk（20.4MB，签名与 Release 一致）</a>；</li>
 <li><strong>构建与签名说明</strong>：见仓库 <a href="https://github.com/sunjunior/volttrack/blob/main/docs/BUILD.md" target="_blank" rel="noopener">docs/BUILD.md</a>——keystore 存放在仓库外，<code>key.properties</code> 由 gitignore 排除，构建脚本在缺失配置时自动回退 debug 签名。</li>
 </ul>
 <p>真机验证：adb 安装 → 启动 → 走完「建档 → 记账 → 统计」全流程，数据全部落在本地 SQLite。</p>
