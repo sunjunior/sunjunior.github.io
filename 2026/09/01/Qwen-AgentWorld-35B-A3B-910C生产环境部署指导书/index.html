@@ -1,0 +1,766 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://sunjunior.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="大模型,华为昇腾,部署实践" />
+
+
+<meta name="description" content="背景：把大模型从「跑起来」到「跑好」最近在华为 Atlas 910C 服务器上部署 Qwen-AgentWorld-35B-A3B（一个基于 MoE 架构的 35B 参数语言模型），过程中踩了不..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Qwen-AgentWorld-35B-A3B 910C 生产环境部署指导书 |
+    
+    sunjunior的个人技术博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
+    /./img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='sunjunior'>
+            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
+            
+            <h2>
+                技术控，爱折腾
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://sunjunior.github.io">
+                        sunjunior的个人技术博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Qwen-AgentWorld-35B-A3B 910C 生产环境部署指导书">
+            
+            Qwen-AgentWorld-35B-A3B 910C 生产环境部署指导书
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/%E5%8D%8E%E4%B8%BA%E6%98%87%E8%85%BE/" rel="tag">华为昇腾</a> <a class="tag-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a> <a class="tag-link" href="/tags/%E9%83%A8%E7%BD%B2%E5%AE%9E%E8%B7%B5/" rel="tag">部署实践</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2026/09/01</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="背景：把大模型从「跑起来」到「跑好」"><a href="#背景：把大模型从「跑起来」到「跑好」" class="headerlink" title="背景：把大模型从「跑起来」到「跑好」"></a>背景：把大模型从「跑起来」到「跑好」</h2><p>最近在华为 Atlas 910C 服务器上部署 Qwen-AgentWorld-35B-A3B（一个基于 MoE 架构的 35B 参数语言模型），过程中踩了不少坑，也积累了一套经过实测验证的生产环境部署方案。这篇文章把整个部署流程——从硬件选型、拓扑设计、一键部署脚本到压测验收——完整记录下来，方便团队内部复用，也给同样在 910C 上做推理部署的同学一些参考。</p>
+<blockquote>
+<p>本文档是自包含的，所有部署与压测脚本完整内嵌于文末附录，复制保存后即可使用。</p>
+</blockquote>
+<h2 id="1-部署软硬件要求"><a href="#1-部署软硬件要求" class="headerlink" title="1. 部署软硬件要求"></a>1. 部署软硬件要求</h2><h3 id="硬件要求"><a href="#硬件要求" class="headerlink" title="硬件要求"></a>硬件要求</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>服务器</td>
+<td>华为 Atlas 910C × 8 卡</td>
+</tr>
+<tr>
+<td>卡内拓扑</td>
+<td>每卡 2 die（共 16 die），每 die 64GB HBM</td>
+</tr>
+<tr>
+<td>NPU 驱动</td>
+<td>25.5.0（<code>npu-smi info</code> 确认）</td>
+</tr>
+<tr>
+<td>设备文件</td>
+<td><code>/dev/davinci0</code> ~ <code>/dev/davinci15</code>、<code>/dev/davinci_manager</code>、<code>/dev/devmm_svm</code>、<code>/dev/hisi_hdc</code></td>
+</tr>
+<tr>
+<td>宿主机软件</td>
+<td>Docker（含 <code>--privileged</code> 权限）、Python 3.x（压测机）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="软件与模型"><a href="#软件与模型" class="headerlink" title="软件与模型"></a>软件与模型</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>推理镜像</td>
+<td><code>quay.io/ascend/vllm-ascend:v0.23.0-a3-openeuler</code>（内置 CANN 9.0.0，含 fastapi/httpx 依赖）</td>
+</tr>
+<tr>
+<td>模型路径</td>
+<td><code>/mnt/old_data/whl/models/Qwen-AgentWorld-35B-A3B</code>（bf16，21 shards，64.56 GiB）</td>
+</tr>
+<tr>
+<td>模型架构</td>
+<td>Qwen3.5-MoE（256 experts top-8，40 层 GDN 混合线性注意力）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="端口规划"><a href="#端口规划" class="headerlink" title="端口规划"></a>端口规划</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>端口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>推理实例 API（8 个）</td>
+<td>8810 ~ 8817</td>
+</tr>
+<tr>
+<td>统一接入网关（可选）</td>
+<td>9000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="2-部署策略"><a href="#2-部署策略" class="headerlink" title="2. 部署策略"></a>2. 部署策略</h2><h3 id="拓扑视图"><a href="#拓扑视图" class="headerlink" title="拓扑视图"></a>拓扑视图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">                      ┌─────────────────────────────┐</span><br><span class="line">业务流量 ──────────► │  统一接入层（负载均衡网关）   │  统一 URL: http:&#x2F;&#x2F;&lt;host&gt;:9000&#x2F;v1&#x2F;...</span><br><span class="line">                      │  least_conn + 并发准入控制   │</span><br><span class="line">                      └──────────┬──────────────────┘</span><br><span class="line">                                 │ Round-Robin &#x2F; 最少连接分发</span><br><span class="line">   ┌──────────┬──────────┬───────┴──┬──────────┬──────────┐</span><br><span class="line">   ▼          ▼          ▼          ▼          ▼          ▼</span><br><span class="line">inst-tp2-0  inst-tp2-1  inst-tp2-2  ...       inst-tp2-7</span><br><span class="line">卡0双芯      卡1双芯      卡2双芯                  卡7双芯</span><br><span class="line">die 0,1     die 2,3     die 4,5                  die 14,15</span><br><span class="line">:8810       :8811       :8812                    :8817</span><br><span class="line">(TP&#x3D;2)      (TP&#x3D;2)      (TP&#x3D;2)                   (TP&#x3D;2)</span><br></pre></td></tr></table></figure>
+<h3 id="策略要点"><a href="#策略要点" class="headerlink" title="策略要点"></a>策略要点</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>策略</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实例划分</td>
+<td><strong>8 个独立容器 × TP=2</strong>，每实例占用同卡 2 die</td>
+<td>卡内 HCCS 互联最快；实测优于单进程 DP 模式（吞吐 +93%）与 TP=4/8/16 拓扑</td>
+</tr>
+<tr>
+<td>设备配对</td>
+<td>(0,1)(2,3)(4,5)(6,7)(8,9)(10,11)(12,13)(14,15)</td>
+<td>die 级配对，跨卡不混用</td>
+</tr>
+<tr>
+<td>负载均衡</td>
+<td>least_conn（最少连接）+ 并发准入上限</td>
+<td>LLM 请求时长差异大，最少连接优于轮询</td>
+</tr>
+<tr>
+<td><strong>并发准入</strong></td>
+<td><strong>SLA3 档全局在飞上限 112（每实例 14）；SLA5 档上限 192（每实例 24）</strong></td>
+<td>防止负载漂入 TTFT 越线区</td>
+</tr>
+<tr>
+<td>关键图优化</td>
+<td>显式 <code>cudagraph_capture_sizes=[1..36]</code></td>
+<td>缺失则 decode batch&gt;16 回退 eager，峰值 -50%（<strong>必须配置</strong>）</td>
+</tr>
+<tr>
+<td>预热</td>
+<td>部署后多档位预热轮 ≥5min</td>
+<td>图捕获为懒触发，预热不足首请求 TTFT 虚高 3~10 倍（<strong>必须执行</strong>）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="运行档位与预期性能"><a href="#运行档位与预期性能" class="headerlink" title="运行档位与预期性能"></a>运行档位与预期性能</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>档位</th>
+<th style="text-align:center">单实例并发</th>
+<th style="text-align:center">系统并发</th>
+<th style="text-align:center">系统吞吐</th>
+<th style="text-align:center">TTFT P95</th>
+<th style="text-align:center">TPOT P95</th>
+<th>SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>舒适默认</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">64</td>
+<td style="text-align:center">3165 tok/s</td>
+<td style="text-align:center">1394ms</td>
+<td style="text-align:center">18.7ms</td>
+<td>SLA3 ✅</td>
+</tr>
+<tr>
+<td><strong>SLA3 最高</strong></td>
+<td style="text-align:center"><strong>14</strong></td>
+<td style="text-align:center"><strong>112</strong></td>
+<td style="text-align:center"><strong>4500 tok/s</strong></td>
+<td style="text-align:center"><strong>2444ms</strong></td>
+<td style="text-align:center"><strong>24.0ms</strong></td>
+<td><strong>✅ ← 对外承诺推荐</strong></td>
+</tr>
+<tr>
+<td><strong>SLA5 最高</strong></td>
+<td style="text-align:center"><strong>24</strong></td>
+<td style="text-align:center"><strong>192</strong></td>
+<td style="text-align:center"><strong>6330 tok/s</strong></td>
+<td style="text-align:center"><strong>4574ms</strong></td>
+<td style="text-align:center"><strong>28.9ms</strong></td>
+<td><strong>✅</strong></td>
+</tr>
+<tr>
+<td>吞吐峰值</td>
+<td style="text-align:center">32</td>
+<td style="text-align:center">256</td>
+<td style="text-align:center">7426 tok/s</td>
+<td style="text-align:center">8323ms</td>
+<td style="text-align:center">31.4ms</td>
+<td>超出 SLA（非承诺）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>SLA 定义：SLA3 = TTFT&lt;3s 且 TPOT&lt;50ms；SLA5 = TTFT&lt;5s 且 TPOT&lt;80ms。负载为输入 3500 / 输出 1500 tokens（完全随机、无公共前缀）。</p>
+</blockquote>
+<h2 id="3-部署详细步骤"><a href="#3-部署详细步骤" class="headerlink" title="3. 部署详细步骤"></a>3. 部署详细步骤</h2><h3 id="步骤一：前置检查"><a href="#步骤一：前置检查" class="headerlink" title="步骤一：前置检查"></a>步骤一：前置检查</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1) NPU 无残留进程、显存回基线（每 die ~3GB/65536MB）</span></span><br><span class="line">npu-smi info | grep -A2 <span class="string">"Process id"</span>      <span class="comment"># 应显示 "No running processes found"</span></span><br><span class="line">npu-smi info | grep -oE <span class="string">"[0-9]+ / 65536"</span>  <span class="comment"># 各 die 应为 2800~3200 MB</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 若有残留进程（会导致新实例初始化失败），执行清理：</span></span><br><span class="line"><span class="keyword">for</span> pid <span class="keyword">in</span> $(npu-smi info | grep -oE <span class="string">"^\| [0-9]+ +[0-9]+ +[0-9]+"</span> | awk <span class="string">'&#123;print $NF&#125;'</span>); <span class="keyword">do</span> <span class="built_in">kill</span> -9 <span class="variable">$pid</span>; <span class="keyword">done</span></span><br><span class="line">ps aux | grep -E <span class="string">"VLLMWorker|vllm serve"</span> | grep -v grep | awk <span class="string">'&#123;print $2&#125;'</span> | xargs -r <span class="built_in">kill</span> -9</span><br><span class="line">sleep 10 &amp;&amp; npu-smi info | grep -c <span class="string">"No running processes"</span>   <span class="comment"># 输出 8 为干净</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 端口未被占用</span></span><br><span class="line">ss -tlnp | grep -E <span class="string">":881[0-7]"</span> || <span class="built_in">echo</span> <span class="string">"端口空闲"</span></span><br></pre></td></tr></table></figure>
+<h3 id="步骤二：一键部署-8-实例"><a href="#步骤二：一键部署-8-实例" class="headerlink" title="步骤二：一键部署 8 实例"></a>步骤二：一键部署 8 实例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;交付包&gt;/scripts</span><br><span class="line"></span><br><span class="line"><span class="comment"># capture_sizes 必须显式传入（缺失将导致 decode batch&gt;16 回退 eager，峰值 -50%）</span></span><br><span class="line"><span class="built_in">export</span> COMPILE_CONFIG=<span class="string">'&#123;"cudagraph_mode":"FULL","cudagraph_capture_sizes":[1,2,4,8,10,12,14,16,18,20,24,28,32,36]&#125;'</span></span><br><span class="line"><span class="built_in">export</span> MAX_NUM_SEQS=36</span><br><span class="line"><span class="built_in">export</span> MAX_BATCHED=8192</span><br><span class="line"></span><br><span class="line">bash deploy.sh 2 8810</span><br></pre></td></tr></table></figure>
+<p>脚本自动完成：停止旧实例 → 按设备配对启动 8 容器 → 轮询就绪（模型加载约 5~6 分钟）。</p>
+<h4 id="单实例灵活启动"><a href="#单实例灵活启动" class="headerlink" title="单实例灵活启动"></a>单实例灵活启动</h4><p><code>start_vllm_instance.sh</code> 支持按需启动任意数量的实例，绑定指定卡号与端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 仅启用 1 个实例（绑定卡 0 双芯 die 0,1，端口 8810）</span></span><br><span class="line"><span class="built_in">export</span> COMPILE_CONFIG=<span class="string">'&#123;"cudagraph_mode":"FULL","cudagraph_capture_sizes":[1,2,4,8,10,12,14,16,18,20,24,28,32,36]&#125;'</span></span><br><span class="line"><span class="built_in">export</span> MAX_NUM_SEQS=36 MAX_BATCHED=8192</span><br><span class="line">bash start_vllm_instance.sh inst-tp2-0 2 <span class="string">"0,1"</span> 8810</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用 4 个实例（绑定卡 0~3）</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> 0 1 2 3; <span class="keyword">do</span></span><br><span class="line">  DIES=<span class="string">"<span class="variable">$((i*2)</span>),<span class="variable">$((i*2+1)</span>)"</span></span><br><span class="line">  PORT=$((8810+i))</span><br><span class="line">  bash start_vllm_instance.sh inst-tp2-<span class="variable">$i</span> 2 <span class="string">"<span class="variable">$DIES</span>"</span> <span class="variable">$PORT</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><strong>参数说明</strong>：<code>start_vllm_instance.sh &lt;实例名&gt; &lt;TP数&gt; &lt;die列表&gt; &lt;端口&gt;</code>，实例名和端口由调用者指定，die 列表决定绑定的物理卡。</p>
+<blockquote>
+<p>注意：每个实例独占绑定的 die，不可与其他实例重叠。已运行的实例不受后续启动影响。</p>
+</blockquote>
+<h3 id="步骤三：就绪验证"><a href="#步骤三：就绪验证" class="headerlink" title="步骤三：就绪验证"></a>步骤三：就绪验证</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> $(seq 8810 8817); <span class="keyword">do</span></span><br><span class="line">  curl -s -m 2 <span class="string">"http://127.0.0.1:<span class="variable">$p</span>/v1/models"</span> &gt;/dev/null &amp;&amp; <span class="built_in">echo</span> <span class="string">"<span class="variable">$p</span>: OK"</span> || <span class="built_in">echo</span> <span class="string">"<span class="variable">$p</span>: DOWN"</span></span><br><span class="line"><span class="keyword">done</span>   <span class="comment"># 预期 8/8 OK</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 确认图捕获尺寸已生效（关键！）</span></span><br><span class="line">docker logs inst-tp2-0 2&gt;&amp;1 | grep -oE <span class="string">"cudagraph_capture_sizes[^]]*\]"</span></span><br><span class="line"><span class="comment"># 预期输出: [1, 2, 4, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36]</span></span><br></pre></td></tr></table></figure>
+<h3 id="步骤四：多档位预热（部署后必做，≥5-分钟）"><a href="#步骤四：多档位预热（部署后必做，≥5-分钟）" class="headerlink" title="步骤四：多档位预热（部署后必做，≥5 分钟）"></a>步骤四：多档位预热（部署后必做，≥5 分钟）</h3><p><strong>预热不足会导致首批请求 TTFT 虚高 3~10 倍（图捕获为懒触发），此步骤不可跳过。</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BASE=<span class="string">"http://127.0.0.1:8810,...,http://127.0.0.1:8817"</span>   <span class="comment"># 8 个端口全部列出</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 按并发档位从低到高逐档预热（丢弃预热数据）：</span></span><br><span class="line"><span class="keyword">for</span> C <span class="keyword">in</span> 64 96 128 160 192 224 256; <span class="keyword">do</span></span><br><span class="line">  python3 bench_closed_loop.py --base-url <span class="string">"<span class="variable">$BASE</span>"</span> --model qwen-agentworld \</span><br><span class="line">    --concurrency <span class="variable">$C</span> --input-len 3500 --output-len 1500 --prompt-mode unique \</span><br><span class="line">    --warmup-secs 45 --warmup-output-len 128 --warmup-only --duration 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="comment"># ⚠️ --prompt-mode 必须与业务输入的前缀分布一致（unique=无公共前缀 / shared=含共享前缀），</span></span><br><span class="line"><span class="comment">#    预热分布与业务分布不一致时图捕获与缓存状态不匹配，首批请求 TTFT 仍会虚高</span></span><br></pre></td></tr></table></figure>
+<p><strong>完成判定</strong>：连续两档预热请求的 TTFT P95 与历史稳态值偏差 &lt;20%。若目标仅为单一运行档位，至少完成该档位 ± 邻近档的预热。</p>
+<h3 id="步骤五：安装与配置-nginx-统一接入网关"><a href="#步骤五：安装与配置-nginx-统一接入网关" class="headerlink" title="步骤五：安装与配置 nginx 统一接入网关"></a>步骤五：安装与配置 nginx 统一接入网关</h3><h4 id="nginx-安装"><a href="#nginx-安装" class="headerlink" title="nginx 安装"></a>nginx 安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CentOS/RHEL/openEuler</span></span><br><span class="line">yum install -y nginx    <span class="comment"># 或 dnf install -y nginx</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Ubuntu/Debian</span></span><br><span class="line">apt-get install -y nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证安装</span></span><br><span class="line">nginx -v   <span class="comment"># nginx version: nginx/1.x.x</span></span><br></pre></td></tr></table></figure>
+<h4 id="网关配置"><a href="#网关配置" class="headerlink" title="网关配置"></a>网关配置</h4><p>将以下配置写入 <code>/etc/nginx/nginx.conf</code>（<strong>完全替换默认内容</strong>）：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">worker_processes</span> <span class="number">2</span>;</span><br><span class="line"><span class="section">events</span> &#123; <span class="attribute">worker_connections</span> <span class="number">2048</span>; &#125;</span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/mime.types;</span><br><span class="line">    <span class="attribute">default_type</span> application/octet-stream;</span><br><span class="line">    <span class="attribute">sendfile</span> <span class="literal">on</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">upstream</span> qwen_backend &#123;</span><br><span class="line">        least_conn;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8810</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8811</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8812</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8813</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8814</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8815</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8816</span> max_conns=<span class="number">24</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8817</span> max_conns=<span class="number">24</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">9000</span>;</span><br><span class="line">        <span class="attribute">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://qwen_backend;</span><br><span class="line">            <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">300s</span>;</span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">5s</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>关键参数</strong>：<code>least_conn</code>（LLM 请求时长差异大时优于轮询）、<code>max_conns=24</code>（8 后端 × 24 = 全局 192，对应 SLA5 档）、<code>proxy_buffering off</code>（<strong>必须关闭</strong>，否则 SSE 流式响应会被缓冲，导致客户端无法逐 token 接收）。</p>
+</blockquote>
+<h4 id="启动与验证"><a href="#启动与验证" class="headerlink" title="启动与验证"></a>启动与验证</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx -t                    <span class="comment"># 配置语法检查</span></span><br><span class="line">nginx                       <span class="comment"># 启动（如已在运行则 nginx -s reload）</span></span><br><span class="line">curl -s -m 5 http://127.0.0.1:9000/v1/models | head -c 80</span><br><span class="line"><span class="comment"># 预期：返回 JSON 模型列表</span></span><br></pre></td></tr></table></figure>
+<h4 id="网关实测吞吐（已验证）"><a href="#网关实测吞吐（已验证）" class="headerlink" title="网关实测吞吐（已验证）"></a>网关实测吞吐（已验证）</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">系统并发</th>
+<th style="text-align:center">经网关吞吐</th>
+<th style="text-align:center">直连吞吐</th>
+<th style="text-align:center">网关开销</th>
+<th style="text-align:center">经网关 TTFT P95</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">112</td>
+<td style="text-align:center">4615 tok/s</td>
+<td style="text-align:center">4500 tok/s</td>
+<td style="text-align:center">+2.6%</td>
+<td style="text-align:center">1882ms</td>
+</tr>
+<tr>
+<td style="text-align:center">192</td>
+<td style="text-align:center">6329 tok/s</td>
+<td style="text-align:center">6330 tok/s</td>
+<td style="text-align:center">≈0%</td>
+<td style="text-align:center">2791ms</td>
+</tr>
+<tr>
+<td style="text-align:center">256</td>
+<td style="text-align:center">8192 tok/s</td>
+<td style="text-align:center">7426 tok/s</td>
+<td style="text-align:center">+10.3%</td>
+<td style="text-align:center">3723ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>nginx 网关接入无性能损耗，生产推荐通过网关统一暴露（统一 URL :9000）。实测 C=256 时经网关吞吐反而高于直连 10.3%，原因是 least_conn 使各后端负载更均匀。</p>
+</blockquote>
+<h4 id="运维命令"><a href="#运维命令" class="headerlink" title="运维命令"></a>运维命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload              <span class="comment"># 重载配置（不中断服务）</span></span><br><span class="line">nginx -s stop                <span class="comment"># 停止</span></span><br><span class="line"><span class="comment"># 查看各后端连接数</span></span><br><span class="line">ss -tn | grep -c <span class="string">"8810\|8811\|8812\|8813\|8814\|8815\|8816\|8817"</span></span><br></pre></td></tr></table></figure>
+<h3 id="常见部署故障速查"><a href="#常见部署故障速查" class="headerlink" title="常见部署故障速查"></a>常见部署故障速查</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>根因</th>
+<th>处置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WorkerProc failed / Engine core initialization failed</td>
+<td>多实例并发启动的 HCCL 初始化竞态（偶发）</td>
+<td>仅重启失败实例：<code>docker rm -f inst-tp2-N</code> 后按单实例命令重启，其余不动</td>
+</tr>
+<tr>
+<td>新实例报 Free memory 不足</td>
+<td>残留孤儿进程占显存（强杀后易发）</td>
+<td>执行步骤一清理流程后重试</td>
+</tr>
+<tr>
+<td>首批请求 TTFT 达 12s+</td>
+<td>预热不足（图捕获懒触发）</td>
+<td>执行多档预热轮</td>
+</tr>
+<tr>
+<td>吞吐只有预期一半</td>
+<td>COMPILE_CONFIG 未传（eager 回退）</td>
+<td>按步骤二显式 export 后重新部署</td>
+</tr>
+<tr>
+<td>单请求 30 token 耗时 3s+ / 高并发零完成</td>
+<td>投机解码（MTP/Ngram）被误启用</td>
+<td>移除 —speculative-config（本模型 checkpoint 无草稿权重）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="4-压测方法"><a href="#4-压测方法" class="headerlink" title="4. 压测方法"></a>4. 压测方法</h2><h3 id="压测工具与负载定义"><a href="#压测工具与负载定义" class="headerlink" title="压测工具与负载定义"></a>压测工具与负载定义</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>压测工具</td>
+<td><code>bench_closed_loop.py</code>（闭环并发：固定并发槽，完成即补发；流式采集 TTFT/TPOT；多实例 round-robin）</td>
+</tr>
+<tr>
+<td>负载</td>
+<td>输入 3500 tokens / 输出 1500 tokens（<code>--ignore-eos</code> 强制长度）</td>
+</tr>
+<tr>
+<td>采样</td>
+<td>贪心/默认采样；prompt 模式可选（identical / unique / shared，影响前缀缓存命中率）</td>
+</tr>
+<tr>
+<td>指标</td>
+<td>TTFT / TPOT / ITL / E2E 的 P50/P95/P99，吞吐（req/s、tok/s）</td>
+</tr>
+<tr>
+<td>SLA 判定</td>
+<td>TTFT P95 与 TPOT P95 对照 SLA 标准（SLA3: TTFT&lt;3s, TPOT&lt;50ms; SLA5: TTFT&lt;5s, TPOT&lt;80ms）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="标准压测流程"><a href="#标准压测流程" class="headerlink" title="标准压测流程"></a>标准压测流程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ① 部署后先完成多档预热，再进入正式测量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ② 单点压测（示例：SLA3 承诺档 系统并发 112，unique 无公共前缀保守口径）</span></span><br><span class="line">python3 bench_closed_loop.py --base-url <span class="string">"<span class="variable">$BASE</span>"</span> --model qwen-agentworld \</span><br><span class="line">  --concurrency 112 --input-len 3500 --output-len 1500 --prompt-mode unique \</span><br><span class="line">  --warmup-secs 30 --warmup-output-len 128 --duration 180 \</span><br><span class="line">  --output acceptance_c112.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># ③ 全曲线验收扫描（可选：单实例并发 PI=8..36，系统并发 C = PI×8）</span></span><br><span class="line"><span class="keyword">for</span> PI <span class="keyword">in</span> 8 11 12 13 14 16 18 20 24 28 32 36; <span class="keyword">do</span></span><br><span class="line">  C=$((PI * 8))</span><br><span class="line">  python3 bench_closed_loop.py --base-url <span class="string">"<span class="variable">$BASE</span>"</span> --model qwen-agentworld \</span><br><span class="line">    --concurrency <span class="variable">$C</span> --input-len 3500 --output-len 1500 \</span><br><span class="line">    --warmup-secs 30 --warmup-output-len 128 --duration 180 \</span><br><span class="line">    --output <span class="string">"scan_pi<span class="variable">$&#123;PI&#125;</span>_c<span class="variable">$&#123;C&#125;</span>.json"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<h3 id="数据有效性规则"><a href="#数据有效性规则" class="headerlink" title="数据有效性规则"></a>数据有效性规则</h3><ol>
+<li><strong>每点至少 2 轮</strong>：首轮 TTFT P95 可能虚高（懒捕获残余），以复测值为准</li>
+<li><strong>吞吐稳定性</strong>：连续两轮偏差 &lt;5% 方可采信</li>
+<li><strong>C≥160 时</strong>：TTFT P95 存在 ±1~2s 的排队波时序波动，需 2~3 轮交叉确认</li>
+<li><strong>prompt-mode 标注</strong>：identical / shared / unique 三种模式的吞吐与 TTFT 不同，验收数据必须标注所测模式</li>
+</ol>
+<h2 id="附录-A：全并发档位实测曲线"><a href="#附录-A：全并发档位实测曲线" class="headerlink" title="附录 A：全并发档位实测曲线"></a>附录 A：全并发档位实测曲线</h2><blockquote>
+<p>以下数据为 2026-08-29 ~ 09-01 实测，环境与本文档完全一致。负载为 unique 无公共前缀，多档位预热后测量。</p>
+</blockquote>
+<p><strong>SLA 边界：SLA3 稳健上限 = C≤112（4500 tok/s）；SLA5 稳健上限 = C≤192（6330 tok/s）；吞吐峰值 = 7426 tok/s（C=256）。</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">系统并发</th>
+<th style="text-align:center">吞吐 (tok/s)</th>
+<th style="text-align:center">TTFT P95</th>
+<th style="text-align:center">TPOT P95</th>
+<th style="text-align:center">SLA3</th>
+<th style="text-align:center">SLA5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">64</td>
+<td style="text-align:center">3165</td>
+<td style="text-align:center">1394ms</td>
+<td style="text-align:center">18.7ms</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">88</td>
+<td style="text-align:center">3626</td>
+<td style="text-align:center">1964ms</td>
+<td style="text-align:center">22.8ms</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">96</td>
+<td style="text-align:center">4055</td>
+<td style="text-align:center">2089ms</td>
+<td style="text-align:center">22.1ms</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">104</td>
+<td style="text-align:center">4286</td>
+<td style="text-align:center">2239ms</td>
+<td style="text-align:center">23.7ms</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">112</td>
+<td style="text-align:center">4500</td>
+<td style="text-align:center">2444ms</td>
+<td style="text-align:center">24.0ms</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">128</td>
+<td style="text-align:center">5134</td>
+<td style="text-align:center">3165ms</td>
+<td style="text-align:center">24.4ms</td>
+<td style="text-align:center">❌（临界）</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">144</td>
+<td style="text-align:center">5341</td>
+<td style="text-align:center">2702ms</td>
+<td style="text-align:center">26.0ms</td>
+<td style="text-align:center">✅（临界）</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">160</td>
+<td style="text-align:center">5711</td>
+<td style="text-align:center">3140ms</td>
+<td style="text-align:center">26.9ms</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">192</td>
+<td style="text-align:center">6330</td>
+<td style="text-align:center">4574ms</td>
+<td style="text-align:center">28.9ms</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td style="text-align:center">224</td>
+<td style="text-align:center">7022</td>
+<td style="text-align:center">6180ms</td>
+<td style="text-align:center">29.1ms</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td style="text-align:center">256</td>
+<td style="text-align:center">7426</td>
+<td style="text-align:center">8323ms</td>
+<td style="text-align:center">31.4ms</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td style="text-align:center">288</td>
+<td style="text-align:center">7120</td>
+<td style="text-align:center">6633ms</td>
+<td style="text-align:center">31.4ms</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="验收基准速查"><a href="#验收基准速查" class="headerlink" title="验收基准速查"></a>验收基准速查</h3><ul>
+<li><strong>SLA3 验收</strong>：系统并发 112，预期吞吐 <strong>4500±5% tok/s</strong>、TTFT P95 ≤3s（实测 2444ms）、TPOT P95 ≤50ms（实测 24.0ms）</li>
+<li><strong>SLA5 验收</strong>：系统并发 192，预期吞吐 <strong>6330±5% tok/s</strong>、TTFT P95 ≤5s（实测 4574ms）、TPOT P95 ≤80ms（实测 28.9ms）</li>
+<li><strong>舒适档冒烟</strong>：系统并发 64，预期吞吐 <strong>3165±5% tok/s</strong>、TTFT P95 ≤1.5s（实测 1394ms）</li>
+</ul>
+<h2 id="附录-B：vllm-bench-官方工具交叉验证"><a href="#附录-B：vllm-bench-官方工具交叉验证" class="headerlink" title="附录 B：vllm bench 官方工具交叉验证"></a>附录 B：vllm bench 官方工具交叉验证</h2><p>单实例直测 ×8 = 系统值。负载：random 3.5k/1.5k、ignore_eos、greedy（temperature=0）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> inst-tp2-0 python3 -m vllm.entrypoints.cli.main bench serve \</span><br><span class="line">  --dataset-name random --random-input-len 3500 --random-output-len 1500 \</span><br><span class="line">  --model qwen-agentworld --base-url http://127.0.0.1:8810 --endpoint /v1/completions \</span><br><span class="line">  --request-rate inf --max-concurrency 8 --num-prompts 40 --num-warmups 0 \</span><br><span class="line">  --percentile-metrics ttft,tpot,itl --metric-percentiles <span class="string">"50,90,95,99"</span> \</span><br><span class="line">  --ignore-eos --skip-chat-template --temperature 0 \</span><br><span class="line">  --tokenizer /mnt/old_data/whl/models/Qwen-AgentWorld-35B-A3B --trust-remote-code \</span><br><span class="line">  --save-result --result-dir /tmp/vb --result-filename c8.json --<span class="built_in">disable</span>-tqdm</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>vllm bench 注意事项：① 首轮存在首过噪声需复测；② 突发发射（request-rate=inf）较高档位偏保守；③ 需显式 <code>--temperature 0</code>。</p>
+</blockquote>
+<h2 id="附录-C：部署与压测脚本（完整源码）"><a href="#附录-C：部署与压测脚本（完整源码）" class="headerlink" title="附录 C：部署与压测脚本（完整源码）"></a>附录 C：部署与压测脚本（完整源码）</h2><blockquote>
+<p>以下脚本完整内嵌，复制保存后即可使用。所有脚本放在同一目录下执行。</p>
+</blockquote>
+<h4 id="C-1-一键部署脚本（deploy-sh）"><a href="#C-1-一键部署脚本（deploy-sh）" class="headerlink" title="C.1 一键部署脚本（deploy.sh）"></a>C.1 一键部署脚本（deploy.sh）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 用法: bash deploy.sh 2 8810   (TP=2, 起始端口 8810, 自动部署 8 实例)</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line">TP=<span class="string">"<span class="variable">$&#123;1:?usage: $0 &lt;tp&gt; &lt;start_port&gt;&#125;</span>"</span></span><br><span class="line">BASE_PORT=<span class="string">"<span class="variable">$&#123;2:-8810&#125;</span>"</span></span><br><span class="line">SCRIPT_DIR=<span class="string">"<span class="variable">$(cd "$(dirname "$0")</span>"</span> &amp;&amp; <span class="built_in">pwd</span>)<span class="string">"</span></span><br><span class="line"><span class="string">CARDS=("</span>0,1<span class="string">" "</span>2,3<span class="string">" "</span>4,5<span class="string">" "</span>6,7<span class="string">" "</span>8,9<span class="string">" "</span>10,11<span class="string">" "</span>12,13<span class="string">" "</span>14,15<span class="string">")</span></span><br><span class="line"><span class="string">case "</span><span class="variable">$TP</span><span class="string">" in</span></span><br><span class="line"><span class="string">  2) INSTANCES=8; DIE_GROUPS=("</span><span class="variable">$&#123;CARDS[@]&#125;</span><span class="string">") ;;</span></span><br><span class="line"><span class="string">  4) INSTANCES=4; DIE_GROUPS=("</span>0,1,2,3<span class="string">" "</span>4,5,6,7<span class="string">" "</span>8,9,10,11<span class="string">" "</span>12,13,14,15<span class="string">") ;;</span></span><br><span class="line"><span class="string">  8) INSTANCES=2; DIE_GROUPS=("</span>0,1,2,3,4,5,6,7<span class="string">" "</span>8,9,10,11,12,13,14,15<span class="string">") ;;</span></span><br><span class="line"><span class="string">  16) INSTANCES=1; DIE_GROUPS=("</span>0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15<span class="string">") ;;</span></span><br><span class="line"><span class="string">  *) echo "</span>Unsupported TP: <span class="variable">$TP</span><span class="string">"; exit 1 ;;</span></span><br><span class="line"><span class="string">esac</span></span><br><span class="line"><span class="string">echo "</span>=== Deploying TP=<span class="variable">$TP</span> x <span class="variable">$&#123;INSTANCES&#125;</span> instances ===<span class="string">"</span></span><br><span class="line"><span class="string">PIDS=()</span></span><br><span class="line"><span class="string">for i in <span class="variable">$(seq 0 $((INSTANCES - 1)</span>)); do</span></span><br><span class="line"><span class="string">  NAME="</span>inst-tp<span class="variable">$&#123;TP&#125;</span>-<span class="variable">$&#123;i&#125;</span><span class="string">"; PORT=<span class="variable">$((BASE_PORT + i)</span>); DEV="</span><span class="variable">$&#123;DIE_GROUPS[$i]&#125;</span><span class="string">"</span></span><br><span class="line"><span class="string">  MAX_NUM_SEQS="</span><span class="variable">$&#123;MAX_NUM_SEQS:-36&#125;</span><span class="string">" MAX_BATCHED="</span><span class="variable">$&#123;MAX_BATCHED:-8192&#125;</span><span class="string">" \</span></span><br><span class="line"><span class="string">    CUDAGRAPH_MODE="</span><span class="variable">$&#123;CUDAGRAPH_MODE:-FULL&#125;</span><span class="string">" \</span></span><br><span class="line"><span class="string">    bash "</span><span class="variable">$SCRIPT_DIR</span>/start_vllm_instance.sh<span class="string">" "</span><span class="variable">$NAME</span><span class="string">" "</span><span class="variable">$TP</span><span class="string">" "</span><span class="variable">$DEV</span><span class="string">" "</span><span class="variable">$PORT</span><span class="string">" &amp;</span></span><br><span class="line"><span class="string">  PIDS+=($!)</span></span><br><span class="line"><span class="string">done</span></span><br><span class="line"><span class="string">for pid in "</span><span class="variable">$&#123;PIDS[@]&#125;</span><span class="string">"; do wait <span class="variable">$pid</span>; done</span></span><br><span class="line"><span class="string">for attempt in <span class="variable">$(seq 1 60)</span>; do</span></span><br><span class="line"><span class="string">  READY=0</span></span><br><span class="line"><span class="string">  for i in <span class="variable">$(seq 0 $((INSTANCES - 1)</span>)); do</span></span><br><span class="line"><span class="string">    PORT=<span class="variable">$((BASE_PORT + i)</span>); curl -s -m 3 "</span>http://127.0.0.1:<span class="variable">$&#123;PORT&#125;</span>/v1/models<span class="string">" &gt;/dev/null 2&gt;&amp;1 &amp;&amp; READY=<span class="variable">$((READY + 1)</span>)</span></span><br><span class="line"><span class="string">  done</span></span><br><span class="line"><span class="string">  [ "</span><span class="variable">$READY</span><span class="string">" -eq "</span><span class="variable">$INSTANCES</span><span class="string">" ] &amp;&amp; &#123; echo "</span>All ready!<span class="string">"; break; &#125;</span></span><br><span class="line"><span class="string">  sleep 20</span></span><br><span class="line"><span class="string">done</span></span><br></pre></td></tr></table></figure>
+<h4 id="C-2-单实例启动脚本（start-vllm-instance-sh）"><a href="#C-2-单实例启动脚本（start-vllm-instance-sh）" class="headerlink" title="C.2 单实例启动脚本（start_vllm_instance.sh）"></a>C.2 单实例启动脚本（start_vllm_instance.sh）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 用法: bash start_vllm_instance.sh &lt;name&gt; &lt;tp&gt; &lt;devices&gt; &lt;port&gt;</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line">NAME=<span class="string">"<span class="variable">$&#123;1:?&#125;</span>"</span>; TP=<span class="string">"<span class="variable">$&#123;2:?&#125;</span>"</span>; DEVICES=<span class="string">"<span class="variable">$&#123;3:?&#125;</span>"</span>; PORT=<span class="string">"<span class="variable">$&#123;4:?&#125;</span>"</span></span><br><span class="line">IMAGE_NAME=<span class="string">"<span class="variable">$&#123;IMAGE_NAME:-quay.io/ascend/vllm-ascend:v0.23.0-a3-openeuler&#125;</span>"</span></span><br><span class="line">MODEL_PATH=<span class="string">"<span class="variable">$&#123;MODEL_PATH:-/mnt/old_data/whl/models/Qwen-AgentWorld-35B-A3B&#125;</span>"</span></span><br><span class="line">MAX_NUM_SEQS=<span class="string">"<span class="variable">$&#123;MAX_NUM_SEQS:-36&#125;</span>"</span>; MAX_BATCHED=<span class="string">"<span class="variable">$&#123;MAX_BATCHED:-8192&#125;</span>"</span></span><br><span class="line">MAX_MODEL_LEN=<span class="string">"<span class="variable">$&#123;MAX_MODEL_LEN:-8192&#125;</span>"</span>; CUDAGRAPH_MODE=<span class="string">"<span class="variable">$&#123;CUDAGRAPH_MODE:-FULL&#125;</span>"</span></span><br><span class="line">COMPILE_CONFIG=<span class="string">"<span class="variable">$&#123;COMPILE_CONFIG:-&#125;</span>"</span>; FUSED_MC2=<span class="string">"<span class="variable">$&#123;FUSED_MC2:-1&#125;</span>"</span>; NZ_MODE=<span class="string">"<span class="variable">$&#123;NZ_MODE:-1&#125;</span>"</span></span><br><span class="line">GPU_MEM_UTIL=<span class="string">"<span class="variable">$&#123;GPU_MEM_UTIL:-0.95&#125;</span>"</span>; EXTRA_ARGS=<span class="string">"<span class="variable">$&#123;EXTRA_ARGS:-&#125;</span>"</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$COMPILE_CONFIG</span>"</span> ]; <span class="keyword">then</span> COMPILE_ARG=<span class="string">"--compilation-config '<span class="variable">$COMPILE_CONFIG</span>'"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">"<span class="variable">$CUDAGRAPH_MODE</span>"</span> = <span class="string">"NONE"</span> ]; <span class="keyword">then</span> COMPILE_ARG=<span class="string">"--enforce-eager"</span></span><br><span class="line"><span class="keyword">else</span> COMPILE_ARG=<span class="string">"--compilation-config '&#123;\"cudagraph_mode\":\"<span class="variable">$&#123;CUDAGRAPH_MODE&#125;</span>\"&#125;'"</span>; <span class="keyword">fi</span></span><br><span class="line">docker rm -f <span class="string">"<span class="variable">$NAME</span>"</span> &gt;/dev/null 2&gt;&amp;1 || <span class="literal">true</span></span><br><span class="line">DAVINCI_DEVICES=()</span><br><span class="line"><span class="keyword">for</span> d <span class="keyword">in</span> <span class="variable">$&#123;DEVICES//,/ &#125;</span>; <span class="keyword">do</span> DAVINCI_DEVICES+=(<span class="string">"--device=/dev/davinci<span class="variable">$&#123;d&#125;</span>"</span>); <span class="keyword">done</span></span><br><span class="line">docker run -d --name <span class="string">"<span class="variable">$NAME</span>"</span> --net=host --ipc=host --shm-size=16g --privileged=<span class="literal">true</span> \</span><br><span class="line">  --<span class="built_in">ulimit</span> nofile=65535:65535 <span class="string">"<span class="variable">$&#123;DAVINCI_DEVICES[@]&#125;</span>"</span> \</span><br><span class="line">  --device=/dev/davinci_manager --device=/dev/devmm_svm --device=/dev/hisi_hdc \</span><br><span class="line">  -v /usr/<span class="built_in">local</span>/Ascend/driver:/usr/<span class="built_in">local</span>/Ascend/driver \</span><br><span class="line">  -v /usr/<span class="built_in">local</span>/bin/npu-smi:/usr/<span class="built_in">local</span>/bin/npu-smi \</span><br><span class="line">  -v /usr/<span class="built_in">local</span>/sbin/npu-smi:/usr/<span class="built_in">local</span>/sbin/npu-smi \</span><br><span class="line">  -v /usr/<span class="built_in">local</span>/Ascend/driver/lib64/:/usr/<span class="built_in">local</span>/Ascend/driver/lib64/ \</span><br><span class="line">  -v /usr/<span class="built_in">local</span>/Ascend/driver/version.info:/usr/<span class="built_in">local</span>/Ascend/driver/version.info \</span><br><span class="line">  -v /var/<span class="built_in">log</span>/npu:/var/<span class="built_in">log</span>/npu -v /etc/hccn.conf:/etc/hccn.conf \</span><br><span class="line">  -v /mnt/old_data/whl:/mnt/old_data/whl \</span><br><span class="line">  -e ASCEND_RT_VISIBLE_DEVICES=<span class="string">"<span class="variable">$DEVICES</span>"</span> \</span><br><span class="line">  -e PYTORCH_NPU_ALLOC_CONF=expandable_segments:True \</span><br><span class="line">  -e VLLM_ASCEND_ENABLE_FUSED_MC2=<span class="string">"<span class="variable">$FUSED_MC2</span>"</span> -e VLLM_ASCEND_ENABLE_NZ=<span class="string">"<span class="variable">$NZ_MODE</span>"</span> \</span><br><span class="line">  -e VLLM_ASCEND_ENABLE_DENSE_OPTIMIZE=1 -e VLLM_ASCEND_BALANCE_SCHEDULING=1 \</span><br><span class="line">  -e VLLM_ASCEND_GDN_FAST_PATH=1 \</span><br><span class="line">  -e VLLM_ASCEND_GDN_MAX_H_OVERALLOC_RATIO=2.0 -e VLLM_ASCEND_GDN_MAX_PADDING_RATIO=2.0 \</span><br><span class="line">  -e HCCL_OP_EXPANSION_MODE=AIV -e HCCL_BUFFSIZE=1024 \</span><br><span class="line">  -e HF_HUB_OFFLINE=1 -e OMP_NUM_THREADS=1 \</span><br><span class="line">  <span class="string">"<span class="variable">$IMAGE_NAME</span>"</span> \</span><br><span class="line">  /bin/bash -c <span class="string">"source /usr/local/Ascend/ascend-toolkit/set_env.sh 2&gt;/dev/null; \</span></span><br><span class="line"><span class="string">    export LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64:\$LD_LIBRARY_PATH; \</span></span><br><span class="line"><span class="string">    vllm serve <span class="variable">$MODEL_PATH</span> --host 0.0.0.0 --port <span class="variable">$PORT</span> \</span></span><br><span class="line"><span class="string">      --served-model-name qwen-agentworld --dtype bfloat16 --trust-remote-code \</span></span><br><span class="line"><span class="string">      --tensor-parallel-size <span class="variable">$TP</span> --gpu-memory-utilization <span class="variable">$GPU_MEM_UTIL</span> \</span></span><br><span class="line"><span class="string">      --max-model-len <span class="variable">$MAX_MODEL_LEN</span> --max-num-seqs <span class="variable">$MAX_NUM_SEQS</span> \</span></span><br><span class="line"><span class="string">      --max-num-batched-tokens <span class="variable">$MAX_BATCHED</span> --block-size 256 \</span></span><br><span class="line"><span class="string">      --enable-chunked-prefill --enable-prefix-caching \</span></span><br><span class="line"><span class="string">      --language-model-only --seed 1024 --safetensors-load-strategy eager \</span></span><br><span class="line"><span class="string">      <span class="variable">$COMPILE_ARG</span> <span class="variable">$EXTRA_ARGS</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"[started] <span class="variable">$NAME</span> (TP=<span class="variable">$TP</span> devices=<span class="variable">$DEVICES</span> port=<span class="variable">$PORT</span>)"</span></span><br></pre></td></tr></table></figure>
+<h4 id="C-3-停止脚本（stop-all-sh）"><a href="#C-3-停止脚本（stop-all-sh）" class="headerlink" title="C.3 停止脚本（stop_all.sh）"></a>C.3 停止脚本（stop_all.sh）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">NAMES=$(docker ps --format <span class="string">'&#123;&#123;.Names&#125;&#125;'</span> | grep -E <span class="string">'^inst-tp|^qwen-gateway'</span>)</span><br><span class="line">[ -z <span class="string">"<span class="variable">$NAMES</span>"</span> ] &amp;&amp; <span class="built_in">echo</span> <span class="string">"No instances"</span> || &#123; <span class="built_in">echo</span> <span class="string">"Stopping: <span class="variable">$NAMES</span>"</span>; docker rm -f <span class="variable">$NAMES</span>; &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="C-4-闭环并发压测脚本（bench-closed-loop-py）"><a href="#C-4-闭环并发压测脚本（bench-closed-loop-py）" class="headerlink" title="C.4 闭环并发压测脚本（bench_closed_loop.py）"></a>C.4 闭环并发压测脚本（bench_closed_loop.py）</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> argparse, json, random, sys, time, threading, requests</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line">RESULTS, LOCK = [], threading.Lock()</span><br><span class="line">WARMUP_DONE, STOP = threading.Event(), threading.Event()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_args</span><span class="params">()</span>:</span></span><br><span class="line">    p = argparse.ArgumentParser()</span><br><span class="line">    p.add_argument(<span class="string">"--base-url"</span>, default=<span class="string">"http://127.0.0.1:8810"</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--model"</span>, default=<span class="string">"qwen-agentworld"</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--concurrency"</span>, type=int, default=<span class="number">20</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--input-len"</span>, type=int, default=<span class="number">3500</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--output-len"</span>, type=int, default=<span class="number">1500</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--warmup-secs"</span>, type=int, default=<span class="number">90</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--warmup-output-len"</span>, type=int, default=<span class="number">128</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--duration"</span>, type=int, default=<span class="number">180</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--warmup-only"</span>, action=<span class="string">"store_true"</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--prompt-mode"</span>, default=<span class="string">"identical"</span>, choices=[<span class="string">"identical"</span>,<span class="string">"unique"</span>,<span class="string">"shared"</span>])</span><br><span class="line">    p.add_argument(<span class="string">"--shared-len"</span>, type=int, default=<span class="number">3000</span>)</span><br><span class="line">    p.add_argument(<span class="string">"--output"</span>, default=<span class="string">""</span>)</span><br><span class="line">    <span class="keyword">return</span> p.parse_args()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stream_request</span><span class="params">(url, model, prompt, max_tokens)</span>:</span></span><br><span class="line">    headers = &#123;<span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>&#125;</span><br><span class="line">    data = &#123;<span class="string">"model"</span>: model, <span class="string">"prompt"</span>: prompt, <span class="string">"max_tokens"</span>: max_tokens,</span><br><span class="line">            <span class="string">"temperature"</span>: <span class="number">0.0</span>, <span class="string">"stream"</span>: <span class="literal">True</span>, <span class="string">"ignore_eos"</span>: <span class="literal">True</span>&#125;</span><br><span class="line">    t0 = time.time(); first = <span class="literal">None</span>; last = <span class="literal">None</span>; times = []</span><br><span class="line">    resp = requests.post(url, headers=headers, json=data, stream=<span class="literal">True</span>, timeout=<span class="number">600</span>)</span><br><span class="line">    resp.raise_for_status()</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> resp.iter_lines():</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> line: <span class="keyword">continue</span></span><br><span class="line">        line = line.decode(<span class="string">"utf-8"</span>, errors=<span class="string">"replace"</span>)</span><br><span class="line">        <span class="keyword">if</span> line.startswith(<span class="string">"data: "</span>):</span><br><span class="line">            payload = line[<span class="number">6</span>:]</span><br><span class="line">            <span class="keyword">if</span> payload.strip() == <span class="string">"[DONE]"</span>: <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">try</span>: chunk = json.loads(payload)</span><br><span class="line">            <span class="keyword">except</span> json.JSONDecodeError: <span class="keyword">continue</span></span><br><span class="line">            now = time.time()</span><br><span class="line">            <span class="keyword">if</span> first <span class="keyword">is</span> <span class="literal">None</span>: first = now</span><br><span class="line">            last = now; times.append(now)</span><br><span class="line">    e2e = time.time() - t0</span><br><span class="line">    ttft = (first - t0) * <span class="number">1000</span> <span class="keyword">if</span> first <span class="keyword">else</span> e2e * <span class="number">1000</span></span><br><span class="line">    n = len(times)</span><br><span class="line">    tpot = (last - first) / (n - <span class="number">1</span>) * <span class="number">1000</span> <span class="keyword">if</span> n &gt; <span class="number">1</span> <span class="keyword">else</span> ttft</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">"prompt_tokens"</span>: len(prompt) <span class="keyword">if</span> isinstance(prompt, list) <span class="keyword">else</span> <span class="number">0</span>,</span><br><span class="line">            <span class="string">"completion_tokens"</span>: n, <span class="string">"ttft_ms"</span>: ttft, <span class="string">"tpot_ms"</span>: tpot, <span class="string">"e2e_s"</span>: e2e&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_prompt</span><span class="params">(args, rid)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> args.prompt_mode == <span class="string">"identical"</span>: <span class="keyword">return</span> [<span class="number">0</span>] * args.input_len</span><br><span class="line">    <span class="keyword">if</span> args.prompt_mode == <span class="string">"unique"</span>:</span><br><span class="line">        <span class="keyword">return</span> [random.randint(<span class="number">2000</span>, <span class="number">50000</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(args.input_len)]</span><br><span class="line">    sl = min(args.shared_len, args.input_len - <span class="number">100</span>)</span><br><span class="line">    <span class="keyword">return</span> [<span class="number">0</span>] * sl + [random.randint(<span class="number">2000</span>, <span class="number">50000</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(args.input_len - sl)]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">worker</span><span class="params">(wid, args, phase, counter)</span>:</span></span><br><span class="line">    urls = [<span class="string">f"<span class="subst">&#123;u.strip()&#125;</span>/v1/completions"</span> <span class="keyword">for</span> u <span class="keyword">in</span> args.base_url.split(<span class="string">","</span>)]</span><br><span class="line">    rid = [wid]</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> STOP.is_set():</span><br><span class="line">        <span class="keyword">if</span> phase == <span class="string">"warmup"</span> <span class="keyword">and</span> WARMUP_DONE.is_set(): <span class="keyword">break</span></span><br><span class="line">        mx = args.warmup_output_len <span class="keyword">if</span> phase == <span class="string">"warmup"</span> <span class="keyword">else</span> args.output_len</span><br><span class="line">        rid[<span class="number">0</span>] += <span class="number">1</span>; p = build_prompt(args, rid[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            url = urls[(rid[<span class="number">0</span>] + wid) % len(urls)]</span><br><span class="line">            r = stream_request(url, args.model, p, mx)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> STOP.is_set(): print(<span class="string">f"err: <span class="subst">&#123;e&#125;</span>"</span>, file=sys.stderr)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">with</span> LOCK:</span><br><span class="line">            counter[<span class="number">0</span>] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">"test"</span>: RESULTS.append(r)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pct</span><span class="params">(vals, p)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> vals: <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    sv = sorted(vals); <span class="keyword">return</span> sv[min(int(len(sv)*p/<span class="number">100</span>), len(sv)<span class="number">-1</span>)]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(args)</span>:</span></span><br><span class="line">    wc, tc = [<span class="number">0</span>], [<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(min(args.concurrency, <span class="number">8</span>)):</span><br><span class="line">        threading.Thread(target=worker, args=(i, args, <span class="string">"warmup"</span>, wc), daemon=<span class="literal">True</span>).start()</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    <span class="keyword">while</span> time.time() - t0 &lt; args.warmup_secs: time.sleep(<span class="number">5</span>)</span><br><span class="line">    WARMUP_DONE.set(); time.sleep(<span class="number">1</span>); RESULTS.clear(); STOP.clear()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(args.concurrency):</span><br><span class="line">        threading.Thread(target=worker, args=(i, args, <span class="string">"test"</span>, tc), daemon=<span class="literal">True</span>).start()</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    <span class="keyword">while</span> time.time() - t0 &lt; args.duration: time.sleep(<span class="number">10</span>)</span><br><span class="line">    STOP.set(); time.sleep(<span class="number">2</span>); elapsed = time.time() - t0</span><br><span class="line">    <span class="keyword">with</span> LOCK: final = list(RESULTS)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> final: print(<span class="string">"No results"</span>); <span class="keyword">return</span></span><br><span class="line">    ttft = [r[<span class="string">"ttft_ms"</span>] <span class="keyword">for</span> r <span class="keyword">in</span> final]; tpot = [r[<span class="string">"tpot_ms"</span>] <span class="keyword">for</span> r <span class="keyword">in</span> final]</span><br><span class="line">    e2e = [r[<span class="string">"e2e_s"</span>] <span class="keyword">for</span> r <span class="keyword">in</span> final]; otok = [r[<span class="string">"completion_tokens"</span>] <span class="keyword">for</span> r <span class="keyword">in</span> final]</span><br><span class="line">    qps = len(final)/elapsed; tok_s = sum(otok)/elapsed</span><br><span class="line">    t3 = pct(ttft,<span class="number">95</span>) &lt; <span class="number">3000</span> <span class="keyword">and</span> pct(tpot,<span class="number">95</span>) &lt; <span class="number">50</span></span><br><span class="line">    t5 = pct(ttft,<span class="number">95</span>) &lt; <span class="number">5000</span> <span class="keyword">and</span> pct(tpot,<span class="number">95</span>) &lt; <span class="number">80</span></span><br><span class="line">    print(<span class="string">f"\n===== C=<span class="subst">&#123;args.concurrency&#125;</span> ====="</span>)</span><br><span class="line">    print(<span class="string">f" req/s=<span class="subst">&#123;qps:<span class="number">.2</span>f&#125;</span> tok/s=<span class="subst">&#123;tok_s:<span class="number">.0</span>f&#125;</span>"</span>)</span><br><span class="line">    print(<span class="string">f" TTFT P50=<span class="subst">&#123;pct(ttft,<span class="number">50</span>):<span class="number">.0</span>f&#125;</span> P95=<span class="subst">&#123;pct(ttft,<span class="number">95</span>):<span class="number">.0</span>f&#125;</span> P99=<span class="subst">&#123;pct(ttft,<span class="number">99</span>):<span class="number">.0</span>f&#125;</span>ms"</span>)</span><br><span class="line">    print(<span class="string">f" TPOT P50=<span class="subst">&#123;pct(tpot,<span class="number">50</span>):<span class="number">.1</span>f&#125;</span> P95=<span class="subst">&#123;pct(tpot,<span class="number">95</span>):<span class="number">.1</span>f&#125;</span> P99=<span class="subst">&#123;pct(tpot,<span class="number">99</span>):<span class="number">.1</span>f&#125;</span>ms"</span>)</span><br><span class="line">    print(<span class="string">f" SLA3=<span class="subst">&#123;<span class="string">'PASS'</span> <span class="keyword">if</span> t3 <span class="keyword">else</span> <span class="string">'FAIL'</span>&#125;</span> SLA5=<span class="subst">&#123;<span class="string">'PASS'</span> <span class="keyword">if</span> t5 <span class="keyword">else</span> <span class="string">'FAIL'</span>&#125;</span>"</span>)</span><br><span class="line">    <span class="keyword">if</span> args.output:</span><br><span class="line">        json.dump(&#123;<span class="string">"qps"</span>:qps,<span class="string">"tok_s"</span>:tok_s,<span class="string">"elapsed"</span>:elapsed,<span class="string">"total_requests"</span>:len(final),</span><br><span class="line">                   <span class="string">"ttft"</span>:&#123;<span class="string">"p50"</span>:pct(ttft,<span class="number">50</span>),<span class="string">"p95"</span>:pct(ttft,<span class="number">95</span>),<span class="string">"p99"</span>:pct(ttft,<span class="number">99</span>)&#125;,</span><br><span class="line">                   <span class="string">"tpot"</span>:&#123;<span class="string">"p50"</span>:pct(tpot,<span class="number">50</span>),<span class="string">"p95"</span>:pct(tpot,<span class="number">95</span>),<span class="string">"p99"</span>:pct(tpot,<span class="number">99</span>)&#125;,</span><br><span class="line">                   <span class="string">"sla3"</span>:t3,<span class="string">"sla5"</span>:t5&#125;, open(args.output,<span class="string">"w"</span>), indent=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    a = parse_args()</span><br><span class="line">    <span class="keyword">try</span>: run(a)</span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt: STOP.set()</span><br></pre></td></tr></table></figure>
+<h4 id="C-5-统一接入网关（gateway-py）"><a href="#C-5-统一接入网关（gateway-py）" class="headerlink" title="C.5 统一接入网关（gateway.py）"></a>C.5 统一接入网关（gateway.py）</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> asyncio, os, time</span><br><span class="line"><span class="keyword">import</span> httpx, uvicorn</span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, Request</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> StreamingResponse, JSONResponse, Response</span><br><span class="line"></span><br><span class="line">BACKENDS = [b.strip().rstrip(<span class="string">"/"</span>) <span class="keyword">for</span> b <span class="keyword">in</span> os.getenv(<span class="string">"GATEWAY_BACKENDS"</span>,</span><br><span class="line">    <span class="string">","</span>.join(<span class="string">f"http://127.0.0.1:<span class="subst">&#123;<span class="number">8810</span>+i&#125;</span>"</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>))).split(<span class="string">","</span>) <span class="keyword">if</span> b.strip()]</span><br><span class="line">PORT = int(os.getenv(<span class="string">"GATEWAY_PORT"</span>, <span class="string">"9000"</span>))</span><br><span class="line">MAX_INFLIGHT = int(os.getenv(<span class="string">"GATEWAY_MAX_INFLIGHT"</span>, <span class="string">"192"</span>))</span><br><span class="line">QUEUE_TIMEOUT = float(os.getenv(<span class="string">"GATEWAY_QUEUE_TIMEOUT"</span>, <span class="string">"2.0"</span>))</span><br><span class="line">HEALTH_INTERVAL = float(os.getenv(<span class="string">"GATEWAY_HEALTH_INTERVAL"</span>, <span class="string">"5.0"</span>))</span><br><span class="line"></span><br><span class="line">S = &#123;<span class="string">"inflight"</span>: &#123;b: <span class="number">0</span> <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS&#125;, <span class="string">"healthy"</span>: &#123;b: <span class="literal">True</span> <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS&#125;,</span><br><span class="line">     <span class="string">"total_ok"</span>: &#123;b: <span class="number">0</span> <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS&#125;, <span class="string">"total_err"</span>: &#123;b: <span class="number">0</span> <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS&#125;,</span><br><span class="line">     <span class="string">"served"</span>: <span class="number">0</span>, <span class="string">"rejected"</span>: <span class="number">0</span>&#125;</span><br><span class="line">sem = asyncio.Semaphore(MAX_INFLIGHT)</span><br><span class="line">HOP = &#123;<span class="string">"connection"</span>,<span class="string">"keep-alive"</span>,<span class="string">"transfer-encoding"</span>,<span class="string">"te"</span>,<span class="string">"trailer"</span>,</span><br><span class="line">       <span class="string">"proxy-authenticate"</span>,<span class="string">"proxy-authorization"</span>,<span class="string">"upgrade"</span>,<span class="string">"content-length"</span>,<span class="string">"content-encoding"</span>&#125;</span><br><span class="line"></span><br><span class="line">app = FastAPI(docs_url=<span class="literal">None</span>, redoc_url=<span class="literal">None</span>, openapi_url=<span class="literal">None</span>)</span><br><span class="line">client = httpx.AsyncClient(timeout=httpx.Timeout(connect=<span class="number">5</span>, read=<span class="literal">None</span>, write=<span class="number">60</span>, pool=<span class="number">15</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pick</span><span class="params">()</span>:</span></span><br><span class="line">    healthy = [b <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS <span class="keyword">if</span> S[<span class="string">"healthy"</span>][b]]</span><br><span class="line">    <span class="keyword">return</span> min(healthy, key=<span class="keyword">lambda</span> b: S[<span class="string">"inflight"</span>][b]) <span class="keyword">if</span> healthy <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">health_loop</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">probe</span><span class="params">(b)</span>:</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                r = <span class="keyword">await</span> client.get(<span class="string">f"<span class="subst">&#123;b&#125;</span>/health"</span>, timeout=<span class="number">2.0</span>)</span><br><span class="line">                S[<span class="string">"healthy"</span>][b] = (r.status_code == <span class="number">200</span>)</span><br><span class="line">            <span class="keyword">except</span> Exception: S[<span class="string">"healthy"</span>][b] = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">await</span> asyncio.gather(*(probe(b) <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS))</span><br><span class="line">        <span class="keyword">await</span> asyncio.sleep(HEALTH_INTERVAL)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.on_event("startup")</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">startup</span><span class="params">()</span>:</span></span><br><span class="line">    asyncio.get_event_loop().create_task(health_loop())</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get("/gateway/health")</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">gw_health</span><span class="params">()</span>:</span> <span class="keyword">return</span> &#123;<span class="string">"status"</span>: <span class="string">"ok"</span>, <span class="string">"backends"</span>: len(BACKENDS)&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get("/gateway/status")</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">gw_status</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">"config"</span>: &#123;<span class="string">"max_inflight"</span>: MAX_INFLIGHT, <span class="string">"backends"</span>: BACKENDS&#125;,</span><br><span class="line">            <span class="string">"backends"</span>: [&#123;<span class="string">"url"</span>: b, <span class="string">"healthy"</span>: S[<span class="string">"healthy"</span>][b], <span class="string">"inflight"</span>: S[<span class="string">"inflight"</span>][b],</span><br><span class="line">                          <span class="string">"ok"</span>: S[<span class="string">"total_ok"</span>][b], <span class="string">"err"</span>: S[<span class="string">"total_err"</span>][b]&#125; <span class="keyword">for</span> b <span class="keyword">in</span> BACKENDS],</span><br><span class="line">            <span class="string">"totals"</span>: &#123;<span class="string">"served"</span>: S[<span class="string">"served"</span>], <span class="string">"rejected"</span>: S[<span class="string">"rejected"</span>]&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get("/health")</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">health</span><span class="params">()</span>:</span> <span class="keyword">return</span> Response(status_code=<span class="number">200</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">filt_headers</span><span class="params">(hdrs)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> &#123;k: v <span class="keyword">for</span> k, v <span class="keyword">in</span> hdrs.items() <span class="keyword">if</span> k.lower() <span class="keyword">not</span> <span class="keyword">in</span> HOP&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.api_route("/&#123;path:path&#125;", methods=["GET","POST","PUT","DELETE","OPTIONS","PATCH"])</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">proxy_all</span><span class="params">(request: Request, path: str)</span>:</span></span><br><span class="line">    S[<span class="string">"served"</span>] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">try</span>: body = <span class="keyword">await</span> request.body()</span><br><span class="line">    <span class="keyword">except</span> Exception: body = <span class="string">b""</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> body: body = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">await</span> asyncio.wait_for(sem.acquire(), timeout=QUEUE_TIMEOUT)</span><br><span class="line">    <span class="keyword">except</span> asyncio.TimeoutError:</span><br><span class="line">        S[<span class="string">"rejected"</span>] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> JSONResponse(&#123;<span class="string">"error"</span>: <span class="string">"busy"</span>&#125;, status_code=<span class="number">429</span>, headers=&#123;<span class="string">"Retry-After"</span>: <span class="string">"2"</span>&#125;)</span><br><span class="line">    tried = set()</span><br><span class="line">    is_stream = <span class="string">b'"stream":true'</span> <span class="keyword">in</span> (body <span class="keyword">or</span> <span class="string">b""</span>) <span class="keyword">or</span> <span class="string">b'"stream": true'</span> <span class="keyword">in</span> (body <span class="keyword">or</span> <span class="string">b""</span>)</span><br><span class="line">    <span class="keyword">while</span> len(tried) &lt; len(BACKENDS):</span><br><span class="line">        b = pick()</span><br><span class="line">        <span class="keyword">if</span> b <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> b <span class="keyword">in</span> tried: <span class="keyword">break</span></span><br><span class="line">        tried.add(b); S[<span class="string">"inflight"</span>][b] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            url = <span class="string">f"<span class="subst">&#123;b&#125;</span>/<span class="subst">&#123;path&#125;</span>"</span></span><br><span class="line">            fwd = filt_headers(dict(request.headers)); fwd.pop(<span class="string">"content-length"</span>, <span class="literal">None</span>)</span><br><span class="line">            req = client.build_request(request.method, url, headers=fwd, content=body)</span><br><span class="line">            <span class="keyword">if</span> is_stream:</span><br><span class="line">                up = <span class="keyword">await</span> client.send(req, stream=<span class="literal">True</span>)</span><br><span class="line">                S[<span class="string">"total_ok"</span>][b] += <span class="number">1</span></span><br><span class="line">                rh = filt_headers(dict(up.headers))</span><br><span class="line">                <span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">gen</span><span class="params">()</span>:</span></span><br><span class="line">                    <span class="keyword">try</span>:</span><br><span class="line">                        <span class="keyword">async</span> <span class="keyword">for</span> chunk <span class="keyword">in</span> up.aiter_raw(): <span class="keyword">yield</span> chunk</span><br><span class="line">                    <span class="keyword">except</span> Exception: <span class="keyword">pass</span></span><br><span class="line">                    <span class="keyword">finally</span>:</span><br><span class="line">                        <span class="keyword">await</span> up.aclose(); S[<span class="string">"inflight"</span>][b] -= <span class="number">1</span>; sem.release()</span><br><span class="line">                <span class="keyword">return</span> StreamingResponse(gen(), status_code=up.status_code, headers=rh)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                up = <span class="keyword">await</span> client.send(req)</span><br><span class="line">                S[<span class="string">"total_ok"</span>][b] += <span class="number">1</span>; content = up.content</span><br><span class="line">                rh = filt_headers(dict(up.headers))</span><br><span class="line">                S[<span class="string">"inflight"</span>][b] -= <span class="number">1</span>; sem.release()</span><br><span class="line">                <span class="keyword">return</span> Response(content=content, status_code=up.status_code,</span><br><span class="line">                                headers=rh, media_type=up.headers.get(<span class="string">"content-type"</span>))</span><br><span class="line">        <span class="keyword">except</span> httpx.ConnectError:</span><br><span class="line">            S[<span class="string">"inflight"</span>][b] = max(<span class="number">0</span>, S[<span class="string">"inflight"</span>][b] - <span class="number">1</span>)</span><br><span class="line">            S[<span class="string">"healthy"</span>][b] = <span class="literal">False</span>; S[<span class="string">"total_err"</span>][b] += <span class="number">1</span>; <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            S[<span class="string">"inflight"</span>][b] = max(<span class="number">0</span>, S[<span class="string">"inflight"</span>][b] - <span class="number">1</span>)</span><br><span class="line">            S[<span class="string">"total_err"</span>][b] += <span class="number">1</span>; <span class="keyword">continue</span></span><br><span class="line">    S[<span class="string">"rejected"</span>] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> JSONResponse(&#123;<span class="string">"error"</span>: <span class="string">"no healthy backend"</span>&#125;, status_code=<span class="number">503</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    uvicorn.run(app, host=<span class="string">"0.0.0.0"</span>, port=PORT, log_level=<span class="string">"info"</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="C-6-网关启动脚本（start-gateway-sh）"><a href="#C-6-网关启动脚本（start-gateway-sh）" class="headerlink" title="C.6 网关启动脚本（start_gateway.sh）"></a>C.6 网关启动脚本（start_gateway.sh）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">PORT=<span class="string">"<span class="variable">$&#123;GATEWAY_PORT:-9000&#125;</span>"</span></span><br><span class="line">BACKENDS=<span class="string">"<span class="variable">$&#123;GATEWAY_BACKENDS:-$(for i in $(seq 8810 8817); do echo -n "http://127.0.0.1:$i,"; done | sed 's/,$//')&#125;</span>"</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$&#123;1:-start&#125;</span>"</span> <span class="keyword">in</span></span><br><span class="line">  stop) docker rm -f qwen-gateway &gt;/dev/null 2&gt;&amp;1 &amp;&amp; <span class="built_in">echo</span> <span class="string">"stopped"</span> || <span class="built_in">echo</span> <span class="string">"not running"</span> ;;</span><br><span class="line">  status) curl -s -m 3 <span class="string">"http://127.0.0.1:<span class="variable">$PORT</span>/gateway/status"</span> | python3 -m json.tool 2&gt;/dev/null || <span class="built_in">echo</span> <span class="string">"DOWN"</span> ;;</span><br><span class="line">  start|*)</span><br><span class="line">    docker rm -f qwen-gateway &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">    docker run -d --name qwen-gateway --net=host --ipc=host \</span><br><span class="line">      -v <span class="string">"<span class="variable">$(pwd)</span>"</span>:/workspace:ro \</span><br><span class="line">      -e GATEWAY_PORT=<span class="string">"<span class="variable">$PORT</span>"</span> -e GATEWAY_BACKENDS=<span class="string">"<span class="variable">$BACKENDS</span>"</span> \</span><br><span class="line">      -e GATEWAY_MAX_INFLIGHT=<span class="string">"<span class="variable">$&#123;GATEWAY_MAX_INFLIGHT:-112&#125;</span>"</span> \</span><br><span class="line">      --entrypoint bash \</span><br><span class="line">      quay.io/ascend/vllm-ascend:v0.23.0-a3-openeuler \</span><br><span class="line">      -c <span class="string">'python3 -m uvicorn gateway:app --host 0.0.0.0 --port '</span><span class="string">"<span class="variable">$PORT</span>"</span><span class="string">' --workers 1'</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> $(seq 1 30); <span class="keyword">do</span></span><br><span class="line">      curl -s -m 2 <span class="string">"http://127.0.0.1:<span class="variable">$PORT</span>/gateway/health"</span> &gt;/dev/null 2&gt;&amp;1 &amp;&amp; &#123; <span class="built_in">echo</span> <span class="string">"READY"</span>; <span class="built_in">break</span>; &#125;</span><br><span class="line">      sleep 2</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赠人玫瑰，手留余香
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 ©
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2026/08/30/VoltTrack-%E7%94%B5%E5%8A%A8%E8%87%AA%E8%A1%8C%E8%BD%A6%E7%94%B5%E8%80%97%E8%AE%B0%E8%B4%A6App%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" class="next-post btn btn-default" title='VoltTrack：给电动自行车做一款电耗记账 App 的完整实践'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            VoltTrack：给电动自行车做一款电耗记账 App 的完整实践</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景：把大模型从「跑起来」到「跑好」"><span class="toc-text">背景：把大模型从「跑起来」到「跑好」</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-部署软硬件要求"><span class="toc-text">1. 部署软硬件要求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#硬件要求"><span class="toc-text">硬件要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#软件与模型"><span class="toc-text">软件与模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#端口规划"><span class="toc-text">端口规划</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-部署策略"><span class="toc-text">2. 部署策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拓扑视图"><span class="toc-text">拓扑视图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#策略要点"><span class="toc-text">策略要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行档位与预期性能"><span class="toc-text">运行档位与预期性能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-部署详细步骤"><span class="toc-text">3. 部署详细步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤一：前置检查"><span class="toc-text">步骤一：前置检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤二：一键部署-8-实例"><span class="toc-text">步骤二：一键部署 8 实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#单实例灵活启动"><span class="toc-text">单实例灵活启动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤三：就绪验证"><span class="toc-text">步骤三：就绪验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤四：多档位预热（部署后必做，≥5-分钟）"><span class="toc-text">步骤四：多档位预热（部署后必做，≥5 分钟）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤五：安装与配置-nginx-统一接入网关"><span class="toc-text">步骤五：安装与配置 nginx 统一接入网关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx-安装"><span class="toc-text">nginx 安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网关配置"><span class="toc-text">网关配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动与验证"><span class="toc-text">启动与验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网关实测吞吐（已验证）"><span class="toc-text">网关实测吞吐（已验证）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#运维命令"><span class="toc-text">运维命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见部署故障速查"><span class="toc-text">常见部署故障速查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-压测方法"><span class="toc-text">4. 压测方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#压测工具与负载定义"><span class="toc-text">压测工具与负载定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标准压测流程"><span class="toc-text">标准压测流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据有效性规则"><span class="toc-text">数据有效性规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-A：全并发档位实测曲线"><span class="toc-text">附录 A：全并发档位实测曲线</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#验收基准速查"><span class="toc-text">验收基准速查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-B：vllm-bench-官方工具交叉验证"><span class="toc-text">附录 B：vllm bench 官方工具交叉验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-C：部署与压测脚本（完整源码）"><span class="toc-text">附录 C：部署与压测脚本（完整源码）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#C-1-一键部署脚本（deploy-sh）"><span class="toc-text">C.1 一键部署脚本（deploy.sh）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-2-单实例启动脚本（start-vllm-instance-sh）"><span class="toc-text">C.2 单实例启动脚本（start_vllm_instance.sh）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-3-停止脚本（stop-all-sh）"><span class="toc-text">C.3 停止脚本（stop_all.sh）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-4-闭环并发压测脚本（bench-closed-loop-py）"><span class="toc-text">C.4 闭环并发压测脚本（bench_closed_loop.py）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-5-统一接入网关（gateway-py）"><span class="toc-text">C.5 统一接入网关（gateway.py）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-6-网关启动脚本（start-gateway-sh）"><span class="toc-text">C.6 网关启动脚本（start_gateway.sh）</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                
+<div class="busuanzi">
+    访问量:
+    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
+    &nbsp; | &nbsp;
+    访客数:
+    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+(function () {
+  var api = 'https://blog-counter.sunjun19860214.workers.dev';
+  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
+  localStorage.setItem('cf_uid', vid);
+
+  function fill(elId, slug, inc, extra) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
+    fetch(api + '/?' + q)
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
+      .catch(function (e) { console.warn('counter:', e); });
+  }
+
+  fill('page-pv', window.location.pathname, true);
+  fill('site-pv', 'site_pv', true);
+  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
+})();
+</script>
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
