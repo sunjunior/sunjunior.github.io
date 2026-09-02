@@ -1423,9 +1423,9 @@ pre,
   overflow: auto;
   margin: 20px 0;
   padding: 0;
-  color: #808080;
+  color: #24292f;
   font-size: 13px;
-  background: #1d1f21;
+  background: #f6f8fa;
   line-height: 1.6;
 }
 code {
@@ -1433,23 +1433,23 @@ code {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  color: #666666;
-  background: #eee;
+  color: #24292f;
+  background: #eff1f3;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
 pre code {
   padding: 0;
-  color: #808080;
+  color: #24292f;
   background: none;
   text-shadow: none;
 }
 pre .meta {
-  color: #b294bb;
+  color: #6e7781;
 }
 pre .comment {
-  color: #969896;
+  color: #6e7781;
 }
 .highlight {
   -webkit-border-radius: 1px;
@@ -1472,29 +1472,29 @@ pre .comment {
 }
 .highlight figcaption {
   font-size: 1em;
-  color: #808080;
+  color: #24292f;
   line-height: 1em;
   margin-bottom: 1em;
 }
 .highlight figcaption a {
   float: right;
-  color: #808080;
+  color: #24292f;
 }
 .highlight figcaption a:hover {
-  border-bottom-color: #808080;
+  border-bottom-color: #24292f;
 }
 .highlight .gutter pre {
   padding-left: 10px;
   padding-right: 10px;
-  color: #888f96;
+  color: #6e7781;
   text-align: right;
-  background-color: #000;
+  background-color: #f6f8fa;
 }
 .highlight .code pre {
   width: 100%;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: #1d1f21;
+  background-color: #f6f8fa;
 }
 .highlight .line {
   height: 20px;
@@ -1512,9 +1512,11 @@ pre .comment {
   border: none;
 }
 pre .variable,
+pre .regexp {
+  color: #953800;
+}
 pre .attribute,
 pre .tag,
-pre .regexp,
 pre .ruby .constant,
 pre .xml .tag .title,
 pre .xml .pi,
@@ -1523,7 +1525,7 @@ pre .html .doctype,
 pre .css .id,
 pre .css .class,
 pre .css .pseudo {
-  color: #c66;
+  color: #116329;
 }
 pre .number,
 pre .preprocessor,
@@ -1532,7 +1534,7 @@ pre .literal,
 pre .params,
 pre .constant,
 pre .command {
-  color: #de935f;
+  color: #0550ae;
 }
 pre .ruby .class .title,
 pre .css .rules .attribute,
@@ -1543,13 +1545,12 @@ pre .header,
 pre .ruby .symbol,
 pre .xml .cdata,
 pre .special,
-pre .number,
 pre .formula {
-  color: #b5bd68;
+  color: #0a3069;
 }
 pre .title,
 pre .css .hexcolor {
-  color: #8abeb7;
+  color: #8250df;
 }
 pre .function,
 pre .python .decorator,
@@ -1559,11 +1560,11 @@ pre .ruby .title .keyword,
 pre .perl .sub,
 pre .javascript .title,
 pre .coffeescript .title {
-  color: #81a2be;
+  color: #8250df;
 }
 pre .keyword,
 pre .javascript .function {
-  color: #b294bb;
+  color: #cf222e;
 }
 /*====================================================
     scrollbar
