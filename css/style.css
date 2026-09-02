@@ -34,17 +34,17 @@ html {
   overflow-y: scroll;
   scrollbar-color: #e67e22 #e0e0e0;
   scrollbar-width: auto;
-  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  font-family: "ui-sans-serif", "system-ui", -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 body {
   color: #505050;
   line-height: 1.75em;
   background: #ebebeb;
   position: relative;
-  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  font-family: "ui-sans-serif", "system-ui", -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 h1 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 2em;
   margin: 0.67em 0;
@@ -53,7 +53,7 @@ h1 {
 }
 
 h2 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1.5em;
   margin: 0.83em 0;
@@ -62,7 +62,7 @@ h2 {
 }
 
 h3 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1.17em;
   margin: 1em 0;
@@ -71,7 +71,7 @@ h3 {
 }
 
 h4 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1em;
   margin: 1.6em 0 1em 0;
@@ -80,7 +80,7 @@ h4 {
 }
 
 h5 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: .83em;
   margin: 1.6em 0 1em 0;
@@ -89,7 +89,7 @@ h5 {
 }
 
 h6 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: .67em;
   margin: 1.6em 0 1em 0;
@@ -323,7 +323,7 @@ pre {
   padding-top: 15px;
 }
 .main-header .main-header-box .branding h2 {
-  font-family: "STXingkai", "KaiTi", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   width: 320px;
   margin: 0 auto;
   letter-spacing: 3px;
@@ -578,11 +578,11 @@ pre {
   main post content
 ====================================================*/
 .post-content {
-  font: 400 16px/1.62 "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif;
+  font: 400 16px/1.62 "ui-sans-serif", "system-ui", -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   color: #333;
 }
 .post-content h1 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1.8em;
   margin: 0.67em 0;
@@ -590,7 +590,7 @@ pre {
   border-bottom: 2px LightGrey solid;
 }
 .post-content h2 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1.5em;
   margin: 0.83em 0;
@@ -598,7 +598,7 @@ pre {
   border-bottom: 2px LightGrey solid;
 }
 .post-content h3 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1.17em;
   margin: 1em 0;
@@ -606,7 +606,7 @@ pre {
   border-bottom: 1px LightGrey solid;
 }
 .post-content h4 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1em;
   margin: 1.6em 0 1em 0;
@@ -614,7 +614,7 @@ pre {
   border-bottom: 1px LightGrey solid;
 }
 .post-content h5 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1em;
   margin: 1.6em 0 1em 0;
@@ -622,7 +622,7 @@ pre {
   border-bottom: 1px LightGrey solid;
 }
 .post-content h6 {
-  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "SimSun", serif;
   color: #333;
   font-size: 1em;
   margin: 1.6em 0 1em 0;
@@ -743,28 +743,27 @@ pre {
   padding: 0;
 }
 .post-content code {
-  color: #0a0a0a;
+  color: #24292f;
   font-size: 0.98em;
-  font-weight: bold;
-  background-color: #f9f9f9;
+  background-color: #eff1f3;
   padding: 1px 2px;
-  border: 1px solid #dadada;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  border: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   word-wrap: break-word;
 }
 .post-content tt {
-  color: #808080;
+  color: #24292f;
   font-size: 0.96em;
-  background-color: #f9f9f9;
+  background-color: #eff1f3;
   padding: 1px 2px;
-  border: 1px solid #dadada;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  border: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   word-wrap: break-word;
 }
 .post-content td code,
@@ -781,19 +780,18 @@ pre {
   overflow: auto;
   line-height: 1.5;
   font-size: 0.98em;
-  font-weight: bold;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  color: #05f745;
-  background-color: #0a0a0a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: #24292f;
+  background-color: #f6f8fa;
 }
 .post-content pre code {
-  color: #17f90a;
+  color: #24292f;
   border: none;
   background: none;
   padding: 0;
 }
 .post-content pre tt {
-  color: #17f90a;
+  color: #24292f;
   border: none;
   background: none;
   padding: 0;
@@ -832,7 +830,7 @@ pre {
 }
 .windows .post-content {
   font-size: 16px;
-  font-family: "Georgia", "SimSun", sans-serif;
+  font-family: "ui-sans-serif", "system-ui", -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 /*====================================================
     pagination
