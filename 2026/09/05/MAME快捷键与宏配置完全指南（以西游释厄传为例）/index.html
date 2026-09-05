@@ -1,0 +1,631 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://sunjunior.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="MAME, 模拟器, 配置, 宏" />
+
+
+<meta name="description" content="
+目标：MAME 0.289 键位映射与 inputmacro 插件配置日期：2026-09-05游戏：西游释厄传（orlegend）/ 西游释厄传 Super（olds）机板：PGM（Poly..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    MAME 快捷键与宏配置完全指南（以西游释厄传为例） |
+    
+    sunjunior的个人技术博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
+    /./img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='sunjunior'>
+            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
+            
+            <h2>
+                技术控，爱折腾
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://sunjunior.github.io">
+                        sunjunior的个人技术博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="MAME 快捷键与宏配置完全指南（以西游释厄传为例）">
+            
+            MAME 快捷键与宏配置完全指南（以西游释厄传为例）
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/MAME-%E6%A8%A1%E6%8B%9F%E5%99%A8-%E9%85%8D%E7%BD%AE-%E5%AE%8F/" rel="tag">MAME, 模拟器, 配置, 宏</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2026/09/05</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <blockquote>
+<p>目标：MAME 0.289 键位映射与 inputmacro 插件配置<br>日期：2026-09-05<br>游戏：西游释厄传（orlegend）/ 西游释厄传 Super（olds）<br>机板：PGM（Poly Game Master）</p>
+</blockquote>
+<hr>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>MAME 内置了 <code>inputmacro</code> 插件，可以在不修改游戏 ROM 的前提下，通过模拟输入端口字段的方式实现一键宏。本文以《西游释厄传》为实战案例，完整记录从键位映射到宏配置的全过程，以及遇到的各类陷阱。</p>
+<p>最终实现效果：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空格（按住）</td>
+<td>集气 + 自动升阶到满（4 档）</td>
+</tr>
+<tr>
+<td>E</td>
+<td>乾坤波动功 ←↙↓↘→←→+A（面向右）</td>
+</tr>
+<tr>
+<td>Q</td>
+<td>乾坤波动功 →↘↓↙←→←+A（面向左）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="2-分析环境"><a href="#2-分析环境" class="headerlink" title="2. 分析环境"></a>2. 分析环境</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td>MAME 0.289（Arch Linux 官方包）</td>
+</tr>
+<tr>
+<td>宏引擎</td>
+<td>内置 inputmacro 插件</td>
+</tr>
+<tr>
+<td>调试探针</td>
+<td>Lua 脚本（<code>-autoboot_script</code>）</td>
+</tr>
+<tr>
+<td>端口分析</td>
+<td><code>ioport.ports</code> + <code>field:read()</code></td>
+</tr>
+<tr>
+<td>内存分析</td>
+<td><code>maincpu.spaces[&#39;program&#39;]:read_u16()</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="3-MAME-目录结构"><a href="#3-MAME-目录结构" class="headerlink" title="3. MAME 目录结构"></a>3. MAME 目录结构</h2><p>MAME 的配置文件搜索路径由 <code>inipath</code> 控制。默认 <code>inipath</code> 为 <code>$HOME/.mame/ini</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">~&#x2F;.mame&#x2F;</span><br><span class="line">├── mame.ini              # 主配置</span><br><span class="line">├── ini&#x2F;</span><br><span class="line">│   ├── plugin.ini        # 插件开关</span><br><span class="line">│   ├── orlegend.ini      # 单游戏配置</span><br><span class="line">│   ├── olds.ini</span><br><span class="line">│   └── ui.ini</span><br><span class="line">├── ctrlr&#x2F;</span><br><span class="line">│   └── orlegend_map.cfg  # 键位映射</span><br><span class="line">├── inputmacro&#x2F;</span><br><span class="line">│   ├── orlegend.cfg      # 宏配置（按游戏名自动加载）</span><br><span class="line">│   └── olds.cfg</span><br><span class="line">├── cfg&#x2F;                  # 游戏内输入配置自动保存</span><br><span class="line">├── roms&#x2F;                 # ROM 目录</span><br><span class="line">└── language&#x2F;             # 语言包</span><br></pre></td></tr></table></figure>
+<h3 id="3-1-关键陷阱：plugin-ini-位置"><a href="#3-1-关键陷阱：plugin-ini-位置" class="headerlink" title="3.1 关键陷阱：plugin.ini 位置"></a>3.1 关键陷阱：plugin.ini 位置</h3><p>MAME 的 <code>plugin.ini</code> 读取路径是 <code>inipath</code> 目录，而不是 <code>$HOME/.mame</code> 根目录。如果误放根目录，<code>inputmacro</code> 插件<strong>完全不会被加载</strong>，但游戏本身运行正常。这会导致”游戏正常、宏不生效”的假象，且日志无任何报错。</p>
+<p><strong>验证方法</strong>：启动时加 <code>-verbose</code>，查看日志中是否有 <code>Starting plugin inputmacro...</code>。</p>
+<p><strong>修复</strong>：<code>mv ~/.mame/plugin.ini ~/.mame/ini/plugin.ini</code></p>
+<hr>
+<h2 id="4-键位映射（Ctrlr-文件）"><a href="#4-键位映射（Ctrlr-文件）" class="headerlink" title="4. 键位映射（Ctrlr 文件）"></a>4. 键位映射（Ctrlr 文件）</h2><p>MAME 的 ctrlr 文件通过 XML 格式重映射输入。</p>
+<h3 id="4-1-配置文件结构"><a href="#4-1-配置文件结构" class="headerlink" title="4.1 配置文件结构"></a>4.1 配置文件结构</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mameconfig</span> <span class="attr">version</span>=<span class="string">"10"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">system</span> <span class="attr">name</span>=<span class="string">"orlegend"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">port</span> <span class="attr">type</span>=<span class="string">"P1_JOYSTICK_UP"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">newseq</span> <span class="attr">type</span>=<span class="string">"standard"</span>&gt;</span>KEYCODE_W OR JOYCODE_1_YAXIS_UP_SWITCH<span class="tag">&lt;/<span class="name">newseq</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">input</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">system</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mameconfig</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-2-键位布局"><a href="#4-2-键位布局" class="headerlink" title="4.2 键位布局"></a>4.2 键位布局</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>原始键位</th>
+<th>映射到</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>← → ↑ ↓</td>
+<td>W A S D</td>
+<td>方向键</td>
+</tr>
+<tr>
+<td>Ctrl（A）</td>
+<td>J</td>
+<td>攻击/拾取</td>
+</tr>
+<tr>
+<td>Alt（B）</td>
+<td>K</td>
+<td>跳跃</td>
+</tr>
+<tr>
+<td>Space（C）</td>
+<td>L</td>
+<td>道具菜单</td>
+</tr>
+<tr>
+<td>Shift（D）</td>
+<td>U</td>
+<td>使用道具</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="4-3-启用方法"><a href="#4-3-启用方法" class="headerlink" title="4.3 启用方法"></a>4.3 启用方法</h3><p>在 <code>~/.mame/ini/</code> 下创建游戏名 <code>.ini</code> 文件，添加 <code>ctrlr 文件名</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ~&#x2F;.mame&#x2F;ini&#x2F;orlegend.ini</span><br><span class="line">ctrlr orlegend_map</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-注意事项"><a href="#4-4-注意事项" class="headerlink" title="4.4 注意事项"></a>4.4 注意事项</h3><ul>
+<li><code>&lt;system name=&quot;XXX&quot;&gt;</code> 只对指定游戏生效。如果玩多个游戏，需要为每个游戏添加 <code>&lt;system&gt;</code> 块，或省略 <code>&lt;system&gt;</code> 标签让配置全局生效。</li>
+<li>ctrlr 只影响<strong>手动按键</strong>，不影响 inputmacro 插件的宏。</li>
+</ul>
+<hr>
+<h2 id="5-输入宏插件（Inputmacro）"><a href="#5-输入宏插件（Inputmacro）" class="headerlink" title="5. 输入宏插件（Inputmacro）"></a>5. 输入宏插件（Inputmacro）</h2><h3 id="5-1-启用插件"><a href="#5-1-启用插件" class="headerlink" title="5.1 启用插件"></a>5.1 启用插件</h3><p><code>~/.mame/ini/plugin.ini</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inputmacro                1</span><br></pre></td></tr></table></figure>
+<h3 id="5-2-宏配置文件格式"><a href="#5-2-宏配置文件格式" class="headerlink" title="5.2 宏配置文件格式"></a>5.2 宏配置文件格式</h3><p>每个游戏独立一个 JSON 文件，存放在 <code>&lt;homepath&gt;/inputmacro/&lt;romname&gt;.cfg</code>。插件在游戏启动时自动加载，退出时自动保存。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;binding&quot;: &quot;KEYCODE_E&quot;,</span><br><span class="line">        &quot;name&quot;: &quot;发波右&quot;,</span><br><span class="line">        &quot;earlycancel&quot;: false,</span><br><span class="line">        &quot;loop&quot;: -1,</span><br><span class="line">        &quot;steps&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;delay&quot;: 0,</span><br><span class="line">                &quot;duration&quot;: 8,</span><br><span class="line">                &quot;inputs&quot;: [</span><br><span class="line">                    &#123;&quot;port&quot;: &quot;:P1P2&quot;, &quot;mask&quot;: 4, &quot;type&quot;: &quot;P1_JOYSTICK_DOWN&quot;, &quot;value&quot;: 1&#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h3 id="5-3-字段说明"><a href="#5-3-字段说明" class="headerlink" title="5.3 字段说明"></a>5.3 字段说明</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>binding</code></td>
+<td>string</td>
+<td>触发键，MAME 键码（如 <code>KEYCODE_SPACE</code>）</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>显示名称</td>
+</tr>
+<tr>
+<td><code>earlycancel</code></td>
+<td>bool</td>
+<td>松开键时立即取消（true）或完成当前步骤（false）</td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td>int</td>
+<td><code>-1</code>=释放即完；<code>0</code>=按住延续；<code>&gt;0</code>=循环到第 N 步</td>
+</tr>
+<tr>
+<td><code>steps[].delay</code></td>
+<td>int</td>
+<td>延迟帧数（先空等再激活输入）</td>
+</tr>
+<tr>
+<td><code>steps[].duration</code></td>
+<td>int</td>
+<td>持续帧数（保持输入的时间）</td>
+</tr>
+<tr>
+<td><code>steps[].inputs[]</code></td>
+<td>—</td>
+<td>此步骤激活的按键</td>
+</tr>
+<tr>
+<td><code>inputs[].port</code></td>
+<td>string</td>
+<td>端口标签，如 <code>:P1P2</code></td>
+</tr>
+<tr>
+<td><code>inputs[].mask</code></td>
+<td>int</td>
+<td>位掩码，标识具体按键</td>
+</tr>
+<tr>
+<td><code>inputs[].type</code></td>
+<td>string</td>
+<td>类型令牌，如 <code>P1_BUTTON1</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="5-4-端口与掩码的获取"><a href="#5-4-端口与掩码的获取" class="headerlink" title="5.4 端口与掩码的获取"></a>5.4 端口与掩码的获取</h3><p>通过 Lua 探针脚本获取游戏的端口结构：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> port = manager.machine.ioport.ports[<span class="string">':P1P2'</span>]</span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="built_in">pairs</span>(port.fields) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> token = manager.machine.ioport:input_type_to_token(v.<span class="built_in">type</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'mask=0x%04X type=%s'</span>, v.mask, token))</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>西游释厄传（PGM 机板）P1 端口：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>掩码</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x0001</td>
+<td>START1</td>
+<td>1P 开始</td>
+</tr>
+<tr>
+<td>0x0002</td>
+<td>P1_JOYSTICK_UP</td>
+<td>上</td>
+</tr>
+<tr>
+<td>0x0004</td>
+<td>P1_JOYSTICK_DOWN</td>
+<td>下</td>
+</tr>
+<tr>
+<td>0x0008</td>
+<td>P1_JOYSTICK_LEFT</td>
+<td>左</td>
+</tr>
+<tr>
+<td>0x0010</td>
+<td>P1_JOYSTICK_RIGHT</td>
+<td>右</td>
+</tr>
+<tr>
+<td>0x0020</td>
+<td>P1_BUTTON1</td>
+<td>A（攻击）</td>
+</tr>
+<tr>
+<td>0x0040</td>
+<td>P1_BUTTON2</td>
+<td>B（跳跃）</td>
+</tr>
+<tr>
+<td>0x0080</td>
+<td>P1_BUTTON3</td>
+<td>C（道具）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>所有端口均为 <strong>IP_ACTIVE_LOW</strong>（低电平有效），<code>set_value(1)</code> = 按下。</p>
+<hr>
+<h2 id="6-实战：西游释厄传宏"><a href="#6-实战：西游释厄传宏" class="headerlink" title="6. 实战：西游释厄传宏"></a>6. 实战：西游释厄传宏</h2><h3 id="6-1-游戏操作分析"><a href="#6-1-游戏操作分析" class="headerlink" title="6.1 游戏操作分析"></a>6.1 游戏操作分析</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>输入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>集气</td>
+<td>按住 A + B + C</td>
+</tr>
+<tr>
+<td>升阶（提升气档上限）</td>
+<td>气槽满后，按 ↑ + B + C</td>
+</tr>
+<tr>
+<td>气功波（小）</td>
+<td>↓↘→ + A</td>
+</tr>
+<tr>
+<td>乾坤波动功</td>
+<td>←↙↓↘→←→ + A</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-2-宏一：集气-自动升阶（循环）"><a href="#6-2-宏一：集气-自动升阶（循环）" class="headerlink" title="6.2 宏一：集气 + 自动升阶（循环）"></a>6.2 宏一：集气 + 自动升阶（循环）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"集气升阶"</span>,</span><br><span class="line">    <span class="attr">"binding"</span>: <span class="string">"KEYCODE_SPACE"</span>,</span><br><span class="line">    <span class="attr">"earlycancel"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"loop"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"steps"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"duration"</span>: <span class="number">190</span>,</span><br><span class="line">            <span class="attr">"delay"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">"inputs"</span>: [</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">64</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON2"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">128</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON3"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"duration"</span>: <span class="number">35</span>,</span><br><span class="line">            <span class="attr">"delay"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">"inputs"</span>: [</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">2</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_UP"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">64</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON2"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                &#123;<span class="attr">"mask"</span>: <span class="number">128</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON3"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>设计要点</strong>：</p>
+<ul>
+<li><code>loop: 1</code>：循环到第 1 步，按住空格期间无限循环</li>
+<li>集气 190 帧（~3.2 秒）确保气槽充分充满</li>
+<li>升阶时同时按住 A+B+C+↑（四键齐按），保持集气状态不中断</li>
+<li><code>earlycancel: true</code>：松开空格立即停止</li>
+</ul>
+<h3 id="6-3-宏二：乾坤波动功（面向右）"><a href="#6-3-宏二：乾坤波动功（面向右）" class="headerlink" title="6.3 宏二：乾坤波动功（面向右）"></a>6.3 宏二：乾坤波动功（面向右）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"乾坤波动功 右"</span>,</span><br><span class="line">    <span class="attr">"binding"</span>: <span class="string">"KEYCODE_E"</span>,</span><br><span class="line">    <span class="attr">"earlycancel"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"loop"</span>: <span class="number">-1</span>,</span><br><span class="line">    <span class="attr">"steps"</span>: [</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">0</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;, &#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;, &#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;]&#125;,</span><br><span class="line">        &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>&#125;]&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>方向序列</strong>：<code>←(1f) → ↙(delay2+1f) → ↓(1f) → ↘(1f) → →(1f) → ←(1f) → →(1f) → A(1f)</code></p>
+<h3 id="6-4-宏三：乾坤波动功（面向左，镜像）"><a href="#6-4-宏三：乾坤波动功（面向左，镜像）" class="headerlink" title="6.4 宏三：乾坤波动功（面向左，镜像）"></a>6.4 宏三：乾坤波动功（面向左，镜像）</h3><p>面向左的版本只需将每一步的方向取反（← → 互换，↗ ↘ 互换），其余参数完全一致。</p>
+<p><strong>方向序列</strong>：<code>→(1f) → ↘(1f) → ↓(1f) → ↙(1f) → ←(1f) → →(1f) → ←(1f) → A(1f)</code></p>
+<hr>
+<h2 id="7-关键技术要点"><a href="#7-关键技术要点" class="headerlink" title="7. 关键技术要点"></a>7. 关键技术要点</h2><h3 id="7-1-delay-与-duration-的配合"><a href="#7-1-delay-与-duration-的配合" class="headerlink" title="7.1 delay 与 duration 的配合"></a>7.1 delay 与 duration 的配合</h3><p><code>delay: 2, duration: 1</code> 的效果：先空等 2 帧 → 激活输入 1 帧 → 进入下一步。这相当于在方向切换之间插入了一个空白间隔，避免前后方向重叠，让游戏的方向检测器能清晰分辨每个输入。</p>
+<h3 id="7-2-set-value-的一帧延迟"><a href="#7-2-set-value-的一帧延迟" class="headerlink" title="7.2 set_value 的一帧延迟"></a>7.2 set_value 的一帧延迟</h3><p><code>field:set_value()</code> 在帧处理期间写入，游戏在同一帧读取时还看不到更新。<code>duration: N</code> 实际生效为 <code>N-1</code> 帧。建议 <code>duration ≥ 2</code> 或结合 <code>delay</code> 使用。</p>
+<h3 id="7-3-指令窗口与动作时长"><a href="#7-3-指令窗口与动作时长" class="headerlink" title="7.3 指令窗口与动作时长"></a>7.3 指令窗口与动作时长</h3><p>乾坤波动功共 8 段方向，如果每段用 <code>duration: 8</code>，总时长约 1.1 秒，游戏的方向输入缓冲窗口可能放不下，开头的方向会被丢弃，导致宏被识别为较短的指令（如 ↓↘→+A 气功波）。</p>
+<p>解决方案：压缩每段到 1 帧，配合 <code>delay: 2</code> 间隔，总时长约 0.5 秒，既保证方向清晰可辨，又不会超出缓冲窗口。</p>
+<hr>
+<h2 id="8-调试工具与方法"><a href="#8-调试工具与方法" class="headerlink" title="8. 调试工具与方法"></a>8. 调试工具与方法</h2><h3 id="8-1-验证-ROM-完整性"><a href="#8-1-验证-ROM-完整性" class="headerlink" title="8.1 验证 ROM 完整性"></a>8.1 验证 ROM 完整性</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mame orlegend -verifyroms</span><br><span class="line">mame olds -verifyroms</span><br></pre></td></tr></table></figure>
+<h3 id="8-2-查看端口结构"><a href="#8-2-查看端口结构" class="headerlink" title="8.2 查看端口结构"></a>8.2 查看端口结构</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mame orlegend -autoboot_script probe.lua -video none -sound none -seconds_to_run 5</span><br></pre></td></tr></table></figure>
+<h3 id="8-3-从磁力链接单独下载文件"><a href="#8-3-从磁力链接单独下载文件" class="headerlink" title="8.3 从磁力链接单独下载文件"></a>8.3 从磁力链接单独下载文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取元数据</span></span><br><span class="line">aria2c --bt-metadata-only=<span class="literal">true</span> --bt-save-metadata=<span class="literal">true</span> -d /tmp/torrent <span class="string">"<span class="variable">$MAGNET</span>"</span></span><br><span class="line"><span class="comment"># 列出文件索引</span></span><br><span class="line">aria2c --show-files=<span class="literal">true</span> /tmp/torrent/*.torrent</span><br><span class="line"><span class="comment"># 下载指定文件</span></span><br><span class="line">aria2c --select-file=9908 --seed-time=0 -d /tmp/dl /tmp/torrent/*.torrent</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="9-踩坑记录"><a href="#9-踩坑记录" class="headerlink" title="9. 踩坑记录"></a>9. 踩坑记录</h2><h3 id="坑-1：plugin-ini-位置错误"><a href="#坑-1：plugin-ini-位置错误" class="headerlink" title="坑 1：plugin.ini 位置错误"></a>坑 1：plugin.ini 位置错误</h3><p><strong>现象</strong>：游戏正常、宏不生效，日志无插件报错。</p>
+<p><strong>原因</strong>：<code>plugin.ini</code> 放在了 <code>~/.mame/plugin.ini</code>，但 MAME 从 <code>inipath</code>（<code>~/.mame/ini/</code>）读取。</p>
+<p><strong>验证</strong>：<code>-verbose</code> 日志中没有 <code>Starting plugin inputmacro...</code>。</p>
+<h3 id="坑-2：插件退出时覆盖配置文件"><a href="#坑-2：插件退出时覆盖配置文件" class="headerlink" title="坑 2：插件退出时覆盖配置文件"></a>坑 2：插件退出时覆盖配置文件</h3><p><strong>现象</strong>：手动修改了 <code>.cfg</code> 文件，重启游戏后修改被还原。</p>
+<p><strong>原因</strong>：inputmacro 插件在游戏退出时执行 <code>save_settings</code>，将内存中的宏写回 JSON 文件，覆盖了磁盘上的修改。</p>
+<p><strong>预防</strong>：修改配置文件前，确保没有 MAME 进程在运行。</p>
+<h3 id="坑-3：宏步骤太长导致输入缓冲溢出"><a href="#坑-3：宏步骤太长导致输入缓冲溢出" class="headerlink" title="坑 3：宏步骤太长导致输入缓冲溢出"></a>坑 3：宏步骤太长导致输入缓冲溢出</h3><p><strong>现象</strong>：8 段方向的宏（如 ←↙↓↘→←→）只触发了前半段的指令（如 ↓↘→+A 气功波）。</p>
+<p><strong>原因</strong>：游戏的方向输入缓冲窗口有限，动作太慢导致开头方向被丢弃。</p>
+<p><strong>修复</strong>：压缩每段到 1 帧，配合 <code>delay</code> 间隔保持总时长在缓冲窗口内。</p>
+<h3 id="坑-4：SIGKILL-导致日志缓冲丢失"><a href="#坑-4：SIGKILL-导致日志缓冲丢失" class="headerlink" title="坑 4：SIGKILL 导致日志缓冲丢失"></a>坑 4：SIGKILL 导致日志缓冲丢失</h3><p><strong>现象</strong>：<code>-verbose</code> 日志在 <code>pkill -9</code> 后只剩前几十行，看起来像卡住了。</p>
+<p><strong>原因</strong>：SIGKILL 不会刷新 C 标准库的 stdout 缓冲。</p>
+<p><strong>修复</strong>：正常退出（ESC）而非 SIGKILL。</p>
+<h3 id="坑-5：窗口模式下-Lua-探针-GC-问题"><a href="#坑-5：窗口模式下-Lua-探针-GC-问题" class="headerlink" title="坑 5：窗口模式下 Lua 探针 GC 问题"></a>坑 5：窗口模式下 Lua 探针 GC 问题</h3><p><strong>现象</strong>：<code>emu.add_machine_frame_notifier</code> 注册的帧回调在 ~70 帧后停止调用。</p>
+<p><strong>原因</strong>：返回的订阅对象未被引用，被 Lua GC 回收。</p>
+<p><strong>修复</strong>：用全局变量持有引用：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_HOLD = &#123;&#125;</span><br><span class="line">_HOLD.<span class="built_in">sub</span> = emu.add_machine_frame_notifier(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> ... <span class="keyword">end</span>)</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="10-完整配置"><a href="#10-完整配置" class="headerlink" title="10. 完整配置"></a>10. 完整配置</h2><h3 id="最终-mame-inputmacro-olds-cfg（与-orlegend-cfg-同步）"><a href="#最终-mame-inputmacro-olds-cfg（与-orlegend-cfg-同步）" class="headerlink" title="最终 ~/.mame/inputmacro/olds.cfg（与 orlegend.cfg 同步）"></a>最终 <code>~/.mame/inputmacro/olds.cfg</code>（与 orlegend.cfg 同步）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"jiqi"</span>,</span><br><span class="line">        <span class="attr">"binding"</span>: <span class="string">"KEYCODE_SPACE"</span>,</span><br><span class="line">        <span class="attr">"earlycancel"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"loop"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">"steps"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"duration"</span>: <span class="number">190</span>, <span class="attr">"delay"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"inputs"</span>: [</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">64</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON2"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">128</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON3"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"duration"</span>: <span class="number">35</span>, <span class="attr">"delay"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"inputs"</span>: [</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">2</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_UP"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">64</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON2"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    &#123;<span class="attr">"mask"</span>: <span class="number">128</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON3"</span>, <span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"value"</span>: <span class="number">1</span>&#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"发波左Q"</span>,</span><br><span class="line">        <span class="attr">"binding"</span>: <span class="string">"KEYCODE_Q"</span>,</span><br><span class="line">        <span class="attr">"earlycancel"</span>: <span class="literal">false</span>, <span class="attr">"loop"</span>: <span class="number">-1</span>,</span><br><span class="line">        <span class="attr">"steps"</span>: [</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">0</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;, &#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;, &#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>&#125;]&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"发波右E"</span>,</span><br><span class="line">        <span class="attr">"binding"</span>: <span class="string">"KEYCODE_E"</span>,</span><br><span class="line">        <span class="attr">"earlycancel"</span>: <span class="literal">false</span>, <span class="attr">"loop"</span>: <span class="number">-1</span>,</span><br><span class="line">        <span class="attr">"steps"</span>: [</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">0</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;, &#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;, &#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">4</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_DOWN"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">8</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_LEFT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">16</span>, <span class="attr">"type"</span>: <span class="string">"P1_JOYSTICK_RIGHT"</span>&#125;]&#125;,</span><br><span class="line">            &#123;<span class="attr">"delay"</span>: <span class="number">2</span>, <span class="attr">"duration"</span>: <span class="number">1</span>, <span class="attr">"inputs"</span>: [&#123;<span class="attr">"port"</span>: <span class="string">":P1P2"</span>, <span class="attr">"mask"</span>: <span class="number">32</span>, <span class="attr">"type"</span>: <span class="string">"P1_BUTTON1"</span>&#125;]&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>MAME 官方文档：inputmacro 插件源码位于 <code>/usr/lib/mame/plugins/inputmacro/</code></li>
+<li>PGM 机板端口映射：<code>mame -listxml &lt;romname&gt;</code> 查看 ROM 和端口结构</li>
+<li>游戏出招表：西游释厄传 Super 操作手册（知乎/哔哩哔哩）</li>
+</ul>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赠人玫瑰，手留余香
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 ©
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2026/09/01/Qwen-AgentWorld-35B-A3B-910C%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%8C%87%E5%AF%BC%E4%B9%A6/" class="next-post btn btn-default" title='Qwen-AgentWorld-35B-A3B 910C 生产环境部署指导书'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Qwen-AgentWorld-35B-A3B 910C 生产环境部署指导书</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-MAME-目录结构"><span class="toc-text">3. MAME 目录结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-关键陷阱：plugin-ini-位置"><span class="toc-text">3.1 关键陷阱：plugin.ini 位置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-键位映射（Ctrlr-文件）"><span class="toc-text">4. 键位映射（Ctrlr 文件）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-配置文件结构"><span class="toc-text">4.1 配置文件结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-键位布局"><span class="toc-text">4.2 键位布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-启用方法"><span class="toc-text">4.3 启用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-注意事项"><span class="toc-text">4.4 注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-输入宏插件（Inputmacro）"><span class="toc-text">5. 输入宏插件（Inputmacro）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-启用插件"><span class="toc-text">5.1 启用插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-宏配置文件格式"><span class="toc-text">5.2 宏配置文件格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-字段说明"><span class="toc-text">5.3 字段说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-端口与掩码的获取"><span class="toc-text">5.4 端口与掩码的获取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-实战：西游释厄传宏"><span class="toc-text">6. 实战：西游释厄传宏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-游戏操作分析"><span class="toc-text">6.1 游戏操作分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-宏一：集气-自动升阶（循环）"><span class="toc-text">6.2 宏一：集气 + 自动升阶（循环）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-宏二：乾坤波动功（面向右）"><span class="toc-text">6.3 宏二：乾坤波动功（面向右）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-宏三：乾坤波动功（面向左，镜像）"><span class="toc-text">6.4 宏三：乾坤波动功（面向左，镜像）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-关键技术要点"><span class="toc-text">7. 关键技术要点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-delay-与-duration-的配合"><span class="toc-text">7.1 delay 与 duration 的配合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-set-value-的一帧延迟"><span class="toc-text">7.2 set_value 的一帧延迟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-指令窗口与动作时长"><span class="toc-text">7.3 指令窗口与动作时长</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-调试工具与方法"><span class="toc-text">8. 调试工具与方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-验证-ROM-完整性"><span class="toc-text">8.1 验证 ROM 完整性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-查看端口结构"><span class="toc-text">8.2 查看端口结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-从磁力链接单独下载文件"><span class="toc-text">8.3 从磁力链接单独下载文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-踩坑记录"><span class="toc-text">9. 踩坑记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#坑-1：plugin-ini-位置错误"><span class="toc-text">坑 1：plugin.ini 位置错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#坑-2：插件退出时覆盖配置文件"><span class="toc-text">坑 2：插件退出时覆盖配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#坑-3：宏步骤太长导致输入缓冲溢出"><span class="toc-text">坑 3：宏步骤太长导致输入缓冲溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#坑-4：SIGKILL-导致日志缓冲丢失"><span class="toc-text">坑 4：SIGKILL 导致日志缓冲丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#坑-5：窗口模式下-Lua-探针-GC-问题"><span class="toc-text">坑 5：窗口模式下 Lua 探针 GC 问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-完整配置"><span class="toc-text">10. 完整配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#最终-mame-inputmacro-olds-cfg（与-orlegend-cfg-同步）"><span class="toc-text">最终 ~&#x2F;.mame&#x2F;inputmacro&#x2F;olds.cfg（与 orlegend.cfg 同步）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                
+<div class="busuanzi">
+    访问量:
+    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
+    &nbsp; | &nbsp;
+    访客数:
+    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+(function () {
+  var api = 'https://blog-counter.sunjun19860214.workers.dev';
+  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
+  localStorage.setItem('cf_uid', vid);
+
+  function fill(elId, slug, inc, extra) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
+    fetch(api + '/?' + q)
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
+      .catch(function (e) { console.warn('counter:', e); });
+  }
+
+  fill('page-pv', window.location.pathname, true);
+  fill('site-pv', 'site_pv', true);
+  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
+})();
+</script>
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
