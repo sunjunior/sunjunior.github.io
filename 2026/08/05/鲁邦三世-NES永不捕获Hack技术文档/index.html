@@ -1,190 +1,292 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="逆向工程" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="
-目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）目标：使用道具时，槽位道具数量不减少交付物：IPS 补丁（打在原版 ROM 上即可）
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版） 目标：使用道具时，槽位道具数量不减少 交付物：IPS 补丁（打在原版 ROM 上即可）   1. 背景 游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减 1。需求：使用道具时数量维持不变。  2. 分析环境    用途 工具     模拟器 Mesen2，Lua Console">
+<meta property="og:type" content="article">
+<meta property="og:title" content="鲁邦三世（NES &#x2F; FC 汉化版）道具不减 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/08/05/%E9%B2%81%E9%82%A6%E4%B8%89%E4%B8%96-NES%E6%B0%B8%E4%B8%8D%E6%8D%95%E8%8E%B7Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版） 目标：使用道具时，槽位道具数量不减少 交付物：IPS 补丁（打在原版 ROM 上即可）   1. 背景 游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减 1。需求：使用道具时数量维持不变。  2. 分析环境    用途 工具     模拟器 Mesen2，Lua Console">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/lupin.gif">
+<meta property="article:published_time" content="2026-08-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-30T11:39:39.376Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/lupin.gif">
 
 
-1...." />
+<link rel="canonical" href="https://sunjunior.github.io/2026/08/05/%E9%B2%81%E9%82%A6%E4%B8%89%E4%B8%96-NES%E6%B0%B8%E4%B8%8D%E6%8D%95%E8%8E%B7Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/08/05/%E9%B2%81%E9%82%A6%E4%B8%89%E4%B8%96-NES%E6%B0%B8%E4%B8%8D%E6%8D%95%E8%8E%B7Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/08/05/鲁邦三世-NES永不捕获Hack技术文档/","title":"鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档"}</script>
 
-<title>
-    
-    鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="icon" href="/favicon.ico">
-
-    
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档">
-            
-            鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2026/08/05</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">2. 分析环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">3. 分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%93%E5%85%B7%E6%A7%BD%E5%B8%83%E5%B1%80"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 道具槽布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%95%B0%E9%87%8F%E5%AD%97%E8%8A%82"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 定位数量字节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%89%A3%E5%87%8F%E4%BB%A3%E7%A0%81"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 定位扣减代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lua-%E9%AA%8C%E8%AF%81"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Lua 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81"><span class="nav-number">4.</span> <span class="nav-text">4. 补丁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 效果演示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">5.</span> <span class="nav-text">5. 交付物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">6. 经验总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <blockquote>
-<p>目标游戏：<strong>鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s Legacy，汉化版）</strong><br>目标：使用道具时，槽位道具数量不减少<br>交付物：IPS 补丁（打在原版 ROM 上即可）</p>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/08/05/%E9%B2%81%E9%82%A6%E4%B8%89%E4%B8%96-NES%E6%B0%B8%E4%B8%8D%E6%8D%95%E8%8E%B7Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="鲁邦三世（NES &#x2F; FC 汉化版）道具不减 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          鲁邦三世（NES / FC 汉化版）道具不减 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-05 00:00:00" itemprop="dateCreated datePublished" datetime="2026-08-05T00:00:00+08:00">2026-08-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-30 19:39:39" itemprop="dateModified" datetime="2026-08-30T19:39:39+08:00">2026-08-30</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>鲁邦三世：潘多拉的遗产（Lupin III: Pandora’s
+Legacy，汉化版）</strong> 目标：使用道具时，槽位道具数量不减少
+交付物：IPS 补丁（打在原版 ROM 上即可）</p>
 </blockquote>
-<hr>
-<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减 1。需求：使用道具时数量维持不变。</p>
-<hr>
-<h2 id="2-分析环境"><a href="#2-分析环境" class="headerlink" title="2. 分析环境"></a>2. 分析环境</h2><div class="table-container">
+<hr />
+<h2 id="背景">1. 背景</h2>
+<p>游戏最上方槽位道具下方显示数量。当角色选择并使用道具后，数量减
+1。需求：使用道具时数量维持不变。</p>
+<hr />
+<h2 id="分析环境">2. 分析环境</h2>
 <table>
 <thead>
 <tr>
@@ -211,10 +313,10 @@
 </tr>
 </tbody>
 </table>
-</div>
-<hr>
-<h2 id="3-分析过程"><a href="#3-分析过程" class="headerlink" title="3. 分析过程"></a>3. 分析过程</h2><h3 id="3-1-道具槽布局"><a href="#3-1-道具槽布局" class="headerlink" title="3.1 道具槽布局"></a>3.1 道具槽布局</h3><p>通过反汇编确认道具槽位于 <code>$0410</code>，8 槽 × 21 字节：</p>
-<div class="table-container">
+<hr />
+<h2 id="分析过程">3. 分析过程</h2>
+<h3 id="道具槽布局">3.1 道具槽布局</h3>
+<p>通过反汇编确认道具槽位于 <code>$0410</code>，8 槽 × 21 字节：</p>
 <table>
 <thead>
 <tr>
@@ -257,30 +359,46 @@
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="3-2-定位数量字节"><a href="#3-2-定位数量字节" class="headerlink" title="3.2 定位数量字节"></a>3.2 定位数量字节</h3><p>用 Lua 全 RAM 快照对比定位数量字节。操作流程：</p>
-<ol>
+<h3 id="定位数量字节">3.2 定位数量字节</h3>
+<p>用 Lua 全 RAM 快照对比定位数量字节。操作流程：</p>
+<ol type="1">
 <li>选好道具 → 按 F 记录 snapA（使用前）</li>
 <li>按 Q（Select）选择道具（数量 -1）</li>
 <li>再按 F 记录 snapB（使用后）</li>
 <li>diff 全内存 <code>$0000-$07FF</code></li>
 </ol>
-<p>对应脚本 <code>item_snapshot.lua</code>（F 键触发前后快照，避开 Q 键干扰）：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- item_snapshot.lua v2: 用键盘 F 触发前后快照对比, 避开 Q 干扰</span></span><br><span class="line"><span class="comment">-- 流程(关键: 数量-1发生在"按Q选择道具"瞬间, 而非开枪后):</span></span><br><span class="line"><span class="comment">--  1) 拿一个新道具(如机枪, 数量N), 暂停菜单里选好但【不要】按Q让它生效</span></span><br><span class="line"><span class="comment">--  2) 运行脚本</span></span><br><span class="line"><span class="comment">--  3) 按键盘 F        -&gt; 记录 snapA (使用前, 数量=N)</span></span><br><span class="line"><span class="comment">--  4) 按 Q(Select)选择道具 -&gt; 数量 N-1   (此时道具生效)</span></span><br><span class="line"><span class="comment">--  5) 按键盘 F        -&gt; 记录 snapB (使用后, 数量=N-1)</span></span><br><span class="line"><span class="comment">--  6) 脚本自动 diff 全内存 $0000-$07FF, 输出 N -&gt; N-1 的变化</span></span><br><span class="line"><span class="keyword">local</span> DIR = <span class="string">"/tmp/opencode/lupin"</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">log</span> = <span class="built_in">io</span>.<span class="built_in">open</span>(DIR..<span class="string">"/item_snapshot.log"</span>, <span class="string">"a"</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">"\n===== SNAPSHOT v2 SESSION "</span>..<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"%Y-%m-%d %H:%M:%S"</span>)..<span class="string">" =====\n"</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> f = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> lastF = <span class="literal">false</span></span><br><span class="line"><span class="keyword">local</span> snapA = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">local</span> haveA = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">r</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesInternalRam) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">takeSnapshot</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> snap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> a = <span class="number">0x0000</span>, <span class="number">0x07FF</span> <span class="keyword">do</span> snap[a] = r(a) <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">return</span> snap</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">diffSnapshots</span><span class="params">(before, after)</span></span></span><br><span class="line">    <span class="keyword">local</span> changes = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> a = <span class="number">0x0000</span>, <span class="number">0x07FF</span> <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> before[a] ~= after[a] <span class="keyword">then</span></span><br><span class="line">            changes[#changes+<span class="number">1</span>] = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"%04X: %02X -&gt; %02X"</span>, a, before[a], after[a])</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> msg = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"\n[DIFF] 共 %d 字节变化 (f=%d):\n%s"</span>,</span><br><span class="line">        #changes, f, <span class="built_in">table</span>.<span class="built_in">concat</span>(changes, <span class="string">"\n"</span>))</span><br><span class="line">    <span class="built_in">print</span>(msg)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(msg..<span class="string">"\n"</span>)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onFrame</span><span class="params">()</span></span></span><br><span class="line">    f = f + <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> fPressed = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">local</span> okF = <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> fPressed = emu.isKeyPressed(<span class="string">"F"</span>) <span class="keyword">end</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> okF <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> fPressed <span class="keyword">and</span> <span class="keyword">not</span> lastF <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> haveA <span class="keyword">then</span></span><br><span class="line">            snapA = takeSnapshot()</span><br><span class="line">            haveA = <span class="literal">true</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"SNAP A 记录 (f=%d) 数量使用前"</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"SNAP A f=%d\n"</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">local</span> snapB = takeSnapshot()</span><br><span class="line">            <span class="built_in">print</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"SNAP B 记录 (f=%d) 数量使用后"</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"SNAP B f=%d\n"</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line">            diffSnapshots(snapA, snapB)</span><br><span class="line">            snapA, haveA = snapB, <span class="literal">true</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    lastF = fPressed</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addEventCallback(onFrame, emu.eventType.endFrame)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"item_snapshot v2 ready. 操作: 键盘F记录A -&gt; 按Q选择道具(数量-1) -&gt; 键盘F记录B -&gt; 自动diff"</span>)</span><br></pre></td></tr></table></figure>
-<p>两次确认 <code>$0204: 06→05</code> 和 <code>$0204: 05→04</code>，<strong>锁定数量字节 = <code>$0204</code></strong>。</p>
-<h3 id="3-3-定位扣减代码"><a href="#3-3-定位扣减代码" class="headerlink" title="3.3 定位扣减代码"></a>3.3 定位扣减代码</h3><p>用 <code>addMemoryCallback</code> 拦截 <code>$0204</code> 写入，在回调中调用 <code>emu.getState()</code> 获取 <code>cpu.pc</code>。对应脚本 <code>item_trace_pc.lua</code>：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- item_trace_pc.lua v2: 捕获 $0204 写入时的 CPU 状态(提取 PC + 寄存器)</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">log</span> = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">"/tmp/opencode/lupin/item_trace_pc.log"</span>, <span class="string">"w"</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">"===== TRACE PC v2 "</span>..<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"%Y-%m-%d %H:%M:%S"</span>)..<span class="string">" =====\n"</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> st = emu.getState()</span><br><span class="line">    <span class="keyword">local</span> msg = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"WRITE $%04X=%02X  PC=$%04X A=%02X X=%02X Y=%02X"</span>,</span><br><span class="line">        addr, value, st[<span class="string">"cpu.pc"</span>], st[<span class="string">"cpu.a"</span>], st[<span class="string">"cpu.x"</span>], st[<span class="string">"cpu.y"</span>])</span><br><span class="line">    <span class="built_in">print</span>(msg)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(msg..<span class="string">"\n"</span>)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"item_trace_pc v2 ready. 按 Q 使用道具 -&gt; 看 PC 地址"</span>)</span><br></pre></td></tr></table></figure>
+<p>对应脚本 <code>item_snapshot.lua</code>（F 键触发前后快照，避开 Q
+键干扰）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- item_snapshot.lua v2: 用键盘 F 触发前后快照对比, 避开 Q 干扰</span></span><br><span class="line"><span class="comment">-- 流程(关键: 数量-1发生在&quot;按Q选择道具&quot;瞬间, 而非开枪后):</span></span><br><span class="line"><span class="comment">--  1) 拿一个新道具(如机枪, 数量N), 暂停菜单里选好但【不要】按Q让它生效</span></span><br><span class="line"><span class="comment">--  2) 运行脚本</span></span><br><span class="line"><span class="comment">--  3) 按键盘 F        -&gt; 记录 snapA (使用前, 数量=N)</span></span><br><span class="line"><span class="comment">--  4) 按 Q(Select)选择道具 -&gt; 数量 N-1   (此时道具生效)</span></span><br><span class="line"><span class="comment">--  5) 按键盘 F        -&gt; 记录 snapB (使用后, 数量=N-1)</span></span><br><span class="line"><span class="comment">--  6) 脚本自动 diff 全内存 $0000-$07FF, 输出 N -&gt; N-1 的变化</span></span><br><span class="line"><span class="keyword">local</span> DIR = <span class="string">&quot;/tmp/opencode/lupin&quot;</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">log</span> = <span class="built_in">io</span>.<span class="built_in">open</span>(DIR..<span class="string">&quot;/item_snapshot.log&quot;</span>, <span class="string">&quot;a&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;\n===== SNAPSHOT v2 SESSION &quot;</span>..<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)..<span class="string">&quot; =====\n&quot;</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> f = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> lastF = <span class="literal">false</span></span><br><span class="line"><span class="keyword">local</span> snapA = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">local</span> haveA = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">r</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesInternalRam) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">takeSnapshot</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> snap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> a = <span class="number">0x0000</span>, <span class="number">0x07FF</span> <span class="keyword">do</span> snap[a] = r(a) <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">return</span> snap</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">diffSnapshots</span><span class="params">(before, after)</span></span></span><br><span class="line">    <span class="keyword">local</span> changes = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> a = <span class="number">0x0000</span>, <span class="number">0x07FF</span> <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> before[a] ~= after[a] <span class="keyword">then</span></span><br><span class="line">            changes[#changes+<span class="number">1</span>] = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;%04X: %02X -&gt; %02X&quot;</span>, a, before[a], after[a])</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> msg = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;\n[DIFF] 共 %d 字节变化 (f=%d):\n%s&quot;</span>,</span><br><span class="line">        #changes, f, <span class="built_in">table</span>.<span class="built_in">concat</span>(changes, <span class="string">&quot;\n&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(msg)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(msg..<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onFrame</span><span class="params">()</span></span></span><br><span class="line">    f = f + <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> fPressed = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">local</span> okF = <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> fPressed = emu.isKeyPressed(<span class="string">&quot;F&quot;</span>) <span class="keyword">end</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> okF <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> fPressed <span class="keyword">and</span> <span class="keyword">not</span> lastF <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> haveA <span class="keyword">then</span></span><br><span class="line">            snapA = takeSnapshot()</span><br><span class="line">            haveA = <span class="literal">true</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;SNAP A 记录 (f=%d) 数量使用前&quot;</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;SNAP A f=%d\n&quot;</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">local</span> snapB = takeSnapshot()</span><br><span class="line">            <span class="built_in">print</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;SNAP B 记录 (f=%d) 数量使用后&quot;</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;SNAP B f=%d\n&quot;</span>, f))</span><br><span class="line">            <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line">            diffSnapshots(snapA, snapB)</span><br><span class="line">            snapA, haveA = snapB, <span class="literal">true</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    lastF = fPressed</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addEventCallback(onFrame, emu.eventType.endFrame)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;item_snapshot v2 ready. 操作: 键盘F记录A -&gt; 按Q选择道具(数量-1) -&gt; 键盘F记录B -&gt; 自动diff&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>两次确认 <code>$0204: 06→05</code> 和
+<code>$0204: 05→04</code>，<strong>锁定数量字节 =
+<code>$0204</code></strong>。</p>
+<h3 id="定位扣减代码">3.3 定位扣减代码</h3>
+<p>用 <code>addMemoryCallback</code> 拦截 <code>$0204</code>
+写入，在回调中调用 <code>emu.getState()</code> 获取
+<code>cpu.pc</code>。对应脚本 <code>item_trace_pc.lua</code>：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- item_trace_pc.lua v2: 捕获 $0204 写入时的 CPU 状态(提取 PC + 寄存器)</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">log</span> = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">&quot;/tmp/opencode/lupin/item_trace_pc.log&quot;</span>, <span class="string">&quot;w&quot;</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;===== TRACE PC v2 &quot;</span>..<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)..<span class="string">&quot; =====\n&quot;</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> st = emu.getState()</span><br><span class="line">    <span class="keyword">local</span> msg = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;WRITE $%04X=%02X  PC=$%04X A=%02X X=%02X Y=%02X&quot;</span>,</span><br><span class="line">        addr, value, st[<span class="string">&quot;cpu.pc&quot;</span>], st[<span class="string">&quot;cpu.a&quot;</span>], st[<span class="string">&quot;cpu.x&quot;</span>], st[<span class="string">&quot;cpu.y&quot;</span>])</span><br><span class="line">    <span class="built_in">print</span>(msg)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(msg..<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;item_trace_pc v2 ready. 按 Q 使用道具 -&gt; 看 PC 地址&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>运行输出：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WRITE $0204&#x3D;01  PC&#x3D;$CD16 A&#x3D;04 X&#x3D;04 Y&#x3D;03</span><br></pre></td></tr></table></figure>
-<p><code>PC=$CD16</code> 是写指令后的下一条指令地址，往前推 3 字节即扣减指令。反汇编 <code>$CD13</code> 附近：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$CD13: DEC  $0200,X  ; ★ 扣减道具数量（X&#x3D;4 时 DEC $0204）</span><br><span class="line">$CD16: LDA  #$20</span><br><span class="line">$CD18: STA  $020A,X</span><br><span class="line">$CD1B: RTS</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WRITE $0204=01  PC=$CD16 A=04 X=04 Y=03</span><br></pre></td></tr></table></figure>
+<p><code>PC=$CD16</code> 是写指令后的下一条指令地址，往前推 3
+字节即扣减指令。反汇编 <code>$CD13</code> 附近：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$CD13: DEC  $0200,X  ; ★ 扣减道具数量（X=4 时 DEC $0204）</span><br><span class="line">$CD16: LDA  #$20</span><br><span class="line">$CD18: STA  $020A,X</span><br><span class="line">$CD1B: RTS</span><br></pre></td></tr></table></figure>
 <p>全 ROM 仅 1 处 <code>DEC $0200,X</code>，是共享的扣减例程。</p>
-<h3 id="3-4-Lua-验证"><a href="#3-4-Lua-验证" class="headerlink" title="3.4 Lua 验证"></a>3.4 Lua 验证</h3><p>在制作补丁前，先用写回调拦截验证。对应脚本 <code>item_fix.lua</code>：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- item_fix.lua: 阻止道具数量($0204)减少 —— 返回旧值覆盖写入</span></span><br><span class="line"><span class="comment">-- 原理: 内存写回调在写入前触发, 若回调返回整数, 则该值覆盖原写入。</span></span><br><span class="line"><span class="comment">--       每次写 $0204 时读取当前旧值并返回, 使数量永远不减少。</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">log</span> = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">"/tmp/opencode/lupin/item_fix.log"</span>, <span class="string">"w"</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">"===== ITEM FIX "</span>..<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"%Y-%m-%d %H:%M:%S"</span>)..<span class="string">" =====\n"</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> current = emu.<span class="built_in">read</span>(<span class="number">0x0204</span>, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> value ~= current <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">local</span> msg = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"拦截 $0204 写 %02X -&gt; 保持 %02X"</span>, value, current)</span><br><span class="line">        <span class="built_in">print</span>(msg)</span><br><span class="line">        <span class="built_in">log</span>:<span class="built_in">write</span>(msg..<span class="string">"\n"</span>)</span><br><span class="line">        <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line">        <span class="keyword">return</span> current</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"item_fix ready. 道具数量不会减少了. 按 Q 使用道具测试"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="lua-验证">3.4 Lua 验证</h3>
+<p>在制作补丁前，先用写回调拦截验证。对应脚本
+<code>item_fix.lua</code>：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- item_fix.lua: 阻止道具数量($0204)减少 —— 返回旧值覆盖写入</span></span><br><span class="line"><span class="comment">-- 原理: 内存写回调在写入前触发, 若回调返回整数, 则该值覆盖原写入。</span></span><br><span class="line"><span class="comment">--       每次写 $0204 时读取当前旧值并返回, 使数量永远不减少。</span></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">log</span> = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">&quot;/tmp/opencode/lupin/item_fix.log&quot;</span>, <span class="string">&quot;w&quot;</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;===== ITEM FIX &quot;</span>..<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)..<span class="string">&quot; =====\n&quot;</span>)</span><br><span class="line"><span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">    <span class="keyword">local</span> current = emu.<span class="built_in">read</span>(<span class="number">0x0204</span>, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> value ~= current <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">local</span> msg = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;拦截 $0204 写 %02X -&gt; 保持 %02X&quot;</span>, value, current)</span><br><span class="line">        <span class="built_in">print</span>(msg)</span><br><span class="line">        <span class="built_in">log</span>:<span class="built_in">write</span>(msg..<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">        <span class="built_in">log</span>:<span class="built_in">flush</span>()</span><br><span class="line">        <span class="keyword">return</span> current</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0204</span>, <span class="number">0x0204</span>, emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;item_fix ready. 道具数量不会减少了. 按 Q 使用道具测试&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>验证结果：数量保持不变。</p>
-<hr>
-<h2 id="4-补丁"><a href="#4-补丁" class="headerlink" title="4. 补丁"></a>4. 补丁</h2><div class="table-container">
+<hr />
+<h2 id="补丁">4. 补丁</h2>
 <table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
 <thead>
 <tr>
 <th>文件偏移</th>
@@ -300,12 +418,17 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p>将 <code>$CD13</code> 的 <code>DEC $0200,X</code>（3 字节）替换为 <code>EA EA EA</code>（NOP）。</p>
-<h3 id="4-1-效果演示"><a href="#4-1-效果演示" class="headerlink" title="4.1 效果演示"></a>4.1 效果演示</h3><p><img src="/img/lupin.gif" alt="道具不减 + 遇敌不捕获效果演示"></p>
+<p>将 <code>$CD13</code> 的 <code>DEC $0200,X</code>（3 字节）替换为
+<code>EA EA EA</code>（NOP）。</p>
+<h3 id="效果演示">4.1 效果演示</h3>
+<figure>
+<img src="/img/lupin.gif" alt="道具不减 + 遇敌不捕获效果演示" />
+<figcaption aria-hidden="true">道具不减 +
+遇敌不捕获效果演示</figcaption>
+</figure>
 <p>上图为补丁生效后的实机录屏：在生命道具护持下，遇敌后不再进入捕获界面，且道具数量维持不变。</p>
-<hr>
-<h2 id="5-交付物"><a href="#5-交付物" class="headerlink" title="5. 交付物"></a>5. 交付物</h2><div class="table-container">
+<hr />
+<h2 id="交付物">5. 交付物</h2>
 <table>
 <thead>
 <tr>
@@ -332,159 +455,133 @@
 </tr>
 </tbody>
 </table>
-</div>
 <p>打在原版 ROM <code>鲁邦三世-潘多拉的遗产.nes</code> 上即可。</p>
-<p><strong>下载</strong>：<a href="/downloads/鲁邦三世-潘多拉的遗产-永不捕获_道具不减.nes">鲁邦三世-潘多拉的遗产-永不捕获_道具不减.nes</a>（已打补丁的永不捕获 ROM）</p>
-<hr>
-<h2 id="6-经验总结"><a href="#6-经验总结" class="headerlink" title="6. 经验总结"></a>6. 经验总结</h2><ol>
-<li><strong>数量字节不在道具槽内</strong>：道具槽 <code>$0410-$04B7</code> 只存 ID、冷却计时器、动画参数，数量在 <code>$0204</code>。</li>
-<li><strong>全 RAM 快照对比最直接</strong>：使用前/后快照 diff 全内存，比持续监控更干净。</li>
-<li><strong>回调可覆盖写入</strong>：<code>addMemoryCallback</code> 写回调返回值覆盖原写入，可做运行时验证。</li>
-<li><strong><code>emu.getState()</code> 取 PC</strong>：在回调中调用获取 <code>cpu.pc</code>，定位写入指令的 ROM 地址。</li>
-<li><strong><code>DEC $0200,X</code> 是唯一点</strong>：全 ROM 仅 1 处，NOP 掉即可阻止所有道具减少。</li>
-<li><strong>API 参数必须写全</strong>：缺 <code>cpuType</code>/<code>memType</code> 会 core dump，枚举是 <code>emu.callbackType.write</code>。</li>
+<p><strong>下载</strong>：<a
+href="/downloads/鲁邦三世-潘多拉的遗产-永不捕获_道具不减.nes">鲁邦三世-潘多拉的遗产-永不捕获_道具不减.nes</a>（已打补丁的永不捕获
+ROM）</p>
+<hr />
+<h2 id="经验总结">6. 经验总结</h2>
+<ol type="1">
+<li><strong>数量字节不在道具槽内</strong>：道具槽
+<code>$0410-$04B7</code> 只存 ID、冷却计时器、动画参数，数量在
+<code>$0204</code>。</li>
+<li><strong>全 RAM 快照对比最直接</strong>：使用前/后快照 diff
+全内存，比持续监控更干净。</li>
+<li><strong>回调可覆盖写入</strong>：<code>addMemoryCallback</code>
+写回调返回值覆盖原写入，可做运行时验证。</li>
+<li><strong><code>emu.getState()</code> 取 PC</strong>：在回调中调用获取
+<code>cpu.pc</code>，定位写入指令的 ROM 地址。</li>
+<li><strong><code>DEC $0200,X</code> 是唯一点</strong>：全 ROM 仅 1
+处，NOP 掉即可阻止所有道具减少。</li>
+<li><strong>API 参数必须写全</strong>：缺
+<code>cpuType</code>/<code>memType</code> 会 core dump，枚举是
+<code>emu.callbackType.write</code>。</li>
 </ol>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2026/08/07/%E5%85%94%E5%85%AB%E5%93%A5-NES%E9%81%87%E6%95%8C%E4%B8%8D%E6%AD%BBHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="pre-post btn btn-default" title='兔八哥（NES / FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复）'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            兔八哥（NES / FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复）</span>
-    </a>
+
     
     
-    <a href="/2026/08/02/%E8%9D%99%E8%9D%A0%E4%BE%A0-NES%E6%97%A0%E9%99%90%E7%94%9F%E5%91%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="next-post btn btn-default" title='蝙蝠侠（NES / FC）无限生命 Hack 技术文档'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            蝙蝠侠（NES / FC）无限生命 Hack 技术文档</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/08/05/%E9%B2%81%E9%82%A6%E4%B8%89%E4%B8%96-NES%E6%B0%B8%E4%B8%8D%E6%8D%95%E8%8E%B7Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="鲁邦三世（NES &#x2F; FC 汉化版）道具不减 Hack 技术文档">https://sunjunior.github.io/2026/08/05/鲁邦三世-NES永不捕获Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 逆向工程</a>
+          </div>
+
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析过程"><span class="toc-text">3. 分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-道具槽布局"><span class="toc-text">3.1 道具槽布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-定位数量字节"><span class="toc-text">3.2 定位数量字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-定位扣减代码"><span class="toc-text">3.3 定位扣减代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Lua-验证"><span class="toc-text">3.4 Lua 验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-补丁"><span class="toc-text">4. 补丁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-效果演示"><span class="toc-text">4.1 效果演示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-交付物"><span class="toc-text">5. 交付物</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-经验总结"><span class="toc-text">6. 经验总结</span></a></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/02/%E8%9D%99%E8%9D%A0%E4%BE%A0-NES%E6%97%A0%E9%99%90%E7%94%9F%E5%91%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="蝙蝠侠（NES &#x2F; FC）无限生命 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 蝙蝠侠（NES / FC）无限生命 Hack 技术文档
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2026/08/07/%E5%85%94%E5%85%AB%E5%93%A5-NES%E9%81%87%E6%95%8C%E4%B8%8D%E6%AD%BBHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="next" title="兔八哥（NES &#x2F; FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复）">
+                  兔八哥（NES / FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复） <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

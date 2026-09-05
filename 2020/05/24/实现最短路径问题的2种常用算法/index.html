@@ -1,410 +1,485 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="数据结构与算法" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="背景最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：
 
-确定起点的单源最短路..." />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    实现最短路径问题的2种常用算法 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
-
-
-<link rel="icon" href="/favicon.ico">
-
-    
+    <meta name="description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：  确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现最短路径问题的2种常用算法">
+<meta property="og:url" content="https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：  确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/dijkstra/dijkstra1.png">
+<meta property="article:published_time" content="2020-05-23T23:56:07.000Z">
+<meta property="article:modified_time" content="2020-05-27T15:30:42.142Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="数据结构与算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/dijkstra/dijkstra1.png">
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+<link rel="canonical" href="https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/","path":"2020/05/24/实现最短路径问题的2种常用算法/","title":"实现最短路径问题的2种常用算法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>实现最短路径问题的2种常用算法 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="实现最短路径问题的2种常用算法">
-            
-            实现最短路径问题的2种常用算法
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2020/05/24</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                2295</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="nav-number">2.</span> <span class="nav-text">算法设计思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#floyd-warshall%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">Floyd-Warshall算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dijkstra%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Dijkstra算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><strong>最短路径</strong>问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：</p>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="实现最短路径问题的2种常用算法 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          实现最短路径问题的2种常用算法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-24 07:56:07" itemprop="dateCreated datePublished" datetime="2020-05-24T07:56:07+08:00">2020-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-27 23:30:42" itemprop="dateModified" datetime="2020-05-27T23:30:42+08:00">2020-05-27</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="背景">背景</h2>
+<p><strong>最短路径</strong>问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：</p>
 <ul>
-<li><strong>确定起点的单源最短路径问题</strong> - 即已知起始结点，求最短路径的问题。适合使用<strong>Dijkstra算法</strong></li>
-<li><strong>确定终点的最短路径问题</strong> - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源最短路径问题完全等同，在有向图中该问题等同于把所有路径方向反转的确定起点的问题。</li>
-<li><strong>确定起点终点的最短路径问题</strong> - 即已知起点和终点，求两结点之间的最短路径。</li>
-<li><strong>全局最短路径问题</strong> - 求图中所有的节点之间的最短路径。适合使用<strong>Floyd-Warshall算法</strong></li>
+<li><strong>确定起点的单源最短路径问题</strong> -
+即已知起始结点，求最短路径的问题。适合使用<strong>Dijkstra算法</strong></li>
+<li><strong>确定终点的最短路径问题</strong> -
+与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源最短路径问题完全等同，在有向图中该问题等同于把所有路径方向反转的确定起点的问题。</li>
+<li><strong>确定起点终点的最短路径问题</strong> -
+即已知起点和终点，求两结点之间的最短路径。</li>
+<li><strong>全局最短路径问题</strong> -
+求图中所有的节点之间的最短路径。适合使用<strong>Floyd-Warshall算法</strong></li>
 </ul>
-<h2 id="算法设计思想"><a href="#算法设计思想" class="headerlink" title="算法设计思想"></a>算法设计思想</h2><p>本文重点讨论Dijkstra算法和Floyd-Warshall算法的实现思路。本文不会详细探究这两个算法理论支撑基础，重点在于说明这两种算法的使用场景及代码实现。我们知道图的广度优先算法BFS可以算出任意2个节点之间的最短路径，这里有个隐含条件，每2个节点之间之间的边的权重都是相等的，这样我们用队列实现的时候对于同一层次的节点入队列时是不分优先级顺序的。但是如果节点之间连接的边的权重是不一样的，则需要对经典的BFS算法进行改造，将普通的队列修改为优先队列。</p>
-<p>首先，我们先实现比较简单的Floyd-Warshall算法，该算法核心代码就5行，但算法思想包含了动态规划，我们以节点i和节点j的最短路径为例， 我们用dp(i, j)表示节点i和节点j的最短路径，那么可以有如下公式：</p>
-<script type="math/tex; mode=display">
-dp(i, j) = min \{dp(i, prev(j)) + val(prev(j), j)， dp(i,j)\}</script><p>令 <script type="math/tex">k = prev(j)</script>，则有<script type="math/tex">k</script>表示为所有与j相邻的节点，这里我们取最小值，那如何更新最小值呢，我们可以用用一个二维数组来表示2个节点之间的边，边的权重为其路径，没有直接相邻的2个节点之间的路径长度设置为无穷大，对于节点i和节点j来说，如果经过了节点k，那我们只需要计算<script type="math/tex">dp(i, j)</script>的值和<script type="math/tex">dp(i,k) + dp(k,j)</script>的值哪个更小一些，即对所有经过节点k的节点i和节点j的路径，我们通过以下公式更新：</p>
-<script type="math/tex; mode=display">
-dp(i,j)=dp(i,k)+dp(k,j) \space\space\space\space if \space\space\space dp(i, j) > dp(i, k) + dp(k, j)</script><p>将所有经过节点k(k=1~n)遍历完之后，我们就会得到最终的二维数据值，该值描述了2个节点之间的最短路径。</p>
-<p>最后，我们再实现Dijkstra算法，Dijkstra(迪杰斯特拉)算法是典型的单源最短路径算法，用于计算一个节点到其他所有节点的最短路径。主要特点是以起始点为中心向外层层扩展，直到扩展到终点为止。Dijkstra算法可以基于BFS算法，内部维护一个优先队列实现。问题可以描述为：在无向图 G=(V,E) 中，假设每条边 E[i] 的长度为 w[i]，找到由顶点 V0 到其余各点的最短路径。（单源最短路径）,这里需要注意的是，节点之间的边不能有<strong>负权边</strong>。</p>
-<h2 id="Floyd-Warshall算法实现"><a href="#Floyd-Warshall算法实现" class="headerlink" title="Floyd-Warshall算法实现"></a>Floyd-Warshall算法实现</h2><p>首先，我们先抛出Floyd-Warshall算法的核心代码，就5行代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> range(n):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">if</span> dp[i][j] &gt; dp[i][k] + dp[k][j]:</span><br><span class="line">                dp[i][j] = dp[i][k] + dp[k][j]</span><br></pre></td></tr></table></figure>
+<h2 id="算法设计思想">算法设计思想</h2>
+<p>本文重点讨论Dijkstra算法和Floyd-Warshall算法的实现思路。本文不会详细探究这两个算法理论支撑基础，重点在于说明这两种算法的使用场景及代码实现。我们知道图的广度优先算法BFS可以算出任意2个节点之间的最短路径，这里有个隐含条件，每2个节点之间之间的边的权重都是相等的，这样我们用队列实现的时候对于同一层次的节点入队列时是不分优先级顺序的。但是如果节点之间连接的边的权重是不一样的，则需要对经典的BFS算法进行改造，将普通的队列修改为优先队列。</p>
+<p>首先，我们先实现比较简单的Floyd-Warshall算法，该算法核心代码就5行，但算法思想包含了动态规划，我们以节点i和节点j的最短路径为例，
+我们用dp(i, j)表示节点i和节点j的最短路径，那么可以有如下公式：
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>m</mi><mi>i</mi><mi>n</mi><mo stretchy="false" form="prefix">{</mo><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>p</mi><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>v</mi><mi>a</mi><mi>l</mi><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mi>，</mi><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">
+dp(i, j) = min \{dp(i, prev(j)) + val(prev(j), j)， dp(i,j)\}
+</annotation></semantics></math> 令
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>p</mi><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> k = prev(j)</annotation></semantics></math>，则有<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex"> k </annotation></semantics></math>表示为所有与j相邻的节点，这里我们取最小值，那如何更新最小值呢，我们可以用用一个二维数组来表示2个节点之间的边，边的权重为其路径，没有直接相邻的2个节点之间的路径长度设置为无穷大，对于节点i和节点j来说，如果经过了节点k，那我们只需要计算<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> dp(i, j) </annotation></semantics></math>的值和<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">  dp(i,k) + dp(k,j)</annotation></semantics></math>的值哪个更小一些，即对所有经过节点k的节点i和节点j的路径，我们通过以下公式更新：
+<span class="math display">$$
+dp(i,j)=dp(i,k)+dp(k,j) \space\space\space\space if \space\space\space
+dp(i, j) &gt; dp(i, k) + dp(k, j)
+$$</span>
+将所有经过节点k(k=1~n)遍历完之后，我们就会得到最终的二维数据值，该值描述了2个节点之间的最短路径。</p>
+<p>最后，我们再实现Dijkstra算法，Dijkstra(迪杰斯特拉)算法是典型的单源最短路径算法，用于计算一个节点到其他所有节点的最短路径。主要特点是以起始点为中心向外层层扩展，直到扩展到终点为止。Dijkstra算法可以基于BFS算法，内部维护一个优先队列实现。问题可以描述为：在无向图
+G=(V,E) 中，假设每条边 E[i] 的长度为 w[i]，找到由顶点 V0
+到其余各点的最短路径。（单源最短路径）,这里需要注意的是，节点之间的边不能有<strong>负权边</strong>。</p>
+<h2 id="floyd-warshall算法实现">Floyd-Warshall算法实现</h2>
+<p>首先，我们先抛出Floyd-Warshall算法的核心代码，就5行代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">if</span> dp[i][j] &gt; dp[i][k] + dp[k][j]:</span><br><span class="line">                dp[i][j] = dp[i][k] + dp[k][j]</span><br></pre></td></tr></table></figure>
 <p>我们用一个实际的例子来理解该算法，下图为无向图，意思为节点i到节点j的距离和节点j到节点i的距离是相等的，当然我们这个算法可以用于有向图，节点i到节点j的距离和节点j到节点i的距离不一定相等，该算法照样可以算出两两节点之间的最短距离。</p>
-<p><img src="/img/dijkstra/dijkstra1.png" alt=""></p>
-<p>这里我们首先用一个二维数组dp表示所有节点之间两两节点之间的关系，二维数组的值表示当前的最短路径。设定第i个节点到第i个节点本身的距离为0，即 <script type="math/tex">dp(i, i) = 0</script>, 无直接相连节点之间的距离为无穷大。上图一共是5个节点，我们用<script type="math/tex">5 * 5</script>的二维数组dp表示节点间关系即距离。</p>
-<div class="table-container">
+<p><img src="/img/dijkstra/dijkstra1.png" /></p>
+<p>这里我们首先用一个二维数组dp表示所有节点之间两两节点之间的关系，二维数组的值表示当前的最短路径。设定第i个节点到第i个节点本身的距离为0，即
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex"> dp(i, i) = 0 </annotation></semantics></math>,
+无直接相连节点之间的距离为无穷大。上图一共是5个节点，我们用<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>*</mo><mn>5</mn></mrow><annotation encoding="application/x-tex"> 5 * 5 </annotation></semantics></math>的二维数组dp表示节点间关系即距离。</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">A</th>
-<th style="text-align:center">B</th>
-<th style="text-align:center">C</th>
-<th style="text-align:center">D</th>
-<th style="text-align:center">E</th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">A</th>
+<th style="text-align: center;">B</th>
+<th style="text-align: center;">C</th>
+<th style="text-align: center;">D</th>
+<th style="text-align: center;">E</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center"><strong>A</strong></td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">inf</td>
-<td style="text-align:center">10</td>
+<td style="text-align: center;"><strong>A</strong></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">10</td>
 </tr>
 <tr>
-<td style="text-align:center"><strong>B</strong></td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">inf</td>
-<td style="text-align:center">7</td>
+<td style="text-align: center;"><strong>B</strong></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">7</td>
 </tr>
 <tr>
-<td style="text-align:center"><strong>C</strong></td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">3</td>
+<td style="text-align: center;"><strong>C</strong></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr>
-<td style="text-align:center"><strong>D</strong></td>
-<td style="text-align:center">inf</td>
-<td style="text-align:center">inf</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">5</td>
+<td style="text-align: center;"><strong>D</strong></td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">5</td>
 </tr>
 <tr>
-<td style="text-align:center"><strong>E</strong></td>
-<td style="text-align:center">10</td>
-<td style="text-align:center">7</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">0</td>
+<td style="text-align: center;"><strong>E</strong></td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0</td>
 </tr>
 </tbody>
 </table>
-</div>
 <p>我们这里采用python语言实现其算法，最主要的就是根据上面图的关系来构造上面的dp二维数组（代码中的distance变量）。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_path</span><span class="params">(path, i, j)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(path, i, j)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> path[i][j] != math.inf:</span><br><span class="line">            helper(path, i, path[i][j])</span><br><span class="line">            helper(path, path[i][j], j)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"--&gt;"</span>, chr(ord(<span class="string">'A'</span>) + j), end=<span class="string">''</span>)</span><br><span class="line"></span><br><span class="line">    print(chr(ord(<span class="string">'A'</span>) + i), end=<span class="string">''</span>)</span><br><span class="line">    helper(path, i, j)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># graph表示图节点之间的关系，可以用不同形式的数据结构</span></span><br><span class="line"><span class="comment"># 表示，node_num用于表示节点个数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">floyd</span><span class="params">(graph, node_num: int)</span>:</span></span><br><span class="line">    distance = [[math.inf] * node_num <span class="keyword">for</span> _ <span class="keyword">in</span> range(node_num)]</span><br><span class="line">    path = [[math.inf] * node_num <span class="keyword">for</span> _ <span class="keyword">in</span> range(node_num)]</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        row = ord(node) - ord(<span class="string">'A'</span>)</span><br><span class="line">        distance[row][row] = <span class="number">0</span></span><br><span class="line">        adjcents = graph[node]</span><br><span class="line">        <span class="keyword">for</span> adjcent, val <span class="keyword">in</span> adjcents.items():</span><br><span class="line">            col = ord(adjcent) - ord(<span class="string">'A'</span>)</span><br><span class="line">            distance[row][col] = val</span><br><span class="line">    <span class="comment"># 套用Floyd-Warshall算法核心代码</span></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(node_num):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(node_num):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(node_num):</span><br><span class="line">                <span class="keyword">if</span> distance[i][j] &gt; distance[i][k] + distance[k][j]:</span><br><span class="line">                    distance[i][j] = distance[i][k] + distance[k][j]</span><br><span class="line">                    path[i][j] = k  <span class="comment"># 将节点i和节点j之间通过节点k的记录起来</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> path, distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">graph = &#123;</span><br><span class="line">    <span class="string">'A'</span>: &#123;<span class="string">'B'</span>: <span class="number">2</span>, <span class="string">'C'</span>: <span class="number">4</span>, <span class="string">'E'</span>: <span class="number">10</span>&#125;,</span><br><span class="line">    <span class="string">'B'</span>: &#123;<span class="string">'A'</span>: <span class="number">2</span>, <span class="string">'C'</span>: <span class="number">3</span>, <span class="string">'E'</span>: <span class="number">7</span>&#125;,</span><br><span class="line">    <span class="string">'C'</span>: &#123;<span class="string">'A'</span>: <span class="number">4</span>, <span class="string">'B'</span>: <span class="number">3</span>, <span class="string">'D'</span>: <span class="number">4</span>, <span class="string">'E'</span>: <span class="number">3</span>&#125;,</span><br><span class="line">    <span class="string">'D'</span>: &#123;<span class="string">'C'</span>: <span class="number">4</span>, <span class="string">'E'</span>: <span class="number">5</span>&#125;,</span><br><span class="line">    <span class="string">'E'</span>: &#123;<span class="string">'A'</span>: <span class="number">10</span>, <span class="string">'B'</span>: <span class="number">7</span>, <span class="string">'C'</span>: <span class="number">3</span>, <span class="string">'D'</span>: <span class="number">5</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 打印A到E的最短距离7</span></span><br><span class="line">path, distance = floyd(graph, len(graph))</span><br><span class="line">i = ord(<span class="string">'A'</span>) - ord(<span class="string">'A'</span>)  <span class="comment"># 将字符转换为对应的索引</span></span><br><span class="line">j = ord(<span class="string">'E'</span>) - ord(<span class="string">'A'</span>)</span><br><span class="line">print(distance[i][j])  <span class="comment"># 打印A到E的最短路径为7</span></span><br><span class="line">print_path(path, i, j)  <span class="comment"># A--&gt; C--&gt; E</span></span><br></pre></td></tr></table></figure>
-<p>该算法由于是计算的所有节点中每2个节点之间的最短路径，这里明显看出算法的时间复杂度为<script type="math/tex">O(n^3)</script>。因此也可以同样适用于单源最短路径的计算问题，只不过有点高射炮打蚊子的嫌疑了，我们用Dijkstra算法则可以做到<script type="math/tex">O(E + VlogV)</script></p>
-<h2 id="Dijkstra算法实现"><a href="#Dijkstra算法实现" class="headerlink" title="Dijkstra算法实现"></a>Dijkstra算法实现</h2><p>Dijkstra算法是解决单源最短路径的最佳算法，同时节点之间不能有负权边。下面直接用BFS算法+优先队列实现其功能。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line">graph = &#123;</span><br><span class="line">    <span class="string">'A'</span>: &#123;<span class="string">'B'</span>: <span class="number">2</span>, <span class="string">'C'</span>: <span class="number">4</span>, <span class="string">'E'</span>: <span class="number">10</span>&#125;,</span><br><span class="line">    <span class="string">'B'</span>: &#123;<span class="string">'A'</span>: <span class="number">2</span>, <span class="string">'C'</span>: <span class="number">3</span>, <span class="string">'E'</span>: <span class="number">7</span>&#125;,</span><br><span class="line">    <span class="string">'C'</span>: &#123;<span class="string">'A'</span>: <span class="number">4</span>, <span class="string">'B'</span>: <span class="number">3</span>, <span class="string">'D'</span>: <span class="number">4</span>, <span class="string">'E'</span>: <span class="number">3</span>&#125;,</span><br><span class="line">    <span class="string">'D'</span>: &#123;<span class="string">'C'</span>: <span class="number">4</span>, <span class="string">'E'</span>: <span class="number">5</span>&#125;,</span><br><span class="line">    <span class="string">'E'</span>: &#123;<span class="string">'A'</span>: <span class="number">10</span>, <span class="string">'B'</span>: <span class="number">7</span>, <span class="string">'C'</span>: <span class="number">3</span>, <span class="string">'D'</span>: <span class="number">5</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_distance</span><span class="params">(graph: dict, s)</span>:</span></span><br><span class="line">    distance = &#123;s: <span class="number">0</span>&#125;</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        <span class="keyword">if</span> node != s:</span><br><span class="line">            distance[node] = math.inf</span><br><span class="line">    <span class="keyword">return</span> distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dijkstra</span><span class="params">(graph: dict, s: str)</span>:</span></span><br><span class="line">    distance = init_distance(graph, s)</span><br><span class="line">    parent = &#123;s: <span class="literal">None</span>&#125;</span><br><span class="line">    pqueue = []</span><br><span class="line">    heapq.heappush(pqueue, (<span class="number">0</span>, s))  <span class="comment"># 加入源节点</span></span><br><span class="line">    seen = set()</span><br><span class="line">    <span class="keyword">while</span> pqueue:</span><br><span class="line">        dis, node = heapq.heappop(pqueue)</span><br><span class="line">        seen.add(node)</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> graph[node]:</span><br><span class="line">            <span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> seen:</span><br><span class="line">                <span class="keyword">if</span> distance[w] &gt; dis + graph[node][w]:</span><br><span class="line">                    heapq.heappush(pqueue, (dis + graph[node][w], w))</span><br><span class="line">                    parent[w] = node</span><br><span class="line">                    distance[w] = dis + graph[node][w]</span><br><span class="line">    <span class="keyword">return</span> parent, distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    parent, distance = dijkstra(graph, <span class="string">'A'</span>)</span><br><span class="line">    print(parent) <span class="comment"># &#123;'A': None, 'B': 'A', 'C': 'A', 'E': 'C', 'D': 'C'&#125;</span></span><br><span class="line">    print(distance) <span class="comment"># &#123;'A': 0, 'B': 2, 'C': 4, 'D': 8, 'E': 7&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>Floyd-Warshall</strong>算法比<strong>Dijkstra</strong>算法实现要简单很多，如果求最短路径，让大家偷懒的方法就直接用Floyd算法，这个算法通用性更广，既可以算全局两两节点的最短路径，当然也可以算单源最短路径，但算法复杂度为</p>
-<p><script type="math/tex">O(n^3)</script>；而Dijkstra算法实现则要复杂一些,对于某些场景，用这个算法实现指定节点到其他所有节点的最短路径时间复杂度更低点。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">print_path</span>(<span class="params">path, i, j</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">helper</span>(<span class="params">path, i, j</span>):</span><br><span class="line">        <span class="keyword">if</span> path[i][j] != math.inf:</span><br><span class="line">            helper(path, i, path[i][j])</span><br><span class="line">            helper(path, path[i][j], j)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;--&gt;&quot;</span>, <span class="built_in">chr</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) + j), end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) + i), end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    helper(path, i, j)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># graph表示图节点之间的关系，可以用不同形式的数据结构</span></span><br><span class="line"><span class="comment"># 表示，node_num用于表示节点个数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">floyd</span>(<span class="params">graph, node_num: <span class="built_in">int</span></span>):</span><br><span class="line">    distance = [[math.inf] * node_num <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(node_num)]</span><br><span class="line">    path = [[math.inf] * node_num <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(node_num)]</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        row = <span class="built_in">ord</span>(node) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">        distance[row][row] = <span class="number">0</span></span><br><span class="line">        adjcents = graph[node]</span><br><span class="line">        <span class="keyword">for</span> adjcent, val <span class="keyword">in</span> adjcents.items():</span><br><span class="line">            col = <span class="built_in">ord</span>(adjcent) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">            distance[row][col] = val</span><br><span class="line">    <span class="comment"># 套用Floyd-Warshall算法核心代码</span></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(node_num):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(node_num):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(node_num):</span><br><span class="line">                <span class="keyword">if</span> distance[i][j] &gt; distance[i][k] + distance[k][j]:</span><br><span class="line">                    distance[i][j] = distance[i][k] + distance[k][j]</span><br><span class="line">                    path[i][j] = k  <span class="comment"># 将节点i和节点j之间通过节点k的记录起来</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> path, distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">graph = &#123;</span><br><span class="line">    <span class="string">&#x27;A&#x27;</span>: &#123;<span class="string">&#x27;B&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">10</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;B&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">7</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;C&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">3</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;D&#x27;</span>: &#123;<span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">5</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;E&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">7</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 打印A到E的最短距离7</span></span><br><span class="line">path, distance = floyd(graph, <span class="built_in">len</span>(graph))</span><br><span class="line">i = <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)  <span class="comment"># 将字符转换为对应的索引</span></span><br><span class="line">j = <span class="built_in">ord</span>(<span class="string">&#x27;E&#x27;</span>) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(distance[i][j])  <span class="comment"># 打印A到E的最短路径为7</span></span><br><span class="line">print_path(path, i, j)  <span class="comment"># A--&gt; C--&gt; E</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>该算法由于是计算的所有节点中每2个节点之间的最短路径，这里明显看出算法的时间复杂度为<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> O(n^3) </annotation></semantics></math>。因此也可以同样适用于单源最短路径的计算问题，只不过有点高射炮打蚊子的嫌疑了，我们用Dijkstra算法则可以做到<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>E</mi><mo>+</mo><mi>V</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi>V</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> O(E + VlogV) </annotation></semantics></math></p>
+<h2 id="dijkstra算法实现">Dijkstra算法实现</h2>
+<p>Dijkstra算法是解决单源最短路径的最佳算法，同时节点之间不能有负权边。下面直接用BFS算法+优先队列实现其功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line">graph = &#123;</span><br><span class="line">    <span class="string">&#x27;A&#x27;</span>: &#123;<span class="string">&#x27;B&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">10</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;B&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">7</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;C&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">3</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;D&#x27;</span>: &#123;<span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">5</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;E&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">7</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_distance</span>(<span class="params">graph: <span class="built_in">dict</span>, s</span>):</span><br><span class="line">    distance = &#123;s: <span class="number">0</span>&#125;</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        <span class="keyword">if</span> node != s:</span><br><span class="line">            distance[node] = math.inf</span><br><span class="line">    <span class="keyword">return</span> distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dijkstra</span>(<span class="params">graph: <span class="built_in">dict</span>, s: <span class="built_in">str</span></span>):</span><br><span class="line">    distance = init_distance(graph, s)</span><br><span class="line">    parent = &#123;s: <span class="literal">None</span>&#125;</span><br><span class="line">    pqueue = []</span><br><span class="line">    heapq.heappush(pqueue, (<span class="number">0</span>, s))  <span class="comment"># 加入源节点</span></span><br><span class="line">    seen = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">while</span> pqueue:</span><br><span class="line">        dis, node = heapq.heappop(pqueue)</span><br><span class="line">        seen.add(node)</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> graph[node]:</span><br><span class="line">            <span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> seen:</span><br><span class="line">                <span class="keyword">if</span> distance[w] &gt; dis + graph[node][w]:</span><br><span class="line">                    heapq.heappush(pqueue, (dis + graph[node][w], w))</span><br><span class="line">                    parent[w] = node</span><br><span class="line">                    distance[w] = dis + graph[node][w]</span><br><span class="line">    <span class="keyword">return</span> parent, distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parent, distance = dijkstra(graph, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(parent) <span class="comment"># &#123;&#x27;A&#x27;: None, &#x27;B&#x27;: &#x27;A&#x27;, &#x27;C&#x27;: &#x27;A&#x27;, &#x27;E&#x27;: &#x27;C&#x27;, &#x27;D&#x27;: &#x27;C&#x27;&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(distance) <span class="comment"># &#123;&#x27;A&#x27;: 0, &#x27;B&#x27;: 2, &#x27;C&#x27;: 4, &#x27;D&#x27;: 8, &#x27;E&#x27;: 7&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<p><strong>Floyd-Warshall</strong>算法比<strong>Dijkstra</strong>算法实现要简单很多，如果求最短路径，让大家偷懒的方法就直接用Floyd算法，这个算法通用性更广，既可以算全局两两节点的最短路径，当然也可以算单源最短路径，但算法复杂度为</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> O(n^3) </annotation></semantics></math>；而Dijkstra算法实现则要复杂一些,对于某些场景，用这个算法实现指定节点到其他所有节点的最短路径时间复杂度更低点。</p>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/" class="pre-post btn btn-default" title='完全用Linux系统工作'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            完全用Linux系统工作</span>
-    </a>
+
     
     
-    <a href="/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/" class="next-post btn btn-default" title='新秀语言Python与老牌语言Perl的比较'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            新秀语言Python与老牌语言Perl的比较</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" title="实现最短路径问题的2种常用算法">https://sunjunior.github.io/2020/05/24/实现最短路径问题的2种常用算法/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 数据结构与算法</a>
+          </div>
+
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法设计思想"><span class="toc-text">算法设计思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Floyd-Warshall算法实现"><span class="toc-text">Floyd-Warshall算法实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra算法实现"><span class="toc-text">Dijkstra算法实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/" rel="prev" title="新秀语言Python与老牌语言Perl的比较">
+                  <i class="fa fa-angle-left"></i> 新秀语言Python与老牌语言Perl的比较
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/" rel="next" title="完全用Linux系统工作">
+                  完全用Linux系统工作 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

@@ -1,339 +1,444 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="编程实践" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="背景介绍由于从事嵌入式工作领域的缘故，本人需要研究下程序在不同CPU类型下的行为模式是否与预期一致。目前市场上大都CPU按照大小端架构体系来划分的话，大部分都属于小端字节序类型，大端CPU在市面..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景介绍 由于从事嵌入式工作领域的缘故，本人需要研究下程序在不同CPU类型下的行为模式是否与预期一致。目前市场上大都CPU按照大小端架构体系来划分的话，大部分都属于小端字节序类型，大端CPU在市面上很少见。比如小端字节序的有arm（A9,A15），x86系列。大端则主要是基于PowerPC架构的，比如摩托罗拉68000型中央处理器，还有通讯领域采用的网络处理器，也有大端类型的。于是，个人需要找一款">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用qemu模拟器安装ppc操作系统">
+<meta property="og:url" content="https://sunjunior.github.io/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="背景介绍 由于从事嵌入式工作领域的缘故，本人需要研究下程序在不同CPU类型下的行为模式是否与预期一致。目前市场上大都CPU按照大小端架构体系来划分的话，大部分都属于小端字节序类型，大端CPU在市面上很少见。比如小端字节序的有arm（A9,A15），x86系列。大端则主要是基于PowerPC架构的，比如摩托罗拉68000型中央处理器，还有通讯领域采用的网络处理器，也有大端类型的。于是，个人需要找一款">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc1.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc2.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc5.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc7.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc8.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc9.jpg">
+<meta property="article:published_time" content="2018-03-04T00:56:49.000Z">
+<meta property="article:modified_time" content="2020-05-04T00:43:58.912Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="编程实践">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/ppc/ppc1.jpg">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    利用qemu模拟器安装ppc操作系统 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/","path":"2018/03/04/利用qemu模拟器安装ppc操作系统/","title":"利用qemu模拟器安装ppc操作系统"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>利用qemu模拟器安装ppc操作系统 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="利用qemu模拟器安装ppc操作系统">
-            
-            利用qemu模拟器安装ppc操作系统
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/" rel="tag">编程实践</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%80%89%E6%8B%A9"><span class="nav-number">2.</span> <span class="nav-text">操作系统选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B6%E4%BD%9Cqemu%E9%95%9C%E5%83%8F"><span class="nav-number">3.</span> <span class="nav-text">制作qemu镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
     </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2018/03/04</span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
     </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="利用qemu模拟器安装ppc操作系统 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          利用qemu模拟器安装ppc操作系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-04 08:56:49" itemprop="dateCreated datePublished" datetime="2018-03-04T08:56:49+08:00">2018-03-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-04 08:43:58" itemprop="dateModified" datetime="2020-05-04T08:43:58+08:00">2020-05-04</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
     
-    <span class="fa-wrap">
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="背景介绍">背景介绍</h3>
+<p>由于从事嵌入式工作领域的缘故，本人需要研究下程序在不同CPU类型下的行为模式是否与预期一致。目前市场上大都CPU按照大小端架构体系来划分的话，大部分都属于小端字节序类型，大端CPU在市面上很少见。比如小端字节序的有arm（A9,A15），x86系列。大端则主要是基于PowerPC架构的，比如摩托罗拉68000型中央处理器，还有通讯领域采用的网络处理器，也有大端类型的。于是，个人需要找一款可以在PC电脑上模拟不同CPU类型的模拟器，来运行不同CPU架构的操作系统，验证程序在不同CPU类型下行为模式。如今，随着虚拟化技术进一步发展，市场上有许多可用的虚拟化工具来帮助我们来运行各类不同的操作系统，比如强大的VMware虚拟机，我本人之前用过破解版的VMware，该虚拟机确实对各类硬件模拟都有比较好的支持，可惜是正版要收费的。当然市场上也有不少免费的虚拟机工具，免费的虚拟机工具主要有以下２款：</p>
+<p>１）<strong>Oracle VirtualBox</strong>
+维基百科上说最早VirtualBox是由德国InnoTek软件公司出品的虚拟机软件，现在则由甲骨文Oracle公司进行开发，是甲骨文公司xVM虚拟化平台技术的一部分。它提供用户在32位或64位的Windows、Solaris及Linux
+操作系统上虚拟其它x86的操作系统。用户可以在VirtualBox上安装并且运行Solaris、Windows、DOS、Linux、OS/2
+Warp、OpenBSD及FreeBSD等系统作为客户端操作系统。</p>
+<p>2）<strong>QEMU</strong> QEMU是一套由Fabrice
+Bellard所编写的模拟处理器的自由软件。它与Bochs，PearPC近似，但其具有某些后两者所不具备的特性，如高速度及跨平台的特性。经由KVM（早期为kqemu加速器，现在kqemu已被KVM取代）这个开源的加速器，QEMU能模拟至接近真实电脑的速度。QEMU有两种主要运作模式：</p>
+<p>User
+mode模拟模式，亦即是用户模式。QEMU能引导那些为不同中央处理器编译的Linux程序。而Wine及Dosemu是其主要目标。
+System
+mode模拟模式，亦即是系统模式。QEMU能模拟整个电脑系统，包括中央处理器及其他周边设备。它使得为系统源代码进行测试及除错工作变得容易。其亦能用来在一部主机上模拟数部不同虚拟电脑。</p>
+<p>这2款虚拟化工具各有特点，virtualbox入手比较简单，安装之后可以安装部署步骤一步步傻瓜式安装，基本可以模拟市场上所有主流的操作系统。但是qemu自由度更大，而且适配的CPU类型更广，直白一点就是自由定制化程度较高，安卓模拟器内部用的就是qemu。这里我需要模拟大端cpu类型，典型的大端CPU架构就是powerpc。用qemu模拟ppc模拟器很简单，qemu安装之后就会有模拟ppc的命令提供使用。
+经过比较发现，这里选择用qemu来模拟比较合适。下面就开始介绍如何用qemu来模拟ppc，并且运行ppc操作系统的过程。</p>
+<h3 id="操作系统选择">操作系统选择</h3>
+<p>操作系统的话，大端字节序的目前比较稳定的版本有Ubuntu和debian系列。我这里采用Ubuntu发布版本，由于只是模拟CPU，使用的操作系统可以选择轻量级别的，比如lubuntu，于是首先下载lubuntu
+for ppc最新版本的，下载地址为<a
+target="_blank" rel="noopener" href="http://cdimage.ubuntu.com/lubuntu/releases/12.04/release/">lubuntu下载地址</a>。我们选择对硬件性能要求不高的alternate版本:
+<img src="/img/ppc/ppc1.jpg" alt="lubuntu for ppc" /></p>
+<h3 id="制作qemu镜像">制作qemu镜像</h3>
+<p>下载操作系统之后，我们首先需要创建一个qemu文件系统镜像，大小为10G左右
+<code>qemu-img create -f qcow2 ppc.img 10G</code></p>
+<p>创建完成之后，就可以将iso操作系统镜像当做cdrom来完成操作系统安装了，这里我们只需要设置内存大小为1G,硬盘模拟hda,安装操作系统的命令如下:
+<code>qemu-system-ppc -m 1024 -hda ppc.img -cdrom lubuntu-12.04-alternate-powerpc.iso -boot d</code>
+如下图所示，系统会弹出qemu启动界面，在里面输入install就可以启动Ubuntu系统安装程序了
+<img src="/img/ppc/ppc2.jpg" alt="创建img镜像" /> <img
+src="/img/ppc/ppc3.gif" alt="安装Ubuntu系统" /> <img
+src="/img/ppc/ppc4.gif" alt="Ubuntu系统运行" />
+这里安装时间花了约1小时，如果自己的PC机器性能较高，可以在模拟计算机硬件的时候，将分配的资源多一点，比如内存可以设置2G,CPU可以设置多个核等等。
+### 配置linux开发环境
+在系统安装完成之后，由于qemu不会安装bootloader，所以需要手动指定磁盘根目录和系统内核文件(这个需要在iso镜像中提取出来)。我们重新用qemu-system-ppc来启动ppc.img镜像看看:
+<code>qemu-system-ppc -m 1024 -hda disk.img -kernel vmlinux -initrd initrd.img -append "ro root=/dev/sda3"</code>
+这里由于需要用guestfish工具来提取镜像，这个工具在redhat比较好用，这个工作暂时告一段落,懒得折腾了。如果个人使用是Redhat红帽系列的操作系统（Centos，Fedora等等），可以按照上面的步骤制作安装镜像。由于网上直接可以下载debian
+for ppc的qemu镜像文件，于是我下载了一个debian系列的qcow2文件(<a
+target="_blank" rel="noopener" href="https://people.debian.org/~aurel32/qemu/powerpc/">debian_wheezy_powerpc_standard.qcow2</a>)，下载完成之后就可以用qemu运行了:
+<code>qemu-system-ppc -hda debian_wheezy_powerpc_standard.qcow2</code></p>
+<p><img src="/img/ppc/ppc5.jpg" alt="PPC系统下载" /> <img
+src="/img/ppc/ppc6.gif" alt="PPC系统加载" /></p>
+<p>进入到操作系统Shell控制终端，打开vi修改域名和软件源，否则可能无法更新工具链。
+<code>vi /etc/resolv.conf</code>
+修改域名为国内的114.114.114.114,比较稳定。另外软件源用网易163或者其他国内镜像源都不好用，主要是没有powerpc
+32bit的源.这里我找到一个可以使用的源： <a
+target="_blank" rel="noopener" href="http://ftp.heanet.ie/mirrors/debian/">debian powerpc源</a>
+<code>vi /etc/apt/sources.list</code> <img src="/img/ppc/ppc7.jpg"
+alt="域名修改" /> <img src="/img/ppc/ppc8.jpg"
+alt="软件源地址修改" /></p>
+<p>修改完成之后，更新下源，然后安装linux
+C开发工具链，写一个简单的程序来验证下ppc系统下CPU访问和存储字节序的过程。
+<code>apt-get install vim gcc g++</code>
+可以看出，字节序跟预期一致，低地址存放的是高字节，高地址存放的是低字节。这个跟小端CPU存放顺序是相反的。
+<img src="/img/ppc/ppc9.jpg" alt="字节序验证程序" /></p>
+<h3 id="总结">总结</h3>
+<p>qemu模拟器是一款非常强大的工具，可以模拟各种类型的CPU和硬件类型,在后面的学习过程中，如果学习操作系统，系统编程等等方面的知识，可以用模拟器上做测试验证，方便得很。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="利用qemu模拟器安装ppc操作系统">https://sunjunior.github.io/2018/03/04/利用qemu模拟器安装ppc操作系统/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/" rel="tag"><i class="fa fa-tag"></i> 编程实践</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="prev" title="《计算机系统要素》读书笔记">
+                  <i class="fa fa-angle-left"></i> 《计算机系统要素》读书笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/03/17/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" rel="next" title="汇编语言学习总结">
+                  汇编语言学习总结 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
     </span>
-    
-    
 </div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                3107</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
-    </div>
-    
-    <div class="post-body post-content">
-        <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>由于从事嵌入式工作领域的缘故，本人需要研究下程序在不同CPU类型下的行为模式是否与预期一致。目前市场上大都CPU按照大小端架构体系来划分的话，大部分都属于小端字节序类型，大端CPU在市面上很少见。比如小端字节序的有arm（A9,A15），x86系列。大端则主要是基于PowerPC架构的，比如摩托罗拉68000型中央处理器，还有通讯领域采用的网络处理器，也有大端类型的。于是，个人需要找一款可以在PC电脑上模拟不同CPU类型的模拟器，来运行不同CPU架构的操作系统，验证程序在不同CPU类型下行为模式。如今，随着虚拟化技术进一步发展，市场上有许多可用的虚拟化工具来帮助我们来运行各类不同的操作系统，比如强大的VMware虚拟机，我本人之前用过破解版的VMware，该虚拟机确实对各类硬件模拟都有比较好的支持，可惜是正版要收费的。当然市场上也有不少免费的虚拟机工具，免费的虚拟机工具主要有以下２款：</p>
-<p>１）<strong>Oracle VirtualBox</strong><br>维基百科上说最早VirtualBox是由德国InnoTek软件公司出品的虚拟机软件，现在则由甲骨文Oracle公司进行开发，是甲骨文公司xVM虚拟化平台技术的一部分。它提供用户在32位或64位的Windows、Solaris及Linux 操作系统上虚拟其它x86的操作系统。用户可以在VirtualBox上安装并且运行Solaris、Windows、DOS、Linux、OS/2 Warp、OpenBSD及FreeBSD等系统作为客户端操作系统。</p>
-<p>2）<strong>QEMU</strong><br>QEMU是一套由Fabrice Bellard所编写的模拟处理器的自由软件。它与Bochs，PearPC近似，但其具有某些后两者所不具备的特性，如高速度及跨平台的特性。经由KVM（早期为kqemu加速器，现在kqemu已被KVM取代）这个开源的加速器，QEMU能模拟至接近真实电脑的速度。QEMU有两种主要运作模式：</p>
-<p>User mode模拟模式，亦即是用户模式。QEMU能引导那些为不同中央处理器编译的Linux程序。而Wine及Dosemu是其主要目标。<br>System mode模拟模式，亦即是系统模式。QEMU能模拟整个电脑系统，包括中央处理器及其他周边设备。它使得为系统源代码进行测试及除错工作变得容易。其亦能用来在一部主机上模拟数部不同虚拟电脑。</p>
-<p>这2款虚拟化工具各有特点，virtualbox入手比较简单，安装之后可以安装部署步骤一步步傻瓜式安装，基本可以模拟市场上所有主流的操作系统。但是qemu自由度更大，而且适配的CPU类型更广，直白一点就是自由定制化程度较高，安卓模拟器内部用的就是qemu。这里我需要模拟大端cpu类型，典型的大端CPU架构就是powerpc。用qemu模拟ppc模拟器很简单，qemu安装之后就会有模拟ppc的命令提供使用。<br>经过比较发现，这里选择用qemu来模拟比较合适。下面就开始介绍如何用qemu来模拟ppc，并且运行ppc操作系统的过程。</p>
-<h3 id="操作系统选择"><a href="#操作系统选择" class="headerlink" title="操作系统选择"></a>操作系统选择</h3><p>操作系统的话，大端字节序的目前比较稳定的版本有Ubuntu和debian系列。我这里采用Ubuntu发布版本，由于只是模拟CPU，使用的操作系统可以选择轻量级别的，比如lubuntu，于是首先下载lubuntu for ppc最新版本的，下载地址为<a href="http://cdimage.ubuntu.com/lubuntu/releases/12.04/release/" target="_blank" rel="noopener">lubuntu下载地址</a>。我们选择对硬件性能要求不高的alternate版本:<br><img src="/img/ppc/ppc1.jpg" alt="lubuntu for ppc"></p>
-<h3 id="制作qemu镜像"><a href="#制作qemu镜像" class="headerlink" title="制作qemu镜像"></a>制作qemu镜像</h3><p>下载操作系统之后，我们首先需要创建一个qemu文件系统镜像，大小为10G左右<br><code>qemu-img create -f qcow2 ppc.img 10G</code></p>
-<p>创建完成之后，就可以将iso操作系统镜像当做cdrom来完成操作系统安装了，这里我们只需要设置内存大小为1G,硬盘模拟hda,安装操作系统的命令如下:<br><code>qemu-system-ppc -m 1024 -hda ppc.img -cdrom lubuntu-12.04-alternate-powerpc.iso -boot d</code><br>如下图所示，系统会弹出qemu启动界面，在里面输入install就可以启动Ubuntu系统安装程序了<br><img src="/img/ppc/ppc2.jpg" alt="创建img镜像"><br><img src="/img/ppc/ppc3.gif" alt="安装Ubuntu系统"><br><img src="/img/ppc/ppc4.gif" alt="Ubuntu系统运行"><br>这里安装时间花了约1小时，如果自己的PC机器性能较高，可以在模拟计算机硬件的时候，将分配的资源多一点，比如内存可以设置2G,CPU可以设置多个核等等。</p>
-<h3 id="配置linux开发环境"><a href="#配置linux开发环境" class="headerlink" title="配置linux开发环境"></a>配置linux开发环境</h3><p>在系统安装完成之后，由于qemu不会安装bootloader，所以需要手动指定磁盘根目录和系统内核文件(这个需要在iso镜像中提取出来)。我们重新用qemu-system-ppc来启动ppc.img镜像看看:<br><code>qemu-system-ppc -m 1024 -hda disk.img -kernel vmlinux -initrd initrd.img -append &quot;ro root=/dev/sda3&quot;</code><br>这里由于需要用guestfish工具来提取镜像，这个工具在redhat比较好用，这个工作暂时告一段落,懒得折腾了。如果个人使用是Redhat红帽系列的操作系统（Centos，Fedora等等），可以按照上面的步骤制作安装镜像。由于网上直接可以下载debian for ppc的qemu镜像文件，于是我下载了一个debian系列的qcow2文件(<a href="https://people.debian.org/~aurel32/qemu/powerpc/" target="_blank" rel="noopener">debian_wheezy_powerpc_standard.qcow2</a>)，下载完成之后就可以用qemu运行了:<br><code>qemu-system-ppc -hda debian_wheezy_powerpc_standard.qcow2</code></p>
-<p><img src="/img/ppc/ppc5.jpg" alt="PPC系统下载"><br><img src="/img/ppc/ppc6.gif" alt="PPC系统加载"></p>
-<p>进入到操作系统Shell控制终端，打开vi修改域名和软件源，否则可能无法更新工具链。<br><code>vi /etc/resolv.conf</code><br>修改域名为国内的114.114.114.114,比较稳定。另外软件源用网易163或者其他国内镜像源都不好用，主要是没有powerpc 32bit的源.这里我找到一个可以使用的源：<br><a href="http://ftp.heanet.ie/mirrors/debian/" target="_blank" rel="noopener">debian powerpc源</a><br><code>vi /etc/apt/sources.list</code><br><img src="/img/ppc/ppc7.jpg" alt="域名修改"><br><img src="/img/ppc/ppc8.jpg" alt="软件源地址修改"></p>
-<p>修改完成之后，更新下源，然后安装linux C开发工具链，写一个简单的程序来验证下ppc系统下CPU访问和存储字节序的过程。<br><code>apt-get install vim gcc g++</code><br>可以看出，字节序跟预期一致，低地址存放的是高字节，高地址存放的是低字节。这个跟小端CPU存放顺序是相反的。<br><img src="/img/ppc/ppc9.jpg" alt="字节序验证程序"></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>   qemu模拟器是一款非常强大的工具，可以模拟各种类型的CPU和硬件类型,在后面的学习过程中，如果学习操作系统，系统编程等等方面的知识，可以用模拟器上做测试验证，方便得很。</p>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2018/03/17/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" class="pre-post btn btn-default" title='汇编语言学习总结'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            汇编语言学习总结</span>
-    </a>
-    
-    
-    <a href="/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" class="next-post btn btn-default" title='《计算机系统要素》读书笔记'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            《计算机系统要素》读书笔记</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
-    
-</div>
+  </footer>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
-        
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景介绍"><span class="toc-text">背景介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作系统选择"><span class="toc-text">操作系统选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#制作qemu镜像"><span class="toc-text">制作qemu镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置linux开发环境"><span class="toc-text">配置linux开发环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
 
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
-
-
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
-
-
-<script src="/js/app.js?rev=@@hash.js"></script>
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

@@ -1,188 +1,304 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="逆向工程" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="
-目标游戏：重装机兵：回归（Metal Max Return，SFC/SNES，1995 Data East）日期：2026-08-12本系列破解层层递进：初始金币 999999 → 主角技能满..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：重装机兵：回归（Metal Max Return，SFC&#x2F;SNES，1995 Data East） 日期：2026-08-12 本系列破解层层递进：初始金币 999999 → 主角技能满级 → 全角色技能满级 最终交付物：Metal Max Returns0.6 全员MAX_v3.SMC   1. 背景 《重装机兵：回归》是 FC《重装机兵》在 SFC 上的完全重制版。游戏采用开放式地">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重装机兵：回归（SFC&#x2F;SNES）三阶破解：初始金币 999999 + 全角色技能满级">
+<meta property="og:url" content="https://sunjunior.github.io/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：重装机兵：回归（Metal Max Return，SFC&#x2F;SNES，1995 Data East） 日期：2026-08-12 本系列破解层层递进：初始金币 999999 → 主角技能满级 → 全角色技能满级 最终交付物：Metal Max Returns0.6 全员MAX_v3.SMC   1. 背景 《重装机兵：回归》是 FC《重装机兵》在 SFC 上的完全重制版。游戏采用开放式地">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/metal.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/metal_final.gif">
+<meta property="article:published_time" content="2026-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-12T16:01:40.780Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/metal.gif">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/08/12/重装机兵回归-SFC三阶破解技术文档/","title":"重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级">
-            
-            重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2026/08/12</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">2. 分析环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">3. ROM 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E5%88%9D%E5%A7%8B%E9%87%91%E5%B8%81-999999"><span class="nav-number">4.</span> <span class="nav-text">4. 第一阶：初始金币 999999</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%91%E5%B8%81%E5%9C%B0%E5%9D%80%E7%9A%84%E5%AE%9A%E4%BD%8D"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 金币地址的定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E6%9D%A5%E6%BA%90%E8%BF%BD%E8%B8%AA%E8%B8%A9%E5%9D%91%E4%B8%8E%E4%BF%AE%E6%AD%A3"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 写入来源追踪（踩坑与修正）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%86%E5%90%91%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BE%8B%E7%A8%8B"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 逆向初始化例程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 补丁实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E8%AF%BB%E6%A1%A3%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 存读档一致性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E4%B8%BB%E8%A7%92%E6%8A%80%E8%83%BD%E6%BB%A1%E7%BA%A7"><span class="nav-number">5.</span> <span class="nav-text">5. 第二阶：主角技能满级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%92%E8%89%B2%E6%95%B0%E6%8D%AE%E5%9D%97%E7%BB%93%E6%9E%84"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 角色数据块结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E8%A7%92%E8%89%B2%E5%88%9D%E5%A7%8B%E6%A8%A1%E6%9D%BF"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 定位角色初始模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%B0%9D%E8%AF%95%E4%BF%AE%E6%94%B9%E6%A8%A1%E6%9D%BF%E6%95%B0%E6%8D%AE%E8%B8%A9%E5%9D%91"><span class="nav-number">5.3.</span> <span class="nav-text">5.3
+第一次尝试：修改模板数据（踩坑）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E6%96%B9%E6%A1%88%E6%94%B9%E4%BB%A3%E7%A0%81%E4%B8%8D%E6%94%B9%E6%A8%A1%E6%9D%BF"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 正确方案：改代码不改模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E5%85%A8%E5%91%98%E6%8A%80%E8%83%BD%E6%BB%A1%E7%BA%A7"><span class="nav-number">6.</span> <span class="nav-text">6. 第三阶：全员技能满级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%92%E8%89%B2%E6%A7%BD%E4%BD%8D%E5%AE%9A%E4%BD%8D"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 角色槽位定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95-stub"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 扩展 stub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E7%AC%AC%E4%B8%80%E7%89%88%E6%A8%A1%E6%9D%BF%E4%BF%AE%E6%94%B9%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 与第一版（模板修改）的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E7%9A%84%E9%80%92%E8%BF%9B%E5%85%B3%E7%B3%BB"><span class="nav-number">7.</span> <span class="nav-text">7. 三阶破解的递进关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">8. 遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%86%85%E5%AD%98%E6%AE%8B%E7%95%99%E8%84%8F%E6%95%B0%E6%8D%AE"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 初始内存残留脏数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%9B%9E%E8%B0%83%E5%8E%BB%E9%87%8D%E6%BC%8F%E6%8E%89%E9%87%8D%E5%A4%8D%E5%86%99-0"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 写回调去重漏掉”重复写 0”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lorom-%E9%AB%98%E9%80%9F%E5%BA%93%E6%85%A2%E9%80%9F%E5%BA%93%E9%95%9C%E5%83%8F%E6%8D%A2%E7%AE%97"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 LoROM 高速库&#x2F;慢速库镜像换算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%A2%9F%E6%9C%BA%E5%A4%B4%E5%81%8F%E7%A7%BB"><span class="nav-number">8.4.</span> <span class="nav-text">8.4 磁碟机头偏移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E6%B1%87%E7%BC%96%E8%84%9A%E6%9C%AC-imm-%E6%A8%A1%E5%BC%8F-bug"><span class="nav-number">8.5.</span> <span class="nav-text">8.5 反汇编脚本 imm 模式 bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E4%BD%8D%E7%BD%AE%E5%88%9D%E6%AC%A1%E7%AE%97%E9%94%99"><span class="nav-number">8.6.</span> <span class="nav-text">8.6 模板位置初次算错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%A8%A1%E6%9D%BF%E5%AF%BC%E8%87%B4%E7%BA%A2%E5%9D%A6%E5%85%8B%E5%89%A7%E6%83%85%E9%BB%91%E5%B1%8F"><span class="nav-number">8.7.</span> <span class="nav-text">8.7 修改模板导致红坦克剧情黑屏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E6%8E%A8%E6%B5%8B%E6%A7%BD%E4%BD%8D%E9%97%B4%E8%B7%9D0x1c0"><span class="nav-number">8.8.</span> <span class="nav-text">8.8 错误推测槽位间距（0x1C0）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%BC%E6%96%97%E5%AE%B6%E6%A8%A1%E6%9D%BF%E9%9D%A0%E7%BB%93%E6%9E%84%E6%8E%A8%E6%96%AD"><span class="nav-number">8.9.</span> <span class="nav-text">8.9 格斗家模板靠结构推断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A7%E5%AD%98%E6%A1%A3%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2%E4%B8%8D%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0"><span class="nav-number">8.10.</span> <span class="nav-text">8.10 旧存档中的角色不会自动刷新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E8%84%9A%E6%9C%AC%E8%AF%BB%E9%94%99%E6%96%87%E4%BB%B6"><span class="nav-number">8.11.</span> <span class="nav-text">8.11 校验脚本读错文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E5%BF%83%E5%BE%97"><span class="nav-number">9.</span> <span class="nav-text">9. 总结与心得</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E8%A1%A5%E4%B8%81"><span class="nav-number">10.</span> <span class="nav-text">附录：关键脚本与补丁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E9%87%91%E5%B8%81%E8%BF%BD%E8%B8%AA%E8%84%9A%E6%9C%AC"><span class="nav-number">10.1.</span> <span class="nav-text">A.1 金币追踪脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E8%A7%92%E8%89%B2%E6%A7%BD%E4%BD%8D%E5%AE%9A%E4%BD%8D%E8%84%9A%E6%9C%AC"><span class="nav-number">10.2.</span> <span class="nav-text">A.2 角色槽位定位脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E5%85%A8%E9%83%A8%E4%BF%AE%E6%94%B9%E7%82%B9%E6%B1%87%E6%80%BB"><span class="nav-number">10.3.</span> <span class="nav-text">A.3 全部修改点汇总</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">10.4.</span> <span class="nav-text">A.4 交付物</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <blockquote>
-<p>目标游戏：<strong>重装机兵：回归（Metal Max Return，SFC/SNES，1995 Data East）</strong><br>日期：2026-08-12<br>本系列破解层层递进：<strong>初始金币 999999 → 主角技能满级 → 全角色技能满级</strong><br>最终交付物：<code>Metal Max Returns0.6 全员MAX_v3.SMC</code></p>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="重装机兵：回归（SFC&#x2F;SNES）三阶破解：初始金币 999999 + 全角色技能满级 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2026-08-12T00:00:00+08:00">2026-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-13 00:01:40" itemprop="dateModified" datetime="2026-08-13T00:01:40+08:00">2026-08-13</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>重装机兵：回归（Metal Max Return，SFC/SNES，1995
+Data East）</strong> 日期：2026-08-12
+本系列破解层层递进：<strong>初始金币 999999 → 主角技能满级 →
+全角色技能满级</strong>
+最终交付物：<code>Metal Max Returns0.6 全员MAX_v3.SMC</code></p>
 </blockquote>
-<hr>
-<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>《重装机兵：回归》是 FC《重装机兵》在 SFC 上的完全重制版。游戏采用开放式地图 + 赏金猎人的玩法，金钱是核心资源：买车、买装备、补弹药、改武器都需要花钱；角色的 LV / 战斗 / 运转 / 修理等技能等级则决定强度。</p>
+<hr />
+<h2 id="背景">1. 背景</h2>
+<p>《重装机兵：回归》是 FC《重装机兵》在 SFC
+上的完全重制版。游戏采用开放式地图 +
+赏金猎人的玩法，金钱是核心资源：买车、买装备、补弹药、改武器都需要花钱；角色的
+LV / 战斗 / 运转 / 修理等技能等级则决定强度。</p>
 <p>本次破解共三阶，难度递增，每阶都建立在前一阶对游戏机制理解的基础上：</p>
-<div class="table-container">
 <table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
 <tr>
 <th>阶数</th>
@@ -203,17 +319,15 @@
 <td><strong>主角技能满级</strong>（LV99/技能99/HP9999）</td>
 <td>注入代码覆盖 WRAM 角色属性</td>
 <td>主角</td>
-<td></td>
-<td>三阶</td>
-<td><strong>全角色技能满级</strong>（主角 + 机械师 + 格斗家）</td>
-<td>扩展 stub 覆盖三个角色槽位</td>
-<td>全员</td>
 </tr>
 </tbody>
 </table>
-</div>
-<h2 id="2-分析环境"><a href="#2-分析环境" class="headerlink" title="2. 分析环境"></a>2. 分析环境</h2><div class="table-container">
+<h2 id="分析环境">2. 分析环境</h2>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>用途</th>
@@ -227,7 +341,8 @@
 </tr>
 <tr>
 <td>内存监控</td>
-<td><code>addMemoryCallback</code> 写回调 + <code>emu.getState</code>（取 PC）</td>
+<td><code>addMemoryCallback</code> 写回调 +
+<code>emu.getState</code>（取 PC）</td>
 </tr>
 <tr>
 <td>内存搜索</td>
@@ -235,7 +350,8 @@
 </tr>
 <tr>
 <td>反汇编</td>
-<td>自写 65816 反汇编脚本（<code>dis65816.py</code>，按 LoROM 映射换算文件偏移）</td>
+<td>自写 65816 反汇编脚本（<code>dis65816.py</code>，按 LoROM
+映射换算文件偏移）</td>
 </tr>
 <tr>
 <td>ROM 修补</td>
@@ -247,28 +363,57 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p>Mesen2 的 Lua 脚本在本项目中不仅是”验证工具”，更是<strong>定位工具</strong>——靠写回调把所有金币写入点（含 PC）一网打尽，避免了纯静态分析的盲目性。</p>
-<h2 id="3-ROM-结构"><a href="#3-ROM-结构" class="headerlink" title="3. ROM 结构"></a>3. ROM 结构</h2><p>原版 ROM 信息：</p>
+<p>Mesen2 的 Lua
+脚本在本项目中不仅是”验证工具”，更是<strong>定位工具</strong>——靠写回调把所有金币写入点（含
+PC）一网打尽，避免了纯静态分析的盲目性。</p>
+<h2 id="rom-结构">3. ROM 结构</h2>
+<p>原版 ROM 信息：</p>
 <ul>
-<li>文件：<code>Metal Max Return_original.SMC</code>（参照），补丁版为 <code>Metal Max Returns0.6.SMC</code></li>
+<li>文件：<code>Metal Max Return_original.SMC</code>（参照），补丁版为
+<code>Metal Max Returns0.6.SMC</code></li>
 <li>大小：4194816 字节 = 0x200（磁碟机头）+ 0x400000（4MB）</li>
-<li>型号：<strong>LoROM 4MB</strong>（CPU 高速库 <code>$80-$BF</code> 与慢速库 <code>$00-$3F</code> 镜像同一批 ROM 库，<code>$C0-$FD</code> 与 <code>$40-$7D</code> 镜像另一批）</li>
-<li>存档：SRAM 2KB（CPU 库 <code>$70</code>，映射为 <code>snesSaveRam</code>）</li>
+<li>型号：<strong>LoROM 4MB</strong>（CPU 高速库 <code>$80-$BF</code>
+与慢速库 <code>$00-$3F</code> 镜像同一批 ROM 库，<code>$C0-$FD</code> 与
+<code>$40-$7D</code> 镜像另一批）</li>
+<li>存档：SRAM 2KB（CPU 库 <code>$70</code>，映射为
+<code>snesSaveRam</code>）</li>
 </ul>
 <p><strong>关键结论 1：文件带 512 字节磁碟机头。</strong></p>
-<p>文件开头是 <code>GAME DOCTOR SF 3</code>（磁碟机/博士机格式），真正的 ROM 数据从偏移 <code>0x200</code> 开始。因此：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件偏移 &#x3D; 0x200（头）+ (CPU库 &amp; 0x3F) * 0x8000 + (地址 - 0x8000)</span><br></pre></td></tr></table></figure>
-<p>这个公式是本项目最容易踩的坑：<strong>CPU 库 <code>$96</code> 属于高速库组（<code>$80-$BF</code>），镜像到文件第 <code>$16</code> 个 8KB 库</strong>（偏移 <code>0xB0000</code> 附近），而不是文件偏移 <code>0x96*0x8000</code>。详见”遇到的问题”。</p>
-<p>金币数据位于 <strong>WRAM <code>$7E9102-$7E9105</code></strong>，32 位小端存储。999999 = <code>0x000F423F</code>，即低字 <code>0x423F</code>、高字 <code>0x000F</code>。</p>
-<hr>
-<h2 id="4-第一阶：初始金币-999999"><a href="#4-第一阶：初始金币-999999" class="headerlink" title="4. 第一阶：初始金币 999999"></a>4. 第一阶：初始金币 999999</h2><h3 id="4-1-金币地址的定位"><a href="#4-1-金币地址的定位" class="headerlink" title="4.1 金币地址的定位"></a>4.1 金币地址的定位</h3><p>金币是典型的”可精确验证的数值变量”，先用内存搜索：捡箱子金币 +7，反复过滤，收敛到 <code>$7E9102-$7E9105</code> 这一组 4 字节（小端）。</p>
-<p><strong>插曲</strong>：初次搜索时发现该地址上是一个巨大的随机数（如 <code>1457251158</code>），而不是 0。原因在于：<strong>新游戏的开场初始化在复位后并不会立刻清零该块 WRAM</strong>，启动瞬间读到的是上一次运行残留的脏数据。这给”用内存值定位初始化写入”带来干扰，详见”遇到的问题”。</p>
-<p>HUD 验证：每帧读取该地址拼出 32 位数值，与游戏内金币 HUD 完全一致，捡箱子后两者同步 +7，地址确认无误。</p>
-<h3 id="4-2-写入来源追踪（踩坑与修正）"><a href="#4-2-写入来源追踪（踩坑与修正）" class="headerlink" title="4.2 写入来源追踪（踩坑与修正）"></a>4.2 写入来源追踪（踩坑与修正）</h3><p>第一次写监控脚本只记录<strong>值变化</strong>的写入，结果只捕获到两条写入（开场清零、捡金币），<strong>漏掉了初始化例程的零填充</strong>——因为初始化时金币本来就是 0，反复写 0 不触发”值变化”。这直接误导了补丁点位的选择。</p>
-<p>改为<strong>记录窗口内每一次写入</strong>（每地址最多 200 条防刷屏）后，完整跑一次”新游戏”流程，金币字节的全部写入如下：</p>
-<div class="table-container">
+<p>文件开头是 <code>GAME DOCTOR SF 3</code>（磁碟机/博士机格式），真正的
+ROM 数据从偏移 <code>0x200</code> 开始。因此：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件偏移 = 0x200（头）+ (CPU库 &amp; 0x3F) * 0x8000 + (地址 - 0x8000)</span><br></pre></td></tr></table></figure>
+<p>这个公式是本项目最容易踩的坑：<strong>CPU 库 <code>$96</code>
+属于高速库组（<code>$80-$BF</code>），镜像到文件第 <code>$16</code> 个
+8KB 库</strong>（偏移 <code>0xB0000</code> 附近），而不是文件偏移
+<code>0x96*0x8000</code>。详见”遇到的问题”。</p>
+<p>金币数据位于 <strong>WRAM <code>$7E9102-$7E9105</code></strong>，32
+位小端存储。999999 = <code>0x000F423F</code>，即低字
+<code>0x423F</code>、高字 <code>0x000F</code>。</p>
+<hr />
+<h2 id="第一阶初始金币-999999">4. 第一阶：初始金币 999999</h2>
+<h3 id="金币地址的定位">4.1 金币地址的定位</h3>
+<p>金币是典型的”可精确验证的数值变量”，先用内存搜索：捡箱子金币
++7，反复过滤，收敛到 <code>$7E9102-$7E9105</code> 这一组 4
+字节（小端）。</p>
+<p><strong>插曲</strong>：初次搜索时发现该地址上是一个巨大的随机数（如
+<code>1457251158</code>），而不是
+0。原因在于：<strong>新游戏的开场初始化在复位后并不会立刻清零该块
+WRAM</strong>，启动瞬间读到的是上一次运行残留的脏数据。这给”用内存值定位初始化写入”带来干扰，详见”遇到的问题”。</p>
+<p>HUD 验证：每帧读取该地址拼出 32 位数值，与游戏内金币 HUD
+完全一致，捡箱子后两者同步 +7，地址确认无误。</p>
+<h3 id="写入来源追踪踩坑与修正">4.2 写入来源追踪（踩坑与修正）</h3>
+<p>第一次写监控脚本只记录<strong>值变化</strong>的写入，结果只捕获到两条写入（开场清零、捡金币），<strong>漏掉了初始化例程的零填充</strong>——因为初始化时金币本来就是
+0，反复写 0 不触发”值变化”。这直接误导了补丁点位的选择。</p>
+<p>改为<strong>记录窗口内每一次写入</strong>（每地址最多 200
+条防刷屏）后，完整跑一次”新游戏”流程，金币字节的全部写入如下：</p>
 <table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
 <thead>
 <tr>
 <th>帧</th>
@@ -323,30 +468,61 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p><strong>关键结论 2：</strong> 新游戏初始化中，金币<strong>最后一次被写为 0</strong> 是在帧 10580（<code>$96:F98E</code>）；此后直到玩家捡金币（帧 14652）之间没有任何写入。因此在初始化例程末尾注入”设置金币=999999”，不会被后续代码覆盖。</p>
-<h3 id="4-3-逆向初始化例程"><a href="#4-3-逆向初始化例程" class="headerlink" title="4.3 逆向初始化例程"></a>4.3 逆向初始化例程</h3><p>在 <code>$06:80xx</code> 找到标题画面后选择新游戏/读档的调度器，<code>$068E</code> 是分流标志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$8042: LDA $068E</span><br><span class="line">$8045: BEQ $804A       ; $068E&#x3D;&#x3D;0 → 新游戏</span><br><span class="line">$8047: JMP $80D5       ; 否则 → 读档（继续）</span><br><span class="line"></span><br><span class="line">$804A:                  ; ★ 新游戏路径</span><br><span class="line">$804E: JSL $96:F8B9    ; 模板建块 + 钩子 + $96FB2F</span><br><span class="line">$8052: JSL $96:F757    ; 收尾</span><br><span class="line">...</span><br><span class="line">$80D5:                  ; ★ 读档路径</span><br><span class="line">$80D5: JSL $96:F8B9</span><br><span class="line">$80D9: JSL $96:F305    ; 读 SRAM → 整块覆盖 WRAM</span><br><span class="line">$80DD: JSL $96:F757</span><br></pre></td></tr></table></figure>
-<p>反汇编 <code>$96:F8B9</code>：这是”从模板构建角色数据块”的长例程，其中把金币清零的是区域 3 的零填充：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$F98A: LDA #$00</span><br><span class="line">$F98C: STA [$44],Y    ; ★ 这里写入 $7E9102-$7E9105 &#x3D; 0</span><br><span class="line">$F98F: BPL $F98C</span><br></pre></td></tr></table></figure>
-<p><code>$96:FB2F</code> 是该例程末尾调用的<strong>最终处理</strong>，反汇编确认它只重算 WRAM 中的派生结构（道具列表、角色状态显示等），不写 SRAM，保证”钩子只影响初始值，不影响存盘流程”。</p>
-<h3 id="4-4-补丁实现"><a href="#4-4-补丁实现" class="headerlink" title="4.4 补丁实现"></a>4.4 补丁实现</h3><p>把 <code>$96:F9C9</code> 的 <code>JSL $96FB2F</code> 改成跳转到空闲区 stub：stub 先用 16 位模式写入金币=999999，再调回原来的 <code>$96FB2F</code>，最后 <code>RTL</code> 返回原流程。</p>
-<p>空闲区选 <strong><code>$73:CCA0</code>（文件偏移 <code>0x39CEA0</code>）</strong>——文件末尾前仍有大段 <code>$FF</code> 空闲，<code>$73</code> 属慢速库组（<code>$40-$7D</code>），LoROM 下正常映射。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$73:CCA0  C2 20            REP #$20          ; 切 16 位 A</span><br><span class="line">$73:CCA2  A9 3F 42         LDA #$423F        ; 低 16 位 &#x3D; 0x423F</span><br><span class="line">$73:CCA5  8F 02 91 7E      STA $7E9102       ; 金币低字</span><br><span class="line">$73:CCA9  A9 0F 00         LDA #$000F        ; 高 16 位 &#x3D; 0x000F</span><br><span class="line">$73:CCAC  8F 04 91 7E      STA $7E9104       ; 金币高字</span><br><span class="line">$73:CCB0  E2 20            SEP #$20          ; 切回 8 位 A</span><br><span class="line">$73:CCB2  22 2F FB 96      JSL $96FB2F       ; 调用原最终处理</span><br><span class="line">$73:CCB6  6B               RTL               ; 返回原流程</span><br></pre></td></tr></table></figure>
-<p><strong>修改一</strong>（文件 <code>0xB7BC9</code> = CPU <code>$96:F9C9</code>）：<code>22 2F FB 96</code> → <code>22 A0 CC 73</code><br><strong>修改二</strong>（文件 <code>0x39CEA0</code> = CPU <code>$73:CCA0</code>）：写入上表 23 字节 stub。</p>
-<h3 id="4-5-存读档一致性"><a href="#4-5-存读档一致性" class="headerlink" title="4.5 存读档一致性"></a>4.5 存读档一致性</h3><p>新游戏/读档两条路径<strong>都执行 <code>$96:F8B9</code>（含钩子）</strong>，读档时钩子写的 999999 会在 <code>$96:F305</code> 里被 SRAM 存档的整块复制（<code>MVN $7E,$70</code>）覆盖。因此：</p>
+<p><strong>关键结论 2：</strong>
+新游戏初始化中，金币<strong>最后一次被写为 0</strong> 是在帧
+10580（<code>$96:F98E</code>）；此后直到玩家捡金币（帧
+14652）之间没有任何写入。因此在初始化例程末尾注入”设置金币=999999”，不会被后续代码覆盖。</p>
+<h3 id="逆向初始化例程">4.3 逆向初始化例程</h3>
+<p>在 <code>$06:80xx</code>
+找到标题画面后选择新游戏/读档的调度器，<code>$068E</code>
+是分流标志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$8042: LDA $068E</span><br><span class="line">$8045: BEQ $804A       ; $068E==0 → 新游戏</span><br><span class="line">$8047: JMP $80D5       ; 否则 → 读档（继续）</span><br><span class="line"></span><br><span class="line">$804A:                  ; ★ 新游戏路径</span><br><span class="line">$804E: JSL $96:F8B9    ; 模板建块 + 钩子 + $96FB2F</span><br><span class="line">$8052: JSL $96:F757    ; 收尾</span><br><span class="line">...</span><br><span class="line">$80D5:                  ; ★ 读档路径</span><br><span class="line">$80D5: JSL $96:F8B9</span><br><span class="line">$80D9: JSL $96:F305    ; 读 SRAM → 整块覆盖 WRAM</span><br><span class="line">$80DD: JSL $96:F757</span><br></pre></td></tr></table></figure>
+<p>反汇编
+<code>$96:F8B9</code>：这是”从模板构建角色数据块”的长例程，其中把金币清零的是区域
+3 的零填充：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$F98A: LDA #$00</span><br><span class="line">$F98C: STA [$44],Y    ; ★ 这里写入 $7E9102-$7E9105 = 0</span><br><span class="line">$F98F: BPL $F98C</span><br></pre></td></tr></table></figure>
+<p><code>$96:FB2F</code>
+是该例程末尾调用的<strong>最终处理</strong>，反汇编确认它只重算 WRAM
+中的派生结构（道具列表、角色状态显示等），不写
+SRAM，保证”钩子只影响初始值，不影响存盘流程”。</p>
+<h3 id="补丁实现">4.4 补丁实现</h3>
+<p>把 <code>$96:F9C9</code> 的 <code>JSL $96FB2F</code> 改成跳转到空闲区
+stub：stub 先用 16 位模式写入金币=999999，再调回原来的
+<code>$96FB2F</code>，最后 <code>RTL</code> 返回原流程。</p>
+<p>空闲区选 <strong><code>$73:CCA0</code>（文件偏移
+<code>0x39CEA0</code>）</strong>——文件末尾前仍有大段 <code>$FF</code>
+空闲，<code>$73</code> 属慢速库组（<code>$40-$7D</code>），LoROM
+下正常映射。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$73:CCA0  C2 20            REP #$20          ; 切 16 位 A</span><br><span class="line">$73:CCA2  A9 3F 42         LDA #$423F        ; 低 16 位 = 0x423F</span><br><span class="line">$73:CCA5  8F 02 91 7E      STA $7E9102       ; 金币低字</span><br><span class="line">$73:CCA9  A9 0F 00         LDA #$000F        ; 高 16 位 = 0x000F</span><br><span class="line">$73:CCAC  8F 04 91 7E      STA $7E9104       ; 金币高字</span><br><span class="line">$73:CCB0  E2 20            SEP #$20          ; 切回 8 位 A</span><br><span class="line">$73:CCB2  22 2F FB 96      JSL $96FB2F       ; 调用原最终处理</span><br><span class="line">$73:CCB6  6B               RTL               ; 返回原流程</span><br></pre></td></tr></table></figure>
+<p><strong>修改一</strong>（文件 <code>0xB7BC9</code> = CPU
+<code>$96:F9C9</code>）：<code>22 2F FB 96</code> →
+<code>22 A0 CC 73</code> <strong>修改二</strong>（文件
+<code>0x39CEA0</code> = CPU <code>$73:CCA0</code>）：写入上表 23 字节
+stub。</p>
+<h3 id="存读档一致性">4.5 存读档一致性</h3>
+<p>新游戏/读档两条路径<strong>都执行
+<code>$96:F8B9</code>（含钩子）</strong>，读档时钩子写的 999999 会在
+<code>$96:F305</code> 里被 SRAM
+存档的整块复制（<code>MVN $7E,$70</code>）覆盖。因此：</p>
 <ul>
 <li>新游戏 → 金币 = 999999 ✅</li>
 <li>读档 → 金币 = 存档中的真实金币（钩子值被覆盖）✅</li>
 <li>存盘写 SRAM 用的是 WRAM 实时金币 → 存进去的就是玩家当前金币 ✅</li>
 </ul>
-<p><strong>关键结论 3：存读档一致性靠”复制覆盖”而非”绕过”。</strong> 没有试图阻止读档路径执行钩子，而是利用读档例程的整块覆盖，让存档数据天然压过模板值。</p>
+<p><strong>关键结论 3：存读档一致性靠”复制覆盖”而非”绕过”。</strong>
+没有试图阻止读档路径执行钩子，而是利用读档例程的整块覆盖，让存档数据天然压过模板值。</p>
 <p>实测日志验证：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[f&#x3D;002806] WRITE $7E9102&#x3D;$3F  PC&#x3D;$73:CCA9  gold&#x3D;0</span><br><span class="line">[f&#x3D;002806] WRITE $7E9103&#x3D;$42  PC&#x3D;$73:CCA9  gold&#x3D;63</span><br><span class="line">[f&#x3D;002806] WRITE $7E9104&#x3D;$0F  PC&#x3D;$73:CCB0  gold&#x3D;16959</span><br><span class="line">[f&#x3D;002806] WRITE $7E9105&#x3D;$00  PC&#x3D;$73:CCB0  gold&#x3D;999999   ; 完成</span><br><span class="line">[f&#x3D;013593] WRITE $7E9102&#x3D;$46  PC&#x3D;$82:D7F1  gold&#x3D;999999   ; 捡箱子 +7</span><br></pre></td></tr></table></figure>
-<p><img src="/img/metal.gif" alt="新游戏初始金币 999999 效果演示"></p>
-<hr>
-<h2 id="5-第二阶：主角技能满级"><a href="#5-第二阶：主角技能满级" class="headerlink" title="5. 第二阶：主角技能满级"></a>5. 第二阶：主角技能满级</h2><h3 id="5-1-角色数据块结构"><a href="#5-1-角色数据块结构" class="headerlink" title="5.1 角色数据块结构"></a>5.1 角色数据块结构</h3><p>通过运行时 WRAM 观测 + 反汇编，确认角色属性数据块在 WRAM <code>$7E8000</code> 起（主角），每个角色块固定偏移：</p>
-<div class="table-container">
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[f=002806] WRITE $7E9102=$3F  PC=$73:CCA9  gold=0</span><br><span class="line">[f=002806] WRITE $7E9103=$42  PC=$73:CCA9  gold=63</span><br><span class="line">[f=002806] WRITE $7E9104=$0F  PC=$73:CCB0  gold=16959</span><br><span class="line">[f=002806] WRITE $7E9105=$00  PC=$73:CCB0  gold=999999   ; 完成</span><br><span class="line">[f=013593] WRITE $7E9102=$46  PC=$82:D7F1  gold=999999   ; 捡箱子 +7</span><br></pre></td></tr></table></figure>
+<figure>
+<img src="/img/metal.gif" alt="新游戏初始金币 999999 效果演示" />
+<figcaption aria-hidden="true">新游戏初始金币 999999
+效果演示</figcaption>
+</figure>
+<hr />
+<h2 id="第二阶主角技能满级">5. 第二阶：主角技能满级</h2>
+<h3 id="角色数据块结构">5.1 角色数据块结构</h3>
+<p>通过运行时 WRAM 观测 + 反汇编，确认角色属性数据块在 WRAM
+<code>$7E8000</code> 起（主角），每个角色块固定偏移：</p>
 <table>
 <thead>
 <tr>
@@ -443,26 +619,50 @@
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="5-2-定位角色初始模板"><a href="#5-2-定位角色初始模板" class="headerlink" title="5.2 定位角色初始模板"></a>5.2 定位角色初始模板</h3><p>主角的初始数据来自 ROM 中的<strong>角色模板表</strong>。在 WRAM 里观察主角建号后的数值（LV1/战1/运1/修1/HP80/腕10/知10/体15/速20），用这串字节在 ROM 里全量搜索：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01 01 01 01 50 00 50 00 0A 0A 0F 14</span><br></pre></td></tr></table></figure>
-<p>命中 file <code>0xB7C2B</code>，且发现<strong>三个 15 字节模板连续排列</strong>（file <code>0xB7C2B</code> 起）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0xB7C2B: 01 01 01 01 50 00 50 00 0A 0A 0F 14 02 0E 10   模板1 主角</span><br><span class="line">0xB7C3A: 01 01 01 01 50 00 50 00 0A 14 0F 0A 01 0E 20   模板2 机械师</span><br><span class="line">0xB7C49: 05 08 03 02 FF 00 FF 00 24 12 1E 13 03 01 00   模板3 格斗家</span><br></pre></td></tr></table></figure>
-<p>每个模板 15 字节，布局与 5.1 节的 WRAM 块结构<strong>一一对应</strong>。</p>
-<h3 id="5-3-第一次尝试：修改模板数据（踩坑）"><a href="#5-3-第一次尝试：修改模板数据（踩坑）" class="headerlink" title="5.3 第一次尝试：修改模板数据（踩坑）"></a>5.3 第一次尝试：修改模板数据（踩坑）</h3><p>最初尝试直接修改模板1（主角模板 <code>0xB7C2B</code>）为最大值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原：01 01 01 01 50 00 50 00 0A 0A 0F 14 02 0E 10</span><br><span class="line">改：63 63 63 63 0F 27 0F 27 FF FF FF FF 02 00 10</span><br></pre></td></tr></table></figure>
-<p>主角建号后显示满值，短期运行正常。但推进到<strong>红坦克剧情</strong>（游戏早期”收集第一辆坦克”事件）时，游戏<strong>黑屏死机</strong>（背景音乐仍在播放）。经模拟器调试，发现 CPU 卡死在 <code>$96:F246</code>——一个<strong>存档/亮度闪烁的死循环</strong>。</p>
-<p><strong>根因分析</strong>：红坦克剧情的事件脚本会从 ROM 模板表<strong>重新读取数据</strong>，主角模板的满值（LV99/HP9999/属性255）导致计算溢出或表越界，最终进入不可退出的亮度控制循环。</p>
-<h3 id="5-4-正确方案：改代码不改模板"><a href="#5-4-正确方案：改代码不改模板" class="headerlink" title="5.4 正确方案：改代码不改模板"></a>5.4 正确方案：改代码不改模板</h3><p>既然模板数据被剧情脚本重读，就不能修改模板表。改为<strong>修改代码</strong>：在角色初始化例程末尾注入新代码，在模板数据被读入 WRAM <strong>之后</strong>，强制覆盖 WRAM 中的角色属性为最大值。这样模板表始终保持原版安全值，剧情脚本重读时读到的是正常数据。</p>
-<p>具体实现：扩展原有的金币 stub，在 <code>JSL $96FB2F</code>（最终处理）之后，追加一段 65816 代码，直接写入 <code>$7E8006</code> 起的主角属性：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$73:CCB7  REP #$20</span><br><span class="line">$73:CCB9  LDA #$6363         ; LV&#x3D;99, 战&#x3D;99</span><br><span class="line">$73:CCBC  STA $7E8006</span><br><span class="line">$73:CCC0  LDA #$6363         ; 运&#x3D;99, 修&#x3D;99</span><br><span class="line">$73:CCC3  STA $7E8008</span><br><span class="line">$73:CCC6  LDA #$270F         ; MAXHP&#x3D;9999</span><br><span class="line">$73:CCC9  STA $7E800A</span><br><span class="line">$73:CCCD  LDA #$270F         ; HP&#x3D;9999</span><br><span class="line">$73:CCD0  STA $7E800C</span><br><span class="line">$73:CCD4  LDA #$FFFF         ; 腕&#x3D;FF, 知&#x3D;FF</span><br><span class="line">$73:CCD7  STA $7E800E</span><br><span class="line">$73:CCDB  LDA #$FFFF         ; 体&#x3D;FF, 速&#x3D;FF</span><br><span class="line">$73:CCDE  STA $7E8010</span><br><span class="line">$73:CCE2  SEP #$20</span><br><span class="line">$73:CCE4  RTL</span><br></pre></td></tr></table></figure>
-<p><strong>注意</strong>：最初只修改 <strong>LV/战/运/修/MAXHP/HP</strong> 六个字段，保留腕力/智力/体力/速度（影响攻守）和 EXP。后续验证确认全属性 255 运行稳定，因此最终版（v3）将四属性也设为 255。</p>
-<h3 id="5-5-验证"><a href="#5-5-验证" class="headerlink" title="5.5 验证"></a>5.5 验证</h3><p>新开档实测：主角建号后 <strong>LV99 / 战99 / 运99 / 修99 / HP9999 / 四属性 255</strong>。红坦克剧情<strong>正常通过</strong>，坦克可正常收集。</p>
-<hr>
-<h2 id="6-第三阶：全员技能满级"><a href="#6-第三阶：全员技能满级" class="headerlink" title="6. 第三阶：全员技能满级"></a>6. 第三阶：全员技能满级</h2><h3 id="6-1-角色槽位定位"><a href="#6-1-角色槽位定位" class="headerlink" title="6.1 角色槽位定位"></a>6.1 角色槽位定位</h3><p>在红坦克剧情正常通过后，需要定位<strong>机械师和格斗家加入时使用的 WRAM 槽位</strong>。通过 Lua 脚本监控机械师加入前后的全 WRAM 角色区快照，对比发现：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">加入前扫描:</span><br><span class="line">  $8000: AA AB AC AD 00 00 63 63 63 63 ...  (主角, 已满值)</span><br><span class="line">  $8100: 96 9D A3 BE 00 10 01 01 01 01 ...  (机械师, 原值)</span><br><span class="line">  $8206: 05 08 03 02 FF 00 FF 00 24 12 ...  (格斗家模板)</span><br><span class="line"></span><br><span class="line">加入后扫描:</span><br><span class="line">  $8100 区域数据更新, 确认机械师已初始化</span><br></pre></td></tr></table></figure>
-<p><strong>关键发现</strong>：角色槽位间距为 <strong>0x100（256 字节）</strong>，而非之前推测的 0x1C0。</p>
-<div class="table-container">
+<h3 id="定位角色初始模板">5.2 定位角色初始模板</h3>
+<p>主角的初始数据来自 ROM 中的<strong>角色模板表</strong>。在 WRAM
+里观察主角建号后的数值（LV1/战1/运1/修1/HP80/腕10/知10/体15/速20），用这串字节在
+ROM 里全量搜索：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01 01 01 01 50 00 50 00 0A 0A 0F 14</span><br></pre></td></tr></table></figure>
+<p>命中 file <code>0xB7C2B</code>，且发现<strong>三个 15
+字节模板连续排列</strong>（file <code>0xB7C2B</code> 起）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0xB7C2B: 01 01 01 01 50 00 50 00 0A 0A 0F 14 02 0E 10   模板1 主角</span><br><span class="line">0xB7C3A: 01 01 01 01 50 00 50 00 0A 14 0F 0A 01 0E 20   模板2 机械师</span><br><span class="line">0xB7C49: 05 08 03 02 FF 00 FF 00 24 12 1E 13 03 01 00   模板3 格斗家</span><br></pre></td></tr></table></figure>
+<p>每个模板 15 字节，布局与 5.1 节的 WRAM
+块结构<strong>一一对应</strong>。</p>
+<h3 id="第一次尝试修改模板数据踩坑">5.3
+第一次尝试：修改模板数据（踩坑）</h3>
+<p>最初尝试直接修改模板1（主角模板 <code>0xB7C2B</code>）为最大值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原：01 01 01 01 50 00 50 00 0A 0A 0F 14 02 0E 10</span><br><span class="line">改：63 63 63 63 0F 27 0F 27 FF FF FF FF 02 00 10</span><br></pre></td></tr></table></figure>
+<p>主角建号后显示满值，短期运行正常。但推进到<strong>红坦克剧情</strong>（游戏早期”收集第一辆坦克”事件）时，游戏<strong>黑屏死机</strong>（背景音乐仍在播放）。经模拟器调试，发现
+CPU 卡死在
+<code>$96:F246</code>——一个<strong>存档/亮度闪烁的死循环</strong>。</p>
+<p><strong>根因分析</strong>：红坦克剧情的事件脚本会从 ROM
+模板表<strong>重新读取数据</strong>，主角模板的满值（LV99/HP9999/属性255）导致计算溢出或表越界，最终进入不可退出的亮度控制循环。</p>
+<h3 id="正确方案改代码不改模板">5.4 正确方案：改代码不改模板</h3>
+<p>既然模板数据被剧情脚本重读，就不能修改模板表。改为<strong>修改代码</strong>：在角色初始化例程末尾注入新代码，在模板数据被读入
+WRAM <strong>之后</strong>，强制覆盖 WRAM
+中的角色属性为最大值。这样模板表始终保持原版安全值，剧情脚本重读时读到的是正常数据。</p>
+<p>具体实现：扩展原有的金币 stub，在
+<code>JSL $96FB2F</code>（最终处理）之后，追加一段 65816 代码，直接写入
+<code>$7E8006</code> 起的主角属性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$73:CCB7  REP #$20</span><br><span class="line">$73:CCB9  LDA #$6363         ; LV=99, 战=99</span><br><span class="line">$73:CCBC  STA $7E8006</span><br><span class="line">$73:CCC0  LDA #$6363         ; 运=99, 修=99</span><br><span class="line">$73:CCC3  STA $7E8008</span><br><span class="line">$73:CCC6  LDA #$270F         ; MAXHP=9999</span><br><span class="line">$73:CCC9  STA $7E800A</span><br><span class="line">$73:CCCD  LDA #$270F         ; HP=9999</span><br><span class="line">$73:CCD0  STA $7E800C</span><br><span class="line">$73:CCD4  LDA #$FFFF         ; 腕=FF, 知=FF</span><br><span class="line">$73:CCD7  STA $7E800E</span><br><span class="line">$73:CCDB  LDA #$FFFF         ; 体=FF, 速=FF</span><br><span class="line">$73:CCDE  STA $7E8010</span><br><span class="line">$73:CCE2  SEP #$20</span><br><span class="line">$73:CCE4  RTL</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：最初只修改
+<strong>LV/战/运/修/MAXHP/HP</strong>
+六个字段，保留腕力/智力/体力/速度（影响攻守）和 EXP。后续验证确认全属性
+255 运行稳定，因此最终版（v3）将四属性也设为 255。</p>
+<h3 id="验证">5.5 验证</h3>
+<p>新开档实测：主角建号后 <strong>LV99 / 战99 / 运99 / 修99 / HP9999 /
+四属性
+255</strong>。红坦克剧情<strong>正常通过</strong>，坦克可正常收集。</p>
+<hr />
+<h2 id="第三阶全员技能满级">6. 第三阶：全员技能满级</h2>
+<h3 id="角色槽位定位">6.1 角色槽位定位</h3>
+<p>在红坦克剧情正常通过后，需要定位<strong>机械师和格斗家加入时使用的
+WRAM 槽位</strong>。通过 Lua 脚本监控机械师加入前后的全 WRAM
+角色区快照，对比发现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">加入前扫描:</span><br><span class="line">  $8000: AA AB AC AD 00 00 63 63 63 63 ...  (主角, 已满值)</span><br><span class="line">  $8100: 96 9D A3 BE 00 10 01 01 01 01 ...  (机械师, 原值)</span><br><span class="line">  $8206: 05 08 03 02 FF 00 FF 00 24 12 ...  (格斗家模板)</span><br><span class="line"></span><br><span class="line">加入后扫描:</span><br><span class="line">  $8100 区域数据更新, 确认机械师已初始化</span><br></pre></td></tr></table></figure>
+<p><strong>关键发现</strong>：角色槽位间距为 <strong>0x100（256
+字节）</strong>，而非之前推测的 0x1C0。</p>
 <table>
 <thead>
 <tr>
@@ -489,18 +689,27 @@
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="6-2-扩展-stub"><a href="#6-2-扩展-stub" class="headerlink" title="6.2 扩展 stub"></a>6.2 扩展 stub</h3><p>在主角 stub 基础上，扩展为同时写入三个槽位：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$73:CCB7  REP #$20</span><br><span class="line">         ; --- 主角 @ $7E8006 ---</span><br><span class="line">         LDA #$6363 ; STA $7E8006   ; LV&#x3D;99, 战&#x3D;99</span><br><span class="line">         LDA #$6363 ; STA $7E8008   ; 运&#x3D;99, 修&#x3D;99</span><br><span class="line">         LDA #$270F ; STA $7E800A   ; MAXHP&#x3D;9999</span><br><span class="line">         LDA #$270F ; STA $7E800C   ; HP&#x3D;9999</span><br><span class="line">         LDA #$FFFF ; STA $7E800E   ; 腕&#x3D;FF, 知&#x3D;FF</span><br><span class="line">         LDA #$FFFF ; STA $7E8010   ; 体&#x3D;FF, 速&#x3D;FF</span><br><span class="line">         ; --- 机械师 @ $7E8106 ---</span><br><span class="line">         LDA #$6363 ; STA $7E8106</span><br><span class="line">         LDA #$6363 ; STA $7E8108</span><br><span class="line">         LDA #$270F ; STA $7E810A</span><br><span class="line">         LDA #$270F ; STA $7E810C</span><br><span class="line">         LDA #$FFFF ; STA $7E810E</span><br><span class="line">         LDA #$FFFF ; STA $7E8110</span><br><span class="line">         ; --- 格斗家 @ $7E8206 ---</span><br><span class="line">         LDA #$6363 ; STA $7E8206</span><br><span class="line">         LDA #$6363 ; STA $7E8208</span><br><span class="line">         LDA #$270F ; STA $7E820A</span><br><span class="line">         LDA #$270F ; STA $7E820C</span><br><span class="line">         LDA #$FFFF ; STA $7E820E</span><br><span class="line">         LDA #$FFFF ; STA $7E8210</span><br><span class="line">         SEP #$20</span><br><span class="line">         RTL</span><br></pre></td></tr></table></figure>
-<h3 id="6-3-验证"><a href="#6-3-验证" class="headerlink" title="6.3 验证"></a>6.3 验证</h3><ul>
+<h3 id="扩展-stub">6.2 扩展 stub</h3>
+<p>在主角 stub 基础上，扩展为同时写入三个槽位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$73:CCB7  REP #$20</span><br><span class="line">         ; --- 主角 @ $7E8006 ---</span><br><span class="line">         LDA #$6363 ; STA $7E8006   ; LV=99, 战=99</span><br><span class="line">         LDA #$6363 ; STA $7E8008   ; 运=99, 修=99</span><br><span class="line">         LDA #$270F ; STA $7E800A   ; MAXHP=9999</span><br><span class="line">         LDA #$270F ; STA $7E800C   ; HP=9999</span><br><span class="line">         LDA #$FFFF ; STA $7E800E   ; 腕=FF, 知=FF</span><br><span class="line">         LDA #$FFFF ; STA $7E8010   ; 体=FF, 速=FF</span><br><span class="line">         ; --- 机械师 @ $7E8106 ---</span><br><span class="line">         LDA #$6363 ; STA $7E8106</span><br><span class="line">         LDA #$6363 ; STA $7E8108</span><br><span class="line">         LDA #$270F ; STA $7E810A</span><br><span class="line">         LDA #$270F ; STA $7E810C</span><br><span class="line">         LDA #$FFFF ; STA $7E810E</span><br><span class="line">         LDA #$FFFF ; STA $7E8110</span><br><span class="line">         ; --- 格斗家 @ $7E8206 ---</span><br><span class="line">         LDA #$6363 ; STA $7E8206</span><br><span class="line">         LDA #$6363 ; STA $7E8208</span><br><span class="line">         LDA #$270F ; STA $7E820A</span><br><span class="line">         LDA #$270F ; STA $7E820C</span><br><span class="line">         LDA #$FFFF ; STA $7E820E</span><br><span class="line">         LDA #$FFFF ; STA $7E8210</span><br><span class="line">         SEP #$20</span><br><span class="line">         RTL</span><br></pre></td></tr></table></figure>
+<h3 id="验证-1">6.3 验证</h3>
+<ul>
 <li>新开档 → 主角满值 ✅</li>
 <li>红坦克剧情 → 正常通过，坦克可收集 ✅</li>
 <li>机械师加入 → LV99/战99/运99/修99/HP9999/四属性255 ✅</li>
 <li>格斗家加入 → 同样满值 ✅</li>
 </ul>
-<p><img src="/img/metal_final.gif" alt="全角色技能满级最终效果演示"></p>
-<h3 id="6-4-与第一版（模板修改）的对比"><a href="#6-4-与第一版（模板修改）的对比" class="headerlink" title="6.4 与第一版（模板修改）的对比"></a>6.4 与第一版（模板修改）的对比</h3><div class="table-container">
+<figure>
+<img src="/img/metal_final.gif" alt="全角色技能满级最终效果演示" />
+<figcaption aria-hidden="true">全角色技能满级最终效果演示</figcaption>
+</figure>
+<h3 id="与第一版模板修改的对比">6.4 与第一版（模板修改）的对比</h3>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>特性</th>
@@ -541,62 +750,127 @@
 </tr>
 </tbody>
 </table>
-</div>
-<hr>
-<h2 id="7-三阶破解的递进关系"><a href="#7-三阶破解的递进关系" class="headerlink" title="7. 三阶破解的递进关系"></a>7. 三阶破解的递进关系</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────────────────────────────┐</span><br><span class="line">│ 第一阶：初始金币 999999                          │</span><br><span class="line">│ 手段：初始化例程末尾注入 stub（JSL 到空闲区）     │</span><br><span class="line">│ 要点：写入时间线定位 + 存读档一致性分析           │</span><br><span class="line">│ 难度：★★☆☆☆                                     │</span><br><span class="line">├──────────────────────────────────────────────────┤</span><br><span class="line">│ 第二阶：主角技能满级                              │</span><br><span class="line">│ 手段：扩展金币 stub，覆盖 WRAM 角色属性为最大值   │</span><br><span class="line">│ 要点：改代码不改模板，避免剧情脚本重读模板时崩溃  │</span><br><span class="line">│ 难度：★★★☆☆                                     │</span><br><span class="line">├──────────────────────────────────────────────────┤</span><br><span class="line">│ 第三阶：全员技能满级                              │</span><br><span class="line">│ 手段：扩展 stub 覆盖三个角色槽位（0x100 间距）    │</span><br><span class="line">│ 要点：Lua 脚本对比快照定位槽位 + 保留攻守&#x2F;EXP    │</span><br><span class="line">│ 难度：★★★☆☆                                     │</span><br><span class="line">└──────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="三阶破解的递进关系">7. 三阶破解的递进关系</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────────────────────────────┐</span><br><span class="line">│ 第一阶：初始金币 999999                          │</span><br><span class="line">│ 手段：初始化例程末尾注入 stub（JSL 到空闲区）     │</span><br><span class="line">│ 要点：写入时间线定位 + 存读档一致性分析           │</span><br><span class="line">│ 难度：★★☆☆☆                                     │</span><br><span class="line">├──────────────────────────────────────────────────┤</span><br><span class="line">│ 第二阶：主角技能满级                              │</span><br><span class="line">│ 手段：扩展金币 stub，覆盖 WRAM 角色属性为最大值   │</span><br><span class="line">│ 要点：改代码不改模板，避免剧情脚本重读模板时崩溃  │</span><br><span class="line">│ 难度：★★★☆☆                                     │</span><br><span class="line">├──────────────────────────────────────────────────┤</span><br><span class="line">│ 第三阶：全员技能满级                              │</span><br><span class="line">│ 手段：扩展 stub 覆盖三个角色槽位（0x100 间距）    │</span><br><span class="line">│ 要点：Lua 脚本对比快照定位槽位 + 保留攻守/EXP    │</span><br><span class="line">│ 难度：★★★☆☆                                     │</span><br><span class="line">└──────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
 <p>每一阶突破都建立在前一阶对游戏机制理解的基础上：</p>
 <ul>
-<li>一阶的核心是<strong>写入时间线</strong>（<code>addMemoryCallback</code> 全量捕获 + 时间线比对）与 <strong>LoROM 映射换算</strong>；</li>
+<li>一阶的核心是<strong>写入时间线</strong>（<code>addMemoryCallback</code>
+全量捕获 + 时间线比对）与 <strong>LoROM 映射换算</strong>；</li>
 <li>二阶的核心是<strong>识别”改模板”方案的陷阱</strong>——模板数据被剧情脚本重读，修改模板会导致后续事件崩溃，解决方法是<strong>改代码而非改数据</strong>；</li>
-<li>三阶的核心是<strong>用运行时快照对比定位正确槽位</strong>——通过 Lua 脚本监控角色加入前后的 WRAM 变化，避免了错误推测。</li>
+<li>三阶的核心是<strong>用运行时快照对比定位正确槽位</strong>——通过 Lua
+脚本监控角色加入前后的 WRAM 变化，避免了错误推测。</li>
 </ul>
-<h2 id="8-遇到的问题"><a href="#8-遇到的问题" class="headerlink" title="8. 遇到的问题"></a>8. 遇到的问题</h2><h3 id="8-1-初始内存残留脏数据"><a href="#8-1-初始内存残留脏数据" class="headerlink" title="8.1 初始内存残留脏数据"></a>8.1 初始内存残留脏数据</h3><p>新游戏复位后金币地址上不是 0，而是上次运行的残留值（如 <code>1457251158</code>），差点把残留值当成”游戏内实际金币”去追来源。解决：<strong>先完整跑一遍新游戏流程</strong>，看金币何时归 0，再追写入。</p>
-<h3 id="8-2-写回调去重漏掉”重复写-0”"><a href="#8-2-写回调去重漏掉”重复写-0”" class="headerlink" title="8.2 写回调去重漏掉”重复写 0”"></a>8.2 写回调去重漏掉”重复写 0”</h3><p>第一次写监控只记录”值变化”，初始化零填充写 0 时金币本来就是 0，被直接跳过，导致找不到初始化写入点。解决：改为<strong>记录窗口内所有写入</strong>（不判变化），虽然日志量大，但完整无遗漏。</p>
-<h3 id="8-3-LoROM-高速库-慢速库镜像换算"><a href="#8-3-LoROM-高速库-慢速库镜像换算" class="headerlink" title="8.3 LoROM 高速库/慢速库镜像换算"></a>8.3 LoROM 高速库/慢速库镜像换算</h3><p>一开始用 <code>文件偏移 = CPU库 * 0x8000</code> 换算，把 <code>$96:F9C9</code> 算到了 4MB 文件之外，报 <code>IndexError</code>。实际 LoROM 4MB 下正确公式是 <code>(CPU库 &amp; 0x3F) * 0x8000 + 0x200 + (地址 - 0x8000)</code>。</p>
-<h3 id="8-4-磁碟机头偏移"><a href="#8-4-磁碟机头偏移" class="headerlink" title="8.4 磁碟机头偏移"></a>8.4 磁碟机头偏移</h3><p>发现文件带 512 字节 <code>GAME DOCTOR SF 3</code> 头后，所有 file offset 都要再加 <code>0x200</code>。初期的地址换算错误正是漏掉了这一层。</p>
-<h3 id="8-5-反汇编脚本-imm-模式-bug"><a href="#8-5-反汇编脚本-imm-模式-bug" class="headerlink" title="8.5 反汇编脚本 imm 模式 bug"></a>8.5 反汇编脚本 imm 模式 bug</h3><p>自写 <code>dis65816.py</code> 一度把 <code>imm</code> 寻址误设为 2 字节操作数，导致所有 <code>LDA #$xx</code> 等立即数指令反汇编错位，后续指令全部错乱。修复：<code>imm</code> 应为 <strong>1 字节</strong>操作数。</p>
-<h3 id="8-6-模板位置初次算错"><a href="#8-6-模板位置初次算错" class="headerlink" title="8.6 模板位置初次算错"></a>8.6 模板位置初次算错</h3><p>机械师模板最初被标在 file <code>0xB7C3C</code>，与实际 <code>0xB7C3A</code> 差 2 字节，导致解析出的字段全部错位。最终以”模板1 起点 + 15 字节步长”重新推导出三模板位置。</p>
-<h3 id="8-7-修改模板导致红坦克剧情黑屏"><a href="#8-7-修改模板导致红坦克剧情黑屏" class="headerlink" title="8.7 修改模板导致红坦克剧情黑屏"></a>8.7 修改模板导致红坦克剧情黑屏</h3><p>第一次尝试直接修改模板数据，主角建号后满值正常，但推进到红坦克剧情时黑屏死机（CPU 卡在存档亮度闪烁循环 <code>$96:F246</code>）。根因：剧情脚本重读模板数据，满值导致计算溢出。<strong>解决方案</strong>：改代码不改模板，在 WRAM 层面覆盖值。</p>
-<h3 id="8-8-错误推测槽位间距（0x1C0）"><a href="#8-8-错误推测槽位间距（0x1C0）" class="headerlink" title="8.8 错误推测槽位间距（0x1C0）"></a>8.8 错误推测槽位间距（0x1C0）</h3><p>最初假设三个角色槽位间距为 0x1C0（<code>$7E8000</code>、<code>$7E81C0</code>、<code>$7E8380</code>），在三槽位版中写入 <code>$7E81C6</code> 后，导致红坦克消失（写入了坦克数据区）。<strong>通过 Lua 快照对比确认实际间距为 0x100</strong>（<code>$7E8000</code>、<code>$7E8100</code>、<code>$7E8200</code>）。</p>
-<h3 id="8-9-格斗家模板靠结构推断"><a href="#8-9-格斗家模板靠结构推断" class="headerlink" title="8.9 格斗家模板靠结构推断"></a>8.9 格斗家模板靠结构推断</h3><p>模板3 是唯一没有逐字节实证的定位（当时还没遇到格斗家加入）。证据链是：连续排列 + 结构同构 + 职业标识 03。最终通过运行时扫描确认槽位为 <code>$7E8200</code>。</p>
-<h3 id="8-10-旧存档中的角色不会自动刷新"><a href="#8-10-旧存档中的角色不会自动刷新" class="headerlink" title="8.10 旧存档中的角色不会自动刷新"></a>8.10 旧存档中的角色不会自动刷新</h3><p>模板修改只影响新加入/重新初始化。如果使用旧 savestate 加载，已存在的角色仍是原值，需新开档（或运行期 Lua 改 WRAM）验证。</p>
-<h3 id="8-11-校验脚本读错文件"><a href="#8-11-校验脚本读错文件" class="headerlink" title="8.11 校验脚本读错文件"></a>8.11 校验脚本读错文件</h3><p>验证补丁时一度打开的是未打补丁的 <code>0.6.SMC</code>，打印出的模板1 还是原值，险些误判补丁未生效。解决：<strong>每次读文件前先打印文件路径 + 目标区域前 N 字节</strong>，确认读的是正确的文件。</p>
-<h2 id="9-总结与心得"><a href="#9-总结与心得" class="headerlink" title="9. 总结与心得"></a>9. 总结与心得</h2><ol>
-<li><p><strong>“值变化”不等于”写入”</strong>：初始化写 0 是最容易被去重逻辑漏掉的写入，全量捕获才能建立完整的写入时间线。</p>
-</li>
-<li><p><strong>先摸清写入时间线，再选补丁点</strong>：金币在帧 10580 被初始化归零、帧 14652 才被玩家拾取，这中间是安全窗口。选”最后一次初始化写入之后、玩家操作之前”的点位，补丁才不会被覆盖。</p>
-</li>
-<li><p><strong>函数复用是破解的双刃剑</strong>：新游戏/读档共用 <code>$96:F8B9</code>，既是”打一处补丁即可”的幸运，也是”读档也会触发”的隐患。判断清调用顺序，隐患就变成特性。</p>
-</li>
-<li><p><strong>LoROM 映射 + 磁碟机头是 SFC 破解的入场券</strong>：<code>0x200</code> 头偏移和高速库/慢速库换算必须一次算对，否则后面全盘皆错。</p>
-</li>
-<li><p><strong>改代码不改数据，更安全</strong>：直接修改模板数据看似简单，但若游戏逻辑在后续事件中重读模板，会导致崩溃。改为注入代码在运行时覆盖 WRAM，将修改与游戏数据彻底隔离。</p>
-</li>
-<li><p><strong>运行时快照对比是最可靠的定位手段</strong>：反汇编难以定位的槽位、数据表，通过 Lua 脚本在模拟器中对比”加入前/加入后”的 WRAM 快照，能精确锁定变化点。</p>
-</li>
-<li><p><strong>保留”角色标识”和”攻守派生”字段</strong>：职业标识（02/01/03）决定角色种类，攻守由腕力/体力派生，修改这些字段要么破坏角色，要么过度影响平衡。只改 LV/技能/HP 即可达到”满级”效果。</p>
-</li>
-<li><p><strong>最小改动 + 可验证</strong>：金币阶段只改 4 字节跳转 + 23 字节 stub；角色阶段扩展 stub 至 111 字节；每步都用 diff 确认改动范围，用快照对比验证效果。</p>
-</li>
-<li><p><strong>存读档一致性靠”复制覆盖”而非”绕过”</strong>：利用读档例程 <code>MVN $7E,$70</code> 的整块覆盖，让存档数据天然压过模板值。</p>
-</li>
+<h2 id="遇到的问题">8. 遇到的问题</h2>
+<h3 id="初始内存残留脏数据">8.1 初始内存残留脏数据</h3>
+<p>新游戏复位后金币地址上不是 0，而是上次运行的残留值（如
+<code>1457251158</code>），差点把残留值当成”游戏内实际金币”去追来源。解决：<strong>先完整跑一遍新游戏流程</strong>，看金币何时归
+0，再追写入。</p>
+<h3 id="写回调去重漏掉重复写-0">8.2 写回调去重漏掉”重复写 0”</h3>
+<p>第一次写监控只记录”值变化”，初始化零填充写 0 时金币本来就是
+0，被直接跳过，导致找不到初始化写入点。解决：改为<strong>记录窗口内所有写入</strong>（不判变化），虽然日志量大，但完整无遗漏。</p>
+<h3 id="lorom-高速库慢速库镜像换算">8.3 LoROM 高速库/慢速库镜像换算</h3>
+<p>一开始用 <code>文件偏移 = CPU库 * 0x8000</code> 换算，把
+<code>$96:F9C9</code> 算到了 4MB 文件之外，报
+<code>IndexError</code>。实际 LoROM 4MB 下正确公式是
+<code>(CPU库 &amp; 0x3F) * 0x8000 + 0x200 + (地址 - 0x8000)</code>。</p>
+<h3 id="磁碟机头偏移">8.4 磁碟机头偏移</h3>
+<p>发现文件带 512 字节 <code>GAME DOCTOR SF 3</code> 头后，所有 file
+offset 都要再加
+<code>0x200</code>。初期的地址换算错误正是漏掉了这一层。</p>
+<h3 id="反汇编脚本-imm-模式-bug">8.5 反汇编脚本 imm 模式 bug</h3>
+<p>自写 <code>dis65816.py</code> 一度把 <code>imm</code> 寻址误设为 2
+字节操作数，导致所有 <code>LDA #$xx</code>
+等立即数指令反汇编错位，后续指令全部错乱。修复：<code>imm</code> 应为
+<strong>1 字节</strong>操作数。</p>
+<h3 id="模板位置初次算错">8.6 模板位置初次算错</h3>
+<p>机械师模板最初被标在 file <code>0xB7C3C</code>，与实际
+<code>0xB7C3A</code> 差 2 字节，导致解析出的字段全部错位。最终以”模板1
+起点 + 15 字节步长”重新推导出三模板位置。</p>
+<h3 id="修改模板导致红坦克剧情黑屏">8.7 修改模板导致红坦克剧情黑屏</h3>
+<p>第一次尝试直接修改模板数据，主角建号后满值正常，但推进到红坦克剧情时黑屏死机（CPU
+卡在存档亮度闪烁循环
+<code>$96:F246</code>）。根因：剧情脚本重读模板数据，满值导致计算溢出。<strong>解决方案</strong>：改代码不改模板，在
+WRAM 层面覆盖值。</p>
+<h3 id="错误推测槽位间距0x1c0">8.8 错误推测槽位间距（0x1C0）</h3>
+<p>最初假设三个角色槽位间距为
+0x1C0（<code>$7E8000</code>、<code>$7E81C0</code>、<code>$7E8380</code>），在三槽位版中写入
+<code>$7E81C6</code>
+后，导致红坦克消失（写入了坦克数据区）。<strong>通过 Lua
+快照对比确认实际间距为
+0x100</strong>（<code>$7E8000</code>、<code>$7E8100</code>、<code>$7E8200</code>）。</p>
+<h3 id="格斗家模板靠结构推断">8.9 格斗家模板靠结构推断</h3>
+<p>模板3
+是唯一没有逐字节实证的定位（当时还没遇到格斗家加入）。证据链是：连续排列
++ 结构同构 + 职业标识 03。最终通过运行时扫描确认槽位为
+<code>$7E8200</code>。</p>
+<h3 id="旧存档中的角色不会自动刷新">8.10 旧存档中的角色不会自动刷新</h3>
+<p>模板修改只影响新加入/重新初始化。如果使用旧 savestate
+加载，已存在的角色仍是原值，需新开档（或运行期 Lua 改 WRAM）验证。</p>
+<h3 id="校验脚本读错文件">8.11 校验脚本读错文件</h3>
+<p>验证补丁时一度打开的是未打补丁的 <code>0.6.SMC</code>，打印出的模板1
+还是原值，险些误判补丁未生效。解决：<strong>每次读文件前先打印文件路径 +
+目标区域前 N 字节</strong>，确认读的是正确的文件。</p>
+<h2 id="总结与心得">9. 总结与心得</h2>
+<ol type="1">
+<li><p><strong>“值变化”不等于”写入”</strong>：初始化写 0
+是最容易被去重逻辑漏掉的写入，全量捕获才能建立完整的写入时间线。</p></li>
+<li><p><strong>先摸清写入时间线，再选补丁点</strong>：金币在帧 10580
+被初始化归零、帧 14652
+才被玩家拾取，这中间是安全窗口。选”最后一次初始化写入之后、玩家操作之前”的点位，补丁才不会被覆盖。</p></li>
+<li><p><strong>函数复用是破解的双刃剑</strong>：新游戏/读档共用
+<code>$96:F8B9</code>，既是”打一处补丁即可”的幸运，也是”读档也会触发”的隐患。判断清调用顺序，隐患就变成特性。</p></li>
+<li><p><strong>LoROM 映射 + 磁碟机头是 SFC
+破解的入场券</strong>：<code>0x200</code>
+头偏移和高速库/慢速库换算必须一次算对，否则后面全盘皆错。</p></li>
+<li><p><strong>改代码不改数据，更安全</strong>：直接修改模板数据看似简单，但若游戏逻辑在后续事件中重读模板，会导致崩溃。改为注入代码在运行时覆盖
+WRAM，将修改与游戏数据彻底隔离。</p></li>
+<li><p><strong>运行时快照对比是最可靠的定位手段</strong>：反汇编难以定位的槽位、数据表，通过
+Lua 脚本在模拟器中对比”加入前/加入后”的 WRAM
+快照，能精确锁定变化点。</p></li>
+<li><p><strong>保留”角色标识”和”攻守派生”字段</strong>：职业标识（02/01/03）决定角色种类，攻守由腕力/体力派生，修改这些字段要么破坏角色，要么过度影响平衡。只改
+LV/技能/HP 即可达到”满级”效果。</p></li>
+<li><p><strong>最小改动 + 可验证</strong>：金币阶段只改 4 字节跳转 + 23
+字节 stub；角色阶段扩展 stub 至 111 字节；每步都用 diff
+确认改动范围，用快照对比验证效果。</p></li>
+<li><p><strong>存读档一致性靠”复制覆盖”而非”绕过”</strong>：利用读档例程
+<code>MVN $7E,$70</code> 的整块覆盖，让存档数据天然压过模板值。</p></li>
 </ol>
-<hr>
-<h2 id="附录：关键脚本与补丁"><a href="#附录：关键脚本与补丁" class="headerlink" title="附录：关键脚本与补丁"></a>附录：关键脚本与补丁</h2><p>分析过程中使用的核心 Lua 脚本，可在 Mesen2 的命令行或 Lua Console 中加载运行。文件位于博客源码的 <code>source/files/</code> 目录下。</p>
-<h3 id="A-1-金币追踪脚本"><a href="#A-1-金币追踪脚本" class="headerlink" title="A.1 金币追踪脚本"></a>A.1 金币追踪脚本</h3><p><strong>文件</strong>：<a href="/files/gold_trace.lua"><code>gold_trace.lua</code></a></p>
-<p>监控 WRAM <code>$7E9100-$7E9108</code> 窗口内的<strong>所有写入</strong>（含重复写 0），记录 <code>frame/addr/value/PC/gold</code>，用于定位”新游戏初始化把金币清零”的代码位置。</p>
+<hr />
+<h2 id="附录关键脚本与补丁">附录：关键脚本与补丁</h2>
+<p>分析过程中使用的核心 Lua 脚本，可在 Mesen2 的命令行或 Lua Console
+中加载运行。文件位于博客源码的 <code>source/files/</code> 目录下。</p>
+<h3 id="a.1-金币追踪脚本">A.1 金币追踪脚本</h3>
+<p><strong>文件</strong>：<a
+href="/files/gold_trace.lua"><code>gold_trace.lua</code></a></p>
+<p>监控 WRAM <code>$7E9100-$7E9108</code>
+窗口内的<strong>所有写入</strong>（含重复写 0），记录
+<code>frame/addr/value/PC/gold</code>，用于定位”新游戏初始化把金币清零”的代码位置。</p>
 <p>核心写监控逻辑：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> logCount = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">  <span class="keyword">if</span> frame == <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  logCount[addr] = (logCount[addr] <span class="keyword">or</span> <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> logCount[addr] &lt;= <span class="number">200</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> st = emu.getState()</span><br><span class="line">    out(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"[f=%06d] WRITE $%06X=$%02X  PC=$%02X:%04X  gold=%d"</span>,</span><br><span class="line">                      frame, addr, value, st[<span class="string">"cpu.k"</span>], st[<span class="string">"cpu.pc"</span>], curGold()))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>,</span><br><span class="line">  <span class="number">0x9100</span>, <span class="number">0x9108</span>, emu.cpuType.snes, emu.memType.snesWorkRam)</span><br></pre></td></tr></table></figure>
-<h3 id="A-2-角色槽位定位脚本"><a href="#A-2-角色槽位定位脚本" class="headerlink" title="A.2 角色槽位定位脚本"></a>A.2 角色槽位定位脚本</h3><p><strong>文件</strong>：<a href="/files/mech_join.lua"><code>mech_join.lua</code></a></p>
-<p>在机械师加入前后扫描全 WRAM 角色区（<code>$7E8000-$7E83FF</code>），对比快照差异，定位角色槽位实际地址。通过此脚本确认三个槽位间距为 0x100 而非 0x1C0。</p>
-<h3 id="A-3-全部修改点汇总"><a href="#A-3-全部修改点汇总" class="headerlink" title="A.3 全部修改点汇总"></a>A.3 全部修改点汇总</h3><p><strong>金币 stub</strong>（文件 <code>0x39CEA0</code>，CPU <code>$73:CCA0</code>）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$73:CCA0  C2 20            REP #$20</span><br><span class="line">$73:CCA2  A9 3F 42         LDA #$423F</span><br><span class="line">$73:CCA5  8F 02 91 7E      STA $7E9102</span><br><span class="line">$73:CCA9  A9 0F 00         LDA #$000F</span><br><span class="line">$73:CCAC  8F 04 91 7E      STA $7E9104</span><br><span class="line">$73:CCB0  E2 20            SEP #$20</span><br><span class="line">$73:CCB2  22 2F FB 96      JSL $96FB2F</span><br></pre></td></tr></table></figure>
-<p><strong>角色覆盖 stub</strong>（文件 <code>0x39CEB7</code>，CPU <code>$73:CCB7</code>，追加在金币 stub 之后）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$73:CCB7  REP #$20</span><br><span class="line">         ; 主角 @ $7E8006</span><br><span class="line">         LDA #$6363 ; STA $7E8006   ; LV&#x3D;99, 战&#x3D;99</span><br><span class="line">         LDA #$6363 ; STA $7E8008   ; 运&#x3D;99, 修&#x3D;99</span><br><span class="line">         LDA #$270F ; STA $7E800A   ; MAXHP&#x3D;9999</span><br><span class="line">         LDA #$270F ; STA $7E800C   ; HP&#x3D;9999</span><br><span class="line">         LDA #$FFFF ; STA $7E800E   ; 腕&#x3D;FF, 知&#x3D;FF</span><br><span class="line">         LDA #$FFFF ; STA $7E8010   ; 体&#x3D;FF, 速&#x3D;FF</span><br><span class="line">         ; 机械师 @ $7E8106</span><br><span class="line">         LDA #$6363 ; STA $7E8106</span><br><span class="line">         LDA #$6363 ; STA $7E8108</span><br><span class="line">         LDA #$270F ; STA $7E810A</span><br><span class="line">         LDA #$270F ; STA $7E810C</span><br><span class="line">         LDA #$FFFF ; STA $7E810E</span><br><span class="line">         LDA #$FFFF ; STA $7E8110</span><br><span class="line">         ; 格斗家 @ $7E8206</span><br><span class="line">         LDA #$6363 ; STA $7E8206</span><br><span class="line">         LDA #$6363 ; STA $7E8208</span><br><span class="line">         LDA #$270F ; STA $7E820A</span><br><span class="line">         LDA #$270F ; STA $7E820C</span><br><span class="line">         LDA #$FFFF ; STA $7E820E</span><br><span class="line">         LDA #$FFFF ; STA $7E8210</span><br><span class="line">         SEP #$20</span><br><span class="line">         RTL</span><br></pre></td></tr></table></figure>
-<p><strong>跳转修改</strong>（文件 <code>0xB7BC9</code> = CPU <code>$96:F9C9</code>）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原：22 2F FB 96      JSL $96FB2F</span><br><span class="line">改：22 B7 CC 73      JSL $73CCB7  (指向组合 stub)</span><br></pre></td></tr></table></figure>
-<h3 id="A-4-交付物"><a href="#A-4-交付物" class="headerlink" title="A.4 交付物"></a>A.4 交付物</h3><div class="table-container">
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> logCount = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">onWrite</span><span class="params">(addr, value)</span></span></span><br><span class="line">  <span class="keyword">if</span> frame == <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  logCount[addr] = (logCount[addr] <span class="keyword">or</span> <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> logCount[addr] &lt;= <span class="number">200</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> st = emu.getState()</span><br><span class="line">    out(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;[f=%06d] WRITE $%06X=$%02X  PC=$%02X:%04X  gold=%d&quot;</span>,</span><br><span class="line">                      frame, addr, value, st[<span class="string">&quot;cpu.k&quot;</span>], st[<span class="string">&quot;cpu.pc&quot;</span>], curGold()))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">emu.addMemoryCallback(onWrite, emu.callbackType.<span class="built_in">write</span>,</span><br><span class="line">  <span class="number">0x9100</span>, <span class="number">0x9108</span>, emu.cpuType.snes, emu.memType.snesWorkRam)</span><br></pre></td></tr></table></figure>
+<h3 id="a.2-角色槽位定位脚本">A.2 角色槽位定位脚本</h3>
+<p><strong>文件</strong>：<a
+href="/files/mech_join.lua"><code>mech_join.lua</code></a></p>
+<p>在机械师加入前后扫描全 WRAM
+角色区（<code>$7E8000-$7E83FF</code>），对比快照差异，定位角色槽位实际地址。通过此脚本确认三个槽位间距为
+0x100 而非 0x1C0。</p>
+<h3 id="a.3-全部修改点汇总">A.3 全部修改点汇总</h3>
+<p><strong>金币 stub</strong>（文件 <code>0x39CEA0</code>，CPU
+<code>$73:CCA0</code>）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$73:CCA0  C2 20            REP #$20</span><br><span class="line">$73:CCA2  A9 3F 42         LDA #$423F</span><br><span class="line">$73:CCA5  8F 02 91 7E      STA $7E9102</span><br><span class="line">$73:CCA9  A9 0F 00         LDA #$000F</span><br><span class="line">$73:CCAC  8F 04 91 7E      STA $7E9104</span><br><span class="line">$73:CCB0  E2 20            SEP #$20</span><br><span class="line">$73:CCB2  22 2F FB 96      JSL $96FB2F</span><br></pre></td></tr></table></figure>
+<p><strong>角色覆盖 stub</strong>（文件 <code>0x39CEB7</code>，CPU
+<code>$73:CCB7</code>，追加在金币 stub 之后）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$73:CCB7  REP #$20</span><br><span class="line">         ; 主角 @ $7E8006</span><br><span class="line">         LDA #$6363 ; STA $7E8006   ; LV=99, 战=99</span><br><span class="line">         LDA #$6363 ; STA $7E8008   ; 运=99, 修=99</span><br><span class="line">         LDA #$270F ; STA $7E800A   ; MAXHP=9999</span><br><span class="line">         LDA #$270F ; STA $7E800C   ; HP=9999</span><br><span class="line">         LDA #$FFFF ; STA $7E800E   ; 腕=FF, 知=FF</span><br><span class="line">         LDA #$FFFF ; STA $7E8010   ; 体=FF, 速=FF</span><br><span class="line">         ; 机械师 @ $7E8106</span><br><span class="line">         LDA #$6363 ; STA $7E8106</span><br><span class="line">         LDA #$6363 ; STA $7E8108</span><br><span class="line">         LDA #$270F ; STA $7E810A</span><br><span class="line">         LDA #$270F ; STA $7E810C</span><br><span class="line">         LDA #$FFFF ; STA $7E810E</span><br><span class="line">         LDA #$FFFF ; STA $7E8110</span><br><span class="line">         ; 格斗家 @ $7E8206</span><br><span class="line">         LDA #$6363 ; STA $7E8206</span><br><span class="line">         LDA #$6363 ; STA $7E8208</span><br><span class="line">         LDA #$270F ; STA $7E820A</span><br><span class="line">         LDA #$270F ; STA $7E820C</span><br><span class="line">         LDA #$FFFF ; STA $7E820E</span><br><span class="line">         LDA #$FFFF ; STA $7E8210</span><br><span class="line">         SEP #$20</span><br><span class="line">         RTL</span><br></pre></td></tr></table></figure>
+<p><strong>跳转修改</strong>（文件 <code>0xB7BC9</code> = CPU
+<code>$96:F9C9</code>）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原：22 2F FB 96      JSL $96FB2F</span><br><span class="line">改：22 B7 CC 73      JSL $73CCB7  (指向组合 stub)</span><br></pre></td></tr></table></figure>
+<h3 id="a.4-交付物">A.4 交付物</h3>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>文件</th>
@@ -627,148 +901,111 @@
 </tr>
 </tbody>
 </table>
-</div>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="pre-post btn btn-default" title='蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档</span>
-    </a>
+
     
     
-    <a href="/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="next-post btn btn-default" title='坦克大战2008（NES/FC 汉化版）三阶破解：从玩家无敌到基地不死'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            坦克大战2008（NES/FC 汉化版）三阶破解：从玩家无敌到基地不死</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="重装机兵：回归（SFC&#x2F;SNES）三阶破解：初始金币 999999 + 全角色技能满级">https://sunjunior.github.io/2026/08/12/重装机兵回归-SFC三阶破解技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 逆向工程</a>
+          </div>
+
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析环境"><span class="toc-text">2. 分析环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-ROM-结构"><span class="toc-text">3. ROM 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-第一阶：初始金币-999999"><span class="toc-text">4. 第一阶：初始金币 999999</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-金币地址的定位"><span class="toc-text">4.1 金币地址的定位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-写入来源追踪（踩坑与修正）"><span class="toc-text">4.2 写入来源追踪（踩坑与修正）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-逆向初始化例程"><span class="toc-text">4.3 逆向初始化例程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-补丁实现"><span class="toc-text">4.4 补丁实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-存读档一致性"><span class="toc-text">4.5 存读档一致性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-第二阶：主角技能满级"><span class="toc-text">5. 第二阶：主角技能满级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-角色数据块结构"><span class="toc-text">5.1 角色数据块结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-定位角色初始模板"><span class="toc-text">5.2 定位角色初始模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-第一次尝试：修改模板数据（踩坑）"><span class="toc-text">5.3 第一次尝试：修改模板数据（踩坑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-正确方案：改代码不改模板"><span class="toc-text">5.4 正确方案：改代码不改模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-验证"><span class="toc-text">5.5 验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-第三阶：全员技能满级"><span class="toc-text">6. 第三阶：全员技能满级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-角色槽位定位"><span class="toc-text">6.1 角色槽位定位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-扩展-stub"><span class="toc-text">6.2 扩展 stub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-验证"><span class="toc-text">6.3 验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-与第一版（模板修改）的对比"><span class="toc-text">6.4 与第一版（模板修改）的对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-三阶破解的递进关系"><span class="toc-text">7. 三阶破解的递进关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-遇到的问题"><span class="toc-text">8. 遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-初始内存残留脏数据"><span class="toc-text">8.1 初始内存残留脏数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-写回调去重漏掉”重复写-0”"><span class="toc-text">8.2 写回调去重漏掉”重复写 0”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-LoROM-高速库-慢速库镜像换算"><span class="toc-text">8.3 LoROM 高速库&#x2F;慢速库镜像换算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-磁碟机头偏移"><span class="toc-text">8.4 磁碟机头偏移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-反汇编脚本-imm-模式-bug"><span class="toc-text">8.5 反汇编脚本 imm 模式 bug</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-6-模板位置初次算错"><span class="toc-text">8.6 模板位置初次算错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-7-修改模板导致红坦克剧情黑屏"><span class="toc-text">8.7 修改模板导致红坦克剧情黑屏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-8-错误推测槽位间距（0x1C0）"><span class="toc-text">8.8 错误推测槽位间距（0x1C0）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-9-格斗家模板靠结构推断"><span class="toc-text">8.9 格斗家模板靠结构推断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-10-旧存档中的角色不会自动刷新"><span class="toc-text">8.10 旧存档中的角色不会自动刷新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-11-校验脚本读错文件"><span class="toc-text">8.11 校验脚本读错文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-总结与心得"><span class="toc-text">9. 总结与心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录：关键脚本与补丁"><span class="toc-text">附录：关键脚本与补丁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-1-金币追踪脚本"><span class="toc-text">A.1 金币追踪脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-2-角色槽位定位脚本"><span class="toc-text">A.2 角色槽位定位脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-3-全部修改点汇总"><span class="toc-text">A.3 全部修改点汇总</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-4-交付物"><span class="toc-text">A.4 交付物</span></a></li></ol></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="坦克大战2008（NES&#x2F;FC 汉化版）三阶破解：从玩家无敌到基地不死">
+                  <i class="fa fa-angle-left"></i> 坦克大战2008（NES/FC 汉化版）三阶破解：从玩家无敌到基地不死
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="next" title="蝙蝠侠2代（NES &#x2F; FC）BOSS 攻击不掉血 Hack 技术文档">
+                  蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

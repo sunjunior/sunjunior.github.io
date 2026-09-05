@@ -1,195 +1,317 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="逆向工程" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="
-目标游戏：封神榜之伏魔三太子（NES / FC，国产中文 RPG）目标：定位四位角色完整属性数据布局，制作四角色满属性补丁 ROM（体力/法力 4096、力量/体能 888、敏捷/精神 255..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：封神榜之伏魔三太子（NES &#x2F; FC，国产中文 RPG） 目标：定位四位角色完整属性数据布局，制作四角色满属性补丁 ROM（体力&#x2F;法力 4096、力量&#x2F;体能 888、敏捷&#x2F;精神 255、银两 60000） 交付物：两份打补丁的 ROM（带 MD5 校验）、金手指码表、Lua 脚本（含临时修正旧存档用法） 日期：2026-08-27   1. 背景与目标 《封神榜之伏魔三太子》是 FC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：封神榜之伏魔三太子（NES &#x2F; FC，国产中文 RPG） 目标：定位四位角色完整属性数据布局，制作四角色满属性补丁 ROM（体力&#x2F;法力 4096、力量&#x2F;体能 888、敏捷&#x2F;精神 255、银两 60000） 交付物：两份打补丁的 ROM（带 MD5 校验）、金手指码表、Lua 脚本（含临时修正旧存档用法） 日期：2026-08-27   1. 背景与目标 《封神榜之伏魔三太子》是 FC">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/fengshenbang.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/fengshenbang2.gif">
+<meta property="article:published_time" content="2026-08-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-02T23:23:59.207Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/fengshenbang.gif">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/08/27/封神榜之伏魔三太子-NES属性银两Hack技术文档/","title":"封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档">
-            
-            封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2026/08/27</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">4. 关键分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%92%E8%89%B2%E6%95%B0%E6%8D%AE%E5%B8%83%E5%B1%80%E4%B8%89%E5%B1%82%E8%AF%81%E6%8D%AE%E4%BA%92%E8%AF%81"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 角色数据布局（三层证据互证）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%95%BF%E4%B9%8B%E8%B0%9C%E4%B8%8E-b196%E5%85%B3%E9%94%AE%E8%BE%A8%E6%9E%90"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 步长之谜与
+$B196（关键辨析）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E4%BE%8B%E7%A8%8B%E9%80%86%E5%90%91"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 升级例程逆向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%B6%E4%B8%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 银两机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bank-%E5%9F%BA%E5%9D%80%E8%AE%BA%E8%AF%81%E4%B8%BA%E4%BD%95%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%A3%E7%A0%81%E5%9C%A8-a000-%E7%AA%97%E5%8F%A3"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 Bank
+基址论证：为何初始化代码在 $A000 窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A5%E9%98%9F%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B0%8F%E9%BE%99%E5%A5%B3-%E6%9D%A8%E6%88%AC"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 入队初始化（小龙女 &#x2F; 杨戬）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E4%B8%8E%E5%8C%96%E8%A7%A3"><span class="nav-number">4.7.</span> <span class="nav-text">4.7 遇到的问题与化解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%90%E6%9E%9C%E4%B8%80%E9%87%91%E6%89%8B%E6%8C%87%E7%A0%81%E8%A1%A8%E4%B8%8E-lua-%E8%84%9A%E6%9C%AC"><span class="nav-number">5.</span> <span class="nav-text">5. 成果一：金手指码表与 Lua
+脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%91%E6%89%8B%E6%8C%87%E7%A0%81%E8%A1%A8ram-%E7%9B%B4%E6%8E%A5%E6%94%B9"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 金手指码表（RAM 直接改）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mesen2-%E4%B8%80%E6%AC%A1%E6%80%A7-lua%E5%90%AB%E6%97%A7%E5%AD%98%E6%A1%A3%E4%BF%AE%E6%AD%A3"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 Mesen2 一次性
+Lua（含旧存档修正）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%90%E6%9E%9C%E4%BA%8Crom-%E8%A1%A5%E4%B8%81%E5%9B%9B%E8%A7%92%E8%89%B2%E6%BB%A1%E5%B1%9E%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">6. 成果二：ROM
+补丁（四角色满属性）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%8F%91%E7%8E%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8C%BA%E9%87%8C%E7%9A%84%E5%85%B1%E4%BA%AB%E5%AD%90%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3"><span class="nav-number">6.1.</span> <span class="nav-text">6.1
+关键发现：初始化区里的共享子程序入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%AA%E5%90%92%E6%96%B0%E6%B8%B8%E6%88%8F%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A5%E4%B8%81%E5%AD%90%E7%A8%8B%E5%BA%8F%E5%AE%89%E5%85%A8"><span class="nav-number">6.2.</span> <span class="nav-text">6.2
+哪吒新游戏初始化补丁（子程序安全）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E9%BE%99%E5%A5%B3-%E6%9D%A8%E6%88%AC-%E5%A7%9C%E5%A4%AA%E5%85%AC%E5%85%A5%E9%98%9F%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A5%E4%B8%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 小龙女 &#x2F; 杨戬 &#x2F;
+姜太公入队初始化补丁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%99%A4%E7%AD%89%E7%BA%A7%E4%B8%8A%E9%99%90%E6%97%A0%E4%B8%8A%E9%99%90%E5%8F%98%E4%BD%93"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 解除等级上限（无上限变体）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C"><span class="nav-number">7.</span> <span class="nav-text">7. 验证结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%A8%A1%E6%8B%9F%E9%AA%8C%E8%AF%81%E6%9E%81%E7%AE%80-6502-%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 软件模拟验证（极简 6502
+模拟器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E8%BF%90%E8%A1%8C%E6%88%AA%E5%9B%BE"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 实机运行截图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E5%AD%97%E8%8A%82%E5%B7%AE%E5%BC%82%E5%AE%A1%E8%AE%A1"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 全量字节差异审计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E4%BA%A4%E4%BB%98%E6%96%87%E4%BB%B6%E4%B8%8E-md5"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 最终交付文件与 MD5</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text">8. 交付物与使用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">9. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a6502-%E5%8F%8D%E6%B1%87%E7%BC%96%E5%99%A8%E9%AA%A8%E6%9E%B6python"><span class="nav-number">10.</span> <span class="nav-text">附录 A：6502
+反汇编器骨架（Python）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E8%A1%A5%E4%B8%81%E6%9E%84%E5%BB%BA%E8%84%9A%E6%9C%AC%E5%9B%9B%E8%A7%92%E8%89%B2"><span class="nav-number">11.</span> <span class="nav-text">附录 B：补丁构建脚本（四角色）</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <blockquote>
-<p>目标游戏：<strong>封神榜之伏魔三太子</strong>（NES / FC，国产中文 RPG）<br>目标：定位四位角色完整属性数据布局，制作四角色满属性补丁 ROM（体力/法力 4096、力量/体能 888、敏捷/精神 255、银两 60000）<br>交付物：两份打补丁的 ROM（带 MD5 校验）、金手指码表、Lua 脚本（含临时修正旧存档用法）<br>日期：2026-08-27</p>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-27 00:00:00" itemprop="dateCreated datePublished" datetime="2026-08-27T00:00:00+08:00">2026-08-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-03 07:23:59" itemprop="dateModified" datetime="2026-09-03T07:23:59+08:00">2026-09-03</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>封神榜之伏魔三太子</strong>（NES / FC，国产中文
+RPG） 目标：定位四位角色完整属性数据布局，制作四角色满属性补丁
+ROM（体力/法力 4096、力量/体能 888、敏捷/精神 255、银两 60000）
+交付物：两份打补丁的 ROM（带 MD5 校验）、金手指码表、Lua
+脚本（含临时修正旧存档用法） 日期：2026-08-27</p>
 </blockquote>
-<hr>
-<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>《封神榜之伏魔三太子》是 FC 上少有的国产中文 RPG：玩家操控哪吒、小龙女、杨戬、姜太公四人组队，通过战斗升级、攒银两购装备，最终通关。与动作游戏”免伤/无限命”的破解不同，RPG 的破解要深入<strong>数值系统</strong>：等级、经验、四维属性、体力/法力、银两，是一整套相互关联的数据结构。</p>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《封神榜之伏魔三太子》是 FC 上少有的国产中文
+RPG：玩家操控哪吒、小龙女、杨戬、姜太公四人组队，通过战斗升级、攒银两购装备，最终通关。与动作游戏”免伤/无限命”的破解不同，RPG
+的破解要深入<strong>数值系统</strong>：等级、经验、四维属性、体力/法力、银两，是一整套相互关联的数据结构。</p>
 <p>本次破解目标：</p>
-<ol>
+<ol type="1">
 <li>定位并梳理四位角色的完整属性数据布局（等级、经验、体力、法力、敏捷、体能、精神、力量、银两）。</li>
 <li>定位升级例程、<strong>入队初始化例程</strong>，验证”满级封顶”与”属性成长”规则。</li>
-<li>提供补丁 ROM：<strong>哪吒开局即满属性 + 60000 银两；小龙女、杨戬、姜太公剧情入队时同样自动满属性</strong>。</li>
+<li>提供补丁 ROM：<strong>哪吒开局即满属性 + 60000
+银两；小龙女、杨戬、姜太公剧情入队时同样自动满属性</strong>。</li>
 <li>每个交付物都必须经过<strong>验证</strong>，附最终 MD5。</li>
 </ol>
-<p>最终成果：<strong>四角色（哪吒/小龙女/杨戬/姜太公）体力与法力上限 4096、力量与体能 888、敏捷与精神 255、银两 60000</strong>；另有解除 99 级上限的变体。</p>
-<hr>
-<h2 id="2-ROM-与游戏信息"><a href="#2-ROM-与游戏信息" class="headerlink" title="2. ROM 与游戏信息"></a>2. ROM 与游戏信息</h2><div class="table-container">
+<p>最终成果：<strong>四角色（哪吒/小龙女/杨戬/姜太公）体力与法力上限
+4096、力量与体能 888、敏捷与精神 255、银两 60000</strong>；另有解除 99
+级上限的变体。</p>
+<hr />
+<h2 id="rom-与游戏信息">2. ROM 与游戏信息</h2>
 <table>
 <thead>
 <tr>
@@ -212,7 +334,8 @@
 </tr>
 <tr>
 <td>格式</td>
-<td>iNES，Mapper 246 类（自研 bank 切换，寄存器在 <code>$6000-$6003</code>）</td>
+<td>iNES，Mapper 246 类（自研 bank 切换，寄存器在
+<code>$6000-$6003</code>）</td>
 </tr>
 <tr>
 <td>电池 WRAM</td>
@@ -220,15 +343,24 @@
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="关键地址约定"><a href="#关键地址约定" class="headerlink" title="关键地址约定"></a>关键地址约定</h3><ul>
-<li><strong>PRG 偏移</strong>：指相对 PRG 数据起始（文件偏移 = PRG 偏移 + 16 字节 iNES 头）。</li>
-<li>该游戏用 bank 切换把 512KB PRG 映射进 <code>$8000-$FFFF</code>，同一段代码在不同时刻处于不同 CPU 地址。因此<strong>一切分析以 PRG 偏移为唯一基准</strong>，CPU 地址仅用于交叉引用验证（见 §4.5）。</li>
-<li>属性/银两均为<strong>二进制数值</strong>（非 BCD），显示时另有进制转换。</li>
+<h3 id="关键地址约定">关键地址约定</h3>
+<ul>
+<li><strong>PRG 偏移</strong>：指相对 PRG 数据起始（文件偏移 = PRG 偏移
++ 16 字节 iNES 头）。</li>
+<li>该游戏用 bank 切换把 512KB PRG 映射进
+<code>$8000-$FFFF</code>，同一段代码在不同时刻处于不同 CPU
+地址。因此<strong>一切分析以 PRG 偏移为唯一基准</strong>，CPU
+地址仅用于交叉引用验证（见 §4.5）。</li>
+<li>属性/银两均为<strong>二进制数值</strong>（非
+BCD），显示时另有进制转换。</li>
 </ul>
-<hr>
-<h2 id="3-分析环境与工具"><a href="#3-分析环境与工具" class="headerlink" title="3. 分析环境与工具"></a>3. 分析环境与工具</h2><div class="table-container">
+<hr />
+<h2 id="分析环境与工具">3. 分析环境与工具</h2>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>用途</th>
@@ -238,23 +370,28 @@
 <tbody>
 <tr>
 <td>反汇编</td>
-<td>自写 6502 反汇编脚本（Python 内嵌 OPS 字典，按 PRG 偏移线性输出）</td>
+<td>自写 6502 反汇编脚本（Python 内嵌 OPS 字典，按 PRG
+偏移线性输出）</td>
 </tr>
 <tr>
 <td>特征扫描</td>
-<td>Python 字节流正则（定位固定机器码片段，如 <code>STA $0516</code> 定位小龙女入队点）</td>
+<td>Python 字节流正则（定位固定机器码片段，如 <code>STA $0516</code>
+定位小龙女入队点）</td>
 </tr>
 <tr>
 <td>交叉引用</td>
-<td>全 ROM 扫描 16 位地址引用（验证 bank 基址、找空闲区、发现子程序入口）</td>
+<td>全 ROM 扫描 16 位地址引用（验证 bank
+基址、找空闲区、发现子程序入口）</td>
 </tr>
 <tr>
 <td>模拟验证</td>
-<td><strong>极简 6502 模拟器</strong>：线性执行新游戏初始化 / 入队例程，跟踪寄存器，核对写入值</td>
+<td><strong>极简 6502 模拟器</strong>：线性执行新游戏初始化 /
+入队例程，跟踪寄存器，核对写入值</td>
 </tr>
 <tr>
 <td>ROM 修补</td>
-<td>Python 直接读写镜像字节，<strong>改前断言原始字节</strong>防误伤</td>
+<td>Python
+直接读写镜像字节，<strong>改前断言原始字节</strong>防误伤</td>
 </tr>
 <tr>
 <td>验证</td>
@@ -262,23 +399,34 @@
 </tr>
 <tr>
 <td>作弊参考</td>
-<td>k73 社区金手指（<code>等级$0504</code>、<code>银两$0501</code> 等），作为第三方佐证</td>
+<td>k73 社区金手指（<code>等级$0504</code>、<code>银两$0501</code>
+等），作为第三方佐证</td>
 </tr>
 </tbody>
 </table>
-</div>
 <blockquote>
-<p>方法学上采取”静态分析 + 多源交叉验证 + 软件模拟”，未使用 GUI 动态调试器，纯脚本即可完成全部分析与验证。</p>
+<p>方法学上采取”静态分析 + 多源交叉验证 + 软件模拟”，未使用 GUI
+动态调试器，纯脚本即可完成全部分析与验证。</p>
 </blockquote>
-<hr>
-<h2 id="4-关键分析过程"><a href="#4-关键分析过程" class="headerlink" title="4. 关键分析过程"></a>4. 关键分析过程</h2><h3 id="4-1-角色数据布局（三层证据互证）"><a href="#4-1-角色数据布局（三层证据互证）" class="headerlink" title="4.1 角色数据布局（三层证据互证）"></a>4.1 角色数据布局（三层证据互证）</h3><p>四位角色的属性紧邻存放，第一线索来自 k73 金手指：等级 <code>$0504</code>、银两 <code>$0501</code>。以它们为锚点，配合两条独立证据链定位出完整记录块：</p>
-<ol>
-<li><strong>初始化例程</strong>（prg <code>0x037C2</code> 起）：新游戏时对 <code>$0504</code>-<code>$0543</code> 连续清零——这就是角色数据块的”地板”。</li>
-<li><strong>升级例程</strong>（prg <code>0x05B200</code>）：用 <code>$0508+3X</code> 作为经验门槛起点、<code>$0504+X</code> 作为等级、<code>$6964+2X</code> 力量、<code>$0538+2X</code> 体能——各字段”活”的用法。</li>
-<li><strong>字节无缝性检验</strong>：<code>$0504</code> 起到 <code>$0543</code> 止共 64 字节，恰好被各字段”整数条带”填满、无空洞——<strong>记录块完美打包</strong>。</li>
+<hr />
+<h2 id="关键分析过程">4. 关键分析过程</h2>
+<h3 id="角色数据布局三层证据互证">4.1 角色数据布局（三层证据互证）</h3>
+<p>四位角色的属性紧邻存放，第一线索来自 k73 金手指：等级
+<code>$0504</code>、银两
+<code>$0501</code>。以它们为锚点，配合两条独立证据链定位出完整记录块：</p>
+<ol type="1">
+<li><strong>初始化例程</strong>（prg <code>0x037C2</code>
+起）：新游戏时对 <code>$0504</code>-<code>$0543</code>
+连续清零——这就是角色数据块的”地板”。</li>
+<li><strong>升级例程</strong>（prg <code>0x05B200</code>）：用
+<code>$0508+3X</code> 作为经验门槛起点、<code>$0504+X</code>
+作为等级、<code>$6964+2X</code> 力量、<code>$0538+2X</code>
+体能——各字段”活”的用法。</li>
+<li><strong>字节无缝性检验</strong>：<code>$0504</code> 起到
+<code>$0543</code> 止共 64
+字节，恰好被各字段”整数条带”填满、无空洞——<strong>记录块完美打包</strong>。</li>
 </ol>
 <p>最终布局（X = 角色索引，0 哪吒 / 1 小龙女 / 2 杨戬 / 3 姜太公）：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -357,9 +505,7 @@
 </tr>
 </tbody>
 </table>
-</div>
 <p><strong>四位角色完整地址表</strong>（与状态面板左→右顺序一致：哪吒/小龙女/杨戬/姜太公）：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -429,34 +575,67 @@
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="4-2-步长之谜与-B196（关键辨析）"><a href="#4-2-步长之谜与-B196（关键辨析）" class="headerlink" title="4.2 步长之谜与 $B196（关键辨析）"></a>4.2 步长之谜与 <code>$B196</code>（关键辨析）</h3><p>字段并非统一 2 字节步长：<strong>16 位字段（体力/法力/力量/体能）步长 2（<code>基址+2X</code>），1 字节字段（等级/敏捷/精神）步长 1（<code>基址+X</code>）</strong>。若误把敏捷当成 2 字节，记录块就会出现”假空洞”。</p>
+<h3 id="步长之谜与-b196关键辨析">4.2 步长之谜与
+<code>$B196</code>（关键辨析）</h3>
+<p>字段并非统一 2 字节步长：<strong>16 位字段（体力/法力/力量/体能）步长
+2（<code>基址+2X</code>），1 字节字段（等级/敏捷/精神）步长
+1（<code>基址+X</code>）</strong>。若误把敏捷当成 2
+字节，记录块就会出现”假空洞”。</p>
 <p>破解这个谜的关键证据链：</p>
-<ol>
-<li><strong>记录块完美打包</strong>：64 字节无缝填满，反推敏捷/精神必须是步长 1（若步长 2 会与体能 <code>$0538+2X</code> 重叠）。</li>
-<li><strong>升级成长块</strong>（prg <code>0x5B2C1</code>）里，16 位字段用 <code>ADC $0514,X</code> / <code>STA $6964,X</code> / <code>STA $0538,X</code>（步长 2），1 字节字段 <code>ADC $0534,X</code>（步长 1）——<strong>同一 X 前后语义不同</strong>。</li>
-<li><strong><code>JSR $B196</code> 是换算桥</strong>：升级成长块和状态面板在访问单字节字段<strong>之前</strong>都调用 <code>$B196</code>，把 <code>X</code> 从”双字节步长（角色×2）”换算成”单字节步长（角色）”。</li>
+<ol type="1">
+<li><strong>记录块完美打包</strong>：64
+字节无缝填满，反推敏捷/精神必须是步长 1（若步长 2 会与体能
+<code>$0538+2X</code> 重叠）。</li>
+<li><strong>升级成长块</strong>（prg <code>0x5B2C1</code>）里，16
+位字段用 <code>ADC $0514,X</code> / <code>STA $6964,X</code> /
+<code>STA $0538,X</code>（步长 2），1 字节字段
+<code>ADC $0534,X</code>（步长 1）——<strong>同一 X
+前后语义不同</strong>。</li>
+<li><strong><code>JSR $B196</code>
+是换算桥</strong>：升级成长块和状态面板在访问单字节字段<strong>之前</strong>都调用
+<code>$B196</code>，把 <code>X</code>
+从”双字节步长（角色×2）“换算成”单字节步长（角色）“。</li>
 </ol>
-<p>由此确认状态面板”一屏多栏、左→右 = 哪吒/小龙女/杨戬/姜太公”正是 <code>X=0/1/2/3</code>。</p>
-<h3 id="4-3-升级例程逆向"><a href="#4-3-升级例程逆向" class="headerlink" title="4.3 升级例程逆向"></a>4.3 升级例程逆向</h3><p>升级例程位于 prg <code>0x05B200</code>，结构清晰：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">0x5B200  JSR $10DC        ; 经 RAM 跳板进入本段（bank 切换惯例）</span><br><span class="line">0x5B203  CMP $DE00,X      ; 与&quot;满级标记&quot;比较</span><br><span class="line">0x5B206  BEQ 结束         ; ★ 已满级则跳过成长（满级判断）</span><br><span class="line">0x5B208  ...              ; 读取当前等级，Y &#x3D; 3×(内部等级+1)</span><br><span class="line">                         ; 用 ($14),Y 逐字节比较经验门槛 vs $0508+3X</span><br><span class="line">                         ; 达标则 INC $0504,X，并算出&quot;新门槛差&quot;</span><br><span class="line">                         ; 差值写入 $6930+3X 显示缓存</span><br><span class="line">0x5B2C1  成长块           ; HP → $0514&#x2F;X、$051C&#x2F;X；MP → $0524&#x2F;X、$052C&#x2F;X</span><br><span class="line">                         ; 力量 → $6964&#x2F;X、体能 → $0538&#x2F;X（16 位带进位加法）</span><br><span class="line">                         ; 敏捷 → $0534&#x2F;X、精神 → $0540&#x2F;X（单字节，溢出钳 $FF）</span><br></pre></td></tr></table></figure>
+<p>由此确认状态面板”一屏多栏、左→右 = 哪吒/小龙女/杨戬/姜太公”正是
+<code>X=0/1/2/3</code>。</p>
+<h3 id="升级例程逆向">4.3 升级例程逆向</h3>
+<p>升级例程位于 prg <code>0x05B200</code>，结构清晰：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">0x5B200  JSR $10DC        ; 经 RAM 跳板进入本段（bank 切换惯例）</span><br><span class="line">0x5B203  CMP $DE00,X      ; 与&quot;满级标记&quot;比较</span><br><span class="line">0x5B206  BEQ 结束         ; ★ 已满级则跳过成长（满级判断）</span><br><span class="line">0x5B208  ...              ; 读取当前等级，Y = 3×(内部等级+1)</span><br><span class="line">                         ; 用 ($14),Y 逐字节比较经验门槛 vs $0508+3X</span><br><span class="line">                         ; 达标则 INC $0504,X，并算出&quot;新门槛差&quot;</span><br><span class="line">                         ; 差值写入 $6930+3X 显示缓存</span><br><span class="line">0x5B2C1  成长块           ; HP → $0514/X、$051C/X；MP → $0524/X、$052C/X</span><br><span class="line">                         ; 力量 → $6964/X、体能 → $0538/X（16 位带进位加法）</span><br><span class="line">                         ; 敏捷 → $0534/X、精神 → $0540/X（单字节，溢出钳 $FF）</span><br></pre></td></tr></table></figure>
 <p>三个决定性发现：</p>
 <ul>
-<li><strong>满级判断只有一处</strong>：<code>BEQ</code> 在 prg <code>0x5B206</code>。NOP 掉它即解除 99 级上限——“无上限”变体的依据。</li>
-<li><strong>经验门槛表不在 ROM 中</strong>（见 §4.7 问题 3），等级是否提升由当前级直接推出门槛。</li>
-<li><strong>成长规则</strong>：体力/法力/力量/体能是 16 位进位加法，敏捷/精神是单字节、<strong>溢出钳制到 <code>$FF</code></strong>——这解释了为什么敏捷/精神<strong>最大只能 255</strong>，无法像力量/体能那样设到 888。</li>
+<li><strong>满级判断只有一处</strong>：<code>BEQ</code> 在 prg
+<code>0x5B206</code>。NOP 掉它即解除 99
+级上限——“无上限”变体的依据。</li>
+<li><strong>经验门槛表不在 ROM 中</strong>（见 §4.7 问题
+3），等级是否提升由当前级直接推出门槛。</li>
+<li><strong>成长规则</strong>：体力/法力/力量/体能是 16
+位进位加法，敏捷/精神是单字节、<strong>溢出钳制到
+<code>$FF</code></strong>——这解释了为什么敏捷/精神<strong>最大只能
+255</strong>，无法像力量/体能那样设到 888。</li>
 </ul>
-<h3 id="4-4-银两机制"><a href="#4-4-银两机制" class="headerlink" title="4.4 银两机制"></a>4.4 银两机制</h3><p>银两是 24 位<strong>二进制</strong>小端，<code>$0501</code> 低位、<code>$0502</code> 中位、<code>$0503</code> 高位：60000 = <code>$EA60</code> = <code>$0501=$60, $0502=$EA</code>。</p>
+<h3 id="银两机制">4.4 银两机制</h3>
+<p>银两是 24 位<strong>二进制</strong>小端，<code>$0501</code>
+低位、<code>$0502</code> 中位、<code>$0503</code> 高位：60000 =
+<code>$EA60</code> = <code>$0501=$60, $0502=$EA</code>。</p>
 <p>银两初始为 0 的来源有两层：</p>
-<ol>
-<li><strong>引导批量清零</strong>：开机例程（prg <code>~0x0130</code> 起）用 Y 索引循环把 RAM 和电池 WRAM 清成 0，<code>$0501-$0503</code> 自然为 0。</li>
-<li><strong>新游戏初始化</strong>（prg <code>0x037C2</code>）：原本对银两<strong>没有任何显式写入</strong>——银两初始值完全靠”开局前无人改过它”来保证。</li>
+<ol type="1">
+<li><strong>引导批量清零</strong>：开机例程（prg <code>~0x0130</code>
+起）用 Y 索引循环把 RAM 和电池 WRAM 清成 0，<code>$0501-$0503</code>
+自然为 0。</li>
+<li><strong>新游戏初始化</strong>（prg
+<code>0x037C2</code>）：原本对银两<strong>没有任何显式写入</strong>——银两初始值完全靠”开局前无人改过它”来保证。</li>
 </ol>
 <blockquote>
-<p>侧面佐证：ROM 中存在两处<strong>调试遗留代码</strong>（prg <code>0x106F2</code> 与 <code>0x1D281</code>），把银两设置为 <code>$0F423F</code> = 999999 后 <code>RTS</code>，但没有任何调用点——开发期用来测试商店的死代码，恰从反面证明”游戏靠写内存改银两、不靠硬编码”。</p>
+<p>侧面佐证：ROM 中存在两处<strong>调试遗留代码</strong>（prg
+<code>0x106F2</code> 与 <code>0x1D281</code>），把银两设置为
+<code>$0F423F</code> = 999999 后
+<code>RTS</code>，但没有任何调用点——开发期用来测试商店的死代码，恰从反面证明”游戏靠写内存改银两、不靠硬编码”。</p>
 </blockquote>
-<h3 id="4-5-Bank-基址论证：为何初始化代码在-A000-窗口"><a href="#4-5-Bank-基址论证：为何初始化代码在-A000-窗口" class="headerlink" title="4.5 Bank 基址论证：为何初始化代码在 $A000 窗口"></a>4.5 Bank 基址论证：为何初始化代码在 <code>$A000</code> 窗口</h3><p>初始化例程位于 u01 bank（prg <code>0x2000-$3FFF</code>）。用<strong>自洽交叉引用</strong>证明它运行时映射到 <code>$A000</code>：</p>
-<div class="table-container">
+<h3 id="bank-基址论证为何初始化代码在-a000-窗口">4.5 Bank
+基址论证：为何初始化代码在 <code>$A000</code> 窗口</h3>
+<p>初始化例程位于 u01 bank（prg
+<code>0x2000-$3FFF</code>）。用<strong>自洽交叉引用</strong>证明它运行时映射到
+<code>$A000</code>：</p>
 <table>
 <thead>
 <tr>
@@ -483,11 +662,20 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p>三处内部引用全部指向 <code>$A000-$BFFF</code> 窗口内的地址，且该窗口内的 6 个 <code>JSR $B794</code> 调用者分布在 prg <code>0x53xxx</code>（菜单 bank）——<strong>内外交叉引用完全自洽</strong>。若误判为 <code>$8000</code>，所有计算都会偏 0x2000。</p>
-<h3 id="4-6-入队初始化（小龙女-杨戬）"><a href="#4-6-入队初始化（小龙女-杨戬）" class="headerlink" title="4.6 入队初始化（小龙女 / 杨戬）"></a>4.6 入队初始化（小龙女 / 杨戬）</h3><p>剧情触发后小龙女、杨戬入队，游戏会<strong>重新初始化她们的属性</strong>——这决定了四角色补丁必须同时改这两段代码。用特征扫描定位（搜 <code>STA $0516</code>、<code>STA $6968</code> 等专属地址）：</p>
-<div class="table-container">
+<p>三处内部引用全部指向 <code>$A000-$BFFF</code>
+窗口内的地址，且该窗口内的 6 个 <code>JSR $B794</code> 调用者分布在 prg
+<code>0x53xxx</code>（菜单
+bank）——<strong>内外交叉引用完全自洽</strong>。若误判为
+<code>$8000</code>，所有计算都会偏 0x2000。</p>
+<h3 id="入队初始化小龙女-杨戬">4.6 入队初始化（小龙女 / 杨戬）</h3>
+<p>剧情触发后小龙女、杨戬入队，游戏会<strong>重新初始化她们的属性</strong>——这决定了四角色补丁必须同时改这两段代码。用特征扫描定位（搜
+<code>STA $0516</code>、<code>STA $6968</code> 等专属地址）：</p>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>角色</th>
@@ -499,24 +687,33 @@
 <tr>
 <td>小龙女 (X=1)</td>
 <td>prg <code>0x5D701</code></td>
-<td><code>$0500=2</code>，写等级 11、经验、体力、法力、力量、体能、敏捷、精神</td>
+<td><code>$0500=2</code>，写等级
+11、经验、体力、法力、力量、体能、敏捷、精神</td>
 </tr>
 <tr>
 <td>杨戬 (X=2)</td>
 <td>prg <code>0x1C3F3</code></td>
-<td><code>$0500=3</code>，写等级 79、经验、体力、法力、力量、体能、敏捷、精神</td>
+<td><code>$0500=3</code>，写等级
+79、经验、体力、法力、力量、体能、敏捷、精神</td>
 </tr>
 <tr>
 <td>姜太公 (X=3)</td>
 <td>prg <code>0x555D7</code></td>
-<td><code>$0500=4</code>，写等级 37、经验、体力、法力、力量、体能、敏捷、精神</td>
+<td><code>$0500=4</code>，写等级
+37、经验、体力、法力、力量、体能、敏捷、精神</td>
 </tr>
 </tbody>
 </table>
-</div>
-<p>两段例程结构与哪吒新游戏初始化同构：<code>LDA #imm; STA $05xx</code> 逐字段硬编码。因此<strong>改 10 处 <code>LDA #imm</code> 操作数即可</strong>，等级/经验保持原值。</p>
-<h3 id="4-7-遇到的问题与化解"><a href="#4-7-遇到的问题与化解" class="headerlink" title="4.7 遇到的问题与化解"></a>4.7 遇到的问题与化解</h3><div class="table-container">
+<p>两段例程结构与哪吒新游戏初始化同构：<code>LDA #imm; STA $05xx</code>
+逐字段硬编码。因此<strong>改 10 处 <code>LDA #imm</code>
+操作数即可</strong>，等级/经验保持原值。</p>
+<h3 id="遇到的问题与化解">4.7 遇到的问题与化解</h3>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>#</th>
@@ -527,18 +724,23 @@
 <tbody>
 <tr>
 <td>1</td>
-<td><strong>属性宽度之谜</strong>：敏捷/精神到底 1 字节还是 2 字节？若按 2 字节，记录块出现”假空洞”</td>
-<td>完美打包 + 成长块/状态面板的 <code>$B196</code> 换算桥，确认 1 字节步长</td>
+<td><strong>属性宽度之谜</strong>：敏捷/精神到底 1 字节还是 2 字节？若按
+2 字节，记录块出现”假空洞”</td>
+<td>完美打包 + 成长块/状态面板的 <code>$B196</code> 换算桥，确认 1
+字节步长</td>
 </tr>
 <tr>
 <td>2</td>
-<td><strong>bank 窗口误判</strong>：一度假设 u45 在 <code>$8000</code>，结果其内部 helper 全是 <code>FF</code></td>
+<td><strong>bank 窗口误判</strong>：一度假设 u45 在
+<code>$8000</code>，结果其内部 helper 全是 <code>FF</code></td>
 <td>用交叉引用自洽法改判为 <code>$A000</code>，一次对齐</td>
 </tr>
 <tr>
 <td>3</td>
-<td><strong>经验门槛表找不到</strong>：<code>&#39;07 00 00&#39;</code> 特征多轮扫描无果</td>
-<td>确认门槛表不在 ROM 静态区，等级上限逻辑在 <code>0x5B203</code>，不阻塞成果</td>
+<td><strong>经验门槛表找不到</strong>：<code>'07 00 00'</code>
+特征多轮扫描无果</td>
+<td>确认门槛表不在 ROM 静态区，等级上限逻辑在
+<code>0x5B203</code>，不阻塞成果</td>
 </tr>
 <tr>
 <td>4</td>
@@ -547,40 +749,38 @@
 </tr>
 <tr>
 <td>5</td>
-<td><strong>空闲区陷阱</strong>：u01 最大 34B <code>$00</code> 区被全 ROM <strong>66 处指针引用</strong>（数据表空项）</td>
+<td><strong>空闲区陷阱</strong>：u01 最大 34B <code>$00</code> 区被全
+ROM <strong>66 处指针引用</strong>（数据表空项）</td>
 <td>放弃大块跳板，改”重定向 + 精确注入”（见 §6）</td>
 </tr>
 <tr>
 <td>6</td>
-<td><strong>致命假设错误（A=$03 不是 $00）</strong>：第一版补丁假设进块时 A=0，实际 A=$03</td>
-<td>补丁后重跑模拟器/反汇编逐指令追寄存器</td>
-</tr>
-<tr>
-<td>7</td>
-<td><strong>子程序入口破坏（关键）</strong>：旧版 25 字节重排块把 <code>$B7E4/$B7E7/$B7EB</code> 三个子程序入口的指令边界改掉了（菜单 bank 会调用它们重置哪吒属性）</td>
-<td>引用扫描发现 6+ 处 <code>JSR $B7xx</code>，改用”10 字节主流程区重写”，保持子程序入口完好（见 §6.1）</td>
-</tr>
-<tr>
-<td>8</td>
-<td><strong>跨 bank 假阳性</strong>：<code>JSR $B801</code> 等引用看似指向 u01，实为其它 bank 在 <code>$A000</code> 窗口的同地址代码</td>
-<td>用”该地址在原版是否是指令起点”判定真伪（<code>0x3801</code> 是 <code>LDA #$04</code> 的操作数字节，非指令起点）</td>
-</tr>
-<tr>
-<td>9</td>
-<td><strong>敏捷/精神设不了 888/666</strong>：单字节字段溢出钳 <code>$FF</code></td>
-<td>真实上限 255，这是游戏机制硬限制，改 ROM 也突破不了（除非重构成长/显示逻辑）</td>
+<td><strong>致命假设错误（A=$03 不是
+$00）</strong>：第一版补丁假设进块时 A=0，实际 A=<span
+class="math inline">$03 | 补丁后重跑模拟器/反汇编逐指令追寄存器 |
+| 7 | **子程序入口破坏（关键）**：旧版 25 字节重排块把
+`$</span>B7E4/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mn>7</mn><mi>E</mi><mn>7</mn><mi>/</mi></mrow><annotation encoding="application/x-tex">B7E7/</annotation></semantics></math>B7EB<code>三个子程序入口的指令边界改掉了（菜单 bank 会调用它们重置哪吒属性） | 引用扫描发现 6+ 处</code>JSR
+$B7xx<code>，改用"10 字节主流程区重写"，保持子程序入口完好（见 §6.1） | | 8 | **跨 bank 假阳性**：</code>JSR
+<span class="math inline">$B801` 等引用看似指向 u01，实为其它 bank 在
+`$</span>A000<code>窗口的同地址代码 | 用"该地址在原版是否是指令起点"判定真伪（</code>0x3801<code>是</code>LDA
+#<span class="math inline">$04` 的操作数字节，非指令起点） |
+| 9 | **敏捷/精神设不了 888/666**：单字节字段溢出钳 `$</span>FF`</td>
+<td>真实上限 255，这是游戏机制硬限制，改 ROM
+也突破不了（除非重构成长/显示逻辑）</td>
 </tr>
 <tr>
 <td>10</td>
-<td><strong>字节预算本质</strong>：不是数值问题——16 位存储支持 &gt;1000，而是初始化代码<strong>根本没写</strong>当前体力/法力高位和银两，需新增指令而代码区无空闲</td>
+<td><strong>字节预算本质</strong>：不是数值问题——16 位存储支持
+&gt;1000，而是初始化代码<strong>根本没写</strong>当前体力/法力高位和银两，需新增指令而代码区无空闲</td>
 <td>用开机清零已覆盖的冗余写腾出空间 + 空闲区注入（见 §6.2）</td>
 </tr>
 </tbody>
 </table>
-</div>
-<hr>
-<h2 id="5-成果一：金手指码表与-Lua-脚本"><a href="#5-成果一：金手指码表与-Lua-脚本" class="headerlink" title="5. 成果一：金手指码表与 Lua 脚本"></a>5. 成果一：金手指码表与 Lua 脚本</h2><h3 id="5-1-金手指码表（RAM-直接改）"><a href="#5-1-金手指码表（RAM-直接改）" class="headerlink" title="5.1 金手指码表（RAM 直接改）"></a>5.1 金手指码表（RAM 直接改）</h3><p>四人相同布局，X = 0 哪吒 / 1 小龙女 / 2 杨戬 / 3 姜太公：</p>
-<div class="table-container">
+<hr />
+<h2 id="成果一金手指码表与-lua-脚本">5. 成果一：金手指码表与 Lua
+脚本</h2>
+<h3 id="金手指码表ram-直接改">5.1 金手指码表（RAM 直接改）</h3>
+<p>四人相同布局，X = 0 哪吒 / 1 小龙女 / 2 杨戬 / 3 姜太公：</p>
 <table>
 <thead>
 <tr>
@@ -622,16 +822,33 @@
 </tr>
 </tbody>
 </table>
-</div>
 <blockquote>
-<p>重要：敏捷/精神是单字节（最大 255），力量/体能/体力/法力是 16 位，多字节需按低/高位分别写。Mesen 的 <code>NesCustom</code> 金手指是<strong>读拦截</strong>型，会把值”钉死”（体力恒满=无敌），只想一次性改则用 Lua。</p>
+<p>重要：敏捷/精神是单字节（最大 255），力量/体能/体力/法力是 16
+位，多字节需按低/高位分别写。Mesen 的 <code>NesCustom</code>
+金手指是<strong>读拦截</strong>型，会把值”钉死”（体力恒满=无敌），只想一次性改则用
+Lua。</p>
 </blockquote>
-<h3 id="5-2-Mesen2-一次性-Lua（含旧存档修正）"><a href="#5-2-Mesen2-一次性-Lua（含旧存档修正）" class="headerlink" title="5.2 Mesen2 一次性 Lua（含旧存档修正）"></a>5.2 Mesen2 一次性 Lua（含旧存档修正）</h3><p>ROM 补丁只改初始化代码，<strong>读旧 state 存档不会重跑初始化</strong>——此时用一次性 Lua 临时改 RAM，改完再保存状态：</p>
+<h3 id="mesen2-一次性-lua含旧存档修正">5.2 Mesen2 一次性
+Lua（含旧存档修正）</h3>
+<p>ROM 补丁只改初始化代码，<strong>读旧 state
+存档不会重跑初始化</strong>——此时用一次性 Lua 临时改
+RAM，改完再保存状态：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 封神榜: 一次性写入四角色属性 (Mesen2), 不锁定</span></span><br><span class="line"><span class="keyword">local</span> MT = emu.memType.nesMemory</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">w</span><span class="params">(a,v)</span></span> emu.<span class="built_in">write</span>(a, v%<span class="number">256</span>, MT) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">w16</span><span class="params">(a,v)</span></span> w(a,v%<span class="number">256</span>); w(a+<span class="number">1</span>,<span class="built_in">math</span>.<span class="built_in">floor</span>(v/<span class="number">256</span>)) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">w(<span class="number">0x0501</span>,<span class="number">0x60</span>); w(<span class="number">0x0502</span>,<span class="number">0xEA</span>); w(<span class="number">0x0503</span>,<span class="number">0x00</span>)  <span class="comment">-- 银两60000</span></span><br><span class="line"><span class="keyword">for</span> X = <span class="number">0</span>, <span class="number">2</span> <span class="keyword">do</span>   <span class="comment">-- 0哪吒 1小龙女 2杨戬</span></span><br><span class="line">  w16(<span class="number">0x0514</span>+X*<span class="number">2</span>,<span class="number">4096</span>)   <span class="comment">-- 当前体力</span></span><br><span class="line">  w16(<span class="number">0x051C</span>+X*<span class="number">2</span>,<span class="number">4096</span>)   <span class="comment">-- 最大体力</span></span><br><span class="line">  w16(<span class="number">0x0524</span>+X*<span class="number">2</span>,<span class="number">4096</span>)   <span class="comment">-- 当前法力</span></span><br><span class="line">  w16(<span class="number">0x052C</span>+X*<span class="number">2</span>,<span class="number">4096</span>)   <span class="comment">-- 最大法力</span></span><br><span class="line">  w(<span class="number">0x0534</span>+X,<span class="number">0xFF</span>)       <span class="comment">-- 敏捷</span></span><br><span class="line">  w(<span class="number">0x0540</span>+X,<span class="number">0xFF</span>)       <span class="comment">-- 精神</span></span><br><span class="line">  w16(<span class="number">0x6964</span>+X*<span class="number">2</span>,<span class="number">888</span>)    <span class="comment">-- 力量 (电池WRAM)</span></span><br><span class="line">  w16(<span class="number">0x0538</span>+X*<span class="number">2</span>,<span class="number">888</span>)    <span class="comment">-- 体能</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="6-成果二：ROM-补丁（四角色满属性）"><a href="#6-成果二：ROM-补丁（四角色满属性）" class="headerlink" title="6. 成果二：ROM 补丁（四角色满属性）"></a>6. 成果二：ROM 补丁（四角色满属性）</h2><h3 id="6-1-关键发现：初始化区里的共享子程序入口"><a href="#6-1-关键发现：初始化区里的共享子程序入口" class="headerlink" title="6.1 关键发现：初始化区里的共享子程序入口"></a>6.1 关键发现：初始化区里的共享子程序入口</h3><p><code>0x037C2</code> 起的新游戏初始化并非纯线性代码，其中嵌着<strong>多个子程序入口</strong>（菜单 bank 通过它们重置哪吒属性）：</p>
-<div class="table-container">
+<hr />
+<h2 id="成果二rom-补丁四角色满属性">6. 成果二：ROM
+补丁（四角色满属性）</h2>
+<h3 id="关键发现初始化区里的共享子程序入口">6.1
+关键发现：初始化区里的共享子程序入口</h3>
+<p><code>0x037C2</code>
+起的新游戏初始化并非纯线性代码，其中嵌着<strong>多个子程序入口</strong>（菜单
+bank 通过它们重置哪吒属性）：</p>
 <table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
 <tr>
 <th>CPU 入口</th>
@@ -667,10 +884,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p><strong>教训</strong>：早先版本曾用 25 字节整体重排块，破坏了 <code>$B7E4/$B7E7/$B7EB</code> 的指令边界（把 <code>STA $0524</code> 换成了别的指令），导致菜单重置哪吒属性时写入脏值。本次改用<strong>不触碰子程序入口</strong>的补丁方案。</p>
-<h3 id="6-2-哪吒新游戏初始化补丁（子程序安全）"><a href="#6-2-哪吒新游戏初始化补丁（子程序安全）" class="headerlink" title="6.2 哪吒新游戏初始化补丁（子程序安全）"></a>6.2 哪吒新游戏初始化补丁（子程序安全）</h3><p><strong>步骤 1：单字节操作数替换</strong>（不动指令边界）</p>
-<div class="table-container">
+<p><strong>教训</strong>：早先版本曾用 25 字节整体重排块，破坏了
+<code>$B7E4/$B7E7/$B7EB</code> 的指令边界（把 <code>STA $0524</code>
+换成了别的指令），导致菜单重置哪吒属性时写入脏值。本次改用<strong>不触碰子程序入口</strong>的补丁方案。</p>
+<h3 id="哪吒新游戏初始化补丁子程序安全">6.2
+哪吒新游戏初始化补丁（子程序安全）</h3>
+<p><strong>步骤 1：单字节操作数替换</strong>（不动指令边界）</p>
 <table>
 <thead>
 <tr>
@@ -731,17 +950,30 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p><strong>步骤 2：10 字节主流程区重写</strong>（<code>0x037DA-$037E3</code>，无子程序入口，可自由改）</p>
-<p><code>0x037D2</code> 改为 <code>LDA #$10</code> 后，进入本区时 <code>A=$10</code>（恰好是当前体力/法力的高位值），于是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0x037DA  8D 15 05  STA $0515   ; 当前体力高位 &#x3D; $10</span><br><span class="line">0x037DD  8D 25 05  STA $0525   ; 当前法力高位 &#x3D; $10</span><br><span class="line">0x037E0  A9 00     LDA #$00    ; 当前&#x2F;最大法力低位</span><br><span class="line">0x037E2  EA        NOP         ; 补位</span><br><span class="line">0x037E3  EA        NOP</span><br></pre></td></tr></table></figure>
-<p>原区里的”等级清零 <code>$0504/$0505</code>“等<strong>冗余写</strong>被删掉——它们对开机清零后的冷启动是重复操作，删掉安全。之后的 <code>0x037E4</code>（<code>STA $0524</code>）等子程序入口<strong>原样保留</strong>。</p>
+<p><strong>步骤 2：10
+字节主流程区重写</strong>（<code>0x037DA-$037E3</code>，无子程序入口，可自由改）</p>
+<p><code>0x037D2</code> 改为 <code>LDA #$10</code> 后，进入本区时
+<code>A=$10</code>（恰好是当前体力/法力的高位值），于是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0x037DA  8D 15 05  STA $0515   ; 当前体力高位 = $10</span><br><span class="line">0x037DD  8D 25 05  STA $0525   ; 当前法力高位 = $10</span><br><span class="line">0x037E0  A9 00     LDA #$00    ; 当前/最大法力低位</span><br><span class="line">0x037E2  EA        NOP         ; 补位</span><br><span class="line">0x037E3  EA        NOP</span><br></pre></td></tr></table></figure>
+<p>原区里的”等级清零
+<code>$0504/$0505</code>“等<strong>冗余写</strong>被删掉——它们对开机清零后的冷启动是重复操作，删掉安全。之后的
+<code>0x037E4</code>（<code>STA $0524</code>）等子程序入口<strong>原样保留</strong>。</p>
 <p><strong>步骤 3：银两 60000 —— 重定向 + 空闲区注入</strong></p>
-<p>初始化区没有银两写入，且无空闲字节。方案：把结尾的 <code>JMP $B894</code>（<code>0x03852</code>）重定向到 u01 空闲区 <code>0x036B9-$036CA</code>（18 字节，未被任何代码引用），注入银两例程后跳回：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">; @0x036B9 (注入)</span><br><span class="line">A9 60 8D 01 05   ; $0501 &#x3D; $60</span><br><span class="line">A9 EA 8D 02 05   ; $0502 &#x3D; $EA</span><br><span class="line">A9 00 8D 03 05   ; $0503 &#x3D; $00</span><br><span class="line">4C 94 B8         ; JMP $B894 回原流程</span><br><span class="line">; @0x03852 改为 4C B9 B6 (JMP $B6B9)</span><br></pre></td></tr></table></figure>
-<h3 id="6-3-小龙女-杨戬-姜太公入队初始化补丁"><a href="#6-3-小龙女-杨戬-姜太公入队初始化补丁" class="headerlink" title="6.3 小龙女 / 杨戬 / 姜太公入队初始化补丁"></a>6.3 小龙女 / 杨戬 / 姜太公入队初始化补丁</h3><p>三段入队例程各改 10 处 <code>LDA #imm</code> 操作数（等级/经验保留原值）：</p>
-<div class="table-container">
+<p>初始化区没有银两写入，且无空闲字节。方案：把结尾的
+<code>JMP $B894</code>（<code>0x03852</code>）重定向到 u01 空闲区
+<code>0x036B9-$036CA</code>（18
+字节，未被任何代码引用），注入银两例程后跳回：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">; @0x036B9 (注入)</span><br><span class="line">A9 60 8D 01 05   ; $0501 = $60</span><br><span class="line">A9 EA 8D 02 05   ; $0502 = $EA</span><br><span class="line">A9 00 8D 03 05   ; $0503 = $00</span><br><span class="line">4C 94 B8         ; JMP $B894 回原流程</span><br><span class="line">; @0x03852 改为 4C B9 B6 (JMP $B6B9)</span><br></pre></td></tr></table></figure>
+<h3 id="小龙女-杨戬-姜太公入队初始化补丁">6.3 小龙女 / 杨戬 /
+姜太公入队初始化补丁</h3>
+<p>三段入队例程各改 10 处 <code>LDA #imm</code>
+操作数（等级/经验保留原值）：</p>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>角色</th>
@@ -753,37 +985,76 @@
 <tr>
 <td>小龙女</td>
 <td><code>0x5D71F</code> 起</td>
-<td>体力 lo <code>$5C→$00</code>、hi <code>$00→$10</code>；法力 lo <code>$2C→$00</code>、hi <code>$00→$10</code>；力量 <code>$16→$78</code>、hi <code>$00→$03</code>；体能 <code>$0E→$78</code>、hi <code>$00→$03</code>；敏捷 <code>$1A→$FF</code>；精神 <code>$2B→$FF</code></td>
+<td>体力 lo <code>$5C→$00</code>、hi <code>$00→$10</code>；法力 lo
+<code>$2C→$00</code>、hi <code>$00→$10</code>；力量
+<code>$16→$78</code>、hi <code>$00→$03</code>；体能
+<code>$0E→$78</code>、hi <code>$00→$03</code>；敏捷
+<code>$1A→$FF</code>；精神 <code>$2B→$FF</code></td>
 </tr>
 <tr>
 <td>杨戬</td>
 <td><code>0x1C411</code> 起</td>
-<td>体力 lo <code>$EF→$00</code>、hi <code>$01→$10</code>；法力 lo <code>$36→$00</code>、hi <code>$00→$10</code>；力量 <code>$60→$78</code>、hi <code>$00→$03</code>；体能 <code>$3C→$78</code>、hi <code>$00→$03</code>；敏捷 <code>$1C→$FF</code>；精神 <code>$45→$FF</code></td>
+<td>体力 lo <code>$EF→$00</code>、hi <code>$01→$10</code>；法力 lo
+<code>$36→$00</code>、hi <code>$00→$10</code>；力量
+<code>$60→$78</code>、hi <code>$00→$03</code>；体能
+<code>$3C→$78</code>、hi <code>$00→$03</code>；敏捷
+<code>$1C→$FF</code>；精神 <code>$45→$FF</code></td>
 </tr>
 <tr>
 <td>姜太公</td>
 <td><code>0x555EB</code> 起</td>
-<td>体力 lo <code>$48→$00</code>、hi <code>$06→$10</code>；法力 lo <code>$97→$00</code>、hi <code>$00→$10</code>；力量 <code>$EB→$78</code>、hi <code>$00→$03</code>；体能 <code>$6D→$78</code>、hi <code>$00→$03</code>；敏捷 <code>$3F→$FF</code>；精神 <code>$7C→$FF</code></td>
+<td>体力 lo <code>$48→$00</code>、hi <code>$06→$10</code>；法力 lo
+<code>$97→$00</code>、hi <code>$00→$10</code>；力量
+<code>$EB→$78</code>、hi <code>$00→$03</code>；体能
+<code>$6D→$78</code>、hi <code>$00→$03</code>；敏捷
+<code>$3F→$FF</code>；精神 <code>$7C→$FF</code></td>
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="6-4-解除等级上限（无上限变体）"><a href="#6-4-解除等级上限（无上限变体）" class="headerlink" title="6.4 解除等级上限（无上限变体）"></a>6.4 解除等级上限（无上限变体）</h3><p>升级例程 prg <code>0x5B206</code> 的满级判断 <code>BEQ</code>（<code>F0 DE</code>）改为 <code>EA EA</code>（NOP），成长逻辑永不被跳过。</p>
-<hr>
-<h2 id="7-验证结果"><a href="#7-验证结果" class="headerlink" title="7. 验证结果"></a>7. 验证结果</h2><h3 id="7-1-软件模拟验证（极简-6502-模拟器）"><a href="#7-1-软件模拟验证（极简-6502-模拟器）" class="headerlink" title="7.1 软件模拟验证（极简 6502 模拟器）"></a>7.1 软件模拟验证（极简 6502 模拟器）</h3><p>线性执行新游戏初始化与两个入队例程，跟踪寄存器后核对写入值：</p>
+<h3 id="解除等级上限无上限变体">6.4 解除等级上限（无上限变体）</h3>
+<p>升级例程 prg <code>0x5B206</code> 的满级判断
+<code>BEQ</code>（<code>F0 DE</code>）改为
+<code>EA EA</code>（NOP），成长逻辑永不被跳过。</p>
+<hr />
+<h2 id="验证结果">7. 验证结果</h2>
+<h3 id="软件模拟验证极简-6502-模拟器">7.1 软件模拟验证（极简 6502
+模拟器）</h3>
+<p>线性执行新游戏初始化与两个入队例程，跟踪寄存器后核对写入值：</p>
 <ul>
-<li>哪吒开局：银两 60000、当前/最大体力 4096、当前/最大法力 4096、力量 888、体能 888、敏捷 255、精神 255 ✓</li>
-<li>小龙女入队：体力/法力 4096、力量/体能 888、敏捷/精神 255（等级 11 保留）✓</li>
-<li>杨戬入队：体力/法力 4096、力量/体能 888、敏捷/精神 255（等级 79 保留）✓</li>
+<li>哪吒开局：银两 60000、当前/最大体力 4096、当前/最大法力 4096、力量
+888、体能 888、敏捷 255、精神 255 ✓</li>
+<li>小龙女入队：体力/法力 4096、力量/体能 888、敏捷/精神 255（等级 11
+保留）✓</li>
+<li>杨戬入队：体力/法力 4096、力量/体能 888、敏捷/精神 255（等级 79
+保留）✓</li>
 </ul>
-<h3 id="7-2-实机运行截图"><a href="#7-2-实机运行截图" class="headerlink" title="7.2 实机运行截图"></a>7.2 实机运行截图</h3><p><img src="/img/fengshenbang.gif" alt="破解后实机运行：状态画面可见四角色满属性与银两"></p>
-<p><img src="/img/fengshenbang2.gif" alt="破解后实机运行：哪吒/小龙女/杨戬/姜太公四角色属性全部生效"></p>
+<h3 id="实机运行截图">7.2 实机运行截图</h3>
+<figure>
+<img src="/img/fengshenbang.gif"
+alt="破解后实机运行：状态画面可见四角色满属性与银两" />
+<figcaption
+aria-hidden="true">破解后实机运行：状态画面可见四角色满属性与银两</figcaption>
+</figure>
+<figure>
+<img src="/img/fengshenbang2.gif"
+alt="破解后实机运行：哪吒/小龙女/杨戬/姜太公四角色属性全部生效" />
+<figcaption
+aria-hidden="true">破解后实机运行：哪吒/小龙女/杨戬/姜太公四角色属性全部生效</figcaption>
+</figure>
 <blockquote>
-<p>上图为补丁 ROM 的实机运行，四角色（哪吒/小龙女/杨戬/姜太公）满属性均已生效，佐证破解满足目标要求。</p>
+<p>上图为补丁 ROM
+的实机运行，四角色（哪吒/小龙女/杨戬/姜太公）满属性均已生效，佐证破解满足目标要求。</p>
 </blockquote>
-<h3 id="7-3-全量字节差异审计"><a href="#7-3-全量字节差异审计" class="headerlink" title="7.3 全量字节差异审计"></a>7.3 全量字节差异审计</h3><p>以原版为基准做全 ROM 逐字节对比，确认改动面恰好等于预期补丁集、无杂散写入：</p>
-<div class="table-container">
+<h3 id="全量字节差异审计">7.3 全量字节差异审计</h3>
+<p>以原版为基准做全 ROM
+逐字节对比，确认改动面恰好等于预期补丁集、无杂散写入：</p>
 <table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
 <tr>
 <th>文件</th>
@@ -807,9 +1078,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="7-4-最终交付文件与-MD5"><a href="#7-4-最终交付文件与-MD5" class="headerlink" title="7.4 最终交付文件与 MD5"></a>7.4 最终交付文件与 MD5</h3><div class="table-container">
+<h3 id="最终交付文件与-md5">7.4 最终交付文件与 MD5</h3>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>文件</th>
@@ -831,10 +1105,13 @@
 </tr>
 </tbody>
 </table>
-</div>
-<hr>
-<h2 id="8-交付物与使用方式"><a href="#8-交付物与使用方式" class="headerlink" title="8. 交付物与使用方式"></a>8. 交付物与使用方式</h2><div class="table-container">
+<hr />
+<h2 id="交付物与使用方式">8. 交付物与使用方式</h2>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>文件</th>
@@ -852,172 +1129,157 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p><strong>下载</strong>：<a href="/downloads/封神榜之伏魔三太子_属性强化.nes">封神榜之伏魔三太子_属性强化.nes</a>（四角色满属性 + 银两 60000）<br>| 金手指码表（§5.1） | 手改内存用，任意模拟器通用（读拦截，会钉死数值） |<br>| Lua 脚本（§5.2） | Mesen2 一次性写入，适合改旧 state 存档 |</p>
+<p><strong>下载</strong>：<a
+href="/downloads/封神榜之伏魔三太子_属性强化.nes">封神榜之伏魔三太子_属性强化.nes</a>（四角色满属性
++ 银两 60000） | 金手指码表（§5.1） |
+手改内存用，任意模拟器通用（读拦截，会钉死数值） | | Lua 脚本（§5.2） |
+Mesen2 一次性写入，适合改旧 state 存档 |</p>
 <p>任选其一：</p>
-<ol>
-<li><strong>直接玩补丁 ROM</strong>（推荐，对任何模拟器/烧录卡生效）；</li>
+<ol type="1">
+<li><strong>直接玩补丁
+ROM</strong>（推荐，对任何模拟器/烧录卡生效）；</li>
 <li>已有旧存档 → 加载后跑一次 Lua（§5.2）修正四角色属性再保存。</li>
 </ol>
-<hr>
-<h2 id="9-踩坑与经验总结"><a href="#9-踩坑与经验总结" class="headerlink" title="9. 踩坑与经验总结"></a>9. 踩坑与经验总结</h2><ol>
-<li><strong>多源交叉验证 &gt; 单一证据</strong>：初始化 + 升级 + 入队 + 社区金手指多路互证，才能确定宽度混排的记录块。</li>
+<hr />
+<h2 id="踩坑与经验总结">9. 踩坑与经验总结</h2>
+<ol type="1">
+<li><strong>多源交叉验证 &gt; 单一证据</strong>：初始化 + 升级 + 入队 +
+社区金手指多路互证，才能确定宽度混排的记录块。</li>
 <li><strong>“完美打包”是解析记录块的利器</strong>：连续字段总宽度必须无缝填满整个块，出现”假空洞”说明某字段宽度猜错了。</li>
-<li><strong>bank 切换游戏必须定基址</strong>：用”内部交叉引用自洽”而非猜测窗口，差一个窗口就是 0x2000 的偏移。</li>
-<li><strong>共享代码区要查子程序入口</strong>：整体重排前必须全 ROM 扫 <code>JSR/JMP</code> 引用，否则会破坏入口指令边界（本次旧版就踩过）。</li>
-<li><strong>跨 bank 引用有假阳性</strong>：<code>JSR $B801</code> 可能指向其它 bank 在 <code>$A000</code> 的同地址代码；用”该地址在原版是否是指令起点”判定真伪。</li>
-<li><strong>补丁后必须重跑模拟器/反汇编追寄存器</strong>：<code>A=$03</code> 的致命假设就是被这步抓出来的。</li>
-<li><strong>字节预算问题的本质是代码而非数值</strong>：16 位存储完全支持 &gt;1000；卡住的是”初始化代码没写那些字节、又没空闲”，需新增指令。</li>
-<li><strong>空闲区要全 ROM 扫描引用</strong>：看着是 <code>$00</code> 的空洞可能是 66 处指针引用的数据表。</li>
-<li><strong>单字节字段有硬上限</strong>：敏捷/精神钳 <code>$FF</code>=255，这是游戏机制，改 ROM 也突破不了。</li>
-<li><strong>冗余指令/开机清零覆盖的写是腾挪金矿</strong>：等级清 <code>$0504/$0505</code> 等冷启动本就为 0，删掉不损失功能。</li>
-<li><strong>ROM 补丁 ≠ 旧存档</strong>：补丁只改初始化，读旧 state 不会重跑；需要时用 Lua 临时改 RAM。</li>
+<li><strong>bank
+切换游戏必须定基址</strong>：用”内部交叉引用自洽”而非猜测窗口，差一个窗口就是
+0x2000 的偏移。</li>
+<li><strong>共享代码区要查子程序入口</strong>：整体重排前必须全 ROM 扫
+<code>JSR/JMP</code>
+引用，否则会破坏入口指令边界（本次旧版就踩过）。</li>
+<li><strong>跨 bank 引用有假阳性</strong>：<code>JSR $B801</code>
+可能指向其它 bank 在 <code>$A000</code>
+的同地址代码；用”该地址在原版是否是指令起点”判定真伪。</li>
+<li><strong>补丁后必须重跑模拟器/反汇编追寄存器</strong>：<code>A=$03</code>
+的致命假设就是被这步抓出来的。</li>
+<li><strong>字节预算问题的本质是代码而非数值</strong>：16 位存储完全支持
+&gt;1000；卡住的是”初始化代码没写那些字节、又没空闲”，需新增指令。</li>
+<li><strong>空闲区要全 ROM 扫描引用</strong>：看着是 <code>$00</code>
+的空洞可能是 66 处指针引用的数据表。</li>
+<li><strong>单字节字段有硬上限</strong>：敏捷/精神钳
+<code>$FF</code>=255，这是游戏机制，改 ROM 也突破不了。</li>
+<li><strong>冗余指令/开机清零覆盖的写是腾挪金矿</strong>：等级清
+<code>$0504/$0505</code> 等冷启动本就为 0，删掉不损失功能。</li>
+<li><strong>ROM 补丁 ≠ 旧存档</strong>：补丁只改初始化，读旧 state
+不会重跑；需要时用 Lua 临时改 RAM。</li>
 <li><strong>最终防线是全量字节差异审计</strong>：逐字节对比确认改动面=预期补丁集，杜绝杂散写入。</li>
 </ol>
-<hr>
-<h2 id="附录-A：6502-反汇编器骨架（Python）"><a href="#附录-A：6502-反汇编器骨架（Python）" class="headerlink" title="附录 A：6502 反汇编器骨架（Python）"></a>附录 A：6502 反汇编器骨架（Python）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">OPS = &#123;<span class="number">0xA9</span>: (<span class="string">'LDA'</span>, <span class="number">2</span>), <span class="number">0x8D</span>: (<span class="string">'STA'</span>, <span class="number">3</span>), <span class="number">0x49</span>: (<span class="string">'EOR'</span>, <span class="number">2</span>), <span class="number">0xEA</span>: (<span class="string">'NOP'</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x20</span>: (<span class="string">'JSR'</span>, <span class="number">3</span>), <span class="number">0x4C</span>: (<span class="string">'JMP'</span>, <span class="number">3</span>), <span class="number">0xF0</span>: (<span class="string">'BEQ'</span>, <span class="number">2</span>), <span class="number">0x10</span>: (<span class="string">'BPL'</span>, <span class="number">2</span>),</span><br><span class="line">       <span class="number">0xD0</span>: (<span class="string">'BNE'</span>, <span class="number">2</span>), <span class="number">0xA2</span>: (<span class="string">'LDX'</span>, <span class="number">2</span>), <span class="number">0xA0</span>: (<span class="string">'LDY'</span>, <span class="number">2</span>), <span class="number">0xE0</span>: (<span class="string">'CPX'</span>, <span class="number">2</span>),</span><br><span class="line">       <span class="number">0xC0</span>: (<span class="string">'CPY'</span>, <span class="number">2</span>), <span class="number">0xE6</span>: (<span class="string">'INC'</span>, <span class="number">2</span>), <span class="number">0xC6</span>: (<span class="string">'DEC'</span>, <span class="number">2</span>), <span class="number">0x18</span>: (<span class="string">'CLC'</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x38</span>: (<span class="string">'SEC'</span>, <span class="number">1</span>), <span class="number">0x69</span>: (<span class="string">'ADC'</span>, <span class="number">2</span>), <span class="number">0xE9</span>: (<span class="string">'SBC'</span>, <span class="number">2</span>), <span class="number">0x4A</span>: (<span class="string">'LSR'</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x29</span>: (<span class="string">'AND'</span>, <span class="number">2</span>), <span class="number">0x60</span>: (<span class="string">'RTS'</span>, <span class="number">1</span>), <span class="number">0x48</span>: (<span class="string">'PHA'</span>, <span class="number">1</span>), <span class="number">0x68</span>: (<span class="string">'PLA'</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0xA8</span>: (<span class="string">'TAY'</span>, <span class="number">1</span>), <span class="number">0xAA</span>: (<span class="string">'TAX'</span>, <span class="number">1</span>), <span class="number">0x98</span>: (<span class="string">'TYA'</span>, <span class="number">1</span>), <span class="number">0x8A</span>: (<span class="string">'TXA'</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x7D</span>: (<span class="string">'ADC'</span>, <span class="number">3</span>), <span class="number">0xBD</span>: (<span class="string">'LDA'</span>, <span class="number">3</span>), <span class="number">0x9D</span>: (<span class="string">'STA'</span>, <span class="number">3</span>), <span class="number">0xB1</span>: (<span class="string">'LDA'</span>, <span class="number">2</span>),</span><br><span class="line">       <span class="number">0x91</span>: (<span class="string">'STA'</span>, <span class="number">2</span>), <span class="number">0xC8</span>: (<span class="string">'INY'</span>, <span class="number">1</span>), <span class="number">0xE8</span>: (<span class="string">'INX'</span>, <span class="number">1</span>), <span class="number">0x0A</span>: (<span class="string">'ASL'</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x4C</span>: (<span class="string">'JMP'</span>, <span class="number">3</span>), <span class="number">0x90</span>: (<span class="string">'BCC'</span>, <span class="number">2</span>)&#125;  <span class="comment"># 可按需扩充</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dis</span><span class="params">(data, base, count)</span>:</span></span><br><span class="line">    p = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> p &lt; count:</span><br><span class="line">        op = data[base + p]; mnem, ln = OPS.get(op, (<span class="string">f'???$<span class="subst">&#123;op:<span class="number">02</span>X&#125;</span>'</span>, <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">if</span> ln == <span class="number">1</span>: print(<span class="string">f'<span class="subst">&#123;base+p:<span class="number">06</span>X&#125;</span>  <span class="subst">&#123;mnem&#125;</span>'</span>)</span><br><span class="line">        <span class="keyword">elif</span> ln == <span class="number">2</span>: print(<span class="string">f'<span class="subst">&#123;base+p:<span class="number">06</span>X&#125;</span>  <span class="subst">&#123;mnem&#125;</span> #$<span class="subst">&#123;data[base+p+<span class="number">1</span>]:<span class="number">02</span>X&#125;</span>'</span>)</span><br><span class="line">        <span class="keyword">else</span>: print(<span class="string">f'<span class="subst">&#123;base+p:<span class="number">06</span>X&#125;</span>  <span class="subst">&#123;mnem&#125;</span> $<span class="subst">&#123;data[base+p+<span class="number">1</span>]|(data[base+p+<span class="number">2</span>]&lt;&lt;<span class="number">8</span>):<span class="number">04</span>X&#125;</span>'</span>)</span><br><span class="line">        p += ln</span><br></pre></td></tr></table></figure>
-<h2 id="附录-B：补丁构建脚本（四角色）"><a href="#附录-B：补丁构建脚本（四角色）" class="headerlink" title="附录 B：补丁构建脚本（四角色）"></a>附录 B：补丁构建脚本（四角色）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">data = open(<span class="string">'封神榜之伏魔三太子.nes'</span>, <span class="string">'rb'</span>).read()</span><br><span class="line">prg = data[<span class="number">16</span>:]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imm</span><span class="params">(d, p, new)</span>:</span>           <span class="comment"># 改 prg 偏移 p 处 LDA #imm 的立即数</span></span><br><span class="line">    <span class="keyword">assert</span> prg[p] == <span class="number">0xA9</span>, hex(p)</span><br><span class="line">    d[p + <span class="number">16</span> + <span class="number">1</span>] = new</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(cap=False)</span>:</span></span><br><span class="line">    d = bytearray(data)</span><br><span class="line">    <span class="comment"># 1) 哪吒新游戏初始化: 操作数</span></span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x37CB</span>, <span class="number">0x00</span>), (<span class="number">0x37D3</span>, <span class="number">0x10</span>),   <span class="comment"># 体力/法力 -&gt; 4096</span></span><br><span class="line">                 (<span class="number">0x37F4</span>, <span class="number">0x78</span>), (<span class="number">0x37F9</span>, <span class="number">0x03</span>),   <span class="comment"># 力量 -&gt; 888</span></span><br><span class="line">                 (<span class="number">0x3801</span>, <span class="number">0x78</span>), (<span class="number">0x3806</span>, <span class="number">0x03</span>),   <span class="comment"># 体能 -&gt; 888</span></span><br><span class="line">                 (<span class="number">0x380B</span>, <span class="number">0xFF</span>), (<span class="number">0x3810</span>, <span class="number">0xFF</span>)]:  <span class="comment"># 敏捷/精神 -&gt; 255</span></span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="comment"># 2) 10字节主流程区: 当前体力/法力高位 + A=0 (子程序安全)</span></span><br><span class="line">    <span class="keyword">assert</span> prg[<span class="number">0x37DA</span>:<span class="number">0x37E4</span>] == bytes.fromhex(<span class="string">'a900 8d0405 8d0505 a900'</span>.replace(<span class="string">' '</span>, <span class="string">''</span>))</span><br><span class="line">    d[<span class="number">0x37DA</span>+<span class="number">16</span>:<span class="number">0x37E4</span>+<span class="number">16</span>] = bytes.fromhex(<span class="string">'8d1505 8d2505 a900 ea ea'</span>.replace(<span class="string">' '</span>, <span class="string">''</span>))</span><br><span class="line">    <span class="comment"># 3) 银两60000: 重定向 + 注入</span></span><br><span class="line">    <span class="keyword">assert</span> prg[<span class="number">0x3852</span>:<span class="number">0x3855</span>] == <span class="string">b'\x4c\x94\xb8'</span></span><br><span class="line">    d[<span class="number">0x3852</span>+<span class="number">16</span>:<span class="number">0x3855</span>+<span class="number">16</span>] = <span class="string">b'\x4c\xb9\xb6'</span></span><br><span class="line">    <span class="keyword">assert</span> prg[<span class="number">0x36B9</span>:<span class="number">0x36CA</span>+<span class="number">1</span>].hex() == <span class="string">'0e'</span> + <span class="string">'00'</span> * <span class="number">17</span></span><br><span class="line">    d[<span class="number">0x36B9</span>+<span class="number">16</span>:<span class="number">0x36CA</span>+<span class="number">1</span>+<span class="number">16</span>] = bytes.fromhex(</span><br><span class="line">        <span class="string">'a960 8d0105 a9ea 8d0205 a900 8d0305 4c94b8'</span>.replace(<span class="string">' '</span>, <span class="string">''</span>))</span><br><span class="line">    <span class="comment"># 4) 小龙女/杨戬/姜太公入队</span></span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x5D71F</span>,<span class="number">0x00</span>),(<span class="number">0x5D727</span>,<span class="number">0x10</span>),(<span class="number">0x5D72F</span>,<span class="number">0x00</span>),(<span class="number">0x5D737</span>,<span class="number">0x10</span>),</span><br><span class="line">                 (<span class="number">0x5D73F</span>,<span class="number">0x78</span>),(<span class="number">0x5D744</span>,<span class="number">0x03</span>),(<span class="number">0x5D749</span>,<span class="number">0x78</span>),(<span class="number">0x5D74E</span>,<span class="number">0x03</span>),</span><br><span class="line">                 (<span class="number">0x5D753</span>,<span class="number">0xFF</span>),(<span class="number">0x5D758</span>,<span class="number">0xFF</span>)]:</span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x1C411</span>,<span class="number">0x00</span>),(<span class="number">0x1C419</span>,<span class="number">0x10</span>),(<span class="number">0x1C421</span>,<span class="number">0x00</span>),(<span class="number">0x1C429</span>,<span class="number">0x10</span>),</span><br><span class="line">                 (<span class="number">0x1C431</span>,<span class="number">0x78</span>),(<span class="number">0x1C436</span>,<span class="number">0x03</span>),(<span class="number">0x1C43B</span>,<span class="number">0x78</span>),(<span class="number">0x1C440</span>,<span class="number">0x03</span>),</span><br><span class="line">                 (<span class="number">0x1C445</span>,<span class="number">0xFF</span>),(<span class="number">0x1C44A</span>,<span class="number">0xFF</span>)]:</span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x555EB</span>,<span class="number">0x00</span>),(<span class="number">0x555F3</span>,<span class="number">0x10</span>),(<span class="number">0x555FB</span>,<span class="number">0x00</span>),(<span class="number">0x55603</span>,<span class="number">0x10</span>),</span><br><span class="line">                 (<span class="number">0x5560B</span>,<span class="number">0x78</span>),(<span class="number">0x55610</span>,<span class="number">0x03</span>),(<span class="number">0x55615</span>,<span class="number">0x78</span>),(<span class="number">0x5561A</span>,<span class="number">0x03</span>),</span><br><span class="line">                 (<span class="number">0x5561F</span>,<span class="number">0xFF</span>),(<span class="number">0x55624</span>,<span class="number">0xFF</span>)]:</span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="comment"># 5) 可选: 解除等级上限</span></span><br><span class="line">    <span class="keyword">if</span> cap:</span><br><span class="line">        <span class="keyword">assert</span> prg[<span class="number">0x5B206</span>:<span class="number">0x5B208</span>] == <span class="string">b'\xF0\xDE'</span></span><br><span class="line">        d[<span class="number">0x5B206</span>+<span class="number">16</span>:<span class="number">0x5B208</span>+<span class="number">16</span>] = <span class="string">b'\xEA\xEA'</span></span><br><span class="line">    <span class="keyword">return</span> bytes(d)</span><br><span class="line"></span><br><span class="line">open(<span class="string">'封神榜之伏魔三太子_属性强化.nes'</span>, <span class="string">'wb'</span>).write(build(<span class="literal">False</span>))</span><br><span class="line">open(<span class="string">'封神榜之伏魔三太子_属性强化_无上限.nes'</span>, <span class="string">'wb'</span>).write(build(<span class="literal">True</span>))</span><br><span class="line">print(hashlib.md5(open(<span class="string">'封神榜之伏魔三太子_属性强化.nes'</span>,<span class="string">'rb'</span>).read()).hexdigest())</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="附录-a6502-反汇编器骨架python">附录 A：6502
+反汇编器骨架（Python）</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">OPS = &#123;<span class="number">0xA9</span>: (<span class="string">&#x27;LDA&#x27;</span>, <span class="number">2</span>), <span class="number">0x8D</span>: (<span class="string">&#x27;STA&#x27;</span>, <span class="number">3</span>), <span class="number">0x49</span>: (<span class="string">&#x27;EOR&#x27;</span>, <span class="number">2</span>), <span class="number">0xEA</span>: (<span class="string">&#x27;NOP&#x27;</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x20</span>: (<span class="string">&#x27;JSR&#x27;</span>, <span class="number">3</span>), <span class="number">0x4C</span>: (<span class="string">&#x27;JMP&#x27;</span>, <span class="number">3</span>), <span class="number">0xF0</span>: (<span class="string">&#x27;BEQ&#x27;</span>, <span class="number">2</span>), <span class="number">0x10</span>: (<span class="string">&#x27;BPL&#x27;</span>, <span class="number">2</span>),</span><br><span class="line">       <span class="number">0xD0</span>: (<span class="string">&#x27;BNE&#x27;</span>, <span class="number">2</span>), <span class="number">0xA2</span>: (<span class="string">&#x27;LDX&#x27;</span>, <span class="number">2</span>), <span class="number">0xA0</span>: (<span class="string">&#x27;LDY&#x27;</span>, <span class="number">2</span>), <span class="number">0xE0</span>: (<span class="string">&#x27;CPX&#x27;</span>, <span class="number">2</span>),</span><br><span class="line">       <span class="number">0xC0</span>: (<span class="string">&#x27;CPY&#x27;</span>, <span class="number">2</span>), <span class="number">0xE6</span>: (<span class="string">&#x27;INC&#x27;</span>, <span class="number">2</span>), <span class="number">0xC6</span>: (<span class="string">&#x27;DEC&#x27;</span>, <span class="number">2</span>), <span class="number">0x18</span>: (<span class="string">&#x27;CLC&#x27;</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x38</span>: (<span class="string">&#x27;SEC&#x27;</span>, <span class="number">1</span>), <span class="number">0x69</span>: (<span class="string">&#x27;ADC&#x27;</span>, <span class="number">2</span>), <span class="number">0xE9</span>: (<span class="string">&#x27;SBC&#x27;</span>, <span class="number">2</span>), <span class="number">0x4A</span>: (<span class="string">&#x27;LSR&#x27;</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x29</span>: (<span class="string">&#x27;AND&#x27;</span>, <span class="number">2</span>), <span class="number">0x60</span>: (<span class="string">&#x27;RTS&#x27;</span>, <span class="number">1</span>), <span class="number">0x48</span>: (<span class="string">&#x27;PHA&#x27;</span>, <span class="number">1</span>), <span class="number">0x68</span>: (<span class="string">&#x27;PLA&#x27;</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0xA8</span>: (<span class="string">&#x27;TAY&#x27;</span>, <span class="number">1</span>), <span class="number">0xAA</span>: (<span class="string">&#x27;TAX&#x27;</span>, <span class="number">1</span>), <span class="number">0x98</span>: (<span class="string">&#x27;TYA&#x27;</span>, <span class="number">1</span>), <span class="number">0x8A</span>: (<span class="string">&#x27;TXA&#x27;</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x7D</span>: (<span class="string">&#x27;ADC&#x27;</span>, <span class="number">3</span>), <span class="number">0xBD</span>: (<span class="string">&#x27;LDA&#x27;</span>, <span class="number">3</span>), <span class="number">0x9D</span>: (<span class="string">&#x27;STA&#x27;</span>, <span class="number">3</span>), <span class="number">0xB1</span>: (<span class="string">&#x27;LDA&#x27;</span>, <span class="number">2</span>),</span><br><span class="line">       <span class="number">0x91</span>: (<span class="string">&#x27;STA&#x27;</span>, <span class="number">2</span>), <span class="number">0xC8</span>: (<span class="string">&#x27;INY&#x27;</span>, <span class="number">1</span>), <span class="number">0xE8</span>: (<span class="string">&#x27;INX&#x27;</span>, <span class="number">1</span>), <span class="number">0x0A</span>: (<span class="string">&#x27;ASL&#x27;</span>, <span class="number">1</span>),</span><br><span class="line">       <span class="number">0x4C</span>: (<span class="string">&#x27;JMP&#x27;</span>, <span class="number">3</span>), <span class="number">0x90</span>: (<span class="string">&#x27;BCC&#x27;</span>, <span class="number">2</span>)&#125;  <span class="comment"># 可按需扩充</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dis</span>(<span class="params">data, base, count</span>):</span><br><span class="line">    p = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> p &lt; count:</span><br><span class="line">        op = data[base + p]; mnem, ln = OPS.get(op, (<span class="string">f&#x27;???$<span class="subst">&#123;op:02X&#125;</span>&#x27;</span>, <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">if</span> ln == <span class="number">1</span>: <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;base+p:06X&#125;</span>  <span class="subst">&#123;mnem&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">elif</span> ln == <span class="number">2</span>: <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;base+p:06X&#125;</span>  <span class="subst">&#123;mnem&#125;</span> #$<span class="subst">&#123;data[base+p+<span class="number">1</span>]:02X&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">else</span>: <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;base+p:06X&#125;</span>  <span class="subst">&#123;mnem&#125;</span> $<span class="subst">&#123;data[base+p+<span class="number">1</span>]|(data[base+p+<span class="number">2</span>]&lt;&lt;<span class="number">8</span>):04X&#125;</span>&#x27;</span>)</span><br><span class="line">        p += ln</span><br></pre></td></tr></table></figure>
+<h2 id="附录-b补丁构建脚本四角色">附录 B：补丁构建脚本（四角色）</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">data = <span class="built_in">open</span>(<span class="string">&#x27;封神榜之伏魔三太子.nes&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">prg = data[<span class="number">16</span>:]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">imm</span>(<span class="params">d, p, new</span>):           <span class="comment"># 改 prg 偏移 p 处 LDA #imm 的立即数</span></span><br><span class="line">    <span class="keyword">assert</span> prg[p] == <span class="number">0xA9</span>, <span class="built_in">hex</span>(p)</span><br><span class="line">    d[p + <span class="number">16</span> + <span class="number">1</span>] = new</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">cap=<span class="literal">False</span></span>):</span><br><span class="line">    d = <span class="built_in">bytearray</span>(data)</span><br><span class="line">    <span class="comment"># 1) 哪吒新游戏初始化: 操作数</span></span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x37CB</span>, <span class="number">0x00</span>), (<span class="number">0x37D3</span>, <span class="number">0x10</span>),   <span class="comment"># 体力/法力 -&gt; 4096</span></span><br><span class="line">                 (<span class="number">0x37F4</span>, <span class="number">0x78</span>), (<span class="number">0x37F9</span>, <span class="number">0x03</span>),   <span class="comment"># 力量 -&gt; 888</span></span><br><span class="line">                 (<span class="number">0x3801</span>, <span class="number">0x78</span>), (<span class="number">0x3806</span>, <span class="number">0x03</span>),   <span class="comment"># 体能 -&gt; 888</span></span><br><span class="line">                 (<span class="number">0x380B</span>, <span class="number">0xFF</span>), (<span class="number">0x3810</span>, <span class="number">0xFF</span>)]:  <span class="comment"># 敏捷/精神 -&gt; 255</span></span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="comment"># 2) 10字节主流程区: 当前体力/法力高位 + A=0 (子程序安全)</span></span><br><span class="line">    <span class="keyword">assert</span> prg[<span class="number">0x37DA</span>:<span class="number">0x37E4</span>] == <span class="built_in">bytes</span>.fromhex(<span class="string">&#x27;a900 8d0405 8d0505 a900&#x27;</span>.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">    d[<span class="number">0x37DA</span>+<span class="number">16</span>:<span class="number">0x37E4</span>+<span class="number">16</span>] = <span class="built_in">bytes</span>.fromhex(<span class="string">&#x27;8d1505 8d2505 a900 ea ea&#x27;</span>.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">    <span class="comment"># 3) 银两60000: 重定向 + 注入</span></span><br><span class="line">    <span class="keyword">assert</span> prg[<span class="number">0x3852</span>:<span class="number">0x3855</span>] == <span class="string">b&#x27;\x4c\x94\xb8&#x27;</span></span><br><span class="line">    d[<span class="number">0x3852</span>+<span class="number">16</span>:<span class="number">0x3855</span>+<span class="number">16</span>] = <span class="string">b&#x27;\x4c\xb9\xb6&#x27;</span></span><br><span class="line">    <span class="keyword">assert</span> prg[<span class="number">0x36B9</span>:<span class="number">0x36CA</span>+<span class="number">1</span>].<span class="built_in">hex</span>() == <span class="string">&#x27;0e&#x27;</span> + <span class="string">&#x27;00&#x27;</span> * <span class="number">17</span></span><br><span class="line">    d[<span class="number">0x36B9</span>+<span class="number">16</span>:<span class="number">0x36CA</span>+<span class="number">1</span>+<span class="number">16</span>] = <span class="built_in">bytes</span>.fromhex(</span><br><span class="line">        <span class="string">&#x27;a960 8d0105 a9ea 8d0205 a900 8d0305 4c94b8&#x27;</span>.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">    <span class="comment"># 4) 小龙女/杨戬/姜太公入队</span></span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x5D71F</span>,<span class="number">0x00</span>),(<span class="number">0x5D727</span>,<span class="number">0x10</span>),(<span class="number">0x5D72F</span>,<span class="number">0x00</span>),(<span class="number">0x5D737</span>,<span class="number">0x10</span>),</span><br><span class="line">                 (<span class="number">0x5D73F</span>,<span class="number">0x78</span>),(<span class="number">0x5D744</span>,<span class="number">0x03</span>),(<span class="number">0x5D749</span>,<span class="number">0x78</span>),(<span class="number">0x5D74E</span>,<span class="number">0x03</span>),</span><br><span class="line">                 (<span class="number">0x5D753</span>,<span class="number">0xFF</span>),(<span class="number">0x5D758</span>,<span class="number">0xFF</span>)]:</span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x1C411</span>,<span class="number">0x00</span>),(<span class="number">0x1C419</span>,<span class="number">0x10</span>),(<span class="number">0x1C421</span>,<span class="number">0x00</span>),(<span class="number">0x1C429</span>,<span class="number">0x10</span>),</span><br><span class="line">                 (<span class="number">0x1C431</span>,<span class="number">0x78</span>),(<span class="number">0x1C436</span>,<span class="number">0x03</span>),(<span class="number">0x1C43B</span>,<span class="number">0x78</span>),(<span class="number">0x1C440</span>,<span class="number">0x03</span>),</span><br><span class="line">                 (<span class="number">0x1C445</span>,<span class="number">0xFF</span>),(<span class="number">0x1C44A</span>,<span class="number">0xFF</span>)]:</span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="keyword">for</span> o, v <span class="keyword">in</span> [(<span class="number">0x555EB</span>,<span class="number">0x00</span>),(<span class="number">0x555F3</span>,<span class="number">0x10</span>),(<span class="number">0x555FB</span>,<span class="number">0x00</span>),(<span class="number">0x55603</span>,<span class="number">0x10</span>),</span><br><span class="line">                 (<span class="number">0x5560B</span>,<span class="number">0x78</span>),(<span class="number">0x55610</span>,<span class="number">0x03</span>),(<span class="number">0x55615</span>,<span class="number">0x78</span>),(<span class="number">0x5561A</span>,<span class="number">0x03</span>),</span><br><span class="line">                 (<span class="number">0x5561F</span>,<span class="number">0xFF</span>),(<span class="number">0x55624</span>,<span class="number">0xFF</span>)]:</span><br><span class="line">        imm(d, o, v)</span><br><span class="line">    <span class="comment"># 5) 可选: 解除等级上限</span></span><br><span class="line">    <span class="keyword">if</span> cap:</span><br><span class="line">        <span class="keyword">assert</span> prg[<span class="number">0x5B206</span>:<span class="number">0x5B208</span>] == <span class="string">b&#x27;\xF0\xDE&#x27;</span></span><br><span class="line">        d[<span class="number">0x5B206</span>+<span class="number">16</span>:<span class="number">0x5B208</span>+<span class="number">16</span>] = <span class="string">b&#x27;\xEA\xEA&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">bytes</span>(d)</span><br><span class="line"></span><br><span class="line"><span class="built_in">open</span>(<span class="string">&#x27;封神榜之伏魔三太子_属性强化.nes&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>).write(build(<span class="literal">False</span>))</span><br><span class="line"><span class="built_in">open</span>(<span class="string">&#x27;封神榜之伏魔三太子_属性强化_无上限.nes&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>).write(build(<span class="literal">True</span>))</span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(<span class="built_in">open</span>(<span class="string">&#x27;封神榜之伏魔三太子_属性强化.nes&#x27;</span>,<span class="string">&#x27;rb&#x27;</span>).read()).hexdigest())</span><br></pre></td></tr></table></figure>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2026/08/30/VoltTrack-%E7%94%B5%E5%8A%A8%E8%87%AA%E8%A1%8C%E8%BD%A6%E7%94%B5%E8%80%97%E8%AE%B0%E8%B4%A6App%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" class="pre-post btn btn-default" title='VoltTrack：给电动自行车做一款电耗记账 App 的完整实践'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            VoltTrack：给电动自行车做一款电耗记账 App 的完整实践</span>
-    </a>
+
     
     
-    <a href="/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="next-post btn btn-default" title='蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档">https://sunjunior.github.io/2026/08/27/封神榜之伏魔三太子-NES属性银两Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 逆向工程</a>
+          </div>
+
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-关键分析过程"><span class="toc-text">4. 关键分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-角色数据布局（三层证据互证）"><span class="toc-text">4.1 角色数据布局（三层证据互证）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-步长之谜与-B196（关键辨析）"><span class="toc-text">4.2 步长之谜与 $B196（关键辨析）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-升级例程逆向"><span class="toc-text">4.3 升级例程逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-银两机制"><span class="toc-text">4.4 银两机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-Bank-基址论证：为何初始化代码在-A000-窗口"><span class="toc-text">4.5 Bank 基址论证：为何初始化代码在 $A000 窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-入队初始化（小龙女-杨戬）"><span class="toc-text">4.6 入队初始化（小龙女 &#x2F; 杨戬）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-7-遇到的问题与化解"><span class="toc-text">4.7 遇到的问题与化解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-成果一：金手指码表与-Lua-脚本"><span class="toc-text">5. 成果一：金手指码表与 Lua 脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-金手指码表（RAM-直接改）"><span class="toc-text">5.1 金手指码表（RAM 直接改）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Mesen2-一次性-Lua（含旧存档修正）"><span class="toc-text">5.2 Mesen2 一次性 Lua（含旧存档修正）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-成果二：ROM-补丁（四角色满属性）"><span class="toc-text">6. 成果二：ROM 补丁（四角色满属性）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-关键发现：初始化区里的共享子程序入口"><span class="toc-text">6.1 关键发现：初始化区里的共享子程序入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-哪吒新游戏初始化补丁（子程序安全）"><span class="toc-text">6.2 哪吒新游戏初始化补丁（子程序安全）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-小龙女-杨戬-姜太公入队初始化补丁"><span class="toc-text">6.3 小龙女 &#x2F; 杨戬 &#x2F; 姜太公入队初始化补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-解除等级上限（无上限变体）"><span class="toc-text">6.4 解除等级上限（无上限变体）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-验证结果"><span class="toc-text">7. 验证结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-软件模拟验证（极简-6502-模拟器）"><span class="toc-text">7.1 软件模拟验证（极简 6502 模拟器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-实机运行截图"><span class="toc-text">7.2 实机运行截图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-全量字节差异审计"><span class="toc-text">7.3 全量字节差异审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-最终交付文件与-MD5"><span class="toc-text">7.4 最终交付文件与 MD5</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-交付物与使用方式"><span class="toc-text">8. 交付物与使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-踩坑与经验总结"><span class="toc-text">9. 踩坑与经验总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-A：6502-反汇编器骨架（Python）"><span class="toc-text">附录 A：6502 反汇编器骨架（Python）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-B：补丁构建脚本（四角色）"><span class="toc-text">附录 B：补丁构建脚本（四角色）</span></a></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="蝙蝠侠2代（NES &#x2F; FC）BOSS 攻击不掉血 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2026/08/30/VoltTrack-%E7%94%B5%E5%8A%A8%E8%87%AA%E8%A1%8C%E8%BD%A6%E7%94%B5%E8%80%97%E8%AE%B0%E8%B4%A6App%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="next" title="VoltTrack：给电动自行车做一款电耗记账 App 的完整实践">
+                  VoltTrack：给电动自行车做一款电耗记账 App 的完整实践 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

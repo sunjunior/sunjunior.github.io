@@ -1,336 +1,403 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="编程语言" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="背景本人从事嵌入式软件开发已经有8个年头了，最开始是用C/C++做嵌入式底层软件开发。期间利用Qt Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt SDK开发程序，比之前开发效..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景 本人从事嵌入式软件开发已经有8个年头了，最开始是用C&#x2F;C++做嵌入式底层软件开发。期间利用Qt Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt SDK开发程序，比之前开发效率高了不少。也用过Perl脚本编写自动化脚本进行软件测试。但是随着项目变更，期间还用过一段时间java，最近一年多时间搞运维相关的工作，自然用的语言开始以脚本为主了，平时主要利用脚本三剑客Python&#x2F;S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新秀语言Python与老牌语言Perl的比较">
+<meta property="og:url" content="https://sunjunior.github.io/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="背景 本人从事嵌入式软件开发已经有8个年头了，最开始是用C&#x2F;C++做嵌入式底层软件开发。期间利用Qt Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt SDK开发程序，比之前开发效率高了不少。也用过Perl脚本编写自动化脚本进行软件测试。但是随着项目变更，期间还用过一段时间java，最近一年多时间搞运维相关的工作，自然用的语言开始以脚本为主了，平时主要利用脚本三剑客Python&#x2F;S">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/Python-vs-Perl-Programming.png">
+<meta property="article:published_time" content="2020-05-17T02:43:38.000Z">
+<meta property="article:modified_time" content="2020-05-24T04:55:36.726Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="编程语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/Python-vs-Perl-Programming.png">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    新秀语言Python与老牌语言Perl的比较 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/","path":"2020/05/17/新秀语言Python与老牌语言Perl的比较/","title":"新秀语言Python与老牌语言Perl的比较"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>新秀语言Python与老牌语言Perl的比较 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="新秀语言Python与老牌语言Perl的比较">
-            
-            新秀语言Python与老牌语言Perl的比较
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2020/05/17</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                2302</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E5%B7%AE%E5%BC%82%E6%AF%94%E8%BE%83"><span class="nav-number">2.</span> <span class="nav-text">语言差异比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>本人从事嵌入式软件开发已经有8个年头了，最开始是用C/C++做嵌入式底层软件开发。期间利用Qt Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt SDK开发程序，比之前开发效率高了不少。也用过Perl脚本编写自动化脚本进行软件测试。但是随着项目变更，期间还用过一段时间java，最近一年多时间搞运维相关的工作，自然用的语言开始以脚本为主了，平时主要利用脚本三剑客Python/Shell/Perl等进行自动化工具的编写工作。Python语言简单的语法结构，赢得了很多领域从业人事的青睐，也包括非计算机编程专业的同学，都将Python作为编程的首选语言。其实Python这门语言和它的兄弟语言Perl之间有很多相似点，这2门语言发展历史都差不多，为什么Python语言越来越热门，而Perl语言逐步走向衰落了呢？在我看来，Python语言在设计上做到了实用性，易用性和严谨性的一种平衡，对面向对象支持也比较彻底，另外虽然作为一门脚本语言，数据类型的定义上更为严格，比如不同类型之间不能隐式转换，这也使得可维护性，可读性更强。下面就谈谈这2种语言的差异点。</p>
-<p><img src="/img/Python-vs-Perl-Programming.png" alt=""></p>
-<h2 id="语言差异比较"><a href="#语言差异比较" class="headerlink" title="语言差异比较"></a>语言差异比较</h2><p>二者都是属于脚本范畴，发展历史都比较接近，语法相比C/C++/Java等编译型的语言来说，语法结构更加简单。Python与Perl都内置了常用的数据结构，比如列表和字典，同时这2门语言语法结构简单，都是用简单的符号来表示不同的含义。Python语法更加简洁点，一般语句<strong>不加分号</strong>结尾，变量命名跟C语言一样，采用缩进的方式来组织代码块。而Perl语法继承了C语言语法特点，一般用分号表示表达式语句的结尾，变量命名一般最前面要加一个<strong>美元符号$</strong>, 代码块用一组花括号来组织。Python的设计哲学为用一种方法，最好只有一种方法来做一件事情；而Perl设计恰好相反，Larry Wall认为，不要在语言设计上阻碍程序员想做的任何事情，其设计Perl语言理论是不仅仅一种方法做一件事，条条大路通罗马。这也使得Perl的语法比Python在表达上更为丰富。对于条件语句来说，既有肯定的if语句，也有否定含义的unless语句；对于循环语句来说，既有肯定语义的while,for语句，也有否定语义的until语法结构。而对于Python而言，对于每种语法结构而言，都是比较固定的写法。Perl语言条件真假是根据上下文来隐式转换之后表示真假的，字符串和数字类型是根据上下文环境来判断的，而Python有着严格的类型系统，一般来说，字符串类型(str)和数字类型(int)的变量是不能放到一起参与计算的。这也使得Python编写的程序相比Perl语言来说，可维护性更好一些。Perl汲取了C语言、awk、Shell脚本等语言的语法，因此语法上和C语言很类似。后来的PHP和ruby等语言又在Perl语言的基础上进一步发展起来的。言归正传，Python与Perl之间语法很多地方都相似，但是Perl语言的各种数据结构既可以通过值表示，也可以通过引用表示。比如我们用一个数组表示1~5，我们可用一个数组直接表示值，也可以用引用方式表示，这点跟C语言也比较类似。对比而言，Python语言一般用引用方式来表示；hash（字典）数据结构也是类似的做法。这也是两者在语法表示上最大的一个差异吧。</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Perl通过传值方式传值数组</span></span><br><span class="line"><span class="keyword">my</span> @a = (<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">my</span> $item (@a) &#123;</span><br><span class="line">    <span class="keyword">print</span>($item, <span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span>(<span class="string">"&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n"</span>);</span><br><span class="line"><span class="comment"># Perl通过引用方式创建数组</span></span><br><span class="line"><span class="keyword">my</span> $ref = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">my</span> $length = @&#123;$ref&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">my</span> $index = -<span class="number">1</span>; $index &lt; $length; $index++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">print</span>($ref-&gt;[$index], <span class="string">"\n"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># Perl引用一个数组，类似C语言指针指向数组的首地址</span></span><br><span class="line"><span class="keyword">my</span> $ref = \@a;</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python一般通过引用创建数组</span></span><br><span class="line">a = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="keyword">for</span> index, val <span class="keyword">in</span> enumerate(a):</span><br><span class="line">    print(index, val)</span><br></pre></td></tr></table></figure>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="新秀语言Python与老牌语言Perl的比较 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          新秀语言Python与老牌语言Perl的比较
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-17 10:43:38" itemprop="dateCreated datePublished" datetime="2020-05-17T10:43:38+08:00">2020-05-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-24 12:55:36" itemprop="dateModified" datetime="2020-05-24T12:55:36+08:00">2020-05-24</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="背景">背景</h2>
+<p>本人从事嵌入式软件开发已经有8个年头了，最开始是用C/C++做嵌入式底层软件开发。期间利用Qt
+Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt
+SDK开发程序，比之前开发效率高了不少。也用过Perl脚本编写自动化脚本进行软件测试。但是随着项目变更，期间还用过一段时间java，最近一年多时间搞运维相关的工作，自然用的语言开始以脚本为主了，平时主要利用脚本三剑客Python/Shell/Perl等进行自动化工具的编写工作。Python语言简单的语法结构，赢得了很多领域从业人事的青睐，也包括非计算机编程专业的同学，都将Python作为编程的首选语言。其实Python这门语言和它的兄弟语言Perl之间有很多相似点，这2门语言发展历史都差不多，为什么Python语言越来越热门，而Perl语言逐步走向衰落了呢？在我看来，Python语言在设计上做到了实用性，易用性和严谨性的一种平衡，对面向对象支持也比较彻底，另外虽然作为一门脚本语言，数据类型的定义上更为严格，比如不同类型之间不能隐式转换，这也使得可维护性，可读性更强。下面就谈谈这2种语言的差异点。</p>
+<p><img src="/img/Python-vs-Perl-Programming.png" /></p>
+<h2 id="语言差异比较">语言差异比较</h2>
+<p>二者都是属于脚本范畴，发展历史都比较接近，语法相比C/C++/Java等编译型的语言来说，语法结构更加简单。Python与Perl都内置了常用的数据结构，比如列表和字典，同时这2门语言语法结构简单，都是用简单的符号来表示不同的含义。Python语法更加简洁点，一般语句<strong>不加分号</strong>结尾，变量命名跟C语言一样，采用缩进的方式来组织代码块。而Perl语法继承了C语言语法特点，一般用分号表示表达式语句的结尾，变量命名一般最前面要加一个<strong>美元符号$</strong>,
+代码块用一组花括号来组织。Python的设计哲学为用一种方法，最好只有一种方法来做一件事情；而Perl设计恰好相反，Larry
+Wall认为，不要在语言设计上阻碍程序员想做的任何事情，其设计Perl语言理论是不仅仅一种方法做一件事，条条大路通罗马。这也使得Perl的语法比Python在表达上更为丰富。对于条件语句来说，既有肯定的if语句，也有否定含义的unless语句；对于循环语句来说，既有肯定语义的while,for语句，也有否定语义的until语法结构。而对于Python而言，对于每种语法结构而言，都是比较固定的写法。Perl语言条件真假是根据上下文来隐式转换之后表示真假的，字符串和数字类型是根据上下文环境来判断的，而Python有着严格的类型系统，一般来说，字符串类型(str)和数字类型(int)的变量是不能放到一起参与计算的。这也使得Python编写的程序相比Perl语言来说，可维护性更好一些。Perl汲取了C语言、awk、Shell脚本等语言的语法，因此语法上和C语言很类似。后来的PHP和ruby等语言又在Perl语言的基础上进一步发展起来的。言归正传，Python与Perl之间语法很多地方都相似，但是Perl语言的各种数据结构既可以通过值表示，也可以通过引用表示。比如我们用一个数组表示1~5，我们可用一个数组直接表示值，也可以用引用方式表示，这点跟C语言也比较类似。对比而言，Python语言一般用引用方式来表示；hash（字典）数据结构也是类似的做法。这也是两者在语法表示上最大的一个差异吧。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Perl通过传值方式传值数组</span></span><br><span class="line"><span class="keyword">my</span> <span class="variable">@a</span> = (<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">my</span> <span class="variable">$item</span> (<span class="variable">@a</span>) &#123;</span><br><span class="line">    <span class="keyword">print</span>(<span class="variable">$item</span>, <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span>(<span class="string">&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n&quot;</span>);</span><br><span class="line"><span class="comment"># Perl通过引用方式创建数组</span></span><br><span class="line"><span class="keyword">my</span> <span class="variable">$ref</span> = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">my</span> <span class="variable">$length</span> = @&#123;<span class="variable">$ref</span>&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">my</span> <span class="variable">$index</span> = -<span class="number">1</span>; <span class="variable">$index</span> &lt; <span class="variable">$length</span>; <span class="variable">$index</span>++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">print</span>(<span class="variable">$ref</span>-&gt;[<span class="variable">$index</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># Perl引用一个数组，类似C语言指针指向数组的首地址</span></span><br><span class="line"><span class="keyword">my</span> <span class="variable">$ref</span> = \<span class="variable">@a</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python一般通过引用创建数组</span></span><br><span class="line">a = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="keyword">for</span> index, val <span class="keyword">in</span> <span class="built_in">enumerate</span>(a):</span><br><span class="line">    <span class="built_in">print</span>(index, val)</span><br></pre></td></tr></table></figure>
 <p>另外需要提到的是，Python比Perl在面向对象表达上更为彻底，Perl的面向对象对于创建的对象模型暴露给了用户，更像是人工模拟的面向对象，而Python则是将对象模型实现细节隐藏到了语法内部，但本质上这两名语言在对象存储上一般都用字典来保存的。我们这里举一个例子就明白了。</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Location;</span><br><span class="line"><span class="keyword">use</span> strict;</span><br><span class="line"><span class="keyword">use</span> warnings <span class="string">FATAL =&gt;</span> <span class="string">'all'</span>;</span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">new</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> $class = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="comment"># 这里对象存储是放到字典里面的，需要显示的存储</span></span><br><span class="line">    <span class="keyword">my</span> $self = &#123;</span><br><span class="line">        <span class="string">_longitude =&gt;</span> <span class="keyword">shift</span>,</span><br><span class="line">        <span class="string">_latitude =&gt;</span> <span class="keyword">shift</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">bless</span>($self, $class);</span><br><span class="line">    <span class="keyword">return</span> $self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">get_longitude</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> $self = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="keyword">return</span> $self-&gt;&#123;_longitude&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">get_latitude</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> $self = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="keyword">return</span> $self-&gt;&#123;_latitude&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="number">1</span>;</span><br><span class="line"><span class="keyword">package</span> main;</span><br><span class="line"><span class="keyword">my</span> $location = Location-&gt;new(<span class="number">12.22</span>, <span class="number">22.44</span>);</span><br><span class="line"><span class="keyword">print</span>($location-&gt;get_latitude(), <span class="string">"\n"</span>);</span><br><span class="line"><span class="keyword">print</span>($location-&gt;get_longitude(), <span class="string">"\n"</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Location;</span><br><span class="line"><span class="keyword">use</span> strict;</span><br><span class="line"><span class="keyword">use</span> warnings <span class="string">FATAL =&gt;</span> <span class="string">&#x27;all&#x27;</span>;</span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">new</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$class</span> = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="comment"># 这里对象存储是放到字典里面的，需要显示的存储</span></span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$self</span> = &#123;</span><br><span class="line">        <span class="string">_longitude =&gt;</span> <span class="keyword">shift</span>,</span><br><span class="line">        <span class="string">_latitude =&gt;</span> <span class="keyword">shift</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">bless</span>(<span class="variable">$self</span>, <span class="variable">$class</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">get_longitude</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$self</span> = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$self</span>-&gt;&#123;_longitude&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">get_latitude</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$self</span> = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$self</span>-&gt;&#123;_latitude&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="number">1</span>;</span><br><span class="line"><span class="keyword">package</span> main;</span><br><span class="line"><span class="keyword">my</span> <span class="variable">$location</span> = Location-&gt;new(<span class="number">12.22</span>, <span class="number">22.44</span>);</span><br><span class="line"><span class="keyword">print</span>(<span class="variable">$location</span>-&gt;get_latitude(), <span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">print</span>(<span class="variable">$location</span>-&gt;get_longitude(), <span class="string">&quot;\n&quot;</span>);</span><br></pre></td></tr></table></figure>
 <p>如果是Python来写面向对象的代码，则要简单得多，因为对象属性的存储语言默认就是放到dict里面的，不需要显示指定。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Location</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, longitude, latitude)</span>:</span></span><br><span class="line">        self.longitude = longitude</span><br><span class="line">        self.latitude = latitude</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_longitude</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.longitude</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_latitude</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.latitude</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    location = Location(<span class="number">12.22</span>, <span class="number">22.44</span>)</span><br><span class="line">    print(location.get_longitude)</span><br><span class="line">    print(location.get_latitude)</span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总的来说，Python与Perl这两种语言，语法虽然差异大，但语言之间有不少共性地方。相比而言，Perl在语法表达方式上更为丰富，对于一般人来说反而思考负担太重，而且类型转换太随意。不过也需要考虑到Perl的发展历史，当时产生Perl脚本语言的时候，OOP编程范式还没有成为主流，那个时候的Perl更多地是替换C语言这类强类型语言，补充C语言在编写效率上的劣势，成为运维领域的专属语言。如今由于Perl语言语法规则太多，对于一般人来说可能hold不住，反而Python语言在语法上由于写法的一致性，获得了不少非计算机专业人员的青睐。现在Python语言的热度紧随C语言和Java语言之后，如今随着大数据，AI、数据科学的兴起，Python也在这些领域内发光发热。的确，Python语言语法简洁，精美，用很简短的符号表示不同的数据结构，用缩进来表示层次递进关系，比如我们分别用方括号[]和花括号{}来声明数组和字典，还有各种语法糖相关的东西，语法抽象的层次更高，语法使用上基本接近我们人类思维方式。这两年来，我也逐步体会到了Python的语言语法的优美之处，平时上网刷刷算法什么的，首选Python语言实现。尤其是在平时工作，验证方案的正确性，我们可能只需要用到短短几行代码就可以搞定，确实效率高；对工作中的问题，我们用Python语言来更多地专注在解决方案（业务实现）上，而不是把精力都投入到了C/C++等语言在底层实现细节上，包括手工释放内存。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Location</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, longitude, latitude</span>):</span><br><span class="line">        <span class="variable language_">self</span>.longitude = longitude</span><br><span class="line">        <span class="variable language_">self</span>.latitude = latitude</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_longitude</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.longitude</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_latitude</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.latitude</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    location = Location(<span class="number">12.22</span>, <span class="number">22.44</span>)</span><br><span class="line">    <span class="built_in">print</span>(location.get_longitude)</span><br><span class="line">    <span class="built_in">print</span>(location.get_latitude)</span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<p>总的来说，Python与Perl这两种语言，语法虽然差异大，但语言之间有不少共性地方。相比而言，Perl在语法表达方式上更为丰富，对于一般人来说反而思考负担太重，而且类型转换太随意。不过也需要考虑到Perl的发展历史，当时产生Perl脚本语言的时候，OOP编程范式还没有成为主流，那个时候的Perl更多地是替换C语言这类强类型语言，补充C语言在编写效率上的劣势，成为运维领域的专属语言。如今由于Perl语言语法规则太多，对于一般人来说可能hold不住，反而Python语言在语法上由于写法的一致性，获得了不少非计算机专业人员的青睐。现在Python语言的热度紧随C语言和Java语言之后，如今随着大数据，AI、数据科学的兴起，Python也在这些领域内发光发热。的确，Python语言语法简洁，精美，用很简短的符号表示不同的数据结构，用缩进来表示层次递进关系，比如我们分别用方括号[]和花括号{}来声明数组和字典，还有各种语法糖相关的东西，语法抽象的层次更高，语法使用上基本接近我们人类思维方式。这两年来，我也逐步体会到了Python的语言语法的优美之处，平时上网刷刷算法什么的，首选Python语言实现。尤其是在平时工作，验证方案的正确性，我们可能只需要用到短短几行代码就可以搞定，确实效率高；对工作中的问题，我们用Python语言来更多地专注在解决方案（业务实现）上，而不是把精力都投入到了C/C++等语言在底层实现细节上，包括手工释放内存。</p>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="pre-post btn btn-default" title='实现最短路径问题的2种常用算法'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            实现最短路径问题的2种常用算法</span>
-    </a>
+
     
     
-    <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/" class="next-post btn btn-default" title='回溯算法的基本原理及代码框架'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            回溯算法的基本原理及代码框架</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/" title="新秀语言Python与老牌语言Perl的比较">https://sunjunior.github.io/2020/05/17/新秀语言Python与老牌语言Perl的比较/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag"><i class="fa fa-tag"></i> 编程语言</a>
+          </div>
+
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#语言差异比较"><span class="toc-text">语言差异比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/" rel="prev" title="回溯算法的基本原理及代码框架">
+                  <i class="fa fa-angle-left"></i> 回溯算法的基本原理及代码框架
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" rel="next" title="实现最短路径问题的2种常用算法">
+                  实现最短路径问题的2种常用算法 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

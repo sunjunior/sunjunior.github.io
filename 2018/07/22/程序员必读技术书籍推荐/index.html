@@ -1,380 +1,530 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="编程人生" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="  毕业6年来，我一直在回顾这几年的职业发展之路到底经历了什么，收获了什么。比如如何从应届小白完成到职场的转变；再比如身为程序员（软件方向的）究竟要阅读多少书才能称为高手。这里的书籍包括了技术的..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="毕业6年来，我一直在回顾这几年的职业发展之路到底经历了什么，收获了什么。比如如何从应届小白完成到职场的转变；再比如身为程序员（软件方向的）究竟要阅读多少书才能称为高手。这里的书籍包括了技术的和非技术的。技术类的书籍属于程序员的职业基础。而非技术类的书籍属于程序员的软技能，可以有助于我们在职业生涯中迈入更高的台阶。那么哪些是程序员的必读经典书籍呢，这里根据我个人的经验来看可以是自顶向下，逐步深入到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序员必读技术书籍推荐">
+<meta property="og:url" content="https://sunjunior.github.io/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="毕业6年来，我一直在回顾这几年的职业发展之路到底经历了什么，收获了什么。比如如何从应届小白完成到职场的转变；再比如身为程序员（软件方向的）究竟要阅读多少书才能称为高手。这里的书籍包括了技术的和非技术的。技术类的书籍属于程序员的职业基础。而非技术类的书籍属于程序员的软技能，可以有助于我们在职业生涯中迈入更高的台阶。那么哪些是程序员的必读经典书籍呢，这里根据我个人的经验来看可以是自顶向下，逐步深入到">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book1.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book2.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book3.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book4.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book5.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book6.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book7.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book8.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book9.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book10.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book11.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book12.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book13.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book14.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book15.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book16.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book17.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/books/book18.jpg">
+<meta property="article:published_time" content="2018-07-22T01:02:24.000Z">
+<meta property="article:modified_time" content="2020-05-04T00:41:12.042Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="编程人生">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/books/book1.jpg">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    程序员必读技术书籍推荐 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/","path":"2018/07/22/程序员必读技术书籍推荐/","title":"程序员必读技术书籍推荐"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>程序员必读技术书籍推荐 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="程序员必读技术书籍推荐">
-            
-            程序员必读技术书籍推荐
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E7%BC%96%E7%A8%8B%E4%BA%BA%E7%94%9F/" rel="tag">编程人生</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2018/07/22</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                2967</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <p>  <p>毕业6年来，我一直在回顾这几年的职业发展之路到底经历了什么，收获了什么。比如如何从应届小白完成到职场的转变；再比如身为程序员（软件方向的）究竟要阅读多少书才能称为高手。这里的书籍包括了技术的和非技术的。技术类的书籍属于程序员的职业基础。而非技术类的书籍属于程序员的软技能，可以有助于我们在职业生涯中迈入更高的台阶。那么哪些是程序员的必读经典书籍呢，这里根据我个人的经验来看可以是自顶向下，逐步深入到底层；也可以是自底向上，逐渐从底层原理到上层应用软件。计算机体系是一个分层次的庞大的系统，大体上可以分为三层，每个层次都有不少需要我们掌握的知识点，最底下的是硬件和汇编（对于软件来说主要是CPU和内存），是所有程序的编程基石。这部分对于程序员来说只需要了解硬件是如何称为软件的编程基础的，也就是说硬件中提供了哪些最基础的器件来支撑软件的运行。硬件上面就是操作系统层，操作系统就像是一个魔术师，将晦涩难懂的硬件接口抽象成了容易理解的系统API，程序员不需要关系硬件是如何在内部通信的，只需要指定该系统API能够达到什么目的。操作系统是软硬件的接口层，我们运行的软件基本都需要得到操作系统的控制。操作系统对软件提供服务, 对硬件抽象后，以更友好的接口来方便程序员门编写各类系统应用程序。最上层就是各类应用程序了（其中也包括了系统应用，比如编译器，解释器，shell等等），比如我们常见的各类PC客户端，服务端软件都属于这一层次。下面以我的个人经历，逐步地推荐一些经典好书，帮助小白在IT生涯前期少走一些弯路，也是对我自己读过的一些经典书籍的总结和回顾。下面从我的大学求学之路开始说起：</p>
-<p>  <p>我本科学习的信息与计算科学，这实际上是数学的一个现代分支，除了学习传统的微积分和高等代数之外，我们的专业课程里面还涉及到了各种离散化的算法计算，比如现代密码学就涉及到了初等数论，这里面就研究整数的一些特性。再比如有一门课叫做数值分析，主要利用一些近似算法来无限逼近真实值。在开设这些课程期间，其中大多数算法实验都是在SAS,MATLAB上完成的，当时自己对计算机的认识很模糊，因为我们课程关注的是算法本身，而不少计算机语言和计算机相关的工作原理是没有深入理解的。这些课程恰好是CS专业要掌握的知识。<br>  <p>大二开设C语言课程之后，对于C语言的指针，内存管理那一部分有些痛苦，工作之后才发现，C语言不完全是一门高级语言，更是一门系统级的编程语言，需要和操作系统一起来掌握学习，这样才能更深入理解。比如指针的本质是啥，指针类型呢，各类指针操作又是怎么回事，函数指针，二级指针用于哪些场景等等。这些没有一些项目经验和系统的了解，是无法得到准确答案的。后面毕业之后有幸地读取了数据挖掘方向的研究生，研究生期间了解了各类现代优化算法，各类分类聚类算法，个性化推荐算法等等。有部分甚至来自其他领域，比如生物学仿真算法（从其他低等生物研究抽象出来的算法模型），这里经典的就有神经网络，进化算法（遗传算法），蚁群算法，模拟退火等等。这些算法本身比较奇妙，在某些领域也达到了比较理想的应用。比如神经网络在分类预测方面就有显著的应用，曾经参加数学建模，我们团队打算就是利用了神经网络来预测中国人口等等。不过这些算法的实现由于在MATLAB里面有现成的工具箱可用，我们只需要对选择函数，参数等进行训练调优即可。也就是说研究生期间个人对计算机这部分知识原理几乎为0，更多地是研究一些这些算法本身如何优化，有哪些应用场景等等。<br>  <p>到研究生毕业那一年，这一年才成为我人生的转折点，临近研三的时候，上半年由于个人时间比较多，而毕业生论文也刚刚起步，我每天都在图书馆泡着，开始为找工作做一些前期准备，毕业之后也打算从事IT相关的岗位（当时由于数据挖掘（大数据）没有现在这么火，大都还是传统的C/S和B/S架构的应用开发工程师）。在图书馆，我有幸读到了一些非常经典的书籍。在图书馆学习了大半年，我读了IT书籍数十本，但是我认为非常经典的就是那么几本，这些书能宏观系统地教你一些计算机系统方面的理论原理，为后续职业发展起到了良好的铺垫作用，第一本书就是《编码，隐匿在计算机软硬件背后的语言》，这本书属于科普图书，一拿到手中，看起来是那么的清晰易懂。后面得知原版是微软的某个大牛写的，将计算机原理复杂的逻辑，利用一些导线，开关来逐步深入介绍，对计算机运行机理有着比较详细的解说。这对于我这种非计算机，不懂电子硬件的小白来说着实有着不小的吸引力。<br><img src="/img/books/book1.jpg" alt="编码，隐匿在计算机软硬件背后的语言"></p>
-<p>另外一本书就是《Linux C编程一站式学习》，当时该书还没有纸质的，我阅读的是电子书，该书以C作为切入点，系统讲解了C语言，C语言如何编译运行在操作系统下，程序的运行原理等等基础知识。这本书我觉得是少数国人在计算机领域写得最好书籍之一。书介绍的内容都不多，但是比较有系统性，作为一个没有经过系统训练的程序员，阅读此书之后有一种醍醐灌顶的感觉，把多年来自己离散的计算机基础知识拼接到了一起。这书有纸质版上市了，不过我还是觉得电子版的更完整一些。<br><img src="/img/books/book2.jpg" alt="Linux C编程一站式学习"></p>
-<p>研究生期间还阅读过基本经典原理图书，我印象中有3本，一本是《深入理解计算机系统》，另外一本是《程序员的自我修养，链接、装载与库》，还有一本就是《现代操作系统》。这3本书当时也是看了图书馆的样本书之后，在网络上买的纸质书。《深入理解计算机系统》简称CSAPP，这本书被列为程序员的圣经，该书就是对《Linux C编程一站式学习》一书的补充和完善，我买的时候是修订版本，现在最新版本是第三版，以X86-64架构作为基础讲解。</p>
-<p><img src="/img/books/book3.jpg" alt="深入理解计算机系统"></p>
-<p><img src="/img/books/book4.jpg" alt="现代操作系统"></p>
-<p><img src="/img/books/book5.jpg" alt="程序员的自我修养"></p>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="程序员必读技术书籍推荐 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          程序员必读技术书籍推荐
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-22 09:02:24" itemprop="dateCreated datePublished" datetime="2018-07-22T09:02:24+08:00">2018-07-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-04 08:41:12" itemprop="dateModified" datetime="2020-05-04T08:41:12+08:00">2020-05-04</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>
+<p>毕业6年来，我一直在回顾这几年的职业发展之路到底经历了什么，收获了什么。比如如何从应届小白完成到职场的转变；再比如身为程序员（软件方向的）究竟要阅读多少书才能称为高手。这里的书籍包括了技术的和非技术的。技术类的书籍属于程序员的职业基础。而非技术类的书籍属于程序员的软技能，可以有助于我们在职业生涯中迈入更高的台阶。那么哪些是程序员的必读经典书籍呢，这里根据我个人的经验来看可以是自顶向下，逐步深入到底层；也可以是自底向上，逐渐从底层原理到上层应用软件。计算机体系是一个分层次的庞大的系统，大体上可以分为三层，每个层次都有不少需要我们掌握的知识点，最底下的是硬件和汇编（对于软件来说主要是CPU和内存），是所有程序的编程基石。这部分对于程序员来说只需要了解硬件是如何称为软件的编程基础的，也就是说硬件中提供了哪些最基础的器件来支撑软件的运行。硬件上面就是操作系统层，操作系统就像是一个魔术师，将晦涩难懂的硬件接口抽象成了容易理解的系统API，程序员不需要关系硬件是如何在内部通信的，只需要指定该系统API能够达到什么目的。操作系统是软硬件的接口层，我们运行的软件基本都需要得到操作系统的控制。操作系统对软件提供服务,
+对硬件抽象后，以更友好的接口来方便程序员门编写各类系统应用程序。最上层就是各类应用程序了（其中也包括了系统应用，比如编译器，解释器，shell等等），比如我们常见的各类PC客户端，服务端软件都属于这一层次。下面以我的个人经历，逐步地推荐一些经典好书，帮助小白在IT生涯前期少走一些弯路，也是对我自己读过的一些经典书籍的总结和回顾。下面从我的大学求学之路开始说起：</p>
+<p>
+我本科学习的信息与计算科学，这实际上是数学的一个现代分支，除了学习传统的微积分和高等代数之外，我们的专业课程里面还涉及到了各种离散化的算法计算，比如现代密码学就涉及到了初等数论，这里面就研究整数的一些特性。再比如有一门课叫做数值分析，主要利用一些近似算法来无限逼近真实值。在开设这些课程期间，其中大多数算法实验都是在SAS,MATLAB上完成的，当时自己对计算机的认识很模糊，因为我们课程关注的是算法本身，而不少计算机语言和计算机相关的工作原理是没有深入理解的。这些课程恰好是CS专业要掌握的知识。
+<p>
+大二开设C语言课程之后，对于C语言的指针，内存管理那一部分有些痛苦，工作之后才发现，C语言不完全是一门高级语言，更是一门系统级的编程语言，需要和操作系统一起来掌握学习，这样才能更深入理解。比如指针的本质是啥，指针类型呢，各类指针操作又是怎么回事，函数指针，二级指针用于哪些场景等等。这些没有一些项目经验和系统的了解，是无法得到准确答案的。后面毕业之后有幸地读取了数据挖掘方向的研究生，研究生期间了解了各类现代优化算法，各类分类聚类算法，个性化推荐算法等等。有部分甚至来自其他领域，比如生物学仿真算法（从其他低等生物研究抽象出来的算法模型），这里经典的就有神经网络，进化算法（遗传算法），蚁群算法，模拟退火等等。这些算法本身比较奇妙，在某些领域也达到了比较理想的应用。比如神经网络在分类预测方面就有显著的应用，曾经参加数学建模，我们团队打算就是利用了神经网络来预测中国人口等等。不过这些算法的实现由于在MATLAB里面有现成的工具箱可用，我们只需要对选择函数，参数等进行训练调优即可。也就是说研究生期间个人对计算机这部分知识原理几乎为0，更多地是研究一些这些算法本身如何优化，有哪些应用场景等等。
+<p>
+<p>到研究生毕业那一年，这一年才成为我人生的转折点，临近研三的时候，上半年由于个人时间比较多，而毕业生论文也刚刚起步，我每天都在图书馆泡着，开始为找工作做一些前期准备，毕业之后也打算从事IT相关的岗位（当时由于数据挖掘（大数据）没有现在这么火，大都还是传统的C/S和B/S架构的应用开发工程师）。在图书馆，我有幸读到了一些非常经典的书籍。在图书馆学习了大半年，我读了IT书籍数十本，但是我认为非常经典的就是那么几本，这些书能宏观系统地教你一些计算机系统方面的理论原理，为后续职业发展起到了良好的铺垫作用，第一本书就是《编码，隐匿在计算机软硬件背后的语言》，这本书属于科普图书，一拿到手中，看起来是那么的清晰易懂。后面得知原版是微软的某个大牛写的，将计算机原理复杂的逻辑，利用一些导线，开关来逐步深入介绍，对计算机运行机理有着比较详细的解说。这对于我这种非计算机，不懂电子硬件的小白来说着实有着不小的吸引力。
+<img src="/img/books/book1.jpg"
+alt="编码，隐匿在计算机软硬件背后的语言" /></p>
+<p>另外一本书就是《Linux
+C编程一站式学习》，当时该书还没有纸质的，我阅读的是电子书，该书以C作为切入点，系统讲解了C语言，C语言如何编译运行在操作系统下，程序的运行原理等等基础知识。这本书我觉得是少数国人在计算机领域写得最好书籍之一。书介绍的内容都不多，但是比较有系统性，作为一个没有经过系统训练的程序员，阅读此书之后有一种醍醐灌顶的感觉，把多年来自己离散的计算机基础知识拼接到了一起。这书有纸质版上市了，不过我还是觉得电子版的更完整一些。
+<img src="/img/books/book2.jpg" alt="Linux C编程一站式学习" /></p>
+<p>研究生期间还阅读过基本经典原理图书，我印象中有3本，一本是《深入理解计算机系统》，另外一本是《程序员的自我修养，链接、装载与库》，还有一本就是《现代操作系统》。这3本书当时也是看了图书馆的样本书之后，在网络上买的纸质书。《深入理解计算机系统》简称CSAPP，这本书被列为程序员的圣经，该书就是对《Linux
+C编程一站式学习》一书的补充和完善，我买的时候是修订版本，现在最新版本是第三版，以X86-64架构作为基础讲解。</p>
+<figure>
+<img src="/img/books/book3.jpg" alt="深入理解计算机系统" />
+<figcaption aria-hidden="true">深入理解计算机系统</figcaption>
+</figure>
+<figure>
+<img src="/img/books/book4.jpg" alt="现代操作系统" />
+<figcaption aria-hidden="true">现代操作系统</figcaption>
+</figure>
+<figure>
+<img src="/img/books/book5.jpg" alt="程序员的自我修养" />
+<figcaption aria-hidden="true">程序员的自我修养</figcaption>
+</figure>
 <p>研究生毕业之时，趁着京东618搞活动，IT技术书籍满减活动，买了几本书籍，由于之前看了不少类似这类经典书籍，因此阅读后面技术书籍也有比较好的底子了。后面工作后的几年，也买过不少经典好书。下面列出的是我后面买的经典书籍，非常推荐大家看一看，其中有不少属于国内IT技术精品图书。</p>
 <ul>
-<li>《计算机系统要素》<br>对于应用软件人员来说，计算机硬件其实了解的不用太深入，而嵌入式软件开发工程师，底层软件，bsp等驱动开发工程师等需要对硬件接口文档，硬件各种外围芯片的特性功能等要了解一些。因此对于大都从事应用开发的人员来说，了解一下计算机的运行机理就可以了，这里另外一本我特别喜欢的书籍《计算机系统要素》，可以阅读前面几个章节。这2本书主要系统地如何从零开始，利用布尔逻辑来实现各类逻辑门电路，实现一个简单的CPU等等。对这些元器件理解是决定我们软件领域的路走得更远。如果想了解了硬件的工作原理，CPU是如何工作的等等，这本书会对我们编写的程序有着引导作用。</li>
+<li>《计算机系统要素》
+对于应用软件人员来说，计算机硬件其实了解的不用太深入，而嵌入式软件开发工程师，底层软件，bsp等驱动开发工程师等需要对硬件接口文档，硬件各种外围芯片的特性功能等要了解一些。因此对于大都从事应用开发的人员来说，了解一下计算机的运行机理就可以了，这里另外一本我特别喜欢的书籍《计算机系统要素》，可以阅读前面几个章节。这2本书主要系统地如何从零开始，利用布尔逻辑来实现各类逻辑门电路，实现一个简单的CPU等等。对这些元器件理解是决定我们软件领域的路走得更远。如果想了解了硬件的工作原理，CPU是如何工作的等等，这本书会对我们编写的程序有着引导作用。</li>
 </ul>
-<p><img src="/img/books/book6.jpg" alt="计算机系统要素"></p>
+<figure>
+<img src="/img/books/book6.jpg" alt="计算机系统要素" />
+<figcaption aria-hidden="true">计算机系统要素</figcaption>
+</figure>
 <ul>
-<li>《计算机程序构造和解释》<br>该书是MIT教学的一本经典教材，书中用scheme来讲解了如何组织抽象的数据和程序，全书都是围绕这抽象这一概念进行展开，讲解了lambda演算，函数式编程，闭包，Y算子等概念模型，使我们更加清楚的计算的本质是什么。不过该书不适合小白阅读，适合有一定的编程基础的人阅读，阅读之后绝对对个人的编程思想，编程方式产生较为深刻的影响。本书一直在强调处理数据的抽象原则，数据和过程是对立又统一的矛盾体，二者在某些场景下可以相互转换，过程即数据，数据即过程。</li>
+<li>《计算机程序构造和解释》
+该书是MIT教学的一本经典教材，书中用scheme来讲解了如何组织抽象的数据和程序，全书都是围绕这抽象这一概念进行展开，讲解了lambda演算，函数式编程，闭包，Y算子等概念模型，使我们更加清楚的计算的本质是什么。不过该书不适合小白阅读，适合有一定的编程基础的人阅读，阅读之后绝对对个人的编程思想，编程方式产生较为深刻的影响。本书一直在强调处理数据的抽象原则，数据和过程是对立又统一的矛盾体，二者在某些场景下可以相互转换，过程即数据，数据即过程。</li>
 </ul>
-<p><img src="/img/books/book7.jpg" alt="计算机程序构造和解释"></p>
+<figure>
+<img src="/img/books/book7.jpg" alt="计算机程序构造和解释" />
+<figcaption aria-hidden="true">计算机程序构造和解释</figcaption>
+</figure>
 <ul>
-<li>《Effective系列丛书》<br>由于毕业之后一直从事嵌入式软件开发，用的最多的还是C/C++语言,这里看完了C/C++的基础语法之后，如何写出更好的C++程序来，这里有一系列C++的书籍，其中最有影响力的Effective系列图书三部曲。这里三部曲指的就是《Effective C++》、《More Effective C++》、《Effective STL》这三本书。这些书籍能指导我们在平时编码中，有意识地会约束自己的编码习惯，使其符合其中的一条或者某条，写出的程序扩展性更强，便于后期维护，当然本书不能代替编码本身带来的经验。在项目中经历了多个特性开发之后，再回过头来看本书的一些条款，发现提早做这些工作能尽量少踩坑。</li>
+<li>《Effective系列丛书》
+由于毕业之后一直从事嵌入式软件开发，用的最多的还是C/C++语言,这里看完了C/C++的基础语法之后，如何写出更好的C++程序来，这里有一系列C++的书籍，其中最有影响力的Effective系列图书三部曲。这里三部曲指的就是《Effective
+C++》、《More Effective C++》、《Effective
+STL》这三本书。这些书籍能指导我们在平时编码中，有意识地会约束自己的编码习惯，使其符合其中的一条或者某条，写出的程序扩展性更强，便于后期维护，当然本书不能代替编码本身带来的经验。在项目中经历了多个特性开发之后，再回过头来看本书的一些条款，发现提早做这些工作能尽量少踩坑。</li>
 </ul>
-<p><img src="/img/books/book8.jpg" alt="Effective C++"></p>
-<p><img src="/img/books/book9.jpg" alt="More Effective C++"></p>
-<p><img src="/img/books/book10.jpg" alt="Effective STL"></p>
+<figure>
+<img src="/img/books/book8.jpg" alt="Effective C++" />
+<figcaption aria-hidden="true">Effective C++</figcaption>
+</figure>
+<figure>
+<img src="/img/books/book9.jpg" alt="More Effective C++" />
+<figcaption aria-hidden="true">More Effective C++</figcaption>
+</figure>
+<figure>
+<img src="/img/books/book10.jpg" alt="Effective STL" />
+<figcaption aria-hidden="true">Effective STL</figcaption>
+</figure>
 <ul>
-<li>《C++反汇编与逆向分析技术揭秘》<br>本书深刻揭示C++内部工作机制，透过汇编语言来看隐藏在语言内部的动作，也就是通过这一层关系，我们能深刻认识到C++语言一些语法特性的原理，和C语言有哪些差异等等。语言本书为我们做了哪些东西，我们用C++开发程序时，这部分代码映射到底层是怎么样的，了解这部分背后的动作之后，能为我们编写高质量的C++代码打下良好的基础。虽然我们平时很少逆向分析，逆向分析一般用于病毒分析，破解等领域，但是逆向分析能为对语言本质性的东西有着深层次的认识。</li>
+<li>《C++反汇编与逆向分析技术揭秘》
+本书深刻揭示C++内部工作机制，透过汇编语言来看隐藏在语言内部的动作，也就是通过这一层关系，我们能深刻认识到C++语言一些语法特性的原理，和C语言有哪些差异等等。语言本书为我们做了哪些东西，我们用C++开发程序时，这部分代码映射到底层是怎么样的，了解这部分背后的动作之后，能为我们编写高质量的C++代码打下良好的基础。虽然我们平时很少逆向分析，逆向分析一般用于病毒分析，破解等领域，但是逆向分析能为对语言本质性的东西有着深层次的认识。</li>
 </ul>
-<p><img src="/img/books/book11.jpg" alt="C++反汇编与逆向分析技术揭秘"></p>
+<figure>
+<img src="/img/books/book11.jpg" alt="C++反汇编与逆向分析技术揭秘" />
+<figcaption aria-hidden="true">C++反汇编与逆向分析技术揭秘</figcaption>
+</figure>
 <ul>
-<li><p>《UNIX环境高级编程》<br>本书也被誉为UNIX/LINUX系统编程的圣经，当我们了解操作系统提供的各类服务之后，如何利用这些接口来编写程序呢？本书就详细介绍了类UNIX系统常用的接口使用方法，书中也给了非常经典的实例。学习此书之后，基本上对类UINX系统上编程有了初步的认识。本书由UNIX技术牛人W.Richard Stevens所作，他生前著有多种经典的传世之作，比如《UNIX网络编程》（两卷本）、《TCP/IP详解》等等。<br><img src="/img/books/book12.jpg" alt="UNIX环境高级编程"></p>
-</li>
-<li><p>《深度探索C++对象模型》<br>本书详细描述了C++的底层实现细节，如果我们之前学习过C语言，了解C语言的内存布局，那么读这类书籍就是如虎添翼。书中讲解了大量C++的语言特性实现细节，比如C++虚函数实现机理，RTTI运行时类型识别等等，了解C++底层实现细节之后，我们在利用C++语言的时候就能做到有效取舍，在效率和可读性方面达到平衡。</p>
-</li>
+<li><p>《UNIX环境高级编程》
+本书也被誉为UNIX/LINUX系统编程的圣经，当我们了解操作系统提供的各类服务之后，如何利用这些接口来编写程序呢？本书就详细介绍了类UNIX系统常用的接口使用方法，书中也给了非常经典的实例。学习此书之后，基本上对类UINX系统上编程有了初步的认识。本书由UNIX技术牛人W.Richard
+Stevens所作，他生前著有多种经典的传世之作，比如《UNIX网络编程》（两卷本）、《TCP/IP详解》等等。
+<img src="/img/books/book12.jpg" alt="UNIX环境高级编程" /></p></li>
+<li><p>《深度探索C++对象模型》
+本书详细描述了C++的底层实现细节，如果我们之前学习过C语言，了解C语言的内存布局，那么读这类书籍就是如虎添翼。书中讲解了大量C++的语言特性实现细节，比如C++虚函数实现机理，RTTI运行时类型识别等等，了解C++底层实现细节之后，我们在利用C++语言的时候就能做到有效取舍，在效率和可读性方面达到平衡。</p></li>
 </ul>
-<p><img src="/img/books/book13.jpg" alt="深度探索C++对象模型"></p>
+<figure>
+<img src="/img/books/book13.jpg" alt="深度探索C++对象模型" />
+<figcaption aria-hidden="true">深度探索C++对象模型</figcaption>
+</figure>
 <ul>
-<li>《重构,改善既有代码的设计》<br>重构，一言以蔽之，就是在不改变外部行为的前提下，有条不紊地改善代码。本书虽然为java讲解的，但是并不影响其他语言的使用，书中有大量的实例，重构之前和重构之后代码结构好在哪些地方，书中都有区分比较，该书也是计算机领域的一位大牛编写的，值得大家反复阅读。</li>
+<li>《重构,改善既有代码的设计》
+重构，一言以蔽之，就是在不改变外部行为的前提下，有条不紊地改善代码。本书虽然为java讲解的，但是并不影响其他语言的使用，书中有大量的实例，重构之前和重构之后代码结构好在哪些地方，书中都有区分比较，该书也是计算机领域的一位大牛编写的，值得大家反复阅读。</li>
 </ul>
-<p><img src="/img/books/book14.jpg" alt="重构,改善既有代码的设计"></p>
+<figure>
+<img src="/img/books/book14.jpg" alt="重构,改善既有代码的设计" />
+<figcaption aria-hidden="true">重构,改善既有代码的设计</figcaption>
+</figure>
 <ul>
-<li>《正则表达式系列丛书》<br>正则表达式是每个开发人员必须掌握的知识之一，尤其是在处理文本处理方面。随着互联网的迅速发展，几乎所有工具软件和程序语言都支持的正则表达式也变得越来越强大和易于使用。C++11以上版本开始支持正则表达式，而大部分脚本语言天然支持正则表达式，比如perl语言本身就支持，而python,java等也有对应的库支持。下面有2本书都讲得不错，一本是《精通正则表达式》，另外一本是《正则指引》，两本书都是技术专家余晟翻译或撰写的，写的比较详细，通俗易懂。<br>其中《精通正则表达式》是一本经典之作。本书主要讲解了正则表达式的特性和流派、匹配原理、优化原则、实用诀窍以及调校措施，并详细介绍了正则表达式在Perl、Java、.NET、PHP中的用法。<br>而《正则指引》一书更多地是作者结合实际的项目经验开发遇到的问题，以及其他开发人员咨询的问题，总结出一套使用正则表达式解题的办法，并通过具体的例子指导读者拆解、分析问题。《精通正则表达式》偏重理论，《正则指引》则重视实践。</li>
+<li>《正则表达式系列丛书》
+正则表达式是每个开发人员必须掌握的知识之一，尤其是在处理文本处理方面。随着互联网的迅速发展，几乎所有工具软件和程序语言都支持的正则表达式也变得越来越强大和易于使用。C++11以上版本开始支持正则表达式，而大部分脚本语言天然支持正则表达式，比如perl语言本身就支持，而python,java等也有对应的库支持。下面有2本书都讲得不错，一本是《精通正则表达式》，另外一本是《正则指引》，两本书都是技术专家余晟翻译或撰写的，写的比较详细，通俗易懂。
+其中《精通正则表达式》是一本经典之作。本书主要讲解了正则表达式的特性和流派、匹配原理、优化原则、实用诀窍以及调校措施，并详细介绍了正则表达式在Perl、Java、.NET、PHP中的用法。
+而《正则指引》一书更多地是作者结合实际的项目经验开发遇到的问题，以及其他开发人员咨询的问题，总结出一套使用正则表达式解题的办法，并通过具体的例子指导读者拆解、分析问题。《精通正则表达式》偏重理论，《正则指引》则重视实践。</li>
 </ul>
-<p><img src="/img/books/book15.jpg" alt="精通正则表达式"></p>
-<p><img src="/img/books/book16.jpg" alt="正则指引"></p>
+<figure>
+<img src="/img/books/book15.jpg" alt="精通正则表达式" />
+<figcaption aria-hidden="true">精通正则表达式</figcaption>
+</figure>
+<figure>
+<img src="/img/books/book16.jpg" alt="正则指引" />
+<figcaption aria-hidden="true">正则指引</figcaption>
+</figure>
 <ul>
-<li>《UNIX shell范例精解》<br>本书就是常用的一些shell命令的宝典库，可以平时作为开发的案头书籍，书中详细介绍了awk、sed及grep等内容，以及不同的shell语言的写法，平时shell脚本可以参考此书。</li>
+<li>《UNIX shell范例精解》
+本书就是常用的一些shell命令的宝典库，可以平时作为开发的案头书籍，书中详细介绍了awk、sed及grep等内容，以及不同的shell语言的写法，平时shell脚本可以参考此书。</li>
 </ul>
-<p><img src="/img/books/book17.jpg" alt="UNIX shell范例精解"></p>
+<figure>
+<img src="/img/books/book17.jpg" alt="UNIX shell范例精解" />
+<figcaption aria-hidden="true">UNIX shell范例精解</figcaption>
+</figure>
 <ul>
-<li>《Head First 设计模式》<br>这本书是我学习设计模式中第一本书籍，其他的还看过《设计模式之禅》。书利用自问自答的方法讲解了软件常用的设计模式，这类模式在什么场景下使用，用于解决什么问题，说的简单一点就是，设计模式就是软件在项目实践中的最佳用例（最佳实践）。作为一门软件开发者，掌握常用的软件开发模式能让我们在编码时做到代码的可扩展，可维护，符合SOLID原则。</li>
+<li>《Head First 设计模式》
+这本书是我学习设计模式中第一本书籍，其他的还看过《设计模式之禅》。书利用自问自答的方法讲解了软件常用的设计模式，这类模式在什么场景下使用，用于解决什么问题，说的简单一点就是，设计模式就是软件在项目实践中的最佳用例（最佳实践）。作为一门软件开发者，掌握常用的软件开发模式能让我们在编码时做到代码的可扩展，可维护，符合SOLID原则。</li>
 </ul>
-<p><img src="/img/books/book18.jpg" alt="Head First 设计模式"></p>
+<figure>
+<img src="/img/books/book18.jpg" alt="Head First 设计模式" />
+<figcaption aria-hidden="true">Head First 设计模式</figcaption>
+</figure>
 <ul>
-<li>《汇编语言》<br>王爽的经典书籍，这里就不用多说了，基本适合零基础学习的人员看。<br><img src="/img/books/book19.jpg" alt="汇编语言"></li>
+<li>《汇编语言》
+王爽的经典书籍，这里就不用多说了，基本适合零基础学习的人员看。 <img
+src="/img/books/book19.jpg" alt="汇编语言" /></li>
 </ul>
-<p><p> 其实还有许多经典书籍，这里也不一一介绍了，比如《代码整洁之道》、《编程珠玑》、《计算理论导引》等等，都是很好的书籍。看过上面的图书之后，起码对计算机理论有了个基本认识。后面还需要自己在各自的领域精耕细作才会有更好地发展体会。专业领域的书籍太多，这里也不作过多说明。这几年人工智能，区块链等等又开始火了起来，但是底层技术这一块这几十年没有质的变化。阅读好这些经典书籍之后，再看市面上有的各类“新技术”书籍也能做到游刃有余。技术书籍的内容也遵循二八法则，只有那20%的东西可能对你是有用的，其他大部分知识都是前人的已有成果或者说你已经掌握好了。以上就是我这几年看到的，认为比较经典的，值得大家一看的书籍，一致推荐给大家。</p>
+<p>
+<p>其实还有许多经典书籍，这里也不一一介绍了，比如《代码整洁之道》、《编程珠玑》、《计算理论导引》等等，都是很好的书籍。看过上面的图书之后，起码对计算机理论有了个基本认识。后面还需要自己在各自的领域精耕细作才会有更好地发展体会。专业领域的书籍太多，这里也不作过多说明。这几年人工智能，区块链等等又开始火了起来，但是底层技术这一块这几十年没有质的变化。阅读好这些经典书籍之后，再看市面上有的各类“新技术”书籍也能做到游刃有余。技术书籍的内容也遵循二八法则，只有那20%的东西可能对你是有用的，其他大部分知识都是前人的已有成果或者说你已经掌握好了。以上就是我这几年看到的，认为比较经典的，值得大家一看的书籍，一致推荐给大家。</p>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2018/09/10/%E7%A7%91%E7%9B%AE%E4%BA%8C%E8%80%83%E8%AF%95%E6%8A%80%E5%B7%A7%E8%A6%81%E7%82%B9/" class="pre-post btn btn-default" title='深圳西丽科目二考试细节'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            深圳西丽科目二考试细节</span>
-    </a>
+
     
     
-    <a href="/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/" class="next-post btn btn-default" title='函数式编程的几点思考'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            函数式编程的几点思考</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/" title="程序员必读技术书籍推荐">https://sunjunior.github.io/2018/07/22/程序员必读技术书籍推荐/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E4%BA%BA%E7%94%9F/" rel="tag"><i class="fa fa-tag"></i> 编程人生</a>
+          </div>
+
         
-        <p>暂无目录</p>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/" rel="prev" title="函数式编程的几点思考">
+                  <i class="fa fa-angle-left"></i> 函数式编程的几点思考
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2018/09/10/%E7%A7%91%E7%9B%AE%E4%BA%8C%E8%80%83%E8%AF%95%E6%8A%80%E5%B7%A7%E8%A6%81%E7%82%B9/" rel="next" title="深圳西丽科目二考试细节">
+                  深圳西丽科目二考试细节 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

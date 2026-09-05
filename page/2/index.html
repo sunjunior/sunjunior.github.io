@@ -1,908 +1,1536 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="C/C++;Python;Perl;Linux Shell" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="程序员，喜编程，爱折腾，技术控" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="程序员，喜编程，爱折腾，技术控">
+<meta property="og:type" content="website">
+<meta property="og:title" content="sunjunior的个人技术博客">
+<meta property="og:url" content="https://sunjunior.github.io/page/2/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="程序员，喜编程，爱折腾，技术控">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="C&#x2F;C++;Python;Perl;Linux Shell">
+<meta name="twitter:card" content="summary">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/page/2/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"page/2/index.html","title":""}</script>
 
-    
-
-
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
-
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-</div>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>sunjunior的个人技术博客</title>
+  
 
 
 
 
-    
 
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
-        </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content ">
-                    
-<div class="carousel">
-    <a href="https://sunjunior.github.io" target="_blank">
-        <img src="/./img/head-img.png" alt="">
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">sunjunior的个人技术博客</h1>
+      <i class="logo-line"></i>
     </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2025/09/06/%E7%AE%80%E5%8D%95%E7%94%A8GTest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/gtest.gif" alt="简单用GTest单元测试框架编写测试用例">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2025/09/06/%E7%AE%80%E5%8D%95%E7%94%A8GTest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/">
-                    简单用GTest单元测试框架编写测试用例</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2025年09月06日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            GTest单元测试框架浅析Google发布的gtest是一款跨平台单元测试框架，本文是在archlinux上直接安装gtest之后，用codeblocks编写了一个简单的16进制字符串转数字的函数，最后利用gtest测试框架来输出测试...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/" rel="tag">软件开发</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2025/09/06/%E7%AE%80%E5%8D%95%E7%94%A8GTest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2024/02/25/%E4%BD%BF%E7%94%A8Python%E8%A3%85%E9%A5%B0%E5%99%A8%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E7%B1%BB%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/">
-                    使用Python装饰器自动注册类成员方法</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2024年02月25日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            使用Python装饰器自动注册类成员方法最近本人在开发AI大模型相关的业务功能，其中有一个功能是如何将大模型转换人的意图之后生成的API的接口进行业务逻辑实现。由于业务场景较多，因此需要定义的函数也非常多，如何有效地管理这些函数呢？ ...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E8%BD%AF%E4%BB%B6%E6%8A%80%E6%9C%AF/" rel="tag">软件技术</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2024/02/25/%E4%BD%BF%E7%94%A8Python%E8%A3%85%E9%A5%B0%E5%99%A8%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E7%B1%BB%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/linux/vlc.png" alt="完全用Linux系统工作">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/">
-                    完全用Linux系统工作</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年06月07日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            背景  本文是针对研发人员而言的，尤其是软件开发人员，重度依赖office套件和Adobe等第三方软件的开发人员除外。先表明个人观点：作为一名专业码农，完全可以用Linux系统完成日常的研发工作。本文中说的Linux实际上指的是GNU...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E7%A0%94%E5%8F%91/" rel="tag">研发</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/dijkstra/dijkstra1.png" alt="实现最短路径问题的2种常用算法">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">
-                    实现最短路径问题的2种常用算法</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年05月24日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            背景最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：
-
-确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/Python-vs-Perl-Programming.png" alt="新秀语言Python与老牌语言Perl的比较">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/">
-                    新秀语言Python与老牌语言Perl的比较</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年05月17日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            背景本人从事嵌入式软件开发已经有8个年头了，最开始是用C/C++做嵌入式底层软件开发。期间利用Qt Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt SDK开发程序，比之前开发效率高了不少。也用过Perl脚本编写自动化...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/backtrack/backtrack1.png" alt="回溯算法的基本原理及代码框架">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/">
-                    回溯算法的基本原理及代码框架</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年05月16日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            回溯法的定义回溯法(Backtracking)属于暴力搜索法中的一种，维基百科对该方法的解释是回溯法是一种可以找出所有（或一部分）解的一般性算法，尤其适用于约束满足问题（在解决约束满足问题时，我们逐步构造更多的候选解，并且在确定某一部...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/dfs/tree.png" alt="图的遍历搜索算法之BFS和DFS">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/">
-                    图的遍历搜索算法之BFS和DFS</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年05月05日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search) 。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次遍历算法。BFS算法是从根节点开始，沿着...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/">
-                    深圳清湖科目三路考3号线细节</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2019年03月31日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            清湖科目三3号线细节记录3号线路比2号线长不少，而且记忆的细节要多，因此本次主要记录3号线的操作细节，2号线比较熟悉，这里就不写了。本文按照流水线记录方式，记录考试车行驶过程中需要关注和考试的关键点。
-整体原则：
-
-停车换一档，防止3...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E9%A9%BE%E8%80%83%E7%BB%8F%E9%AA%8C/" rel="tag">驾考经验</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/vpn/vpn2.png" alt="利用shadowsocks上外网">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/">
-                    利用shadowsocks上外网</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2019年03月21日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/VPN%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag">VPN科学上网</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-<article class="post">
-    
-    <div class="post-media">
-        <a href="/2018/10/07/archlinux%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/">
-            <img class="img-ajax" src="/img/loading.gif" data-src="/img/fault/archboot2.jpg" alt="archlinux升级系统之后无法启动问题">
-        </a>
-    </div>
-    
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2018/10/07/archlinux%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/">
-                    archlinux升级系统之后无法启动问题</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2018年10月07日
-                </time>
-            </div>
-        </div>
-        <p class="brief">
-            
-            本人用的Linux系统版本是archlinux系统，这几年来一直用命令 pacman -Syu滚动升级到最新版本，还没有出现滚挂的问题。这两天用命令全量升级之后，重新电脑，发现系统开启不了了，但是在恢复模式下能启动进入系统界面。如果在...
-            
-        </p>
-    </div>
-    
-    <footer class="post-footer clearfix">
-        <div class="pull-left tag-list">
-            <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/Linux%E7%B3%BB%E7%BB%9F%E4%BF%AE%E5%A4%8D/" rel="tag">Linux系统修复</a>
-            
-        </span>
-    </span>
-    
-    
-</div>
-        </div>
-        <div class="post-permalink">
-            <a href="/2018/10/07/archlinux%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/" class="btn btn-default">
-                阅读全文</a>
-        </div>
-    </footer>
-    
-</article>
-
-
-
-<nav class="pagination" role="navigation">
-    <div id="page-nav">
-	<a class="extend prev" rel="prev" href="/"><i class='fa fa-angle-left'></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class='fa fa-angle-right'></i></a>
-    </div>
+      </li>
+  </ul>
 </nav>
 
-                </main>
-                
-                    
-<aside class="col-md-4 sidebar">
-    
-    
-<div class="widget">
-    <h3 class="title">
-        搜索
-    </h3>
-    <div id="search-form">
-        <div id="result-mask" class="hide"></div>
-        <div class="search-area">
-            
-            <input id="search-key" type="search" autocomplete="off" placeholder="搜点啥呢？">
-            <button type="button" class="search-form-submit" id="search-local">
-                站内搜索</button>
-            
-            
-        </div>
-        <div id="result-wrap" class="hide">
-            <div id="search-result"></div>
-        </div>
-        <div class="hide">
-            <template id="search-tpl">
-                <div class="item">
-                    <a href="/{path}" title="{title}">
-                        <div class="title">{title}</div>
-                        <div class="content">{content}</div>
-                    </a>
-                </div>
-            </template>
-        </div>
-    </div>
-</div>
 
-    
-    
-    
-    
-<div class="widget">
-    <h3 class="title">
-        社交
-    </h3>
-    <div class="content social">
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
         
-        <a href="https://www.github.com/sunjunior" rel="external nofollow" title="Github" target="_blank">
-            <i class="git fa fa-git"></i>
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
         </a>
-        
-        <a href="mailto:sunjunior@163.com" rel="external nofollow" title="邮箱" target="_blank">
-            <i class="envelope-o fa fa-envelope-o"></i>
-        </a>
-        
-        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" rel="external nofollow" title="联系QQ" target="_blank">
-            <i class="qq fa fa-qq"></i>
-        </a>
-        
-        <a href="javascript:(function(){var t='sunjunior';try{navigator.clipboard.writeText(t);}catch(e){}alert('微信号：'+t+'（已复制，打开微信搜索添加）');})();" rel="external nofollow" title="微信" target="_blank">
-            <i class="weixin fa fa-weixin"></i>
-        </a>
-        
-    </div>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
 </div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
 
-    
-    
-    
-    
-<div class="widget">
-    <h3 class="title">
-        归档
-    </h3>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/"><i class="fa" aria-hidden="true">2026年09月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/08/"><i class="fa" aria-hidden="true">2026年08月</i></a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/09/"><i class="fa" aria-hidden="true">2025年09月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/"><i class="fa" aria-hidden="true">2024年02月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/"><i class="fa" aria-hidden="true">2020年06月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/"><i class="fa" aria-hidden="true">2020年05月</i></a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/"><i class="fa" aria-hidden="true">2019年03月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/"><i class="fa" aria-hidden="true">2018年10月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/"><i class="fa" aria-hidden="true">2018年09月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/"><i class="fa" aria-hidden="true">2018年07月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/"><i class="fa" aria-hidden="true">2018年05月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/"><i class="fa" aria-hidden="true">2018年03月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/"><i class="fa" aria-hidden="true">2018年02月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/"><i class="fa" aria-hidden="true">2017年12月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/"><i class="fa" aria-hidden="true">2017年09月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/"><i class="fa" aria-hidden="true">2017年08月</i></a><span class="archive-list-count">2</span></li></ul>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        标签云
-    </h3>
-    <div class="content tag-cloud">
-        
-        <a href="/tags/APUE%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">APUE学习笔记</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Linux%E7%B3%BB%E7%BB%9F%E4%BF%AE%E5%A4%8D/" style="font-size: 10px;">Linux系统修复</a> <a href="/tags/MAME-%E6%A8%A1%E6%8B%9F%E5%99%A8-%E9%85%8D%E7%BD%AE-%E5%AE%8F/" style="font-size: 10px;">MAME, 模拟器, 配置, 宏</a> <a href="/tags/VPN%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" style="font-size: 10px;">VPN科学上网</a> <a href="/tags/%E5%8D%8E%E4%B8%BA%E6%98%87%E8%85%BE/" style="font-size: 10px;">华为昇腾</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" style="font-size: 15px;">数据结构与算法</a> <a href="/tags/%E7%A0%94%E5%8F%91/" style="font-size: 10px;">研发</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E4%BA%BA%E7%94%9F/" style="font-size: 10px;">编程人生</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/" style="font-size: 17.5px;">编程实践</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/" style="font-size: 10px;">编程思想</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/" style="font-size: 10px;">软件开发</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E6%8A%80%E6%9C%AF/" style="font-size: 12.5px;">软件技术</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 20px;">逆向工程</a> <a href="/tags/%E9%83%A8%E7%BD%B2%E5%AE%9E%E8%B7%B5/" style="font-size: 10px;">部署实践</a> <a href="/tags/%E9%A9%BE%E8%80%83%E7%BB%8F%E9%AA%8C/" style="font-size: 12.5px;">驾考经验</a>
-        
-    </div>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        相关链接
-    </h3>
-    <div class="content friends-link">
-        
-        <a href="https://www.zhihu.com/people/sunjunior" class="fa" target="_blank">
-            知乎主页</a>
-        
-    </div>
-</div>
-
-    
-</aside>
-
-                
-            </div>
         </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
+      </div>
     </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2025/09/06/%E7%AE%80%E5%8D%95%E7%94%A8GTest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/09/06/%E7%AE%80%E5%8D%95%E7%94%A8GTest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/" class="post-title-link" itemprop="url">简单用GTest单元测试框架编写测试用例</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-06 21:50:26" itemprop="dateCreated datePublished" datetime="2025-09-06T21:50:26+08:00">2025-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-04 08:41:54" itemprop="dateModified" datetime="2020-05-04T08:41:54+08:00">2020-05-04</time>
+    </span>
+
+  
 </div>
 
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
-            </div>
         </div>
-    </div>
-</div>
+      </header>
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="gtest单元测试框架浅析">GTest单元测试框架浅析</h1>
+<p>Google发布的gtest是一款跨平台单元测试框架，本文是在archlinux上直接安装gtest之后，用codeblocks编写了一个简单的16进制字符串转数字的函数，最后利用gtest测试框架来输出测试用例，保证函数的正确性。在使用gtest时，需要在IDE编译选项中添加-lgtest选项，不然可能会链接报错。下面是简单的用法和执行结果：
+#include &lt;gtest/gtest.h&gt;</p>
+<pre><code>bool String2Word(const char *ptr, unsigned int *puiValue)
+{
+    int pos = 0;
+    char aPos[8];
+    unsigned int uiValue = 0;
 
-<script src="/js/search.js?rev=@@hash.js"></script>
+    if (ptr == nullptr || *ptr == &#39;\0&#39; || puiValue == NULL)
+    {
+        return false;
+    }
 
+    //这里比如“14e23”和“0x14e23”都是一样的数字
 
+    if (ptr[0] == &#39;0&#39; &amp;&amp; (ptr[1] == &#39;x&#39; || ptr[1] == &#39;X&#39;))
+    {
+        ptr += 2;
+    }
 
-
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
-
-
-<script src="/js/app.js?rev=@@hash.js"></script>
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
+    while (*ptr != &#39;\0&#39;)
+    {
+        if (pos &gt;= 8)
+        {
+            return false;
         }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+        if (*ptr &gt;= &#39;0&#39; &amp;&amp; *ptr &lt;= &#39;9&#39;)
+        {
+            aPos[pos++] = *ptr - &#39;0&#39;;
+        }
+        else if (*ptr &gt;= &#39;a&#39; &amp;&amp; *ptr &lt;= &#39;f&#39;)
+        {
+            aPos[pos++] = *ptr - &#39;a&#39; + 10;
+        }
+        else if (*ptr &gt;= &#39;A&#39; &amp;&amp; *ptr &lt;= &#39;F&#39;)
+        {
+            aPos[pos++] = *ptr - &#39;A&#39; + 10;
+        }
+        else
+        {
+            return false;
+        }
+
+        ptr++;
+
+    }
+
+    for (int i = 0; i &lt; pos; i++)
+    {
+        uiValue = uiValue * 16 + aPos[i];
+    }
+
+
+    *puiValue = uiValue;
+
+    return true;
+}
+
+TEST(String2Word, testcase1)
+{
+    const char *ptr = &quot;0x12345&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(true, String2Word(ptr, &amp;uiValue));
+    EXPECT_EQ(0x12345, uiValue);
+
+}
+
+TEST(String2Word, testcase2)
+{
+    const char *ptr = &quot;0x12345efc&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(true, String2Word(ptr, &amp;uiValue));
+    EXPECT_EQ(0x12345efc, uiValue);
+
+}
+
+TEST(String2Word, testcase3)
+{
+    const char *ptr = &quot;12345efc&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(true, String2Word(ptr, &amp;uiValue));
+    EXPECT_EQ(0x12345efc, uiValue);
+
+}
+
+TEST(String2Word, testcase4)
+{
+    const char *ptr = &quot;12345678&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(true, String2Word(ptr, &amp;uiValue));
+    EXPECT_EQ(0x12345678, uiValue);
+
+}
+
+TEST(String2Word, testcase5)
+{
+    const char *ptr = &quot;\0&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(false, String2Word(ptr, &amp;uiValue));
+
+}
+
+TEST(String2Word, testcase6)
+{
+    const char *ptr = &quot;0xe3.34&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(false, String2Word(ptr, &amp;uiValue));
+
+}
+
+TEST(String2Word, testcase7)
+{
+    const char *ptr = &quot;e340fs&quot;;
+    unsigned int uiValue = 0;
+
+    EXPECT_EQ(false, String2Word(ptr, &amp;uiValue));
+
+}
+
+
+int main(int argc, char *argv[])
+{
+    testing::InitGoogleTest(&amp;argc, argv);
+
+
+    return RUN_ALL_TESTS();
+
+
+}</code></pre>
+<p><img src="/img/gtest.gif" alt="gtest打桩测试结果显示" />
+总之，单元测试是软件开发中最要的一个环节，利用gtest可以方便测试我们自己编写的程序，写出程序少bug，其他gtest用法可以参考gtest附带的example，里面基本将常见的单元测试用法列举齐全了。最后附上程序猿的佛祖保佑图：</p>
+<pre><code>                   _ooOoo_
+                  o8888888o
+                  88&quot; . &quot;88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---&#39;\____
+             .&#39;  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  &#39;&#39;\---/&#39;&#39;  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .&#39;  /--.--\  `. . __
+      .&quot;&quot; &#39;&lt;  `.___\_&lt;|&gt;_/___.&#39;  &gt;&#39;&quot;&quot;.
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-&#39;======
+                   `=---=&#39;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         佛祖保佑       永无BUG</code></pre>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2024/02/25/%E4%BD%BF%E7%94%A8Python%E8%A3%85%E9%A5%B0%E5%99%A8%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E7%B1%BB%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/25/%E4%BD%BF%E7%94%A8Python%E8%A3%85%E9%A5%B0%E5%99%A8%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E7%B1%BB%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">使用Python装饰器自动注册类成员方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-25 22:03:40" itemprop="dateCreated datePublished" datetime="2024-02-25T22:03:40+08:00">2024-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-16 22:50:49" itemprop="dateModified" datetime="2026-08-16T22:50:49+08:00">2026-08-16</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2
+id="使用python装饰器自动注册类成员方法">使用Python装饰器自动注册类成员方法</h2>
+<p>最近本人在开发AI大模型相关的业务功能，其中有一个功能是如何将大模型转换人的意图之后生成的API的接口进行业务逻辑实现。由于业务场景较多，因此需要定义的函数也非常多，如何有效地管理这些函数呢？
+最早的版本，我简单采用了表驱动法来完成函数的集中管理（也可以派生出工厂模式，给出不同的场景下的函数处理）。这种方法在函数规模较小的时候，简单方便。但随着函数个数的增多，达到上百个，甚至数百个之多时，映射表也急剧膨胀，维护成本也随着增大。</p>
+<p>比如有如下代码： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">**kwargs</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;foo&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bar</span>(<span class="params">**kwargs</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;bar&quot;</span></span><br></pre></td></tr></table></figure></p>
+<p>这里使用表驱动法，可以将代码写成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">despatch_call</span>(<span class="params">func, **kwargs</span>):</span><br><span class="line">    method_mapping = &#123;</span><br><span class="line">        <span class="string">&quot;foo&quot;</span>: foo,</span><br><span class="line">        <span class="string">&quot;bar&quot;</span>: bar</span><br><span class="line">    &#125;</span><br><span class="line">    dispatched_method = method_mapping.get(func)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> dispatched_method:</span><br><span class="line">        <span class="keyword">raise</span> ValueError</span><br><span class="line">    <span class="keyword">return</span> dispatched_method(**kwargs)</span><br></pre></td></tr></table></figure>
+<p>这里每新增一个函数，则只需要在method_mapping中新增一个函数映射即可。但是在某些场景下，函数有数十上百个之多，如果实现API接口的同时，还人工维护这张映射表，维护成本会很高。因此有没有什么好的方法，只关注新增接口的业务逻辑实现，而无需关注映射表的维护，让其自动完成注册呢？答案是有的。</p>
+<p>我们都知道，Python是一门完全面向对象的语言，因此里面所有的类型皆是对象，比如函数，类等。同时Python还拥有强大的反射机制，可以动态修改类成员的行为或属性。因此在声明函数时，我们考虑使用Python装饰器方式来实现一个路由函数<strong>route</strong>，该函数的作用是动态地添加类成员函数的属性（相当于新增一个注册标记），这样做的目的是可以和其他不用注册的成员函数做好区分。代码可以参考Web框架里面常用的写法，使用<strong>setattr</strong>方法在每个函数中动态添加属性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># route.py</span></span><br><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">route</span>(<span class="params">rest_path</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decorator</span>(<span class="params">func</span>):</span><br><span class="line">        <span class="built_in">setattr</span>(func, <span class="string">&quot;__REST_PATH__&quot;</span>, rest_path)</span><br><span class="line"><span class="meta">        @functools.wraps(<span class="params">func</span>)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">wrapper</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br></pre></td></tr></table></figure>
+<p>比如我们有一个Foo类，里面有一个number_calc成员方法，则我们可以这样完成对成员方法的动态属注入：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>:</span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;number_calc&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">number_calc</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br></pre></td></tr></table></figure>
+<p>那如何把所有待注册的类成员函数集中管理起来呢，我们还需要一个管理类RouteMgr,该类包含2个成员方法，一个是类注册方法，作用是将某个类的所有待注册的成员方法（即函数对象中添加了__REST_PATH__属性的）添加到内置字典中保存起来。另外一个成员函数作用是提供这些注册函数的调用方法。调用逻辑实际上跟表驱动方式很类似，也是通过函数名称来获取对应的函数地址，从而完成调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#route.py</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RouteMgr</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.route_map = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">register</span>(<span class="params">self, class_instance</span>):</span><br><span class="line">        cls = class_instance.__class__</span><br><span class="line">        <span class="keyword">for</span> attr_name <span class="keyword">in</span> <span class="built_in">dir</span>(cls):</span><br><span class="line">            attr = <span class="built_in">getattr</span>(class_instance, attr_name)</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">hasattr</span>(attr, <span class="string">&quot;__REST_PATH__&quot;</span>):</span><br><span class="line">                path = <span class="built_in">getattr</span>(attr, <span class="string">&quot;__REST_PATH__&quot;</span>, <span class="literal">False</span>)</span><br><span class="line">                <span class="keyword">if</span> path <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">False</span>:</span><br><span class="line">                    <span class="keyword">if</span> path <span class="keyword">in</span> <span class="variable language_">self</span>.route_map:</span><br><span class="line">                        <span class="keyword">raise</span> Exception(<span class="string">&quot;Route path &#123;&#125; already registered.&quot;</span>.<span class="built_in">format</span>(path))</span><br><span class="line">                    <span class="variable language_">self</span>.route_map[attr.__REST_PATH__] = attr</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call_route</span>(<span class="params">self, route_path, kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> route_path <span class="keyword">in</span> <span class="variable language_">self</span>.route_map:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.route_map[route_path](**kwargs)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">&quot;Route path &#123;&#125; not registered.&quot;</span>.<span class="built_in">format</span>(route_path))</span><br></pre></td></tr></table></figure>
+<p>以上代码基本完成了类成员函数自动注册和动态调用功能，下面我们通过一个实例来说明如何使用该框架：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ast</span><br><span class="line"><span class="keyword">from</span> route <span class="keyword">import</span> route, RouteMgr</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>:</span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;number_calc&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">number_calc</span>(<span class="params">self, a, b, c</span>):</span><br><span class="line">        <span class="keyword">return</span> a * b * c</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;bar&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">bar</span>(<span class="params">a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;a + b = %d&quot;</span> % (a + b)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 后面新增函数时，只需要在此类中新增接口和逻辑路由即可（路由名称和函数名称保持一致）</span></span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;function_name&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">function_name</span>(<span class="params">xx, zz</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RestManager</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.class_instance = Foo()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call_route</span>(<span class="params">self, func_name, kwargs</span>):</span><br><span class="line">        <span class="variable language_">self</span>.route_mgr = RouteMgr()</span><br><span class="line">        <span class="variable language_">self</span>.route_mgr.register(<span class="variable language_">self</span>.class_instance)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.route_mgr.call_route(func_name, kwargs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dispatch_route</span>(<span class="params">method</span>):</span><br><span class="line">    tree = ast.parse(method)</span><br><span class="line">    func = tree.body[<span class="number">0</span>].value.func.<span class="built_in">id</span></span><br><span class="line">    params = tree.body[<span class="number">0</span>].value.keywords</span><br><span class="line">    args = &#123;param.arg: param.value.value <span class="keyword">for</span> param <span class="keyword">in</span> params&#125;</span><br><span class="line">    result = RestManager().call_route(func, args)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    method = <span class="string">&quot;number_calc(a=1, b=2, c=3)&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(dispatch_route(method))</span><br><span class="line">    </span><br><span class="line">    method = <span class="string">&quot;bar(a=1, b=2)&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(dispatch_route(method))</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># 6</span></span><br><span class="line"><span class="comment"># a + b = 3</span></span><br></pre></td></tr></table></figure>
+<p>在RestManager初始化时，先把Foo类实例化，然后在Foo对象注册的时候，动态获取所有带特殊标志的成员函数，将其保留到内部一个字典里面，最后在调用的时候，通过输入函数名称，找到对应的函数地址，传入参数，从而完成调用。后面再新增API接口时，只需要在Foo类中新增API函数（外加逻辑路由)和实现逻辑，无需关注函数如何调用。</p>
+<p>使用该框架本质上和表驱动是一样的，只是这里会将所有映射的函数放置到某个类中（看作某个命名空间），借助Python强大的反射机制，使用一个管理类完成了所有成员函数的自动注册和统一管理。</p>
+<p>这里可以有人会问，一个类中有上百个成员函数，这维护成本也比较高，同时也违反了类的单一职责原则，因此现实过程中，我们可能有多个类（分属不同的模块），每个类中某些方法需要自动注册并调用，那如何将这些类中的成员函数统一管理并自动关联并调用呢？
+答案还是利用Python提供强大的反射机制，基类可以通过内置函数<strong>subclasses</strong>方法获取所有子类，进一步再对各个子类的成员方法统一完成注册管理，实现方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> route <span class="keyword">import</span> route</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RouteMgr</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.route_mapping = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">register</span>(<span class="params">self</span>):</span><br><span class="line">        cls = <span class="variable language_">self</span>.__class__</span><br><span class="line">        subclasses = cls.__subclasses__()</span><br><span class="line">        <span class="keyword">for</span> subclass <span class="keyword">in</span> subclasses:</span><br><span class="line">            <span class="keyword">for</span> attr_name <span class="keyword">in</span> <span class="built_in">dir</span>(subclass):</span><br><span class="line">                class_instance = subclass()</span><br><span class="line">                attr = <span class="built_in">getattr</span>(class_instance, attr_name)</span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">hasattr</span>(attr, <span class="string">&quot;__REST_PATH__&quot;</span>):</span><br><span class="line">                    path = <span class="built_in">getattr</span>(attr, <span class="string">&quot;__REST_PATH__&quot;</span>, <span class="literal">False</span>)</span><br><span class="line">                    <span class="keyword">if</span> path <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">False</span>:</span><br><span class="line">                        <span class="keyword">if</span> path <span class="keyword">in</span> <span class="variable language_">self</span>.route_mapping:</span><br><span class="line">                            <span class="keyword">raise</span> Exception(<span class="string">&quot;Route path &#123;&#125; already registered.&quot;</span>.<span class="built_in">format</span>(path))</span><br><span class="line">                        <span class="variable language_">self</span>.route_mapping[path] = attr</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">call_route</span>(<span class="params">self, route_path, kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> route_path <span class="keyword">in</span> <span class="variable language_">self</span>.route_mapping:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.route_mapping[route_path](**kwargs)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">&quot;Route path &#123;&#125; not registered.&quot;</span>.<span class="built_in">format</span>(route_path))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span>(<span class="title class_ inherited__">RouteMgr</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;add&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;%d + %d = %d&quot;</span> % (a, b, a + b)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;sub&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sub</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;%d - %d = %d&quot;</span> % (a, b, a - b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span>(<span class="title class_ inherited__">RouteMgr</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;multi&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">multi</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;%d * %d = %d&quot;</span> % (a, b, a * b)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @route(<span class="params"><span class="string">&quot;div&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">div</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;%d / %d = %d&quot;</span> % (a, b, a / b)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    route_mgr = RouteMgr()</span><br><span class="line">    route_mgr.register()</span><br><span class="line">    <span class="built_in">print</span>(route_mgr.call_route(<span class="string">&quot;add&quot;</span>, &#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">2</span>&#125;))</span><br><span class="line">    <span class="built_in">print</span>(route_mgr.call_route(<span class="string">&quot;sub&quot;</span>, &#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">5</span>&#125;))</span><br><span class="line">    <span class="built_in">print</span>(route_mgr.call_route(<span class="string">&quot;multi&quot;</span>, &#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">3</span>&#125;))</span><br><span class="line">    <span class="built_in">print</span>(route_mgr.call_route(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">2</span>&#125;))</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line"><span class="comment"># 1 + 2 = 3</span></span><br><span class="line"><span class="comment"># 10 - 5 = 5</span></span><br><span class="line"><span class="comment"># 2 * 3 = 6</span></span><br><span class="line"><span class="comment"># 10 / 2 = 5</span></span><br></pre></td></tr></table></figure>
+<p>这里我们将RouteMgr做了改造，让待注册成员函数所在的类继承至该类，同时在基类RouteMgr的register函数中,可以通过subclasses函数来获取所有的子类，从而进一步获取到所有子类的成员方法，这样就避免了超大类的出现，也有利于生产环境下代码的维护。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/06/07/%E5%AE%8C%E5%85%A8%E7%94%A8Linux%E5%B7%A5%E4%BD%9C/" class="post-title-link" itemprop="url">完全用Linux系统工作</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2020-06-07 15:46:32 / 修改时间：19:30:22" itemprop="dateCreated datePublished" datetime="2020-06-07T15:46:32+08:00">2020-06-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="背景">背景</h1>
+<p>本文是针对研发人员而言的，尤其是软件开发人员，重度依赖office套件和Adobe等第三方软件的开发人员除外。先表明个人观点：作为一名专业码农，<strong>完全可以用Linux系统完成日常的研发工作</strong>。本文中说的Linux实际上指的是GNU/Linux，包括了建立在Linux内核之上的各类基础设施（编译器，语言工具链）以及上层应用的集合。</p>
+<p>我们之所以平时依赖Windows系统，可能在于Windows下系统历史更悠久，应用程序类型更丰富，软件很多，体验更好（对于非研发类员工来说)，不同类型的应用程序都有多种可以选择。比如Windows系统下的office办公套件，Adobe
+Photoshop作图套件，还有不少专业软件和游戏客户端只提供了Windows版本。另外，大多数同学从开始接触计算机开始，用的是DOS系统或者Windows系统入门的（可能跟教育有点关系吧，当年教学用的基本都是盗版的Windows系统），思维上先入为主，这也使得作为大多数开发人员，平时仍然喜欢将Windows系统作为主力开发的系统。但是随着这些年Linux系统生态逐渐发展和完善，特别是一些大厂比如谷歌，微软,包括国内的深度科技deepin，搜狗等公司也开始在Linux系统上开发一些基础应用软件，大大地方便了Linux系统的使用，同时也推动了Linux系统在<strong>非研发类人员</strong>之间的普及。</p>
+<p>作为研发人员来说，用Linux系统进行应用程序开发比Windows系统更为方便，系统提供的各类命令行可以帮助我们高效完成工作。要知道，Linux系统是世界上那些顶级黑客经过近三十年联合开发，逐渐发展起来的一款开源操作系统。使用命令行操作，高效率完成工作是本系统的一大特色。实际上用命令行比用鼠标在图形界面上操作效率更高，更灵活，更方便。但这也使得对我们<strong>研发人员的要求</strong>更高了。其实入门如何使用Linux系统是很简单的，完全不用担心不会用。研发人员完全可以通过自学快速掌握常用的Linux系统命令行。Windows系统在图形界面（Windows
+95）之前不是也有DOS系统么，完成一系列工作也需要记住大量的DOS命令。如今Linux系统也开发了各类GUI界面供我们选择，比较经典常用的GUI界面有GNOME、KDE、
+LXDE、Deepin等等。当前Linux系统发布版本众多，如何选择一款适合在PC上使用的呢？这里根据用户使用流行度，本文这里推荐几款系统比较常用和好用的版本，比如流行的Ubuntu、Fedora、Archlinux、Deepin等。这几款Linux发布版本在个人PC上比较稳定，且版本有社区的支持，一般出现问题反馈给社区，社区就会作为bug解决了。我们研发人员在使用Linux系统上有哪些常用的软件和工具呢？下面就带着这个问题分门别类地讲讲，各类工具软件在Linux系统上有哪些常用的。</p>
+<h1 id="应用软件">应用软件</h1>
+<p>本文以我使用的Linux桌面经验为基础，讲讲不同类型的应用Linux系统上常用的工具有哪些。本文只涉及到开源、免费的工具软件。其他三方收费软件比如MATLAB，SAS，Beyond
+Compare等等不在讨论范围。首先，对于研发人员来说，主要就是程序设计与编码了。当前主流的IDE，我们研发人员主要关心工具是否配置简单，所有主流语言的代码补全功能是否支持，代码重构是否方便等等。工具要支持跨平台，Windows系统下有的，Linux下也有。下面列举下Linux系统的各类主流IDE和工具。</p>
+<h2 id="主流ide">主流IDE</h2>
+<ul>
+<li><p><strong>Codeblocks</strong>（http://www.codeblocks.org）</p>
+<p>Codeblocks是一款免费开源的C/C++开源工具，支持 GCC、MSVC++
+等多种编译器，甚至还可以导入 Dev-C++ 的项目。Code::Blocks
+的优点是：跨平台。在Linux、Mac、Windows
+上都可以运行，且自身体积小，安装配置非常方便。最新的版本为20.03版本，代码自动补全应该是开源IDE中做的体验非常好的一项功能了。</p>
+<p><img src="/img/linux/linux1.png" /></p></li>
+<li><p><strong>CodeLite</strong>（https://codelite.org）</p>
+<p>CodeLite是专门用于C，C
+++，PHP和JavaScript（主要供使用Node.js的后端开发人员）编程语言的开源，免费，跨平台IDE，其在所有主要平台（OSX，Windows和Linux）上均能最佳运行。跟上面介绍的CodeBlocks
+IDE一样，不过语言支持范围更广。 <img
+src="/img/linux/CodeLite.png" /></p></li>
+<li><p><strong>Pycharm</strong>(https://www.jetbrains.com/pycharm/download/#section=linux)</p>
+<p>PyCharm是一个用于计算机编程的集成开发环境（IDE），主要用于Python语言开发，由捷克公司JetBrains开发，提供代码分析、图形化调试器，集成测试器、集成版本控制系统，并支持使用Django进行网页开发。JetBrains公司针对不同的语言都有一套对应的IDE,比如Java/Scala开发用IDEA，C/C++开发用CLion等等。</p>
+<p><img src="/img/linux/linux2.png" /></p></li>
+<li><p><strong>VSCode</strong>（https://code.visualstudio.com）</p>
+<p>Visual Studio Code（简称VS Code）是一个由微软开发，同时支持Windows 、
+Linux和macOS等操作系统且开放源代码的代码编辑器，它支持测试，并内置了Git
+版本控制功能，同时也具有开发环境功能，例如代码补全（类似于
+IntelliSense）、代码片段和代码重构等。该编辑器支持用户个性化配置，例如改变主题颜色、键盘快捷方式等各种属性和参数，同时还在编辑器中内置了扩展程序管理的功能。通过各类插件安装，基本上可以支持所有主流语言的代码补全功能，也是程序员中使用最广泛的编辑器之一。</p></li>
+</ul>
+<p><img src="/img/linux/linux3.png" /></p>
+<ul>
+<li><p><strong>Qt
+Creator</strong>（https://www.qt.io/offline-installers）</p>
+<p>Qt Creator 是一款跨平台的集成开发环境，特别针对Qt开发者，是Qt
+SDK组成的一部分，可运行于Windows, Linux/X11及Mac OS
+X等桌面操作系统，允许开发者为多桌面环境及移动设备平台创建应用程序。它包括一个可视化调试工具和集成的
+GUI 版面和外形设计师。这个编辑器的功能包括语法高亮度显示和自动完成。Qt
+Creator 在 Linux 上，使用 GCC/Clang的 C++ 编译器。Qt
+Creator也是为数不多的代码补全功能好用的IDE之一。QT
+Creator也是在Linux上进行C/C++
+GUI图形软件的主力开发工具，很多软件在Linux下的版本就是用Qt开发的，比如beyond
+compare比较工具，金山公司的WPS办公套件。</p>
+<p><img src="/img/linux/linux5.png" /></p></li>
+<li><p><strong>GVim</strong>（https://github.com/vim/vim-win32-installer/releases）</p>
+<p>Vim是从vi发展出来的一个文本编辑器。其代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。和Emacs并列成为类Unix系统用户最喜欢的编辑器，素有编辑器之神的美誉。GVim是VIM的图形客户端，我们可以通过定制配置之后，改造成一个美观好用IDE，改造之后的IDE几乎支持所有主流语言的代码补全功能，这也是我平时开发主力的IDE。</p>
+<p><img src="/img/linux/linux4.png" /></p></li>
+<li><p><strong>其他IDE</strong></p>
+<p>Linux下还有很多IDE，比如eclipse，也是用的比较多的。这里本文主要想强调的是当前用Linux做应用开发，几乎不存在因为IDE生态不完善而影响开发效率的问题。</p></li>
+</ul>
+<h2 id="图形编辑软件">图形编辑软件</h2>
+<p>研发人员在平时工作中软件编写过程中，最常用的就是要画流程图或者用UML语言来设计功能了，我们在Windows系统下，有visio等工具使用，或者利用第三方收费工具，比如EA（Enterprise
+Architect）、国产亿图edraw。在Linux下，也有不少好用的开源工具辅助我们画UML图。比如Diag画图软件，yEd等等，画脑图也有xmind可用。大家在平时工作中用到的功能，基本上都能找到对应的。这里还有一些通用的画图软件，比如MyPaint,
+Pinta, GIMP,
+Graphviz等等，这里就不一一枚举了。下面图片中的是我本人电脑中常使用的画图工具软件（当然我们可以支持下国产，直接购买亿图的Linux版本）：</p>
+<p><img src="/img/linux/diag.png" /></p>
+<p><img src="/img/linux/graphviz.png" /></p>
+<p><img src="/img/linux/pinta.png" /></p>
+<h2 id="办公套件">办公套件</h2>
+<p>​
+对标windows下的office套件，Linux下有什么可以替代的呢？我们有libreoffice套件，该套件是Linux系统的标配，但由于跟office在布局排版上不一样，可能用的不太顺手。另外，我们还有<strong>永中office套件</strong>，该工具仿照了office
+2003和office
+2007版本，布局排版基本一样，当前永中已经不更新了，需要网上下载以前版本的deb或者rpm包之后，手工安装。目前金山公司的WPS有对应的Linux版本，Linux系统下配置软件源之后可以用命令一键安装，部署好了基本可以达到开箱即用。WPS在界面布局上跟Windows下的office也是一致的，这也是在Linux环境下用office套件办公的不二选择。</p>
+<p>​
+对于研发人员来说，用office套件的频度不大，反而我们有时候需要阅读PDF文档用什么工具效率更高；另外撰写个人博客时用什么markdown工具更为方便；打字用什么输入法更快速等等。这些诉求对于Linux系统来说，自然都是不在话下。当前不但有而且很多，这里我们只列举本人使用得比较多的PDF工具和markdown工具。PDF工具多年之前有一些开源的，但是功能少，大都只是阅读功能。这里PDF推荐用master
+pdf
+editor，当前最新版本为5.0版本，markdown工具用typora，我们不需要对markdown语法记忆，用该markdown工具编写文档，所见即所得，非常好用，本文也是用该工具完成的。输入法自然用搜狗输入法了。</p>
+<p>另外浏览器也是我们用的频率最多的工具了，Linux系统下浏览器的2大阵营，Chrome浏览器和FireFox火狐浏览器，2款浏览器各有特点，依赖喜好而定。都支持丰富的插件，是前端开发调测用的最多的2款浏览器了。</p>
+<p><img src="/img/linux/typora.png" /></p>
+<p><img src="/img/linux/sogou.png" /></p>
+<p><img src="/img/linux/pdf.png" /></p>
+<h2 id="影音播放">影音播放</h2>
+<p>影音这部分在多年前（大概2012年左右）支持不完善，需要手工配置（需要命令行安装多种音视频解码器）后才可以支持播放，由于配置要求较高，使得不少人对Linux下无法播放影音文件产生了质疑。经过这么些年的更新发展，当前我们可以直接在软件商店中点击安装，或者通过命令行安装VLC播放器或者SMPlayer播放器，就可以对当前主流格式的视频，音频一网打尽。</p>
+<p><img src="/img/linux/smplayer.png" /></p>
+<p><img src="/img/linux/vlc.png" /></p>
+<h2 id="其他工具">其他工具</h2>
+<p>Linux上工具数以万计，对于平时我们开发而言，利用Linux系统自带shell命令和常用的工具，平时基本上可以高效率完成日常工作。其他专用工具需要单独搜寻，比如排版工具LaTeX，一般都会有对应的Linux版本，如果没有也会有替代方案。目前很多大型公司都开始重视Linux系统上的应用市场份额了。比如腾讯最近也开始将QQ版本逐步更新。像之前的通信社交软件skype，
+团队协作软件teamviewer都有Linux版本的。当前应用软件开发都是优先考虑跨平台。Linux系统缺少游戏和游乐功能么？答案是不缺，下载安装一个steam平台，可以在Linux上玩多数免费游戏，足够日常娱乐了。另外听歌可以下载网易云音乐客户端，跟Windows下的体验并无差别。本人用的是终端版本的网易云音乐，更加地轻便，丝滑流畅。</p>
+<p><img src="/img/linux/musicbox.png" /></p>
+<p><img src="/img/linux/steam.png" /></p>
+<p><img src="/img/linux/mame.png" /></p>
+<h1 id="总结">总结</h1>
+<p>在Linux桌面上进行研发，对于大都数程序员来说是没有任何问题的。对于一般的影音娱乐，当前系统上也有许多软件可供选择。对于公司而言，用开源的系统最大的优势是节省成本资源，并且社区对该版本提供技术支持。而对于程序员来说，用Linux系统做开发，省去了安装各种开发工具，比如ssh/scp工具，系统是自带的。至于被吐槽的系统娱乐功能太少的问题，反而成为了公司使用该系统的优势，公司的计算机是用来办公的，不是用来玩游戏的，我们玩游戏适可而止就好。总的来说，用Linux系统上研发相比Windows而言，工具链相当完善，许多工具命令系统默认就有，效率甚至会比Windows下开发更高。这里需要说明的是，安装Linux系统对硬件的要求比较高，主要是系统驱动还不完善，很多厂商只开发了Windows下的驱动，Linux下驱动要么缺少，要么功能有残缺。尤其是显卡驱动。N卡的驱动更加稳定些。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">实现最短路径问题的2种常用算法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-24 07:56:07" itemprop="dateCreated datePublished" datetime="2020-05-24T07:56:07+08:00">2020-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-27 23:30:42" itemprop="dateModified" datetime="2020-05-27T23:30:42+08:00">2020-05-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="背景">背景</h2>
+<p><strong>最短路径</strong>问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：</p>
+<ul>
+<li><strong>确定起点的单源最短路径问题</strong> -
+即已知起始结点，求最短路径的问题。适合使用<strong>Dijkstra算法</strong></li>
+<li><strong>确定终点的最短路径问题</strong> -
+与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源最短路径问题完全等同，在有向图中该问题等同于把所有路径方向反转的确定起点的问题。</li>
+<li><strong>确定起点终点的最短路径问题</strong> -
+即已知起点和终点，求两结点之间的最短路径。</li>
+<li><strong>全局最短路径问题</strong> -
+求图中所有的节点之间的最短路径。适合使用<strong>Floyd-Warshall算法</strong></li>
+</ul>
+<h2 id="算法设计思想">算法设计思想</h2>
+<p>本文重点讨论Dijkstra算法和Floyd-Warshall算法的实现思路。本文不会详细探究这两个算法理论支撑基础，重点在于说明这两种算法的使用场景及代码实现。我们知道图的广度优先算法BFS可以算出任意2个节点之间的最短路径，这里有个隐含条件，每2个节点之间之间的边的权重都是相等的，这样我们用队列实现的时候对于同一层次的节点入队列时是不分优先级顺序的。但是如果节点之间连接的边的权重是不一样的，则需要对经典的BFS算法进行改造，将普通的队列修改为优先队列。</p>
+<p>首先，我们先实现比较简单的Floyd-Warshall算法，该算法核心代码就5行，但算法思想包含了动态规划，我们以节点i和节点j的最短路径为例，
+我们用dp(i, j)表示节点i和节点j的最短路径，那么可以有如下公式：
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>m</mi><mi>i</mi><mi>n</mi><mo stretchy="false" form="prefix">{</mo><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>p</mi><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>v</mi><mi>a</mi><mi>l</mi><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mi>，</mi><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">
+dp(i, j) = min \{dp(i, prev(j)) + val(prev(j), j)， dp(i,j)\}
+</annotation></semantics></math> 令
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>p</mi><mi>r</mi><mi>e</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> k = prev(j)</annotation></semantics></math>，则有<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex"> k </annotation></semantics></math>表示为所有与j相邻的节点，这里我们取最小值，那如何更新最小值呢，我们可以用用一个二维数组来表示2个节点之间的边，边的权重为其路径，没有直接相邻的2个节点之间的路径长度设置为无穷大，对于节点i和节点j来说，如果经过了节点k，那我们只需要计算<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> dp(i, j) </annotation></semantics></math>的值和<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">  dp(i,k) + dp(k,j)</annotation></semantics></math>的值哪个更小一些，即对所有经过节点k的节点i和节点j的路径，我们通过以下公式更新：
+<span class="math display">$$
+dp(i,j)=dp(i,k)+dp(k,j) \space\space\space\space if \space\space\space
+dp(i, j) &gt; dp(i, k) + dp(k, j)
+$$</span>
+将所有经过节点k(k=1~n)遍历完之后，我们就会得到最终的二维数据值，该值描述了2个节点之间的最短路径。</p>
+<p>最后，我们再实现Dijkstra算法，Dijkstra(迪杰斯特拉)算法是典型的单源最短路径算法，用于计算一个节点到其他所有节点的最短路径。主要特点是以起始点为中心向外层层扩展，直到扩展到终点为止。Dijkstra算法可以基于BFS算法，内部维护一个优先队列实现。问题可以描述为：在无向图
+G=(V,E) 中，假设每条边 E[i] 的长度为 w[i]，找到由顶点 V0
+到其余各点的最短路径。（单源最短路径）,这里需要注意的是，节点之间的边不能有<strong>负权边</strong>。</p>
+<h2 id="floyd-warshall算法实现">Floyd-Warshall算法实现</h2>
+<p>首先，我们先抛出Floyd-Warshall算法的核心代码，就5行代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">if</span> dp[i][j] &gt; dp[i][k] + dp[k][j]:</span><br><span class="line">                dp[i][j] = dp[i][k] + dp[k][j]</span><br></pre></td></tr></table></figure>
+<p>我们用一个实际的例子来理解该算法，下图为无向图，意思为节点i到节点j的距离和节点j到节点i的距离是相等的，当然我们这个算法可以用于有向图，节点i到节点j的距离和节点j到节点i的距离不一定相等，该算法照样可以算出两两节点之间的最短距离。</p>
+<p><img src="/img/dijkstra/dijkstra1.png" /></p>
+<p>这里我们首先用一个二维数组dp表示所有节点之间两两节点之间的关系，二维数组的值表示当前的最短路径。设定第i个节点到第i个节点本身的距离为0，即
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex"> dp(i, i) = 0 </annotation></semantics></math>,
+无直接相连节点之间的距离为无穷大。上图一共是5个节点，我们用<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>*</mo><mn>5</mn></mrow><annotation encoding="application/x-tex"> 5 * 5 </annotation></semantics></math>的二维数组dp表示节点间关系即距离。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">A</th>
+<th style="text-align: center;">B</th>
+<th style="text-align: center;">C</th>
+<th style="text-align: center;">D</th>
+<th style="text-align: center;">E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>A</strong></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>B</strong></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>C</strong></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>D</strong></td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">inf</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">5</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>E</strong></td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+<p>我们这里采用python语言实现其算法，最主要的就是根据上面图的关系来构造上面的dp二维数组（代码中的distance变量）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">print_path</span>(<span class="params">path, i, j</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">helper</span>(<span class="params">path, i, j</span>):</span><br><span class="line">        <span class="keyword">if</span> path[i][j] != math.inf:</span><br><span class="line">            helper(path, i, path[i][j])</span><br><span class="line">            helper(path, path[i][j], j)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;--&gt;&quot;</span>, <span class="built_in">chr</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) + j), end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) + i), end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    helper(path, i, j)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># graph表示图节点之间的关系，可以用不同形式的数据结构</span></span><br><span class="line"><span class="comment"># 表示，node_num用于表示节点个数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">floyd</span>(<span class="params">graph, node_num: <span class="built_in">int</span></span>):</span><br><span class="line">    distance = [[math.inf] * node_num <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(node_num)]</span><br><span class="line">    path = [[math.inf] * node_num <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(node_num)]</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        row = <span class="built_in">ord</span>(node) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">        distance[row][row] = <span class="number">0</span></span><br><span class="line">        adjcents = graph[node]</span><br><span class="line">        <span class="keyword">for</span> adjcent, val <span class="keyword">in</span> adjcents.items():</span><br><span class="line">            col = <span class="built_in">ord</span>(adjcent) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">            distance[row][col] = val</span><br><span class="line">    <span class="comment"># 套用Floyd-Warshall算法核心代码</span></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(node_num):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(node_num):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(node_num):</span><br><span class="line">                <span class="keyword">if</span> distance[i][j] &gt; distance[i][k] + distance[k][j]:</span><br><span class="line">                    distance[i][j] = distance[i][k] + distance[k][j]</span><br><span class="line">                    path[i][j] = k  <span class="comment"># 将节点i和节点j之间通过节点k的记录起来</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> path, distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">graph = &#123;</span><br><span class="line">    <span class="string">&#x27;A&#x27;</span>: &#123;<span class="string">&#x27;B&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">10</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;B&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">7</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;C&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">3</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;D&#x27;</span>: &#123;<span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">5</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;E&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">7</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 打印A到E的最短距离7</span></span><br><span class="line">path, distance = floyd(graph, <span class="built_in">len</span>(graph))</span><br><span class="line">i = <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)  <span class="comment"># 将字符转换为对应的索引</span></span><br><span class="line">j = <span class="built_in">ord</span>(<span class="string">&#x27;E&#x27;</span>) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(distance[i][j])  <span class="comment"># 打印A到E的最短路径为7</span></span><br><span class="line">print_path(path, i, j)  <span class="comment"># A--&gt; C--&gt; E</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>该算法由于是计算的所有节点中每2个节点之间的最短路径，这里明显看出算法的时间复杂度为<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> O(n^3) </annotation></semantics></math>。因此也可以同样适用于单源最短路径的计算问题，只不过有点高射炮打蚊子的嫌疑了，我们用Dijkstra算法则可以做到<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>E</mi><mo>+</mo><mi>V</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi>V</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> O(E + VlogV) </annotation></semantics></math></p>
+<h2 id="dijkstra算法实现">Dijkstra算法实现</h2>
+<p>Dijkstra算法是解决单源最短路径的最佳算法，同时节点之间不能有负权边。下面直接用BFS算法+优先队列实现其功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line">graph = &#123;</span><br><span class="line">    <span class="string">&#x27;A&#x27;</span>: &#123;<span class="string">&#x27;B&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">10</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;B&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">7</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;C&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">3</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;D&#x27;</span>: &#123;<span class="string">&#x27;C&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;E&#x27;</span>: <span class="number">5</span>&#125;,</span><br><span class="line">    <span class="string">&#x27;E&#x27;</span>: &#123;<span class="string">&#x27;A&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;B&#x27;</span>: <span class="number">7</span>, <span class="string">&#x27;C&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_distance</span>(<span class="params">graph: <span class="built_in">dict</span>, s</span>):</span><br><span class="line">    distance = &#123;s: <span class="number">0</span>&#125;</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">        <span class="keyword">if</span> node != s:</span><br><span class="line">            distance[node] = math.inf</span><br><span class="line">    <span class="keyword">return</span> distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dijkstra</span>(<span class="params">graph: <span class="built_in">dict</span>, s: <span class="built_in">str</span></span>):</span><br><span class="line">    distance = init_distance(graph, s)</span><br><span class="line">    parent = &#123;s: <span class="literal">None</span>&#125;</span><br><span class="line">    pqueue = []</span><br><span class="line">    heapq.heappush(pqueue, (<span class="number">0</span>, s))  <span class="comment"># 加入源节点</span></span><br><span class="line">    seen = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">while</span> pqueue:</span><br><span class="line">        dis, node = heapq.heappop(pqueue)</span><br><span class="line">        seen.add(node)</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> graph[node]:</span><br><span class="line">            <span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> seen:</span><br><span class="line">                <span class="keyword">if</span> distance[w] &gt; dis + graph[node][w]:</span><br><span class="line">                    heapq.heappush(pqueue, (dis + graph[node][w], w))</span><br><span class="line">                    parent[w] = node</span><br><span class="line">                    distance[w] = dis + graph[node][w]</span><br><span class="line">    <span class="keyword">return</span> parent, distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parent, distance = dijkstra(graph, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(parent) <span class="comment"># &#123;&#x27;A&#x27;: None, &#x27;B&#x27;: &#x27;A&#x27;, &#x27;C&#x27;: &#x27;A&#x27;, &#x27;E&#x27;: &#x27;C&#x27;, &#x27;D&#x27;: &#x27;C&#x27;&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(distance) <span class="comment"># &#123;&#x27;A&#x27;: 0, &#x27;B&#x27;: 2, &#x27;C&#x27;: 4, &#x27;D&#x27;: 8, &#x27;E&#x27;: 7&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<p><strong>Floyd-Warshall</strong>算法比<strong>Dijkstra</strong>算法实现要简单很多，如果求最短路径，让大家偷懒的方法就直接用Floyd算法，这个算法通用性更广，既可以算全局两两节点的最短路径，当然也可以算单源最短路径，但算法复杂度为</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex"> O(n^3) </annotation></semantics></math>；而Dijkstra算法实现则要复杂一些,对于某些场景，用这个算法实现指定节点到其他所有节点的最短路径时间复杂度更低点。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/17/%E6%96%B0%E7%A7%80%E8%AF%AD%E8%A8%80Python%E4%B8%8E%E8%80%81%E7%89%8C%E8%AF%AD%E8%A8%80Perl%E7%9A%84%E6%AF%94%E8%BE%83/" class="post-title-link" itemprop="url">新秀语言Python与老牌语言Perl的比较</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-17 10:43:38" itemprop="dateCreated datePublished" datetime="2020-05-17T10:43:38+08:00">2020-05-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-24 12:55:36" itemprop="dateModified" datetime="2020-05-24T12:55:36+08:00">2020-05-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="背景">背景</h2>
+<p>本人从事嵌入式软件开发已经有8个年头了，最开始是用C/C++做嵌入式底层软件开发。期间利用Qt
+Gui(C++ GUI开发框架)开发过补丁制作小工具，要说用Qt
+SDK开发程序，比之前开发效率高了不少。也用过Perl脚本编写自动化脚本进行软件测试。但是随着项目变更，期间还用过一段时间java，最近一年多时间搞运维相关的工作，自然用的语言开始以脚本为主了，平时主要利用脚本三剑客Python/Shell/Perl等进行自动化工具的编写工作。Python语言简单的语法结构，赢得了很多领域从业人事的青睐，也包括非计算机编程专业的同学，都将Python作为编程的首选语言。其实Python这门语言和它的兄弟语言Perl之间有很多相似点，这2门语言发展历史都差不多，为什么Python语言越来越热门，而Perl语言逐步走向衰落了呢？在我看来，Python语言在设计上做到了实用性，易用性和严谨性的一种平衡，对面向对象支持也比较彻底，另外虽然作为一门脚本语言，数据类型的定义上更为严格，比如不同类型之间不能隐式转换，这也使得可维护性，可读性更强。下面就谈谈这2种语言的差异点。</p>
+<p><img src="/img/Python-vs-Perl-Programming.png" /></p>
+<h2 id="语言差异比较">语言差异比较</h2>
+<p>二者都是属于脚本范畴，发展历史都比较接近，语法相比C/C++/Java等编译型的语言来说，语法结构更加简单。Python与Perl都内置了常用的数据结构，比如列表和字典，同时这2门语言语法结构简单，都是用简单的符号来表示不同的含义。Python语法更加简洁点，一般语句<strong>不加分号</strong>结尾，变量命名跟C语言一样，采用缩进的方式来组织代码块。而Perl语法继承了C语言语法特点，一般用分号表示表达式语句的结尾，变量命名一般最前面要加一个<strong>美元符号$</strong>,
+代码块用一组花括号来组织。Python的设计哲学为用一种方法，最好只有一种方法来做一件事情；而Perl设计恰好相反，Larry
+Wall认为，不要在语言设计上阻碍程序员想做的任何事情，其设计Perl语言理论是不仅仅一种方法做一件事，条条大路通罗马。这也使得Perl的语法比Python在表达上更为丰富。对于条件语句来说，既有肯定的if语句，也有否定含义的unless语句；对于循环语句来说，既有肯定语义的while,for语句，也有否定语义的until语法结构。而对于Python而言，对于每种语法结构而言，都是比较固定的写法。Perl语言条件真假是根据上下文来隐式转换之后表示真假的，字符串和数字类型是根据上下文环境来判断的，而Python有着严格的类型系统，一般来说，字符串类型(str)和数字类型(int)的变量是不能放到一起参与计算的。这也使得Python编写的程序相比Perl语言来说，可维护性更好一些。Perl汲取了C语言、awk、Shell脚本等语言的语法，因此语法上和C语言很类似。后来的PHP和ruby等语言又在Perl语言的基础上进一步发展起来的。言归正传，Python与Perl之间语法很多地方都相似，但是Perl语言的各种数据结构既可以通过值表示，也可以通过引用表示。比如我们用一个数组表示1~5，我们可用一个数组直接表示值，也可以用引用方式表示，这点跟C语言也比较类似。对比而言，Python语言一般用引用方式来表示；hash（字典）数据结构也是类似的做法。这也是两者在语法表示上最大的一个差异吧。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Perl通过传值方式传值数组</span></span><br><span class="line"><span class="keyword">my</span> <span class="variable">@a</span> = (<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">my</span> <span class="variable">$item</span> (<span class="variable">@a</span>) &#123;</span><br><span class="line">    <span class="keyword">print</span>(<span class="variable">$item</span>, <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span>(<span class="string">&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n&quot;</span>);</span><br><span class="line"><span class="comment"># Perl通过引用方式创建数组</span></span><br><span class="line"><span class="keyword">my</span> <span class="variable">$ref</span> = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">my</span> <span class="variable">$length</span> = @&#123;<span class="variable">$ref</span>&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">my</span> <span class="variable">$index</span> = -<span class="number">1</span>; <span class="variable">$index</span> &lt; <span class="variable">$length</span>; <span class="variable">$index</span>++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">print</span>(<span class="variable">$ref</span>-&gt;[<span class="variable">$index</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># Perl引用一个数组，类似C语言指针指向数组的首地址</span></span><br><span class="line"><span class="keyword">my</span> <span class="variable">$ref</span> = \<span class="variable">@a</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python一般通过引用创建数组</span></span><br><span class="line">a = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="keyword">for</span> index, val <span class="keyword">in</span> <span class="built_in">enumerate</span>(a):</span><br><span class="line">    <span class="built_in">print</span>(index, val)</span><br></pre></td></tr></table></figure>
+<p>另外需要提到的是，Python比Perl在面向对象表达上更为彻底，Perl的面向对象对于创建的对象模型暴露给了用户，更像是人工模拟的面向对象，而Python则是将对象模型实现细节隐藏到了语法内部，但本质上这两名语言在对象存储上一般都用字典来保存的。我们这里举一个例子就明白了。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Location;</span><br><span class="line"><span class="keyword">use</span> strict;</span><br><span class="line"><span class="keyword">use</span> warnings <span class="string">FATAL =&gt;</span> <span class="string">&#x27;all&#x27;</span>;</span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">new</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$class</span> = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="comment"># 这里对象存储是放到字典里面的，需要显示的存储</span></span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$self</span> = &#123;</span><br><span class="line">        <span class="string">_longitude =&gt;</span> <span class="keyword">shift</span>,</span><br><span class="line">        <span class="string">_latitude =&gt;</span> <span class="keyword">shift</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">bless</span>(<span class="variable">$self</span>, <span class="variable">$class</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">get_longitude</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$self</span> = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$self</span>-&gt;&#123;_longitude&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">get_latitude</span> </span>&#123;</span><br><span class="line">    <span class="keyword">my</span> <span class="variable">$self</span> = <span class="keyword">shift</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$self</span>-&gt;&#123;_latitude&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="number">1</span>;</span><br><span class="line"><span class="keyword">package</span> main;</span><br><span class="line"><span class="keyword">my</span> <span class="variable">$location</span> = Location-&gt;new(<span class="number">12.22</span>, <span class="number">22.44</span>);</span><br><span class="line"><span class="keyword">print</span>(<span class="variable">$location</span>-&gt;get_latitude(), <span class="string">&quot;\n&quot;</span>);</span><br><span class="line"><span class="keyword">print</span>(<span class="variable">$location</span>-&gt;get_longitude(), <span class="string">&quot;\n&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>如果是Python来写面向对象的代码，则要简单得多，因为对象属性的存储语言默认就是放到dict里面的，不需要显示指定。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Location</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, longitude, latitude</span>):</span><br><span class="line">        <span class="variable language_">self</span>.longitude = longitude</span><br><span class="line">        <span class="variable language_">self</span>.latitude = latitude</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_longitude</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.longitude</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_latitude</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.latitude</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    location = Location(<span class="number">12.22</span>, <span class="number">22.44</span>)</span><br><span class="line">    <span class="built_in">print</span>(location.get_longitude)</span><br><span class="line">    <span class="built_in">print</span>(location.get_latitude)</span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<p>总的来说，Python与Perl这两种语言，语法虽然差异大，但语言之间有不少共性地方。相比而言，Perl在语法表达方式上更为丰富，对于一般人来说反而思考负担太重，而且类型转换太随意。不过也需要考虑到Perl的发展历史，当时产生Perl脚本语言的时候，OOP编程范式还没有成为主流，那个时候的Perl更多地是替换C语言这类强类型语言，补充C语言在编写效率上的劣势，成为运维领域的专属语言。如今由于Perl语言语法规则太多，对于一般人来说可能hold不住，反而Python语言在语法上由于写法的一致性，获得了不少非计算机专业人员的青睐。现在Python语言的热度紧随C语言和Java语言之后，如今随着大数据，AI、数据科学的兴起，Python也在这些领域内发光发热。的确，Python语言语法简洁，精美，用很简短的符号表示不同的数据结构，用缩进来表示层次递进关系，比如我们分别用方括号[]和花括号{}来声明数组和字典，还有各种语法糖相关的东西，语法抽象的层次更高，语法使用上基本接近我们人类思维方式。这两年来，我也逐步体会到了Python的语言语法的优美之处，平时上网刷刷算法什么的，首选Python语言实现。尤其是在平时工作，验证方案的正确性，我们可能只需要用到短短几行代码就可以搞定，确实效率高；对工作中的问题，我们用Python语言来更多地专注在解决方案（业务实现）上，而不是把精力都投入到了C/C++等语言在底层实现细节上，包括手工释放内存。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/" class="post-title-link" itemprop="url">回溯算法的基本原理及代码框架</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-16 20:24:12" itemprop="dateCreated datePublished" datetime="2020-05-16T20:24:12+08:00">2020-05-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-23 23:58:20" itemprop="dateModified" datetime="2020-05-23T23:58:20+08:00">2020-05-23</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="回溯法的定义">回溯法的定义</h2>
+<p>回溯法(Backtracking)属于暴力搜索法中的一种，维基百科对该方法的解释是回溯法是一种可以找出所有（或一部分）解的一般性算法，尤其适用于约束满足问题（在解决约束满足问题时，我们逐步构造更多的候选解，并且在确定某一部分候选解不可能补全成正确解之后放弃继续搜索这个部分候选解本身及其可以拓展出的子候选解，转而测试其他的部分候选解）。回溯法采用<strong>试错</strong>的思想，它尝试分步的去解决一个问题。在分步解决问题的过程中，当它通过尝试发现现有的分步答案不能得到有效的正确的解答的时候，它将<strong>取消上一步甚至是上几步</strong>的计算，再通过其它的可能的分步解答再次尝试寻找问题的答案。</p>
+<h2 id="回溯法原理">回溯法原理</h2>
+<p>回溯算法一般要求就是在给定的有限空间内搜索满足条件的路径。
+当我们通过画图得知数据结构（解空间）类似一颗N叉树，要求每个路径分支作为一个解时，那么就可以考虑用回溯法来实现。回溯法跟<strong>树的遍历搜索</strong>非常相似，因此很多时候我们把树的<strong>深度优先算法</strong>(DFS,
+Depth First Search)稍微改造一下，就可以得到回溯法的实现框架了。
+回溯法通常用递归方法来实现。递归也是所有算法的一个底座（基础的基础），后面单独开篇讨论递归算法。这里要特别注意的是，尤其是考虑用回溯法遍历树的节点时，我们可能先处理根节点，然后再考虑左右子树的情况。我们可用一个堆栈的数据结构来保存访问的节点，这里记作path，当遍历完子节点之后，要记得把最近一次访问节点从path堆栈中弹出，因为这个时候子树已经访问完成，遍历的指针回到了其父节点，此时path中不应该包含子节点了。另外如果遍历的树的空间复杂度较高，我们在遍历节点时就要考虑对部分路径进行剪枝，提高搜索效率。</p>
+<h2 id="回溯法的代码框架">回溯法的代码框架</h2>
+<p>下面我们从回溯法代码框架进一步了解其实现流程，同时也加强对树的遍历算法和递归算法思想的把握。我们先列出回溯法的代码框架，然后我们以打印一个序列的全排列，用回溯算法实现其核心代码部分。我们用backtrack函数表示回溯算法，这里一共有3个关键的入参，我们用符号sequence,
+path,
+result来表示。其中我们用sequence来表示可以选择的序列或者子树，path用于保存从根节点到当前遍历节点所访问过的所有节点。result用于保存满足给定条件的所有path的集合。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">result = []</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">路径, 选择列表</span>):</span><br><span class="line">    <span class="keyword">if</span> 满足结束条件:</span><br><span class="line">        result.add(路径)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> 选择 <span class="keyword">in</span> 选择列表:</span><br><span class="line">        做选择</span><br><span class="line">        backtrack(路径, 选择列表)</span><br><span class="line">        撤销选择</span><br></pre></td></tr></table></figure>
+<p><img src="/img/backtrack/backtrack1.png" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">sequence: <span class="type">List</span>[<span class="built_in">str</span>], path: <span class="type">List</span>[<span class="built_in">str</span>], result: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]</span>)-&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> sequence: <span class="comment">#递归结束条件，一般是到了序列为空或者最后一个时，对于树型结构来说，一般是到达了叶子节点</span></span><br><span class="line">        result.append(path[:]) <span class="comment">#对满足条件的path进行处理</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, node <span class="keyword">in</span> <span class="built_in">enumerate</span>(sequence): <span class="comment"># 对当前树层次的可选择节点遍历</span></span><br><span class="line">        path.append(node) <span class="comment"># 这里先对根节点进行处理</span></span><br><span class="line">        remains = sequence[:index] + sequence[index+<span class="number">1</span>:] <span class="comment">#得到子树的可选择节点</span></span><br><span class="line">        backtrack(remains, path, result) <span class="comment">#递归调用，进入子树中，对子树采用相同的处理方式</span></span><br><span class="line">        path.pop() <span class="comment"># 回到父节点后，将之前压栈的节点弹出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">permute</span>(<span class="params">sequence: <span class="type">List</span>[<span class="built_in">str</span>]</span>)-&gt;<span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]:</span><br><span class="line">    result = []</span><br><span class="line">    backtrack(sequence, [], result)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">sequence = [<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>]</span><br><span class="line"><span class="built_in">print</span>(permute(sequence))</span><br></pre></td></tr></table></figure>
+<h2 id="回溯法实战">回溯法实战</h2>
+<p>下面我们以leetcode的113题为例，讲解下用回溯算法怎么处理，题中是给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。给定如下二叉树，以及目标路径和为22。返回5-&gt;4-&gt;11-&gt;2,</p>
+<p>5-&gt;8-&gt;4-&gt;5这2条路径。</p>
+<p><img src="/img/backtrack/backtrack2.png" /></p>
+<p>这里要打印的是满足要求的路径，涉及到路径相关的，我们第一优先考虑树的深度优先算法或者回溯法来求解。根据上面讲解的代码框架套路，我们直接可以套用，完整的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="variable language_">self</span>.val = x</span><br><span class="line">        <span class="variable language_">self</span>.left = <span class="literal">None</span></span><br><span class="line">        <span class="variable language_">self</span>.right = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">self, root:TreeNode, path: <span class="type">List</span>[<span class="built_in">int</span>], result: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], <span class="built_in">sum</span>: <span class="built_in">int</span></span>)-&gt;<span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="built_in">sum</span> -= root.val</span><br><span class="line">        path.append(root.val)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> root.left <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> root.right <span class="keyword">is</span> <span class="literal">None</span>: <span class="comment"># 叶子节点</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">sum</span> == <span class="number">0</span>: <span class="comment">#减到叶子节点值如果恰好为0，则满足要求</span></span><br><span class="line">                result.append(path[:])</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">if</span> root.left <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="variable language_">self</span>.backtrack(root.left, path, result, <span class="built_in">sum</span>)</span><br><span class="line">            path.pop()</span><br><span class="line">        <span class="keyword">if</span> root.right <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="variable language_">self</span>.backtrack(root.right, path, result, <span class="built_in">sum</span>)</span><br><span class="line">            path.pop()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">pathSum</span>(<span class="params">self, root: TreeNode, <span class="built_in">sum</span>: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        result = []</span><br><span class="line">        <span class="variable language_">self</span>.backtrack(root, [], result, <span class="built_in">sum</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>在上面题中我们只需要把框架中的代码修改如下：
+修改sequence参数为二叉树的root(这里root表示一棵树，本身就代表最多有2种选择，左子树和右子树)，
+path用于保存根节点和当前节点遍历的所有节点，result保存满足条件的所有path路径。这样看起来，是不是和上面的排列思路非常类似。再比如leetcode的第17题，题目描述如下图所示：</p>
+<p><img src="/img/backtrack/backtrack3.png" /></p>
+<p>这里我们如果直接用暴力搜索的话，代码可能会这么写，比如按照输入给出的“23”,打印所有的组合：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">letters_map = &#123;</span><br><span class="line">    <span class="string">&quot;2&quot;</span>: <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">    <span class="string">&quot;3&quot;</span>: <span class="string">&quot;def&quot;</span>,</span><br><span class="line">    <span class="string">&quot;4&quot;</span>: <span class="string">&quot;ghi&quot;</span>,</span><br><span class="line">    <span class="string">&quot;5&quot;</span>: <span class="string">&quot;jkl&quot;</span>,</span><br><span class="line">    <span class="string">&quot;6&quot;</span>: <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">    <span class="string">&quot;7&quot;</span>: <span class="string">&quot;pqrs&quot;</span>,</span><br><span class="line">    <span class="string">&quot;8&quot;</span>: <span class="string">&quot;tuv&quot;</span>,</span><br><span class="line">    <span class="string">&quot;9&quot;</span>: <span class="string">&quot;wxyz&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">digits = <span class="string">&quot;23&quot;</span></span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> letters_map[<span class="string">&quot;2&quot;</span>]:</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> letters_map[<span class="string">&quot;3&quot;</span>]: <span class="comment">#这里需要2层循环</span></span><br><span class="line">     result.append(i + j)</span><br><span class="line"><span class="built_in">print</span>(result)</span><br></pre></td></tr></table></figure>
+<p>这里有个问题，如果给出的输入为“235”的话，那么我们还得新增一个循环，有几个输入就需要几个循环，由于循环个数是不定的，因此常用常规的循环无法满足代码实现，我们这里发现，循环条件的格式都是类似的，只是遍历的数字key不一样，考虑用递归方法来求解就能解决个数不一定的问题。本质上，该题的实现方法用的是回溯法做的（回溯法就是我们文章开头说的暴力搜索的一种)，只是该题比较简单，直接按照一定顺序遍历所有节点即可。我们继续套用上面的代码框架，把条件稍微调整下，这个程序代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line">letters_map = &#123;</span><br><span class="line">    <span class="string">&quot;2&quot;</span>: <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">    <span class="string">&quot;3&quot;</span>: <span class="string">&quot;def&quot;</span>,</span><br><span class="line">    <span class="string">&quot;4&quot;</span>: <span class="string">&quot;ghi&quot;</span>,</span><br><span class="line">    <span class="string">&quot;5&quot;</span>: <span class="string">&quot;jkl&quot;</span>,</span><br><span class="line">    <span class="string">&quot;6&quot;</span>: <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">    <span class="string">&quot;7&quot;</span>: <span class="string">&quot;pqrs&quot;</span>,</span><br><span class="line">    <span class="string">&quot;8&quot;</span>: <span class="string">&quot;tuv&quot;</span>,</span><br><span class="line">    <span class="string">&quot;9&quot;</span>: <span class="string">&quot;wxyz&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">self, digits, path: <span class="type">List</span>[<span class="built_in">str</span>], result: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], index</span>)-&gt;<span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> index == <span class="built_in">len</span>(digits):</span><br><span class="line">            result.append(<span class="string">&#x27;&#x27;</span>.join(path[:]))</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> letters_map[digits[index]]:</span><br><span class="line">            path.append(c)</span><br><span class="line">            <span class="variable language_">self</span>.backtrack(digits, path, result, index + <span class="number">1</span>)</span><br><span class="line">            path.pop()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">letterCombinations</span>(<span class="params">self, digits: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        result = []</span><br><span class="line">        <span class="variable language_">self</span>.backtrack(digits, [], result, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>回溯法套路就讲解这么多，是不是很简单，实际上就是树的遍历而已，只是在遍历过程中，我们需要记录一些关键信息，比如这里需要记录遍历节点（按照遍历节点的先后顺序记录到一个堆栈中)而已，其他的跟树的遍历搜索规则类似。把上面的原理和代码套路搞懂了之后，关于回溯法的题目基本就可以做到秒杀了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/" class="post-title-link" itemprop="url">图的遍历搜索算法之BFS和DFS</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-05 07:16:03" itemprop="dateCreated datePublished" datetime="2020-05-05T07:16:03+08:00">2020-05-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-24 07:58:15" itemprop="dateModified" datetime="2020-05-24T07:58:15+08:00">2020-05-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search)
+。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次遍历算法。BFS算法是从根节点开始，沿着树的宽度遍历树的节点，如果发现目标，则终止算法。DFS算法是一种用于遍历搜索树或图的另一种算法。这个算法会尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将回溯到发现节点v的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止一般来说,BFS算法比DFS算法用法更广。BFS算法实现需要维护一个队列，而DFS算法实现需要维护一个栈，算法实现流程大致一样。下面以一个图的遍历为例，分别用BFS算法和DFS算法来实现。代码采用python语言，其他语言可以其思想修改为对应的写法即可。下面我们以一颗完全二叉树为例，分别用BFS算法和DFS算法来遍历，打印访问的节点。</p>
+<p><img src="/img/dfs/tree.png" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">graph = &#123;</span><br><span class="line"> <span class="string">&quot;A&quot;</span>: [<span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>],</span><br><span class="line"> <span class="string">&quot;B&quot;</span>: [<span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>],</span><br><span class="line"> <span class="string">&quot;C&quot;</span>: [<span class="string">&quot;F&quot;</span>, <span class="string">&quot;G&quot;</span>],</span><br><span class="line"> <span class="string">&quot;D&quot;</span>: [<span class="string">&quot;H&quot;</span>, <span class="string">&quot;I&quot;</span>],</span><br><span class="line"> <span class="string">&quot;E&quot;</span>: [<span class="string">&quot;J&quot;</span>],</span><br><span class="line"> <span class="string">&quot;F&quot;</span>: [<span class="string">&quot;K&quot;</span>, <span class="string">&quot;L&quot;</span>],</span><br><span class="line"> <span class="string">&quot;G&quot;</span>: [<span class="string">&quot;M&quot;</span>],</span><br><span class="line"> <span class="string">&quot;M&quot;</span>: [<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bfs</span>(<span class="params">graph, seed</span>):</span><br><span class="line">    queue = []</span><br><span class="line">    visited = <span class="built_in">set</span>()</span><br><span class="line">    queue.append(seed)</span><br><span class="line">    visited.add(seed)</span><br><span class="line">    <span class="keyword">while</span> queue:</span><br><span class="line">        vertex = queue.pop(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> vertex <span class="keyword">in</span> graph:</span><br><span class="line">        	nodes = graph[vertex]</span><br><span class="line">        	<span class="keyword">for</span> w <span class="keyword">in</span> nodes:</span><br><span class="line">            	<span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                	queue.append(w)</span><br><span class="line">                	visited.add(w)</span><br><span class="line">        <span class="built_in">print</span>(vertex)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">bfs(graph, <span class="string">&quot;A&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">graph, seed</span>):</span><br><span class="line">    stack = []</span><br><span class="line">    stack.append(seed)</span><br><span class="line">    visited = <span class="built_in">set</span>()</span><br><span class="line">    visited.add(seed)</span><br><span class="line">    <span class="keyword">while</span> stack:</span><br><span class="line">        vertex = stack.pop()</span><br><span class="line">        <span class="keyword">if</span> vertex <span class="keyword">in</span> graph:</span><br><span class="line">        	nodes = graph[vertex]</span><br><span class="line">        	<span class="keyword">for</span> w <span class="keyword">in</span> nodes:</span><br><span class="line">            	<span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                	stack.append(w)</span><br><span class="line">                	visited.add(w)</span><br><span class="line">        <span class="built_in">print</span>(vertex)</span><br><span class="line"></span><br><span class="line">dfs(graph, <span class="string">&quot;A&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>对于树的遍历来说，我们还可以用递归的方式来求解。我们可以打印所有根节点到叶子节点的路径：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">graph, result:<span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], path: <span class="type">List</span>, seed</span>):</span><br><span class="line">    path.append(seed)</span><br><span class="line">    <span class="keyword">if</span> seed <span class="keyword">not</span> <span class="keyword">in</span> graph: <span class="comment"># 叶子节点</span></span><br><span class="line">        result.append(path[:])</span><br><span class="line">        path.pop()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> graph[seed]:</span><br><span class="line">            dfs(graph, result, path, node)</span><br><span class="line"></span><br><span class="line">        path.pop()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_root_leaf_path</span>(<span class="params">seed</span>):</span><br><span class="line">    graph = &#123;</span><br><span class="line">            <span class="string">&quot;A&quot;</span>: [<span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>],</span><br><span class="line">            <span class="string">&quot;B&quot;</span>: [<span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>],</span><br><span class="line">            <span class="string">&quot;C&quot;</span>: [<span class="string">&quot;F&quot;</span>, <span class="string">&quot;G&quot;</span>],</span><br><span class="line">            <span class="string">&quot;D&quot;</span>: [<span class="string">&quot;H&quot;</span>, <span class="string">&quot;I&quot;</span>],</span><br><span class="line">            <span class="string">&quot;E&quot;</span>: [<span class="string">&quot;J&quot;</span>],</span><br><span class="line">            <span class="string">&quot;F&quot;</span>: [<span class="string">&quot;K&quot;</span>, <span class="string">&quot;L&quot;</span>],</span><br><span class="line">            <span class="string">&quot;G&quot;</span>: [<span class="string">&quot;M&quot;</span>],</span><br><span class="line">            <span class="string">&quot;M&quot;</span>: [<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">    result = []</span><br><span class="line">    dfs(graph, result, [], <span class="string">&quot;A&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> path <span class="keyword">in</span> result:</span><br><span class="line">        <span class="built_in">print</span>(path)</span><br><span class="line">find_root_leaf_path(<span class="string">&quot;A&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/img/dfs/result.png" /></p>
+<p>我们还可以打印从树根节点到叶子节点等于指定和的所有路径，比如25。这里我们观察图，得知有2条路径：</p>
+<p><img src="/img/dfs/path.png" /></p>
+<p>我们把上面的代码稍作修改，即可以完成上面的功能：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">from typing import List</span><br><span class="line"></span><br><span class="line">def dfs(graph, capacities, result:List[List[str]], path: List, seed, target):</span><br><span class="line">    path.append(seed)</span><br><span class="line">    target -= capacities[seed]</span><br><span class="line">    if seed not in graph: # 叶子节点</span><br><span class="line">        if target == 0:</span><br><span class="line">            result.append(path[:])</span><br><span class="line">        path.pop()</span><br><span class="line">    else:</span><br><span class="line">        for node in graph[seed]:</span><br><span class="line">            dfs(graph, capacities, result, path, node, target)</span><br><span class="line">        path.pop()</span><br><span class="line"></span><br><span class="line">def find_root_leaf_path(seed):</span><br><span class="line">    graph = &#123;</span><br><span class="line">            &quot;A&quot;: [&quot;B&quot;, &quot;C&quot;],</span><br><span class="line">            &quot;B&quot;: [&quot;D&quot;, &quot;E&quot;],</span><br><span class="line">            &quot;C&quot;: [&quot;F&quot;, &quot;G&quot;],</span><br><span class="line">            &quot;D&quot;: [&quot;H&quot;, &quot;I&quot;],</span><br><span class="line">            &quot;E&quot;: [&quot;J&quot;],</span><br><span class="line">            &quot;F&quot;: [&quot;K&quot;, &quot;L&quot;],</span><br><span class="line">            &quot;G&quot;: [&quot;M&quot;],</span><br><span class="line">            &quot;M&quot;: [&quot;N&quot;, &quot;O&quot;]</span><br><span class="line">            &#125;</span><br><span class="line">    capacities = &#123; &quot;A&quot;: 10, &quot;B&quot;: 4, &quot;C&quot;: 2, &quot;D&quot;: 8,</span><br><span class="line">            &quot;E&quot;: 10, &quot;F&quot;: 7, &quot;G&quot;: 5, &quot;H&quot;: 2, &quot;I&quot;: 2,</span><br><span class="line">            &quot;J&quot;: 3, &quot;K&quot;: 6, &quot;L&quot;: 9, &quot;M&quot;: 5, &quot;N&quot;: 6, &quot;O&quot;: 3&#125;</span><br><span class="line">    result = []</span><br><span class="line">    target = 25</span><br><span class="line">    dfs(graph,capacities, result, [], &quot;A&quot;, target)</span><br><span class="line">    for path in result:</span><br><span class="line">        print(path)</span><br><span class="line">find_root_leaf_path(&quot;A&quot;)</span><br></pre></td></tr></table></figure>
+<p><img src="/img/dfs/sum.png" /></p>
+<p>总的来说，BFS算法比DFS算法使用范围更广，涉及到二维平面搜索，图搜索，走迷宫等等优先考虑BFS，因为BFS总是可以找到任意2个节点之间的最短路径。而对于遍历树的路径，字符串排列组合等等可以采用DFS算法。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">深圳清湖科目三路考3号线细节</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2019-03-31 21:37:18 / 修改时间：22:02:01" itemprop="dateCreated datePublished" datetime="2019-03-31T21:37:18+08:00">2019-03-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="清湖科目三3号线细节记录">清湖科目三3号线细节记录</h1>
+<p>3号线路比2号线长不少，而且记忆的细节要多，因此本次主要记录3号线的操作细节，2号线比较熟悉，这里就不写了。本文按照流水线记录方式，记录考试车行驶过程中需要关注和考试的关键点。</p>
+<p><strong>整体原则：</strong></p>
+<ol type="1">
+<li><strong>停车换一档，防止3档起步，直接不合格</strong></li>
+<li><strong>注意左边护栏缺口和右边某些公司大门口那些地方过马路的行人，提前做好预判</strong></li>
+<li>特别注意经过<strong>（真实非模拟的）公交站台时</strong>，提前观察左后视镜是否有公交马上进站了，确认之后再启动。</li>
+<li>每次起步时，<strong>离合踩到半联动（也就是车子轻微抖动时），松刹车，稳住离合5s</strong>，车子走动3米之后再慢抬离合，防止起步熄火；万一熄火了，注意要回到空挡打火，否则不合格。</li>
+</ol>
+<h2 id="绕车一周">绕车一周</h2>
+<p>学员在左侧门开始，逆时钟<strong>从左下，右下，右上，左上</strong>绕车身一周，注意4个角位的摄像头，用手捂住，听车内语音播报之后上车。需要注意的是，如果第一次没有驶出岗亭，在车子没有启动不合格的话，也需要下车重新绕车一周，不要忘记了，否则不合格。<strong>也就是每次都按照完整的考试项目来执行</strong>。</p>
+<h2 id="上车准备">上车准备</h2>
+<p>学员上车之后，调整好座位，系好安全带，注意所有灯光是否归位（远近交替按钮往前拨几下）。另外注意<strong>车门是否关好</strong>（没有关好的情况下，仪表盘会有一个小车子图标，门关好了是没有这个图标的）试下离合，刹车，和档位。挂档2把都顺手之后，再将档位挂到1档，<strong>找到车子离合半联动的地方</strong>，确认之后。<strong>按指纹之前，最后确认下档位是否为空挡，手刹是否拉起，安全带是否系好</strong>。没有问题之后然后按指纹准备考试。</p>
+<h2 id="夜间灯光模拟考试">夜间灯光模拟考试</h2>
+<p>语音会播报指纹验证成功，身份验证成功之后，会播报下面开始模拟夜间灯光考试。9项中随机选择5项，其中有2项是一定是请开启前照灯，请关闭所有灯光，中间3项随机。可以这样记忆：<strong>危险报警灯1项</strong>：即路边临时停车;
+<strong>交替使用远近信号灯2项</strong>（也就是左手中指往自己这侧拨4下）：通过急弯，坡路，拱桥，人行横道或者没有交通信号灯路口和超车;
+<strong>远光灯1项</strong>：无照明道路行驶。<strong>其他的都是近光灯了</strong>，这样就减少了记忆工作量。灯光模拟一定要等语言播报之后再操作，不要抢答，否则不合格。</p>
+<h2 id="起步和靠边停车">起步和靠边停车</h2>
+<p>灯光模拟结束之后，语言播报请起步，这时首先踩好离合和刹车，打左转向灯，放手刹，挂一档（这3项位置恰好是逆时钟方向）。离合到半联动车子震动之后，放开脚杀，离合稳住，车子往前走了3~5米之后再慢松离合。走到网格线的时候，将左转向变为右转向灯。接下来语音会播报请靠边停车，这个时候车子方向盘中心对准箭头，来回摆正车头，注意不要幅度过大，到2个箭头中间地方的时候，踩离合和刹车，停车，回空挡，拉手刹（这个时候转向灯还是打的右转向），等待语音提示。等10s之后，语言播报请起步，又跟第一次一样，将右转向灯改为左转向灯，放手刹，挂1档，慢松离合，车子启动走动几米之后，缓慢松离合。用1档速度走到下坡路段。</p>
+<h2 id="驶出岗亭">驶出岗亭</h2>
+<p>走下坡路段时候，不要踩离合，刹车，用1档速度下斜坡，差不多到达下坡起点时，语言提示前方路口左转，此时打左转向灯。到达水平地面时停车，重新挂1档。观察右边是否有车过来，观察左边没有车时，起步左转弯驶出岗亭，到人行横道地方再次停车，挂1档。然后开启右转向灯。注意左边是否有来车，确认没有之后，3号线走最左侧线路。然后挂2档，上3档。语音播报前方路口直行，在人行横道前面停车，重新挂1档。</p>
+<h2 id="掉头">掉头</h2>
+<p>红路灯路况，灯闪的时候慢松离合，绿灯后，一档起步，走过路口后就可以上2档，然后上3档了。这个时候要注意左侧护栏切口处是否有行人过马路，提前做好刹车准备。一切没有异常情况下，语言提示：前方请选择合适路口掉头。在掉头前先停下来，然后观察左边是否有对向车辆过来，确认OK之后，方向盘打死，转到中间车道。</p>
+<h2 id="前方路口右转">前方路口右转</h2>
+<p>用一档一直往前面走，注意右边行人，随时踩刹车（不要停在厂房门口和网格线上，提前预判）。语音播报前方路口右转，开启右转向灯。到前面最后一个虚线开始处停车，观察右后视镜是否有来车。确认之后，完成变道。<strong>变道过程中极有可能转向灯跳了。要及时补上右转向灯。</strong>
+在路口地方停车，然后1档起步，走过右转路口之后，将车身回正，走个3米左右，停车。</p>
+<h2 id="变更车道">变更车道</h2>
+<p>停车后，打左转向灯，方向盘左转90度，看后视镜后面是否有车辆过来，确认后，启动车辆完成变更车道。然后用1档往前走，前面有个（模拟的）公交站台，在公交站台牌子前面1米左右的地方停车。然后1档起步。起步完了换到2档，然后上到3档，前面有个学校区域，只要车速不超过30码就可以了。语言提示前方路况左转，开启左转向灯，到前面三岔路口的人行横道前面停车，挂回1档。</p>
+<h2 id="超车项目">超车项目</h2>
+<p>绿灯之后，车子起步，左转到最右侧车道，一直往前走，语音会播报请超越前方车辆，停车，打左转向灯，挂一档，方向盘左打90度。车身摆正之后，打右转向灯，一直往前走，然后语音播报已超越车辆，车子停下来，然后打右转向灯，方向盘右打90度，返回原右侧车道之后摆正车身。<strong>注意变更到左边车道之后，不要抢语音，等待报了超越车辆之后再返回原车道。</strong></p>
+<h2 id="加减档操作">加减档操作</h2>
+<p>然后前面走个几米找个无项目的地方变更车道，<strong>变更到最左侧车道</strong>（注意不要把车停到厂房门口或者网格线上），变更完车道之后，以1档的速度到前面人行横道前面停车。这个就是2号线掉头的地方，确认无对向车辆掉头之后，走过路口，挂2档，以接近20码的速度行驶，然后前面会有一个公交站台，这个地方会有语言提示，请升到3档，这个时候踩油门，及时完成换挡即可。驶过拐弯路段之后，语言提示前方路口直行，车子以3档25码左右的速度在前面红路灯人行横道前面停车，换成1档起步即可。</p>
+<h2 id="直线行驶">直线行驶</h2>
+<p>过了路口之后，车身回正，前面语音会播报<strong>请保持直线行驶</strong>，这个时候手要一直握住方向盘，不要紧握了。然后方向盘微微向两侧微调。方向盘中心可以远方向和前方路况维也<strong>纳酒店中间的电线杆</strong>成一条直线。过了左侧护栏缺口之后，直线行驶结束。然后开启左转向灯，进入路口等待红绿灯。这里要特别注意红绿灯，确认是红灯之后，还要注意前方是否有右转弯车辆，确认后左转到中间车道，用1档的速度行驶就可以了。只需要注意缺口的地方是否有行人，随时停车。</p>
+<h2 id="变更车道-1">变更车道</h2>
+<p>红绿灯为绿灯时，观察右边车辆情况，然后左转方向，将车驶入到最右侧车道，一直往前走。听到语音播报请变更车道后，车子停下来，然后打左转向灯，方向盘左转90度，看左边后视镜无车辆过来，完成变道。变道之后，远处观察下，注意前面无行人之后，挂2档，上3档，语音提示前方路况左转，打左转向灯，以25~30码速度一直往前开，在前面十字路口人行横道前面停车。重新挂1档。</p>
+<h2 id="会车">会车</h2>
+<p>观察红绿灯，绿灯的时候，注意右边直行车辆，确认没有无障碍之后，将车驶入到最中间车道，然后语音播报会车，这个时候以1档速度会车。这个时候一直往前走，听到会车完成之后，然后在<strong>一直走直线</strong>（为了防止压到厂房门口的下水道盖子）。到厂房门口的时候，可以开启右转向灯了。</p>
+<h2 id="右边停车">右边停车</h2>
+<p>前面走了一段距离之后，会听到语音播报，前方请选择合适地点停车，此时一直往前走，<strong>语音还会播报一次</strong>请靠边停车，这个时候只需要在终点的那块牌子旁边停车即可。停车之后，挂空挡拉手刹。等待系统播报成绩,播报之后再解开安全带。考试结束。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/" class="post-title-link" itemprop="url">利用shadowsocks上外网</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-21 22:11:31" itemprop="dateCreated datePublished" datetime="2019-03-21T22:11:31+08:00">2019-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-04 08:44:41" itemprop="dateModified" datetime="2020-05-04T08:44:41+08:00">2020-05-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到靠谱的那一款。</p>
+<p>这里我们找到了一款比较靠谱的VPN软件，这是一款Google
+chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插件，就可以用chrome浏览器上网了。如果没有付费，一般也能上谷歌搜索和谷歌邮箱，其他的网站就屏蔽了，比如Facebook，Twitter，YouTube等等。按照插件付费步骤付费（一个月也就16元人民币，不贵，一顿饭钱而已）之后，就可以享受科学上网的便利了。这里简单地看下Ghelper界面配置情况，如下图所示</p>
+<figure>
+<img src="/img/vpn/vpn1.png" alt="Ghelper设置界面" />
+<figcaption aria-hidden="true">Ghelper设置界面</figcaption>
+</figure>
+<figure>
+<img src="/img/vpn/vpn2.png" alt="手机设备选项" />
+<figcaption aria-hidden="true">手机设备选项</figcaption>
+</figure>
+<p>其实，只需要我们购买付费服务之后，就可以顺畅地上类似youtube视频网站了：</p>
+<figure>
+<img src="/img/vpn/vpn5.gif" alt="Youtube网站" />
+<figcaption aria-hidden="true">Youtube网站</figcaption>
+</figure>
+<p>此外，我们需要在手机设备一栏中，新增服务，加密方式一般选择aes-256-cfb方式即可。这样新增的服务中会出现VPN所有信息，包括主机地址，服务器端口，加密方式及密钥。</p>
+<figure>
+<img src="/img/vpn/vpn3.png" alt="手机设备新增服务" />
+<figcaption aria-hidden="true">手机设备新增服务</figcaption>
+</figure>
+<p>这里我创建了3个服务地址，方便手机软件轮流使用，防止某一线路不通导致无法上网：</p>
+<figure>
+<img src="/img/vpn/vpn4.png" alt="手机上网配置" />
+<figcaption aria-hidden="true">手机上网配置</figcaption>
+</figure>
+<p>打开手机安装的shadowsocks软件，右上角有个加号按钮，点击之后，如下图所示，这里我们既可以用二维码扫描方式配置（就是上图中模糊的二维码），也可以手动配置，效果是一样的，这样我们用手动设置：</p>
+<figure>
+<img src="/img/vpn/vpn6.jpg" alt="shadowsocks配置" />
+<figcaption aria-hidden="true">shadowsocks配置</figcaption>
+</figure>
+<p>进入手动设置配置界面，将Ghelper中手机设置中的某一个服务配置信息拿过来，进行一一对应填写上，确认就可以科学上网了：</p>
+<figure>
+<img src="/img/vpn/vpn7.jpg" alt="shadowsocks配置" />
+<figcaption aria-hidden="true">shadowsocks配置</figcaption>
+</figure>
+<figure>
+<img src="/img/vpn/vpn8.jpg" alt="shadowsocks配置" />
+<figcaption aria-hidden="true">shadowsocks配置</figcaption>
+</figure>
+<p>这样我们就可以顺利在手机上上网了，每次使用需要VPN连接的软件时，我们首先需要进入到shadowsocks软件下，点击连接后，状态显示已经连接，退出来之后，就可以愉快地上Google
+地图，Youtube，twiiter等客户端。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2018/10/07/archlinux%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/10/07/archlinux%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">archlinux升级系统之后无法启动问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-10-07 09:39:43" itemprop="dateCreated datePublished" datetime="2018-10-07T09:39:43+08:00">2018-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-04 08:38:30" itemprop="dateModified" datetime="2020-05-04T08:38:30+08:00">2020-05-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>本人用的Linux系统版本是archlinux系统，这几年来一直用命令 pacman
+-Syu滚动升级到最新版本，还没有出现滚挂的问题。这两天用命令全量升级之后，重新电脑，发现系统开启不了了，但是在恢复模式下能启动进入系统界面。如果在正常模式下启动，会提示无法找到UUID：</p>
+<figure>
+<img src="/img/fault/archboot1.jpg" alt="启动异常提示" />
+<figcaption aria-hidden="true">启动异常提示</figcaption>
+</figure>
+<p>我在恢复模式下进入系统之后，查看是否我的fstab配置问题，经过确认之后，确认配置没有啥问题。</p>
+<figure>
+<img src="/img/fault/archboot2.jpg" alt="配置异常检测" />
+<figcaption aria-hidden="true">配置异常检测</figcaption>
+</figure>
+<p>经过几番折腾和网上搜索解决方案，在Stack Exchange上找到了一篇帖子<a
+target="_blank" rel="noopener" href="https://superuser.com/questions/769047/unable-to-find-root-device-on-a-fresh-archlinux-install">“Unable
+to find root device” on a fresh ArchLinux
+install</a>，很好的解决了这个问题。文中说道，Linux由于默认镜像文件中缺少block
+mkinitcpio
+hook（负责块设备），Linux启动时无法检测到任何驱动器（比如/dev/sda1,/dev/sdb1等等）。因为在配置文件/etc/mkinitcpio.conf中，block放到了autodetect之后，只需要调换一下位置，重新打包内核就可以了。</p>
+<p>修改之前的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)</span><br></pre></td></tr></table></figure>
+<p>修改之后的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOOKS=(base udev block autodetect modconf filesystems keyboard fsck)</span><br></pre></td></tr></table></figure>
+<p>配置OK之后，重新执行下面命令产生initramfs，永久地修复了该问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkinitcpio -p linux</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

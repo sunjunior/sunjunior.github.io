@@ -1,338 +1,401 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="数据结构与算法" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search) 。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search) 。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次遍历算法。BFS算法是从根节点开始，沿着树的宽度遍历树的节点，如果发现目标，则终止算法。DFS算法是一种用于遍历搜索树或图的另一种算法。这个算法会尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图的遍历搜索算法之BFS和DFS">
+<meta property="og:url" content="https://sunjunior.github.io/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search) 。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次遍历算法。BFS算法是从根节点开始，沿着树的宽度遍历树的节点，如果发现目标，则终止算法。DFS算法是一种用于遍历搜索树或图的另一种算法。这个算法会尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/dfs/tree.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/dfs/result.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/dfs/path.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/dfs/sum.png">
+<meta property="article:published_time" content="2020-05-04T23:16:03.000Z">
+<meta property="article:modified_time" content="2020-05-23T23:58:15.448Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="数据结构与算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/dfs/tree.png">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    图的遍历搜索算法之BFS和DFS |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/","path":"2020/05/05/图的遍历搜索算法之BFS和DFS/","title":"图的遍历搜索算法之BFS和DFS"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>图的遍历搜索算法之BFS和DFS | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="图的遍历搜索算法之BFS和DFS">
-            
-            图的遍历搜索算法之BFS和DFS
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2020/05/05</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                2314</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <p>图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search) 。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次遍历算法。BFS算法是从根节点开始，沿着树的宽度遍历树的节点，如果发现目标，则终止算法。DFS算法是一种用于遍历搜索树或图的另一种算法。这个算法会尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将回溯到发现节点v的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止一般来说,BFS算法比DFS算法用法更广。BFS算法实现需要维护一个队列，而DFS算法实现需要维护一个栈，算法实现流程大致一样。下面以一个图的遍历为例，分别用BFS算法和DFS算法来实现。代码采用python语言，其他语言可以其思想修改为对应的写法即可。下面我们以一颗完全二叉树为例，分别用BFS算法和DFS算法来遍历，打印访问的节点。</p>
-<p><img src="/img/dfs/tree.png" alt=""></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">graph = &#123;</span><br><span class="line"> <span class="string">"A"</span>: [<span class="string">"B"</span>, <span class="string">"C"</span>],</span><br><span class="line"> <span class="string">"B"</span>: [<span class="string">"D"</span>, <span class="string">"E"</span>],</span><br><span class="line"> <span class="string">"C"</span>: [<span class="string">"F"</span>, <span class="string">"G"</span>],</span><br><span class="line"> <span class="string">"D"</span>: [<span class="string">"H"</span>, <span class="string">"I"</span>],</span><br><span class="line"> <span class="string">"E"</span>: [<span class="string">"J"</span>],</span><br><span class="line"> <span class="string">"F"</span>: [<span class="string">"K"</span>, <span class="string">"L"</span>],</span><br><span class="line"> <span class="string">"G"</span>: [<span class="string">"M"</span>],</span><br><span class="line"> <span class="string">"M"</span>: [<span class="string">"N"</span>, <span class="string">"O"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">(graph, seed)</span>:</span></span><br><span class="line">    queue = []</span><br><span class="line">    visited = set()</span><br><span class="line">    queue.append(seed)</span><br><span class="line">    visited.add(seed)</span><br><span class="line">    <span class="keyword">while</span> queue:</span><br><span class="line">        vertex = queue.pop(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> vertex <span class="keyword">in</span> graph:</span><br><span class="line">        	nodes = graph[vertex]</span><br><span class="line">        	<span class="keyword">for</span> w <span class="keyword">in</span> nodes:</span><br><span class="line">            	<span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                	queue.append(w)</span><br><span class="line">                	visited.add(w)</span><br><span class="line">        print(vertex)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">bfs(graph, <span class="string">"A"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(graph, seed)</span>:</span></span><br><span class="line">    stack = []</span><br><span class="line">    stack.append(seed)</span><br><span class="line">    visited = set()</span><br><span class="line">    visited.add(seed)</span><br><span class="line">    <span class="keyword">while</span> stack:</span><br><span class="line">        vertex = stack.pop()</span><br><span class="line">        <span class="keyword">if</span> vertex <span class="keyword">in</span> graph:</span><br><span class="line">        	nodes = graph[vertex]</span><br><span class="line">        	<span class="keyword">for</span> w <span class="keyword">in</span> nodes:</span><br><span class="line">            	<span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                	stack.append(w)</span><br><span class="line">                	visited.add(w)</span><br><span class="line">        print(vertex)</span><br><span class="line"></span><br><span class="line">dfs(graph, <span class="string">"A"</span>)</span><br></pre></td></tr></table></figure>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="图的遍历搜索算法之BFS和DFS | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图的遍历搜索算法之BFS和DFS
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-05 07:16:03" itemprop="dateCreated datePublished" datetime="2020-05-05T07:16:03+08:00">2020-05-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-24 07:58:15" itemprop="dateModified" datetime="2020-05-24T07:58:15+08:00">2020-05-24</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>图结构中常用的２种遍历算法为BFS(Breadth-First-Search)和DFS(Depth-First-Search)
+。顾名思义，BFS算法称为宽度(广度)优先算法，有的地方也称为层次遍历算法。BFS算法是从根节点开始，沿着树的宽度遍历树的节点，如果发现目标，则终止算法。DFS算法是一种用于遍历搜索树或图的另一种算法。这个算法会尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将回溯到发现节点v的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止一般来说,BFS算法比DFS算法用法更广。BFS算法实现需要维护一个队列，而DFS算法实现需要维护一个栈，算法实现流程大致一样。下面以一个图的遍历为例，分别用BFS算法和DFS算法来实现。代码采用python语言，其他语言可以其思想修改为对应的写法即可。下面我们以一颗完全二叉树为例，分别用BFS算法和DFS算法来遍历，打印访问的节点。</p>
+<p><img src="/img/dfs/tree.png" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">graph = &#123;</span><br><span class="line"> <span class="string">&quot;A&quot;</span>: [<span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>],</span><br><span class="line"> <span class="string">&quot;B&quot;</span>: [<span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>],</span><br><span class="line"> <span class="string">&quot;C&quot;</span>: [<span class="string">&quot;F&quot;</span>, <span class="string">&quot;G&quot;</span>],</span><br><span class="line"> <span class="string">&quot;D&quot;</span>: [<span class="string">&quot;H&quot;</span>, <span class="string">&quot;I&quot;</span>],</span><br><span class="line"> <span class="string">&quot;E&quot;</span>: [<span class="string">&quot;J&quot;</span>],</span><br><span class="line"> <span class="string">&quot;F&quot;</span>: [<span class="string">&quot;K&quot;</span>, <span class="string">&quot;L&quot;</span>],</span><br><span class="line"> <span class="string">&quot;G&quot;</span>: [<span class="string">&quot;M&quot;</span>],</span><br><span class="line"> <span class="string">&quot;M&quot;</span>: [<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bfs</span>(<span class="params">graph, seed</span>):</span><br><span class="line">    queue = []</span><br><span class="line">    visited = <span class="built_in">set</span>()</span><br><span class="line">    queue.append(seed)</span><br><span class="line">    visited.add(seed)</span><br><span class="line">    <span class="keyword">while</span> queue:</span><br><span class="line">        vertex = queue.pop(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> vertex <span class="keyword">in</span> graph:</span><br><span class="line">        	nodes = graph[vertex]</span><br><span class="line">        	<span class="keyword">for</span> w <span class="keyword">in</span> nodes:</span><br><span class="line">            	<span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                	queue.append(w)</span><br><span class="line">                	visited.add(w)</span><br><span class="line">        <span class="built_in">print</span>(vertex)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">bfs(graph, <span class="string">&quot;A&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">graph, seed</span>):</span><br><span class="line">    stack = []</span><br><span class="line">    stack.append(seed)</span><br><span class="line">    visited = <span class="built_in">set</span>()</span><br><span class="line">    visited.add(seed)</span><br><span class="line">    <span class="keyword">while</span> stack:</span><br><span class="line">        vertex = stack.pop()</span><br><span class="line">        <span class="keyword">if</span> vertex <span class="keyword">in</span> graph:</span><br><span class="line">        	nodes = graph[vertex]</span><br><span class="line">        	<span class="keyword">for</span> w <span class="keyword">in</span> nodes:</span><br><span class="line">            	<span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                	stack.append(w)</span><br><span class="line">                	visited.add(w)</span><br><span class="line">        <span class="built_in">print</span>(vertex)</span><br><span class="line"></span><br><span class="line">dfs(graph, <span class="string">&quot;A&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>对于树的遍历来说，我们还可以用递归的方式来求解。我们可以打印所有根节点到叶子节点的路径：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(graph, result:List[List[str]], path: List, seed)</span>:</span></span><br><span class="line">    path.append(seed)</span><br><span class="line">    <span class="keyword">if</span> seed <span class="keyword">not</span> <span class="keyword">in</span> graph: <span class="comment"># 叶子节点</span></span><br><span class="line">        result.append(path[:])</span><br><span class="line">        path.pop()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> graph[seed]:</span><br><span class="line">            dfs(graph, result, path, node)</span><br><span class="line"></span><br><span class="line">        path.pop()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_root_leaf_path</span><span class="params">(seed)</span>:</span></span><br><span class="line">    graph = &#123;</span><br><span class="line">            <span class="string">"A"</span>: [<span class="string">"B"</span>, <span class="string">"C"</span>],</span><br><span class="line">            <span class="string">"B"</span>: [<span class="string">"D"</span>, <span class="string">"E"</span>],</span><br><span class="line">            <span class="string">"C"</span>: [<span class="string">"F"</span>, <span class="string">"G"</span>],</span><br><span class="line">            <span class="string">"D"</span>: [<span class="string">"H"</span>, <span class="string">"I"</span>],</span><br><span class="line">            <span class="string">"E"</span>: [<span class="string">"J"</span>],</span><br><span class="line">            <span class="string">"F"</span>: [<span class="string">"K"</span>, <span class="string">"L"</span>],</span><br><span class="line">            <span class="string">"G"</span>: [<span class="string">"M"</span>],</span><br><span class="line">            <span class="string">"M"</span>: [<span class="string">"N"</span>, <span class="string">"O"</span>]</span><br><span class="line">            &#125;</span><br><span class="line">    result = []</span><br><span class="line">    dfs(graph, result, [], <span class="string">"A"</span>)</span><br><span class="line">    <span class="keyword">for</span> path <span class="keyword">in</span> result:</span><br><span class="line">        print(path)</span><br><span class="line">find_root_leaf_path(<span class="string">"A"</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/img/dfs/result.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">graph, result:<span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], path: <span class="type">List</span>, seed</span>):</span><br><span class="line">    path.append(seed)</span><br><span class="line">    <span class="keyword">if</span> seed <span class="keyword">not</span> <span class="keyword">in</span> graph: <span class="comment"># 叶子节点</span></span><br><span class="line">        result.append(path[:])</span><br><span class="line">        path.pop()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> graph[seed]:</span><br><span class="line">            dfs(graph, result, path, node)</span><br><span class="line"></span><br><span class="line">        path.pop()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_root_leaf_path</span>(<span class="params">seed</span>):</span><br><span class="line">    graph = &#123;</span><br><span class="line">            <span class="string">&quot;A&quot;</span>: [<span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>],</span><br><span class="line">            <span class="string">&quot;B&quot;</span>: [<span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>],</span><br><span class="line">            <span class="string">&quot;C&quot;</span>: [<span class="string">&quot;F&quot;</span>, <span class="string">&quot;G&quot;</span>],</span><br><span class="line">            <span class="string">&quot;D&quot;</span>: [<span class="string">&quot;H&quot;</span>, <span class="string">&quot;I&quot;</span>],</span><br><span class="line">            <span class="string">&quot;E&quot;</span>: [<span class="string">&quot;J&quot;</span>],</span><br><span class="line">            <span class="string">&quot;F&quot;</span>: [<span class="string">&quot;K&quot;</span>, <span class="string">&quot;L&quot;</span>],</span><br><span class="line">            <span class="string">&quot;G&quot;</span>: [<span class="string">&quot;M&quot;</span>],</span><br><span class="line">            <span class="string">&quot;M&quot;</span>: [<span class="string">&quot;N&quot;</span>, <span class="string">&quot;O&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">    result = []</span><br><span class="line">    dfs(graph, result, [], <span class="string">&quot;A&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> path <span class="keyword">in</span> result:</span><br><span class="line">        <span class="built_in">print</span>(path)</span><br><span class="line">find_root_leaf_path(<span class="string">&quot;A&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/img/dfs/result.png" /></p>
 <p>我们还可以打印从树根节点到叶子节点等于指定和的所有路径，比如25。这里我们观察图，得知有2条路径：</p>
-<p><img src="/img/dfs/path.png" alt=""></p>
+<p><img src="/img/dfs/path.png" /></p>
 <p>我们把上面的代码稍作修改，即可以完成上面的功能：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">from typing import List</span><br><span class="line"></span><br><span class="line">def dfs(graph, capacities, result:List[List[str]], path: List, seed, target):</span><br><span class="line">    path.append(seed)</span><br><span class="line">    target -&#x3D; capacities[seed]</span><br><span class="line">    if seed not in graph: # 叶子节点</span><br><span class="line">        if target &#x3D;&#x3D; 0:</span><br><span class="line">            result.append(path[:])</span><br><span class="line">        path.pop()</span><br><span class="line">    else:</span><br><span class="line">        for node in graph[seed]:</span><br><span class="line">            dfs(graph, capacities, result, path, node, target)</span><br><span class="line">        path.pop()</span><br><span class="line"></span><br><span class="line">def find_root_leaf_path(seed):</span><br><span class="line">    graph &#x3D; &#123;</span><br><span class="line">            &quot;A&quot;: [&quot;B&quot;, &quot;C&quot;],</span><br><span class="line">            &quot;B&quot;: [&quot;D&quot;, &quot;E&quot;],</span><br><span class="line">            &quot;C&quot;: [&quot;F&quot;, &quot;G&quot;],</span><br><span class="line">            &quot;D&quot;: [&quot;H&quot;, &quot;I&quot;],</span><br><span class="line">            &quot;E&quot;: [&quot;J&quot;],</span><br><span class="line">            &quot;F&quot;: [&quot;K&quot;, &quot;L&quot;],</span><br><span class="line">            &quot;G&quot;: [&quot;M&quot;],</span><br><span class="line">            &quot;M&quot;: [&quot;N&quot;, &quot;O&quot;]</span><br><span class="line">            &#125;</span><br><span class="line">    capacities &#x3D; &#123; &quot;A&quot;: 10, &quot;B&quot;: 4, &quot;C&quot;: 2, &quot;D&quot;: 8,</span><br><span class="line">            &quot;E&quot;: 10, &quot;F&quot;: 7, &quot;G&quot;: 5, &quot;H&quot;: 2, &quot;I&quot;: 2,</span><br><span class="line">            &quot;J&quot;: 3, &quot;K&quot;: 6, &quot;L&quot;: 9, &quot;M&quot;: 5, &quot;N&quot;: 6, &quot;O&quot;: 3&#125;</span><br><span class="line">    result &#x3D; []</span><br><span class="line">    target &#x3D; 25</span><br><span class="line">    dfs(graph,capacities, result, [], &quot;A&quot;, target)</span><br><span class="line">    for path in result:</span><br><span class="line">        print(path)</span><br><span class="line">find_root_leaf_path(&quot;A&quot;)</span><br></pre></td></tr></table></figure>
-<p><img src="/img/dfs/sum.png" alt=""></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">from typing import List</span><br><span class="line"></span><br><span class="line">def dfs(graph, capacities, result:List[List[str]], path: List, seed, target):</span><br><span class="line">    path.append(seed)</span><br><span class="line">    target -= capacities[seed]</span><br><span class="line">    if seed not in graph: # 叶子节点</span><br><span class="line">        if target == 0:</span><br><span class="line">            result.append(path[:])</span><br><span class="line">        path.pop()</span><br><span class="line">    else:</span><br><span class="line">        for node in graph[seed]:</span><br><span class="line">            dfs(graph, capacities, result, path, node, target)</span><br><span class="line">        path.pop()</span><br><span class="line"></span><br><span class="line">def find_root_leaf_path(seed):</span><br><span class="line">    graph = &#123;</span><br><span class="line">            &quot;A&quot;: [&quot;B&quot;, &quot;C&quot;],</span><br><span class="line">            &quot;B&quot;: [&quot;D&quot;, &quot;E&quot;],</span><br><span class="line">            &quot;C&quot;: [&quot;F&quot;, &quot;G&quot;],</span><br><span class="line">            &quot;D&quot;: [&quot;H&quot;, &quot;I&quot;],</span><br><span class="line">            &quot;E&quot;: [&quot;J&quot;],</span><br><span class="line">            &quot;F&quot;: [&quot;K&quot;, &quot;L&quot;],</span><br><span class="line">            &quot;G&quot;: [&quot;M&quot;],</span><br><span class="line">            &quot;M&quot;: [&quot;N&quot;, &quot;O&quot;]</span><br><span class="line">            &#125;</span><br><span class="line">    capacities = &#123; &quot;A&quot;: 10, &quot;B&quot;: 4, &quot;C&quot;: 2, &quot;D&quot;: 8,</span><br><span class="line">            &quot;E&quot;: 10, &quot;F&quot;: 7, &quot;G&quot;: 5, &quot;H&quot;: 2, &quot;I&quot;: 2,</span><br><span class="line">            &quot;J&quot;: 3, &quot;K&quot;: 6, &quot;L&quot;: 9, &quot;M&quot;: 5, &quot;N&quot;: 6, &quot;O&quot;: 3&#125;</span><br><span class="line">    result = []</span><br><span class="line">    target = 25</span><br><span class="line">    dfs(graph,capacities, result, [], &quot;A&quot;, target)</span><br><span class="line">    for path in result:</span><br><span class="line">        print(path)</span><br><span class="line">find_root_leaf_path(&quot;A&quot;)</span><br></pre></td></tr></table></figure>
+<p><img src="/img/dfs/sum.png" /></p>
 <p>总的来说，BFS算法比DFS算法使用范围更广，涉及到二维平面搜索，图搜索，走迷宫等等优先考虑BFS，因为BFS总是可以找到任意2个节点之间的最短路径。而对于遍历树的路径，字符串排列组合等等可以采用DFS算法。</p>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/" class="pre-post btn btn-default" title='回溯算法的基本原理及代码框架'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            回溯算法的基本原理及代码框架</span>
-    </a>
+
     
     
-    <a href="/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/" class="next-post btn btn-default" title='深圳清湖科目三路考3号线细节'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            深圳清湖科目三路考3号线细节</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2020/05/05/%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E4%B9%8BBFS%E5%92%8CDFS/" title="图的遍历搜索算法之BFS和DFS">https://sunjunior.github.io/2020/05/05/图的遍历搜索算法之BFS和DFS/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 数据结构与算法</a>
+          </div>
+
         
-        <p>暂无目录</p>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/" rel="prev" title="深圳清湖科目三路考3号线细节">
+                  <i class="fa fa-angle-left"></i> 深圳清湖科目三路考3号线细节
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2020/05/16/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6/" rel="next" title="回溯算法的基本原理及代码框架">
+                  回溯算法的基本原理及代码框架 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

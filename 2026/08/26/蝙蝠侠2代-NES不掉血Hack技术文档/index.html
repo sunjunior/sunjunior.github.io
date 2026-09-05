@@ -1,196 +1,315 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="逆向工程" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="
-目标游戏：Batman (U) / 蝙蝠侠2代（Map 69, FME-7）目标：修改 NES ROM，使玩家承受所有攻击（包括 BOSS 攻击、激光、小兵）均不掉血交付物：已打补丁的 ROM..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：Batman (U) &#x2F; 蝙蝠侠2代（Map 69, FME-7） 目标：修改 NES ROM，使玩家承受所有攻击（包括 BOSS 攻击、激光、小兵）均不掉血 交付物：已打补丁的 ROM 文件 日期：2026-08-26   1. 背景与目标 《蝙蝠侠2代》是 Sunsoft 推出的 FC&#x2F;NES 横版动作游戏，采用 FME-7（Mapper 69）高级映射芯片。游戏界面中，玩家和 B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="蝙蝠侠2代（NES &#x2F; FC）BOSS 攻击不掉血 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：Batman (U) &#x2F; 蝙蝠侠2代（Map 69, FME-7） 目标：修改 NES ROM，使玩家承受所有攻击（包括 BOSS 攻击、激光、小兵）均不掉血 交付物：已打补丁的 ROM 文件 日期：2026-08-26   1. 背景与目标 《蝙蝠侠2代》是 Sunsoft 推出的 FC&#x2F;NES 横版动作游戏，采用 FME-7（Mapper 69）高级映射芯片。游戏界面中，玩家和 B">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/batman2-hacker.gif">
+<meta property="article:published_time" content="2026-08-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-02T23:24:37.811Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/batman2-hacker.gif">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/08/26/蝙蝠侠2代-NES不掉血Hack技术文档/","title":"蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档">
-            
-            蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2026/08/26</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
-    </span>
-    
-    
-</div>
-        
-        
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
     </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E7%BB%93%E6%9E%84%E4%B8%8E-fme-7-%E6%98%A0%E5%B0%84%E5%88%86%E6%9E%90"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 ROM 结构与 FME-7 映射分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D-power-%E5%9C%B0%E5%9D%80"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 定位 POWER 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%8F%8D%E6%B1%87%E7%BC%96%E5%AE%9A%E4%BD%8D%E6%89%A3%E8%A1%80%E6%8C%87%E4%BB%A4"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 静态反汇编定位扣血指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%86%99%E8%B7%9F%E8%B8%AA%E5%8F%91%E7%8E%B0%E9%81%97%E6%BC%8F%E7%9A%84%E4%BC%A4%E5%AE%B3%E4%BB%A3%E7%A0%81"><span class="nav-number">5.4.</span> <span class="nav-text">5.4
+动态写跟踪发现遗漏的伤害代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E7%82%B9%E5%AE%8C%E6%95%B4%E5%9C%B0%E5%9B%BE"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 伤害点完整地图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">6.</span> <span class="nav-text">6. 补丁实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C"><span class="nav-number">7.</span> <span class="nav-text">7. 验证结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%85%B3%E9%94%AE-lua-%E8%B0%83%E8%AF%95%E8%84%9A%E6%9C%AC"><span class="nav-number">9.</span> <span class="nav-text">附录 A：关键 Lua 调试脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-capture10.lua-hp-%E5%80%99%E9%80%89%E5%80%BC%E7%9B%91%E6%8E%A7%E5%8F%91%E7%8E%B0-b2-%E6%98%AF-power-%E5%9C%B0%E5%9D%80"><span class="nav-number">9.1.</span> <span class="nav-text">A.1
+capture10.lua — HP 候选值监控（发现 $B2 是 POWER 地址）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-trace_damage.lua-%E8%BF%BD%E8%B8%AA-b2-%E5%86%99%E5%85%A5%E5%8F%91%E7%8E%B0-bank-6-%E7%9A%84%E4%BC%A4%E5%AE%B3%E4%BB%A3%E7%A0%81"><span class="nav-number">9.2.</span> <span class="nav-text">A.2
+trace_damage.lua — 追踪 $B2 写入（发现 Bank 6 的伤害代码）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-trace2.lua-%E5%90%8C%E6%97%B6%E7%9B%91%E6%8E%A7-b2b3-%E5%92%8C-048a048b"><span class="nav-number">9.3.</span> <span class="nav-text">A.3 trace2.lua —
+同时监控
+B2&#x2F;B2&#x2F;B3
+和 $048A&#x2F;$048B</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-dis6502.py-6502-%E5%8F%8D%E6%B1%87%E7%BC%96%E5%99%A8%E6%94%AF%E6%8C%81-fme-7-bank-%E6%98%A0%E5%B0%84"><span class="nav-number">9.4.</span> <span class="nav-text">A.4 dis6502.py
+— 6502 反汇编器（支持 FME-7 bank 映射）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
     
-    <div class="post-body post-content">
-        <blockquote>
-<p>目标游戏：<strong>Batman (U) / 蝙蝠侠2代（Map 69, FME-7）</strong><br>目标：修改 NES ROM，使玩家承受所有攻击（包括 BOSS 攻击、激光、小兵）均不掉血<br>交付物：已打补丁的 ROM 文件<br>日期：2026-08-26</p>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="蝙蝠侠2代（NES &#x2F; FC）BOSS 攻击不掉血 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          蝙蝠侠2代（NES / FC）BOSS 攻击不掉血 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-26 00:00:00" itemprop="dateCreated datePublished" datetime="2026-08-26T00:00:00+08:00">2026-08-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-03 07:24:37" itemprop="dateModified" datetime="2026-09-03T07:24:37+08:00">2026-09-03</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>Batman (U) / 蝙蝠侠2代（Map 69, FME-7）</strong>
+目标：修改 NES ROM，使玩家承受所有攻击（包括 BOSS
+攻击、激光、小兵）均不掉血 交付物：已打补丁的 ROM 文件
+日期：2026-08-26</p>
 </blockquote>
-<hr>
-<h2 id="1-背景与目标"><a href="#1-背景与目标" class="headerlink" title="1. 背景与目标"></a>1. 背景与目标</h2><p>《蝙蝠侠2代》是 Sunsoft 推出的 FC/NES 横版动作游戏，采用 FME-7（Mapper 69）高级映射芯片。游戏界面中，玩家和 BOSS 都有 POWER 数值（如 80000 / 100000），每次被攻击 POWER 下降，归零即死亡。</p>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《蝙蝠侠2代》是 Sunsoft 推出的 FC/NES 横版动作游戏，采用
+FME-7（Mapper 69）高级映射芯片。游戏界面中，玩家和 BOSS 都有 POWER
+数值（如 80000 / 100000），每次被攻击 POWER 下降，归零即死亡。</p>
 <p>本次破解任务的目标：</p>
-<ol>
+<ol type="1">
 <li>找到控制 POWER 值的 RAM 地址。</li>
 <li>定位所有”扣血”的代码位置（包括 BOSS、小兵、激光各类攻击）。</li>
 <li>修改 ROM，使扣血逻辑失效，<strong>BOSS 攻击不掉血</strong>。</li>
 <li>提供可直接使用的 patched ROM。</li>
 </ol>
-<p>最终成果：<strong>玩家无论被 BOSS 还是小兵攻击，POWER 值始终保持满格</strong>。</p>
-<hr>
-<h2 id="2-ROM-与游戏信息"><a href="#2-ROM-与游戏信息" class="headerlink" title="2. ROM 与游戏信息"></a>2. ROM 与游戏信息</h2><div class="table-container">
+<p>最终成果：<strong>玩家无论被 BOSS 还是小兵攻击，POWER
+值始终保持满格</strong>。</p>
+<hr />
+<h2 id="rom-与游戏信息">2. ROM 与游戏信息</h2>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>项目</th>
@@ -220,7 +339,8 @@
 </tr>
 <tr>
 <td>格式</td>
-<td>iNES，Mapper <strong>69（FME-7 / Sunsoft 5B）</strong>，水平镜像</td>
+<td>iNES，Mapper <strong>69（FME-7 / Sunsoft
+5B）</strong>，水平镜像</td>
 </tr>
 <tr>
 <td>PRG ROM</td>
@@ -236,19 +356,27 @@
 </tr>
 <tr>
 <td>交换 Bank</td>
-<td><code>$8000-$9FFF</code> 由 reg 09 控制，<code>$A000-$BFFF</code> 由 reg 0A 控制</td>
+<td><code>$8000-$9FFF</code> 由 reg 09 控制，<code>$A000-$BFFF</code> 由
+reg 0A 控制</td>
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="关键地址约定"><a href="#关键地址约定" class="headerlink" title="关键地址约定"></a>关键地址约定</h3><ul>
-<li><strong>PRG 偏移</strong>：指相对 PRG 数据起始（文件偏移 = PRG 偏移 + 16 字节 iNES 头）。</li>
-<li>FME-7 采用 8KB 粒度的银行切换。同一段代码在不同时刻可能处于不同 bank，因此定位时需结合 bank 上下文。</li>
-<li><code>$00B2-$00B3</code>（2 字节小端）：POWER 值，存储值 ×10 = 屏幕显示值（满血 <code>0x1F40</code> = 8000 → 显示 80000）。</li>
+<h3 id="关键地址约定">关键地址约定</h3>
+<ul>
+<li><strong>PRG 偏移</strong>：指相对 PRG 数据起始（文件偏移 = PRG 偏移
++ 16 字节 iNES 头）。</li>
+<li>FME-7 采用 8KB 粒度的银行切换。同一段代码在不同时刻可能处于不同
+bank，因此定位时需结合 bank 上下文。</li>
+<li><code>$00B2-$00B3</code>（2 字节小端）：POWER 值，存储值 ×10 =
+屏幕显示值（满血 <code>0x1F40</code> = 8000 → 显示 80000）。</li>
 </ul>
-<hr>
-<h2 id="3-分析环境与工具"><a href="#3-分析环境与工具" class="headerlink" title="3. 分析环境与工具"></a>3. 分析环境与工具</h2><div class="table-container">
+<hr />
+<h2 id="分析环境与工具">3. 分析环境与工具</h2>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>用途</th>
@@ -258,19 +386,23 @@
 <tbody>
 <tr>
 <td>模拟器</td>
-<td><strong>Mesen2</strong>（Linux），无头测试模式 <code>--testRunner</code></td>
+<td><strong>Mesen2</strong>（Linux），无头测试模式
+<code>--testRunner</code></td>
 </tr>
 <tr>
 <td>反汇编</td>
-<td>自写 6502 反汇编器 <code>dis6502.py</code>，支持 FME-7 8KB bank 映射</td>
+<td>自写 6502 反汇编器 <code>dis6502.py</code>，支持 FME-7 8KB bank
+映射</td>
 </tr>
 <tr>
 <td>内存/执行跟踪</td>
-<td>Mesen Lua API（<code>addMemoryCallback</code>、<code>addEventCallback</code>、<code>emu.getState</code>）</td>
+<td>Mesen Lua
+API（<code>addMemoryCallback</code>、<code>addEventCallback</code>、<code>emu.getState</code>）</td>
 </tr>
 <tr>
 <td>存档对比</td>
-<td>自写 <code>mssdiff.py</code> 解析 Mesen2 <code>.mss</code> 存档格式，提取 WRAM 差异</td>
+<td>自写 <code>mssdiff.py</code> 解析 Mesen2 <code>.mss</code>
+存档格式，提取 WRAM 差异</td>
 </tr>
 <tr>
 <td>补丁生成</td>
@@ -278,13 +410,17 @@
 </tr>
 </tbody>
 </table>
-</div>
-<hr>
-<h2 id="4-破解总体思路"><a href="#4-破解总体思路" class="headerlink" title="4. 破解总体思路"></a>4. 破解总体思路</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">静态分析（ROM 结构 + 反汇编）</span><br><span class="line">    ↓</span><br><span class="line">定位 POWER 地址（存档对比 + 候选值监控）</span><br><span class="line">    ↓</span><br><span class="line">动态写跟踪（抓每次写 $B2 的 PC）</span><br><span class="line">    ↓</span><br><span class="line">伤害点地图（区分&quot;扣血&quot;与&quot;初始化&quot;）</span><br><span class="line">    ↓</span><br><span class="line">ROM 补丁（SBC 立即数改为 #$00）</span><br><span class="line">    ↓</span><br><span class="line">验证（实机测试，确认不掉血）</span><br></pre></td></tr></table></figure>
-<p>核心思想：<strong>层层递进，静动结合</strong>。先用静态反汇编理解 FME-7 的 bank 切换机制，再用存档对比缩小 POWER 地址范围，最后用动态写跟踪精确定位所有伤害代码。</p>
-<hr>
-<h2 id="5-详细分析过程"><a href="#5-详细分析过程" class="headerlink" title="5. 详细分析过程"></a>5. 详细分析过程</h2><h3 id="5-1-ROM-结构与-FME-7-映射分析"><a href="#5-1-ROM-结构与-FME-7-映射分析" class="headerlink" title="5.1 ROM 结构与 FME-7 映射分析"></a>5.1 ROM 结构与 FME-7 映射分析</h3><p>蝙蝠侠2代采用 Sunsoft FME-7（Mapper 69）芯片，其 PRG 内存映射如下：</p>
-<div class="table-container">
+<hr />
+<h2 id="破解总体思路">4. 破解总体思路</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">静态分析（ROM 结构 + 反汇编）</span><br><span class="line">    ↓</span><br><span class="line">定位 POWER 地址（存档对比 + 候选值监控）</span><br><span class="line">    ↓</span><br><span class="line">动态写跟踪（抓每次写 $B2 的 PC）</span><br><span class="line">    ↓</span><br><span class="line">伤害点地图（区分&quot;扣血&quot;与&quot;初始化&quot;）</span><br><span class="line">    ↓</span><br><span class="line">ROM 补丁（SBC 立即数改为 #$00）</span><br><span class="line">    ↓</span><br><span class="line">验证（实机测试，确认不掉血）</span><br></pre></td></tr></table></figure>
+<p>核心思想：<strong>层层递进，静动结合</strong>。先用静态反汇编理解
+FME-7 的 bank 切换机制，再用存档对比缩小 POWER
+地址范围，最后用动态写跟踪精确定位所有伤害代码。</p>
+<hr />
+<h2 id="详细分析过程">5. 详细分析过程</h2>
+<h3 id="rom-结构与-fme-7-映射分析">5.1 ROM 结构与 FME-7 映射分析</h3>
+<p>蝙蝠侠2代采用 Sunsoft FME-7（Mapper 69）芯片，其 PRG
+内存映射如下：</p>
 <table>
 <thead>
 <tr>
@@ -316,34 +452,63 @@
 </tr>
 </tbody>
 </table>
-</div>
-<p>Bank 切换惯用代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LDA #bank_id    ; bank_id &amp; 0x0F &#x3D; 8KB 页号</span><br><span class="line">STA $E9         ; 暂存</span><br><span class="line">LDX #$09        ; 选择 reg 09</span><br><span class="line">JSR $C229       ; STX $8000; STA $A000; RTS → 切换 bank</span><br></pre></td></tr></table></figure></p>
-<p>NMI 处理入口 <code>$E1D0</code>，RESET 入口 <code>$E2E6</code>，IRQ 入口 <code>$E2A9</code>。状态机调度器位于 <code>$D4D3</code>（<code>$BA</code> 写触发状态切换）。</p>
-<h3 id="5-2-定位-POWER-地址"><a href="#5-2-定位-POWER-地址" class="headerlink" title="5.2 定位 POWER 地址"></a>5.2 定位 POWER 地址</h3><p>游戏中的 POWER 显示为 5 位数字（80000 / 100000 等），特征明显。通过存档对比法定位：</p>
-<ol>
+<p>Bank 切换惯用代码： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LDA #bank_id    ; bank_id &amp; 0x0F = 8KB 页号</span><br><span class="line">STA $E9         ; 暂存</span><br><span class="line">LDX #$09        ; 选择 reg 09</span><br><span class="line">JSR $C229       ; STX $8000; STA $A000; RTS → 切换 bank</span><br></pre></td></tr></table></figure></p>
+<p>NMI 处理入口 <code>$E1D0</code>，RESET 入口 <code>$E2E6</code>，IRQ
+入口 <code>$E2A9</code>。状态机调度器位于
+<code>$D4D3</code>（<code>$BA</code> 写触发状态切换）。</p>
+<h3 id="定位-power-地址">5.2 定位 POWER 地址</h3>
+<p>游戏中的 POWER 显示为 5 位数字（80000 / 100000
+等），特征明显。通过存档对比法定位：</p>
+<ol type="1">
 <li>用户在 BOSS 战中满血时存档（Shift+F6，POWER=80000）。</li>
 <li>挨打 2 次后存档（Shift+F7，POWER=60000）。</li>
-<li>解析两个 <code>.mss</code> 存档的 WRAM 差异，搜索所有符合 80000→60000 变化的 3 字节值。</li>
+<li>解析两个 <code>.mss</code> 存档的 WRAM 差异，搜索所有符合
+80000→60000 变化的 3 字节值。</li>
 </ol>
-<p>但初始搜索发现噪声太多（两次存档间游戏世界状态差异大），于是改用<strong>实时监控脚本</strong>，在 BOSS 攻击瞬间捕捉内存变化：</p>
-<p><strong>capture10.lua</strong>（核心思路：加载存档后扫描所有候选值，每 3 帧轮询一次，检测到下降立即停止）：</p>
+<p>但初始搜索发现噪声太多（两次存档间游戏世界状态差异大），于是改用<strong>实时监控脚本</strong>，在
+BOSS 攻击瞬间捕捉内存变化：</p>
+<p><strong>capture10.lua</strong>（核心思路：加载存档后扫描所有候选值，每
+3 帧轮询一次，检测到下降立即停止）：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 关键代码片段 (完整脚本见附录)</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">scan_and_watch</span><span class="params">()</span></span></span><br><span class="line">  watch = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> a = <span class="number">0</span>, <span class="number">0x7FF</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> v = rd(a)</span><br><span class="line">    <span class="comment">-- 单字节: 80=0x50 或 100=0x64</span></span><br><span class="line">    <span class="keyword">if</span> v == <span class="number">0x50</span> <span class="keyword">or</span> v == <span class="number">0x64</span> <span class="keyword">then</span> watch[a] = v <span class="keyword">end</span></span><br><span class="line">    <span class="comment">-- 2字节 LE: 8000=0x1F40</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FE</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v2 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">      <span class="keyword">if</span> v2 == <span class="number">0x1F40</span> <span class="keyword">then</span> watch[a] = v2 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="comment">-- 3字节 BCD: 80 00 00</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">and</span> rd(a) == <span class="number">0x80</span> <span class="keyword">and</span> rd(a+<span class="number">1</span>) == <span class="number">0</span> <span class="keyword">and</span> rd(a+<span class="number">2</span>) == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">      watch[a] = <span class="number">80000</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>运行结果确认 <strong><code>$00B2-$00B3</code></strong> 为 POWER 存储地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">候选 WRAM $00B2 &#x3D; 8000</span><br><span class="line">...</span><br><span class="line">&#x3D;&#x3D;&#x3D; 第642帧: 检测到候选值下降! &#x3D;&#x3D;&#x3D;</span><br><span class="line">  WRAM $00B2: 8000 -&gt; 7000 (delta&#x3D;1000)</span><br><span class="line">  WRAM $00B2: 8000 -&gt; 6000 (delta&#x3D;2000)</span><br><span class="line">  WRAM $00B2: 8000 -&gt; 5000 (delta&#x3D;3000)</span><br></pre></td></tr></table></figure>
-<p>结论：<code>$00B2</code>（低字节）+ <code>$00B3</code>（高字节）= 16 位小端值，存储值 ×10 = 显示 POWER。满血 = <code>0x1F40</code> = 8000（显示 80000），每次受击 -1000（显示 -10000）。</p>
-<h3 id="5-3-静态反汇编定位扣血指令"><a href="#5-3-静态反汇编定位扣血指令" class="headerlink" title="5.3 静态反汇编定位扣血指令"></a>5.3 静态反汇编定位扣血指令</h3><p>确认 <code>$B2/$B3</code> 为 POWER 后，搜索所有操作这对寄存器的指令。在 Bank 5（reg 0A = 页 11）中发现了 3 处 16 位减法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$B27B: LDA $B2; SEC; SBC #$58; STA $B2; LDA $B3; SBC #$02; STA $B3</span><br><span class="line">        → 减 0x0258 &#x3D; 600（显示 6000）</span><br><span class="line">$B81D: LDA $B2; SEC; SBC #$E8; STA $B2; LDA $B3; SBC #$03; STA $B3</span><br><span class="line">        → 减 0x03E8 &#x3D; 1000（显示 10000）← BOSS 攻击</span><br><span class="line">$BBBE: LDA $B2; SEC; SBC #$58; STA $B2; LDA $B3; SBC #$01; STA $B3</span><br><span class="line">        → 减 0x0158 &#x3D; 344（显示 3440）</span><br></pre></td></tr></table></figure>
-<p>Patch 这 3 处后，BOSS 攻击（10000）和小兵部分攻击被拦截，但<strong>激光攻击（3000）仍然有效</strong>——说明还有遗漏的伤害代码。</p>
-<h3 id="5-4-动态写跟踪发现遗漏的伤害代码"><a href="#5-4-动态写跟踪发现遗漏的伤害代码" class="headerlink" title="5.4 动态写跟踪发现遗漏的伤害代码"></a>5.4 动态写跟踪发现遗漏的伤害代码</h3><p>利用 Mesen 的写内存回调追踪 <code>$B2</code> 的每次写入：</p>
-<p><strong>trace_damage.lua</strong>（核心思路：在 NMI 回调中加载存档，然后每帧监控 <code>$B2</code> 写入，记录 PC 地址）：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 关键代码片段 (完整脚本见附录)</span></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> pc = emu.getState()[<span class="string">'cpu.pc'</span>] <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'@f%d STA $B2=$%02X (HP=%d)  pc=$%04X'</span>,</span><br><span class="line">      frame, val, rd(<span class="number">0xB2</span>)+rd(<span class="number">0xB3</span>)*<span class="number">256</span>, pc))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0xB2</span>, <span class="number">0xB2</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果确认 <strong><code>$00B2-$00B3</code></strong> 为 POWER
+存储地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">候选 WRAM $00B2 = 8000</span><br><span class="line">...</span><br><span class="line">=== 第642帧: 检测到候选值下降! ===</span><br><span class="line">  WRAM $00B2: 8000 -&gt; 7000 (delta=1000)</span><br><span class="line">  WRAM $00B2: 8000 -&gt; 6000 (delta=2000)</span><br><span class="line">  WRAM $00B2: 8000 -&gt; 5000 (delta=3000)</span><br></pre></td></tr></table></figure>
+<p>结论：<code>$00B2</code>（低字节）+ <code>$00B3</code>（高字节）= 16
+位小端值，存储值 ×10 = 显示 POWER。满血 = <code>0x1F40</code> =
+8000（显示 80000），每次受击 -1000（显示 -10000）。</p>
+<h3 id="静态反汇编定位扣血指令">5.3 静态反汇编定位扣血指令</h3>
+<p>确认 <code>$B2/$B3</code> 为 POWER
+后，搜索所有操作这对寄存器的指令。在 Bank 5（reg 0A = 页 11）中发现了 3
+处 16 位减法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$B27B: LDA $B2; SEC; SBC #$58; STA $B2; LDA $B3; SBC #$02; STA $B3</span><br><span class="line">        → 减 0x0258 = 600（显示 6000）</span><br><span class="line">$B81D: LDA $B2; SEC; SBC #$E8; STA $B2; LDA $B3; SBC #$03; STA $B3</span><br><span class="line">        → 减 0x03E8 = 1000（显示 10000）← BOSS 攻击</span><br><span class="line">$BBBE: LDA $B2; SEC; SBC #$58; STA $B2; LDA $B3; SBC #$01; STA $B3</span><br><span class="line">        → 减 0x0158 = 344（显示 3440）</span><br></pre></td></tr></table></figure>
+<p>Patch 这 3 处后，BOSS
+攻击（10000）和小兵部分攻击被拦截，但<strong>激光攻击（3000）仍然有效</strong>——说明还有遗漏的伤害代码。</p>
+<h3 id="动态写跟踪发现遗漏的伤害代码">5.4
+动态写跟踪发现遗漏的伤害代码</h3>
+<p>利用 Mesen 的写内存回调追踪 <code>$B2</code> 的每次写入：</p>
+<p><strong>trace_damage.lua</strong>（核心思路：在 NMI
+回调中加载存档，然后每帧监控 <code>$B2</code> 写入，记录 PC 地址）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 关键代码片段 (完整脚本见附录)</span></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> pc = emu.getState()[<span class="string">&#x27;cpu.pc&#x27;</span>] <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;@f%d STA $B2=$%02X (HP=%d)  pc=$%04X&#x27;</span>,</span><br><span class="line">      frame, val, rd(<span class="number">0xB2</span>)+rd(<span class="number">0xB3</span>)*<span class="number">256</span>, pc))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0xB2</span>, <span class="number">0xB2</span>)</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">initial B2&#x3D;$40 B3&#x3D;$1F HP&#x3D;8000</span><br><span class="line">@f232 STA $00B2&#x3D;$40 (HP&#x3D;8000)  pc&#x3D;$9824      ← 初始化写入（值不变）</span><br><span class="line">@f555 STA $00B2&#x3D;$14 (HP&#x3D;7956)  pc&#x3D;$B069      ← 激光命中！写入 $14</span><br><span class="line">@f555 STA $00B3&#x3D;$1E (HP&#x3D;7700)  pc&#x3D;$B06F      ← HP&#x3D;0x1E14&#x3D;7700</span><br></pre></td></tr></table></figure>
-<p><strong><code>pc=$B069</code> 和 <code>pc=$B06F</code> 是新的伤害代码！</strong> 反汇编 Bank 6（reg 0A = 页 13）的 <code>$B062-$B06D</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$B062  LDA $B2</span><br><span class="line">$B064  SEC</span><br><span class="line">$B065  SBC $2F        ; 减 $2F（伤害值低字节）</span><br><span class="line">$B067  STA $B2</span><br><span class="line">$B069  LDA $B3</span><br><span class="line">$B06B  SBC $2E        ; 减 $2E（伤害值高字节）</span><br><span class="line">$B06D  STA $B3</span><br></pre></td></tr></table></figure>
-<p>前 3 处伤害代码用<strong>立即数</strong>（<code>SBC #imm</code>），而这处用<strong>零页寻址</strong>（<code>SBC $2F</code>），伤害值从 <code>$2E/$2F</code> 读取——因此静态扫描 <code>SBC #imm</code> 时被遗漏了！</p>
-<h3 id="5-5-伤害点完整地图"><a href="#5-5-伤害点完整地图" class="headerlink" title="5.5 伤害点完整地图"></a>5.5 伤害点完整地图</h3><div class="table-container">
-<table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">initial B2=$40 B3=$1F HP=8000</span><br><span class="line">@f232 STA $00B2=$40 (HP=8000)  pc=$9824      ← 初始化写入（值不变）</span><br><span class="line">@f555 STA $00B2=$14 (HP=7956)  pc=$B069      ← 激光命中！写入 $14</span><br><span class="line">@f555 STA $00B3=$1E (HP=7700)  pc=$B06F      ← HP=0x1E14=7700</span><br></pre></td></tr></table></figure>
+<p><strong><code>pc=$B069</code> 和 <code>pc=$B06F</code>
+是新的伤害代码！</strong> 反汇编 Bank 6（reg 0A = 页 13）的
+<code>$B062-$B06D</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$B062  LDA $B2</span><br><span class="line">$B064  SEC</span><br><span class="line">$B065  SBC $2F        ; 减 $2F（伤害值低字节）</span><br><span class="line">$B067  STA $B2</span><br><span class="line">$B069  LDA $B3</span><br><span class="line">$B06B  SBC $2E        ; 减 $2E（伤害值高字节）</span><br><span class="line">$B06D  STA $B3</span><br></pre></td></tr></table></figure>
+<p>前 3
+处伤害代码用<strong>立即数</strong>（<code>SBC #imm</code>），而这处用<strong>零页寻址</strong>（<code>SBC $2F</code>），伤害值从
+<code>$2E/$2F</code> 读取——因此静态扫描 <code>SBC #imm</code>
+时被遗漏了！</p>
+<h3 id="伤害点完整地图">5.5 伤害点完整地图</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
 <thead>
 <tr>
 <th>#</th>
@@ -417,13 +582,14 @@
 <td><strong><code>SBC $2E</code></strong></td>
 <td><strong>变量（$2E）</strong></td>
 <td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-</div>
-<hr>
-<h2 id="6-补丁实现"><a href="#6-补丁实现" class="headerlink" title="6. 补丁实现"></a>6. 补丁实现</h2><p>将所有 5 处伤害减法改为减 0（<code>SBC #$00</code>），共修改 10 字节：</p>
-<div class="table-container">
+<hr />
+<h2 id="补丁实现">6. 补丁实现</h2>
+<p>将所有 5 处伤害减法改为减 0（<code>SBC #$00</code>），共修改 10
+字节：</p>
 <table>
 <thead>
 <tr>
@@ -496,185 +662,182 @@
 </tr>
 </tbody>
 </table>
-</div>
 <p>补丁脚本：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">data = bytearray(open(<span class="string">'batman.nes'</span>, <span class="string">'rb'</span>).read())</span><br><span class="line">patches = [</span><br><span class="line">    (<span class="number">0x01728F</span>, <span class="number">0x00</span>), (<span class="number">0x017295</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x017831</span>, <span class="number">0x00</span>), (<span class="number">0x017837</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x017BD2</span>, <span class="number">0x00</span>), (<span class="number">0x017BD8</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x01B075</span>, <span class="number">0xE9</span>), (<span class="number">0x01B076</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x01B07B</span>, <span class="number">0xE9</span>), (<span class="number">0x01B07C</span>, <span class="number">0x00</span>),</span><br><span class="line">]</span><br><span class="line"><span class="keyword">for</span> off, val <span class="keyword">in</span> patches:</span><br><span class="line">    data[off] = val</span><br><span class="line">open(<span class="string">'batman_patched.nes'</span>, <span class="string">'wb'</span>).write(data)</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="7-验证结果"><a href="#7-验证结果" class="headerlink" title="7. 验证结果"></a>7. 验证结果</h2><ul>
-<li>已打补丁的 ROM 在 BOSS 战中实测：<strong>BOSS 攻击不掉血</strong>。</li>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">data = <span class="built_in">bytearray</span>(<span class="built_in">open</span>(<span class="string">&#x27;batman.nes&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>).read())</span><br><span class="line">patches = [</span><br><span class="line">    (<span class="number">0x01728F</span>, <span class="number">0x00</span>), (<span class="number">0x017295</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x017831</span>, <span class="number">0x00</span>), (<span class="number">0x017837</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x017BD2</span>, <span class="number">0x00</span>), (<span class="number">0x017BD8</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x01B075</span>, <span class="number">0xE9</span>), (<span class="number">0x01B076</span>, <span class="number">0x00</span>),</span><br><span class="line">    (<span class="number">0x01B07B</span>, <span class="number">0xE9</span>), (<span class="number">0x01B07C</span>, <span class="number">0x00</span>),</span><br><span class="line">]</span><br><span class="line"><span class="keyword">for</span> off, val <span class="keyword">in</span> patches:</span><br><span class="line">    data[off] = val</span><br><span class="line"><span class="built_in">open</span>(<span class="string">&#x27;batman_patched.nes&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>).write(data)</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="验证结果">7. 验证结果</h2>
+<ul>
+<li>已打补丁的 ROM 在 BOSS 战中实测：<strong>BOSS
+攻击不掉血</strong>。</li>
 <li>进一步测试：<strong>激光攻击、小兵攻击也不掉血</strong>。</li>
 <li>补丁不影响游戏其他逻辑（通关、跳跃、道具使用等均正常）。</li>
 <li>修改前后仅 10 字节差异，ROM 体积不变。</li>
 </ul>
-<p><img src="/img/batman2-hacker.gif" alt="BOSS 持续攻击，POWER 始终保持满格"></p>
+<figure>
+<img src="/img/batman2-hacker.gif"
+alt="BOSS 持续攻击，POWER 始终保持满格" />
+<figcaption aria-hidden="true">BOSS 持续攻击，POWER
+始终保持满格</figcaption>
+</figure>
 <blockquote>
-<p>上图为补丁 ROM 的实机运行录屏：蝙蝠侠被 BOSS 及其装备（激光等）持续攻击，但 POWER 值始终保持在 80000（满格）不再下降，证明补丁已彻底拦截伤害。</p>
+<p>上图为补丁 ROM 的实机运行录屏：蝙蝠侠被 BOSS
+及其装备（激光等）持续攻击，但 POWER 值始终保持在
+80000（满格）不再下降，证明补丁已彻底拦截伤害。</p>
 </blockquote>
-<hr>
-<h2 id="8-踩坑与经验总结"><a href="#8-踩坑与经验总结" class="headerlink" title="8. 踩坑与经验总结"></a>8. 踩坑与经验总结</h2><ol>
-<li><p><strong>FME-7 的 bank 映射复杂性</strong>：不同于 MMC3 的 16KB bank，FME-7 使用 8KB bank 粒度，且 <code>$E9</code> 的高位可能有特殊含义（RAM 模式等）。反汇编时务必确认正确的 bank 映射。</p>
-</li>
-<li><p><strong>存档对比的噪声问题</strong>：直接对比两个 savestate 会引入大量噪声（游戏世界状态变化）。<strong>实时监控脚本</strong>比存档对比更精确，能捕捉到伤害发生的瞬间。</p>
-</li>
-<li><p><strong>SBC 寻址模式多样</strong>：前 3 处伤害代码用 <code>SBC #imm</code>（立即数），第 4 处用 <code>SBC $zp</code>（零页寻址）。静态扫描 <code>SBC #imm</code> 会遗漏 <code>SBC $zp</code>，需要<strong>动态写跟踪</strong>来补全。</p>
-</li>
-<li><p><strong><code>emu.getKeyState()</code> 在 Mesen2 中的局限性</strong>：键盘键被映射到手柄后，Lua 的 <code>getKeyState()</code> 可能无法正常检测。改用 <code>emu.getInput(0)</code> 检测手柄按键更可靠。</p>
-</li>
-<li><p><strong><code>emu.loadSavestate</code> 必须在回调中调用</strong>：<code>loadSavestate</code> 只能在 <code>addMemoryCallback</code>（exec/write/read）内调用，不能在 <code>addEventCallback</code> 中直接调用。常用技巧：在 NMI 入口 <code>$E1D0</code> 设置 exec 回调。</p>
-</li>
-<li><p><strong>POWER 显示值与存储值的关系</strong>：显示 POWER ×10 = 存储值（80000 显示 = 8000 存储）。这个缩放关系意味着 16 位值已足够存储（最大 65535 ×10 = 655350），不需要 3 字节。</p>
-</li>
+<hr />
+<h2 id="踩坑与经验总结">8. 踩坑与经验总结</h2>
+<ol type="1">
+<li><p><strong>FME-7 的 bank 映射复杂性</strong>：不同于 MMC3 的 16KB
+bank，FME-7 使用 8KB bank 粒度，且 <code>$E9</code>
+的高位可能有特殊含义（RAM 模式等）。反汇编时务必确认正确的 bank
+映射。</p></li>
+<li><p><strong>存档对比的噪声问题</strong>：直接对比两个 savestate
+会引入大量噪声（游戏世界状态变化）。<strong>实时监控脚本</strong>比存档对比更精确，能捕捉到伤害发生的瞬间。</p></li>
+<li><p><strong>SBC 寻址模式多样</strong>：前 3 处伤害代码用
+<code>SBC #imm</code>（立即数），第 4 处用
+<code>SBC $zp</code>（零页寻址）。静态扫描 <code>SBC #imm</code> 会遗漏
+<code>SBC $zp</code>，需要<strong>动态写跟踪</strong>来补全。</p></li>
+<li><p><strong><code>emu.getKeyState()</code> 在 Mesen2
+中的局限性</strong>：键盘键被映射到手柄后，Lua 的
+<code>getKeyState()</code> 可能无法正常检测。改用
+<code>emu.getInput(0)</code> 检测手柄按键更可靠。</p></li>
+<li><p><strong><code>emu.loadSavestate</code>
+必须在回调中调用</strong>：<code>loadSavestate</code> 只能在
+<code>addMemoryCallback</code>（exec/write/read）内调用，不能在
+<code>addEventCallback</code> 中直接调用。常用技巧：在 NMI 入口
+<code>$E1D0</code> 设置 exec 回调。</p></li>
+<li><p><strong>POWER 显示值与存储值的关系</strong>：显示 POWER ×10 =
+存储值（80000 显示 = 8000 存储）。这个缩放关系意味着 16
+位值已足够存储（最大 65535 ×10 = 655350），不需要 3 字节。</p></li>
 </ol>
-<hr>
-<h2 id="附录-A：关键-Lua-调试脚本"><a href="#附录-A：关键-Lua-调试脚本" class="headerlink" title="附录 A：关键 Lua 调试脚本"></a>附录 A：关键 Lua 调试脚本</h2><h3 id="A-1-capture10-lua-—-HP-候选值监控（发现-B2-是-POWER-地址）"><a href="#A-1-capture10-lua-—-HP-候选值监控（发现-B2-是-POWER-地址）" class="headerlink" title="A.1 capture10.lua — HP 候选值监控（发现 $B2 是 POWER 地址）"></a>A.1 capture10.lua — HP 候选值监控（发现 $B2 是 POWER 地址）</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- batman_capture10.lua : 记录加载时的 HP 候选位置, 持续监控其值变化</span></span><br><span class="line"><span class="keyword">local</span> logf = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">'/tmp/opencode/capture10.log'</span>, <span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">LOG</span><span class="params">(s)</span></span> logf:<span class="built_in">write</span>(s .. <span class="string">'\n'</span>); logf:<span class="built_in">flush</span>() <span class="keyword">end</span></span><br><span class="line">LOG(<span class="string">'=== capture10 started ==='</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SS_PATH = <span class="string">'/home/sunjunior/.config/Mesen2/SaveStates/batman_6.mss'</span></span><br><span class="line"><span class="keyword">local</span> rd = <span class="function"><span class="keyword">function</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesMemory, <span class="literal">false</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> frame = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> doing = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> stop_at = <span class="number">-1</span></span><br><span class="line"><span class="keyword">local</span> watch = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">scan_and_watch</span><span class="params">()</span></span></span><br><span class="line">  watch = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> a = <span class="number">0</span>, <span class="number">0x7FF</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> v = rd(a)</span><br><span class="line">    <span class="keyword">if</span> v == <span class="number">0x50</span> <span class="keyword">or</span> v == <span class="number">0x64</span> <span class="keyword">then</span> watch[a] = v <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FE</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v2 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">      <span class="keyword">if</span> v2 == <span class="number">0x1F40</span> <span class="keyword">or</span> v2 == <span class="number">0x2710</span> <span class="keyword">then</span> watch[a] = v2 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v3 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span> + rd(a+<span class="number">2</span>)*<span class="number">65536</span></span><br><span class="line">      <span class="keyword">if</span> v3 == <span class="number">0x13880</span> <span class="keyword">or</span> v3 == <span class="number">0x186A0</span> <span class="keyword">then</span> watch[a] = v3 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">and</span> rd(a) == <span class="number">0x80</span> <span class="keyword">and</span> rd(a+<span class="number">1</span>) == <span class="number">0</span> <span class="keyword">and</span> rd(a+<span class="number">2</span>) == <span class="number">0</span> <span class="keyword">then</span> watch[a] = <span class="number">80000</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">and</span> rd(a) == <span class="number">0x10</span> <span class="keyword">and</span> rd(a+<span class="number">1</span>) == <span class="number">0</span> <span class="keyword">and</span> rd(a+<span class="number">2</span>) == <span class="number">0</span> <span class="keyword">then</span> watch[a] = <span class="number">100000</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">for</span> a = <span class="number">0x6000</span>, <span class="number">0x7FFF</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> v = rd(a)</span><br><span class="line">    <span class="keyword">if</span> v == <span class="number">0x50</span> <span class="keyword">or</span> v == <span class="number">0x64</span> <span class="keyword">then</span> watch[a] = v <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FFE</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v2 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">      <span class="keyword">if</span> v2 == <span class="number">0x1F40</span> <span class="keyword">or</span> v2 == <span class="number">0x2710</span> <span class="keyword">then</span> watch[a] = v2 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FFD</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v3 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span> + rd(a+<span class="number">2</span>)*<span class="number">65536</span></span><br><span class="line">      <span class="keyword">if</span> v3 == <span class="number">0x13880</span> <span class="keyword">or</span> v3 == <span class="number">0x186A0</span> <span class="keyword">then</span> watch[a] = v3 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">check_drops</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> drops = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> a, init <span class="keyword">in</span> <span class="built_in">pairs</span>(watch) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> cur</span><br><span class="line">    <span class="keyword">if</span> init &lt;= <span class="number">0xFF</span> <span class="keyword">then</span> cur = rd(a)</span><br><span class="line">    <span class="keyword">elseif</span> init &lt;= <span class="number">0xFFFF</span> <span class="keyword">then</span> cur = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">    <span class="keyword">else</span> cur = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span> + rd(a+<span class="number">2</span>)*<span class="number">65536</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> delta = init - cur</span><br><span class="line">    <span class="keyword">if</span> delta &gt; <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> region = <span class="string">'WRAM'</span></span><br><span class="line">      <span class="keyword">if</span> a &gt;= <span class="number">0x6000</span> <span class="keyword">then</span> region = <span class="string">'PRG'</span> <span class="keyword">end</span></span><br><span class="line">      drops[#drops+<span class="number">1</span>] = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'  %s $%04X: %d -&gt; %d (delta=%d)'</span>,</span><br><span class="line">        region, a, init, cur, delta)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">return</span> drops</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    doing = <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(SS_PATH, <span class="string">'rb'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f <span class="keyword">then</span> LOG(<span class="string">'ERROR: no save'</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> ok, err = <span class="built_in">pcall</span>(emu.loadSavestate, f:<span class="built_in">read</span>(<span class="string">'*a'</span>)); f:<span class="built_in">close</span>()</span><br><span class="line">    LOG(<span class="string">'loadSavestate: '</span> .. <span class="built_in">tostring</span>(ok) .. <span class="string">' '</span> .. <span class="built_in">tostring</span>(err))</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> ok <span class="keyword">then</span> logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    scan_and_watch()</span><br><span class="line">    <span class="keyword">local</span> n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">pairs</span>(watch) <span class="keyword">do</span> n = n + <span class="number">1</span> <span class="keyword">end</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'=== 开始: 监控 %d 个候选位置 ==='</span>, n))</span><br><span class="line">    <span class="keyword">for</span> a, v <span class="keyword">in</span> <span class="built_in">pairs</span>(watch) <span class="keyword">do</span></span><br><span class="line">      <span class="keyword">local</span> region = <span class="string">'WRAM'</span></span><br><span class="line">      <span class="keyword">if</span> a &gt;= <span class="number">0x6000</span> <span class="keyword">then</span> region = <span class="string">'PRG'</span> <span class="keyword">end</span></span><br><span class="line">      LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'  候选 %s $%04X = %d'</span>, region, a, v))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    doing = <span class="number">2</span></span><br><span class="line">    stop_at = <span class="number">-1</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0xE1D0</span>, <span class="number">0xE1D0</span>)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  frame = frame + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> doing ~= <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame % <span class="number">3</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> drops = check_drops()</span><br><span class="line">    <span class="keyword">if</span> #drops &gt; <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">      LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'=== 第%d帧: 检测到候选值下降! ==='</span>, frame))</span><br><span class="line">      <span class="keyword">for</span> _, d <span class="keyword">in</span> <span class="built_in">ipairs</span>(drops) <span class="keyword">do</span> LOG(d) <span class="keyword">end</span></span><br><span class="line">      stop_at = frame + <span class="number">5</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> stop_at &gt;= <span class="number">0</span> <span class="keyword">and</span> frame &gt;= stop_at <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">'=== 停止 ==='</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame &gt; <span class="number">1500</span> <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">'=== 超时 ==='</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br><span class="line"></span><br><span class="line">LOG(<span class="string">'READY'</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<h3 id="A-2-trace-damage-lua-—-追踪-B2-写入（发现-Bank-6-的伤害代码）"><a href="#A-2-trace-damage-lua-—-追踪-B2-写入（发现-Bank-6-的伤害代码）" class="headerlink" title="A.2 trace_damage.lua — 追踪 $B2 写入（发现 Bank 6 的伤害代码）"></a>A.2 trace_damage.lua — 追踪 $B2 写入（发现 Bank 6 的伤害代码）</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- batman_trace_damage.lua : 追踪 $B2 写入, 定位伤害代码</span></span><br><span class="line"><span class="keyword">local</span> logf = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">'/tmp/opencode/trace_damage.log'</span>, <span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">LOG</span><span class="params">(s)</span></span> logf:<span class="built_in">write</span>(s .. <span class="string">'\n'</span>); logf:<span class="built_in">flush</span>() <span class="keyword">end</span></span><br><span class="line">LOG(<span class="string">'=== trace damage started ==='</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SS_PATH = <span class="string">'/home/sunjunior/.config/Mesen2/SaveStates/batman_6.mss'</span></span><br><span class="line"><span class="keyword">local</span> rd = <span class="function"><span class="keyword">function</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesMemory, <span class="literal">false</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> frame = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> doing = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> pc = emu.getState()[<span class="string">'cpu.pc'</span>] <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'@f%d STA $B2=$%02X (HP=%d)  pc=$%04X'</span>,</span><br><span class="line">      frame, val, rd(<span class="number">0xB2</span>)+rd(<span class="number">0xB3</span>)*<span class="number">256</span>, pc))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0xB2</span>, <span class="number">0xB2</span>)</span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    doing = <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(SS_PATH, <span class="string">'rb'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f <span class="keyword">then</span> LOG(<span class="string">'ERROR: no save'</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> ok, err = <span class="built_in">pcall</span>(emu.loadSavestate, f:<span class="built_in">read</span>(<span class="string">'*a'</span>)); f:<span class="built_in">close</span>()</span><br><span class="line">    LOG(<span class="string">'loadSavestate: '</span> .. <span class="built_in">tostring</span>(ok) .. <span class="string">' '</span> .. <span class="built_in">tostring</span>(err))</span><br><span class="line">    doing = <span class="number">2</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'initial B2=$%02X B3=$%02X HP=%d'</span>,</span><br><span class="line">      rd(<span class="number">0xB2</span>), rd(<span class="number">0xB3</span>), rd(<span class="number">0xB2</span>)+rd(<span class="number">0xB3</span>)*<span class="number">256</span>))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0xE1D0</span>, <span class="number">0xE1D0</span>)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  frame = frame + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> doing ~= <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame &gt;= <span class="number">1800</span> <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">'=== done ==='</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br><span class="line"></span><br><span class="line">LOG(<span class="string">'READY'</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<h3 id="A-3-trace2-lua-—-同时监控-B2-B3-和-048A-048B"><a href="#A-3-trace2-lua-—-同时监控-B2-B3-和-048A-048B" class="headerlink" title="A.3 trace2.lua — 同时监控 $B2/$B3 和 $048A/$048B"></a>A.3 trace2.lua — 同时监控 $B2/$B3 和 $048A/$048B</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- batman_trace2.lua : 同时监控 $00B2/$00B3 和 $048A/$048B</span></span><br><span class="line"><span class="keyword">local</span> logf = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">'/tmp/opencode/trace2.log'</span>, <span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">LOG</span><span class="params">(s)</span></span> logf:<span class="built_in">write</span>(s .. <span class="string">'\n'</span>); logf:<span class="built_in">flush</span>() <span class="keyword">end</span></span><br><span class="line">LOG(<span class="string">'=== trace2 started ==='</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SS_PATH = <span class="string">'/home/sunjunior/.config/Mesen2/SaveStates/batman_6.mss'</span></span><br><span class="line"><span class="keyword">local</span> rd = <span class="function"><span class="keyword">function</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesMemory, <span class="literal">false</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> frame = <span class="number">0</span>; <span class="keyword">local</span> doing = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">snapHP</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> b2 = rd(<span class="number">0xB2</span>); <span class="keyword">local</span> b3 = rd(<span class="number">0xB3</span>)</span><br><span class="line">  <span class="keyword">local</span> a = rd(<span class="number">0x048A</span>); <span class="keyword">local</span> b = rd(<span class="number">0x048B</span>)</span><br><span class="line">  <span class="keyword">return</span> b2+b3*<span class="number">256</span>, a+b*<span class="number">256</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _, addr <span class="keyword">in</span> <span class="built_in">ipairs</span>(&#123;<span class="number">0xB2</span>, <span class="number">0xB3</span>, <span class="number">0x048A</span>, <span class="number">0x048B</span>&#125;) <span class="keyword">do</span></span><br><span class="line">  emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(a2, val)</span></span></span><br><span class="line">    <span class="keyword">if</span> doing == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> pc = emu.getState()[<span class="string">'cpu.pc'</span>] <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">      <span class="keyword">local</span> hp, disp = snapHP()</span><br><span class="line">      LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'@f%d STA $%04X=$%02X  (HP=%d dispHP=%d)  pc=$%04X'</span>,</span><br><span class="line">        frame, addr, val, hp, disp, pc))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, addr, addr)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    doing = <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(SS_PATH, <span class="string">'rb'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f <span class="keyword">then</span> LOG(<span class="string">'ERROR: no save'</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> ok, err = <span class="built_in">pcall</span>(emu.loadSavestate, f:<span class="built_in">read</span>(<span class="string">'*a'</span>)); f:<span class="built_in">close</span>()</span><br><span class="line">    LOG(<span class="string">'loadSavestate: '</span> .. <span class="built_in">tostring</span>(ok) .. <span class="string">' '</span> .. <span class="built_in">tostring</span>(err))</span><br><span class="line">    doing = <span class="number">2</span></span><br><span class="line">    <span class="keyword">local</span> hp, disp = snapHP()</span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'initial: HP(00B2/3)=%d  dispHP(048A/B)=%d'</span>, hp, disp))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0xE1D0</span>, <span class="number">0xE1D0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> prev_hp, prev_disp = <span class="number">-1</span>, <span class="number">-1</span></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  frame = frame + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> doing ~= <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">local</span> hp, disp = snapHP()</span><br><span class="line">  <span class="keyword">if</span> hp ~= prev_hp <span class="keyword">or</span> disp ~= prev_disp <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">'@f%d CHECK: HP=%d dispHP=%d'</span>, frame, hp, disp))</span><br><span class="line">    prev_hp, prev_disp = hp, disp</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame &gt;= <span class="number">2000</span> <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">'=== done ==='</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br><span class="line"></span><br><span class="line">LOG(<span class="string">'READY'</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<h3 id="A-4-dis6502-py-—-6502-反汇编器（支持-FME-7-bank-映射）"><a href="#A-4-dis6502-py-—-6502-反汇编器（支持-FME-7-bank-映射）" class="headerlink" title="A.4 dis6502.py — 6502 反汇编器（支持 FME-7 bank 映射）"></a>A.4 dis6502.py — 6502 反汇编器（支持 FME-7 bank 映射）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="string">"""6502 反汇编器，支持 FME-7 (Mapper 69) 的 8KB bank 映射。</span></span><br><span class="line"><span class="string">支持 (reg09_page, reg0A_page) 元组参数，同时覆盖 $8000-$9FFF 和 $A000-$BFFF。"""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6502 指令表（略，完整代码见仓库）</span></span><br><span class="line"><span class="comment"># 关键函数：</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cpu_to_file_off</span><span class="params">(cpu_addr, swap_bank=None)</span>:</span></span><br><span class="line">    <span class="string">"""CPU addr -&gt; ROM file offset.</span></span><br><span class="line"><span class="string">    $C000-$FFFF = 固定最后 16KB PRG bank.</span></span><br><span class="line"><span class="string">    $8000-$9FFF = reg09 选择的 8KB 页.</span></span><br><span class="line"><span class="string">    $A000-$BFFF = reg0A 选择的 8KB 页.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> <span class="number">0xC000</span> &lt;= cpu_addr &lt;= <span class="number">0xFFFF</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">16</span> + <span class="number">7</span>*<span class="number">0x4000</span> + (cpu_addr - <span class="number">0xC000</span>)</span><br><span class="line">    <span class="keyword">if</span> swap_bank <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    reg09 = swap_bank[<span class="number">0</span>] <span class="keyword">if</span> isinstance(swap_bank, tuple) <span class="keyword">else</span> swap_bank</span><br><span class="line">    reg0A = swap_bank[<span class="number">1</span>] <span class="keyword">if</span> isinstance(swap_bank, tuple) <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">if</span> <span class="number">0x8000</span> &lt;= cpu_addr &lt;= <span class="number">0x9FFF</span> <span class="keyword">and</span> reg09 <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">16</span> + reg09*<span class="number">0x2000</span> + (cpu_addr - <span class="number">0x8000</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="number">0xA000</span> &lt;= cpu_addr &lt;= <span class="number">0xBFFF</span> <span class="keyword">and</span> reg0A <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">16</span> + reg0A*<span class="number">0x2000</span> + (cpu_addr - <span class="number">0xA000</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">disasm_at</span><span class="params">(rom, cpu_addr, n=<span class="number">40</span>, swap_bank=None)</span>:</span></span><br><span class="line">    off = cpu_to_file_off(cpu_addr, swap_bank)</span><br><span class="line">    <span class="keyword">if</span> off <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">return</span></span><br><span class="line">    <span class="comment"># 使用 bus_mapper 将 file offset 映射回 CPU addr</span></span><br><span class="line">    sb = swap_bank <span class="keyword">if</span> swap_bank <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    mapper = <span class="keyword">lambda</span> o: file_off_to_cpu(o, swap_bank=sb)</span><br><span class="line">    <span class="keyword">for</span> entry <span class="keyword">in</span> disasm_range(rom, off, n, bus_mapper=mapper):</span><br><span class="line">        rom_off, bus, text, ln = entry</span><br><span class="line">        bus_s = <span class="string">f'$<span class="subst">&#123;bus:<span class="number">04</span>X&#125;</span>'</span> <span class="keyword">if</span> bus <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="string">'----'</span></span><br><span class="line">        print(<span class="string">f'<span class="subst">&#123;bus_s&#125;</span>  <span class="subst">&#123;text&#125;</span>'</span>)</span><br></pre></td></tr></table></figure>
-<p>使用示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反汇编 bank5 (reg 0A = 页 11) 中的 $B27B</span></span><br><span class="line">python3 dis6502.py dis B27B 30 11</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反汇编固定 bank 中的 $D527</span></span><br><span class="line">python3 dis6502.py dis D527 30</span><br></pre></td></tr></table></figure></p>
-<hr>
-<p>补丁 ROM 直接用模拟器加载即可：<code>mesen batman_patched.nes</code>。</p>
-<p><strong>下载</strong>：<a href="/downloads/蝙蝠侠2代遇敌不掉血.nes">蝙蝠侠2代遇敌不掉血.nes</a>（已打补丁的 BOSS 不掉血 ROM）</p>
+<hr />
+<h2 id="附录-a关键-lua-调试脚本">附录 A：关键 Lua 调试脚本</h2>
+<h3 id="a.1-capture10.lua-hp-候选值监控发现-b2-是-power-地址">A.1
+capture10.lua — HP 候选值监控（发现 $B2 是 POWER 地址）</h3>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- batman_capture10.lua : 记录加载时的 HP 候选位置, 持续监控其值变化</span></span><br><span class="line"><span class="keyword">local</span> logf = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">&#x27;/tmp/opencode/capture10.log&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">LOG</span><span class="params">(s)</span></span> logf:<span class="built_in">write</span>(s .. <span class="string">&#x27;\n&#x27;</span>); logf:<span class="built_in">flush</span>() <span class="keyword">end</span></span><br><span class="line">LOG(<span class="string">&#x27;=== capture10 started ===&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SS_PATH = <span class="string">&#x27;/home/sunjunior/.config/Mesen2/SaveStates/batman_6.mss&#x27;</span></span><br><span class="line"><span class="keyword">local</span> rd = <span class="function"><span class="keyword">function</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesMemory, <span class="literal">false</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> frame = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> doing = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> stop_at = <span class="number">-1</span></span><br><span class="line"><span class="keyword">local</span> watch = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">scan_and_watch</span><span class="params">()</span></span></span><br><span class="line">  watch = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> a = <span class="number">0</span>, <span class="number">0x7FF</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> v = rd(a)</span><br><span class="line">    <span class="keyword">if</span> v == <span class="number">0x50</span> <span class="keyword">or</span> v == <span class="number">0x64</span> <span class="keyword">then</span> watch[a] = v <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FE</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v2 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">      <span class="keyword">if</span> v2 == <span class="number">0x1F40</span> <span class="keyword">or</span> v2 == <span class="number">0x2710</span> <span class="keyword">then</span> watch[a] = v2 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v3 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span> + rd(a+<span class="number">2</span>)*<span class="number">65536</span></span><br><span class="line">      <span class="keyword">if</span> v3 == <span class="number">0x13880</span> <span class="keyword">or</span> v3 == <span class="number">0x186A0</span> <span class="keyword">then</span> watch[a] = v3 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">and</span> rd(a) == <span class="number">0x80</span> <span class="keyword">and</span> rd(a+<span class="number">1</span>) == <span class="number">0</span> <span class="keyword">and</span> rd(a+<span class="number">2</span>) == <span class="number">0</span> <span class="keyword">then</span> watch[a] = <span class="number">80000</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FD</span> <span class="keyword">and</span> rd(a) == <span class="number">0x10</span> <span class="keyword">and</span> rd(a+<span class="number">1</span>) == <span class="number">0</span> <span class="keyword">and</span> rd(a+<span class="number">2</span>) == <span class="number">0</span> <span class="keyword">then</span> watch[a] = <span class="number">100000</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">for</span> a = <span class="number">0x6000</span>, <span class="number">0x7FFF</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> v = rd(a)</span><br><span class="line">    <span class="keyword">if</span> v == <span class="number">0x50</span> <span class="keyword">or</span> v == <span class="number">0x64</span> <span class="keyword">then</span> watch[a] = v <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FFE</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v2 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">      <span class="keyword">if</span> v2 == <span class="number">0x1F40</span> <span class="keyword">or</span> v2 == <span class="number">0x2710</span> <span class="keyword">then</span> watch[a] = v2 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> a &lt;= <span class="number">0x7FFD</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> v3 = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span> + rd(a+<span class="number">2</span>)*<span class="number">65536</span></span><br><span class="line">      <span class="keyword">if</span> v3 == <span class="number">0x13880</span> <span class="keyword">or</span> v3 == <span class="number">0x186A0</span> <span class="keyword">then</span> watch[a] = v3 <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">check_drops</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> drops = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> a, init <span class="keyword">in</span> <span class="built_in">pairs</span>(watch) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> cur</span><br><span class="line">    <span class="keyword">if</span> init &lt;= <span class="number">0xFF</span> <span class="keyword">then</span> cur = rd(a)</span><br><span class="line">    <span class="keyword">elseif</span> init &lt;= <span class="number">0xFFFF</span> <span class="keyword">then</span> cur = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span></span><br><span class="line">    <span class="keyword">else</span> cur = rd(a) + rd(a+<span class="number">1</span>)*<span class="number">256</span> + rd(a+<span class="number">2</span>)*<span class="number">65536</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> delta = init - cur</span><br><span class="line">    <span class="keyword">if</span> delta &gt; <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> region = <span class="string">&#x27;WRAM&#x27;</span></span><br><span class="line">      <span class="keyword">if</span> a &gt;= <span class="number">0x6000</span> <span class="keyword">then</span> region = <span class="string">&#x27;PRG&#x27;</span> <span class="keyword">end</span></span><br><span class="line">      drops[#drops+<span class="number">1</span>] = <span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;  %s $%04X: %d -&gt; %d (delta=%d)&#x27;</span>,</span><br><span class="line">        region, a, init, cur, delta)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">return</span> drops</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    doing = <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(SS_PATH, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f <span class="keyword">then</span> LOG(<span class="string">&#x27;ERROR: no save&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> ok, err = <span class="built_in">pcall</span>(emu.loadSavestate, f:<span class="built_in">read</span>(<span class="string">&#x27;*a&#x27;</span>)); f:<span class="built_in">close</span>()</span><br><span class="line">    LOG(<span class="string">&#x27;loadSavestate: &#x27;</span> .. <span class="built_in">tostring</span>(ok) .. <span class="string">&#x27; &#x27;</span> .. <span class="built_in">tostring</span>(err))</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> ok <span class="keyword">then</span> logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    scan_and_watch()</span><br><span class="line">    <span class="keyword">local</span> n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">pairs</span>(watch) <span class="keyword">do</span> n = n + <span class="number">1</span> <span class="keyword">end</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;=== 开始: 监控 %d 个候选位置 ===&#x27;</span>, n))</span><br><span class="line">    <span class="keyword">for</span> a, v <span class="keyword">in</span> <span class="built_in">pairs</span>(watch) <span class="keyword">do</span></span><br><span class="line">      <span class="keyword">local</span> region = <span class="string">&#x27;WRAM&#x27;</span></span><br><span class="line">      <span class="keyword">if</span> a &gt;= <span class="number">0x6000</span> <span class="keyword">then</span> region = <span class="string">&#x27;PRG&#x27;</span> <span class="keyword">end</span></span><br><span class="line">      LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;  候选 %s $%04X = %d&#x27;</span>, region, a, v))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    doing = <span class="number">2</span></span><br><span class="line">    stop_at = <span class="number">-1</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0xE1D0</span>, <span class="number">0xE1D0</span>)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  frame = frame + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> doing ~= <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame % <span class="number">3</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> drops = check_drops()</span><br><span class="line">    <span class="keyword">if</span> #drops &gt; <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">      LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;=== 第%d帧: 检测到候选值下降! ===&#x27;</span>, frame))</span><br><span class="line">      <span class="keyword">for</span> _, d <span class="keyword">in</span> <span class="built_in">ipairs</span>(drops) <span class="keyword">do</span> LOG(d) <span class="keyword">end</span></span><br><span class="line">      stop_at = frame + <span class="number">5</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> stop_at &gt;= <span class="number">0</span> <span class="keyword">and</span> frame &gt;= stop_at <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">&#x27;=== 停止 ===&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame &gt; <span class="number">1500</span> <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">&#x27;=== 超时 ===&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br><span class="line"></span><br><span class="line">LOG(<span class="string">&#x27;READY&#x27;</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h3 id="a.2-trace_damage.lua-追踪-b2-写入发现-bank-6-的伤害代码">A.2
+trace_damage.lua — 追踪 $B2 写入（发现 Bank 6 的伤害代码）</h3>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- batman_trace_damage.lua : 追踪 $B2 写入, 定位伤害代码</span></span><br><span class="line"><span class="keyword">local</span> logf = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">&#x27;/tmp/opencode/trace_damage.log&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">LOG</span><span class="params">(s)</span></span> logf:<span class="built_in">write</span>(s .. <span class="string">&#x27;\n&#x27;</span>); logf:<span class="built_in">flush</span>() <span class="keyword">end</span></span><br><span class="line">LOG(<span class="string">&#x27;=== trace damage started ===&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SS_PATH = <span class="string">&#x27;/home/sunjunior/.config/Mesen2/SaveStates/batman_6.mss&#x27;</span></span><br><span class="line"><span class="keyword">local</span> rd = <span class="function"><span class="keyword">function</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesMemory, <span class="literal">false</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> frame = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> doing = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> pc = emu.getState()[<span class="string">&#x27;cpu.pc&#x27;</span>] <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;@f%d STA $B2=$%02X (HP=%d)  pc=$%04X&#x27;</span>,</span><br><span class="line">      frame, val, rd(<span class="number">0xB2</span>)+rd(<span class="number">0xB3</span>)*<span class="number">256</span>, pc))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0xB2</span>, <span class="number">0xB2</span>)</span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    doing = <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(SS_PATH, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f <span class="keyword">then</span> LOG(<span class="string">&#x27;ERROR: no save&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> ok, err = <span class="built_in">pcall</span>(emu.loadSavestate, f:<span class="built_in">read</span>(<span class="string">&#x27;*a&#x27;</span>)); f:<span class="built_in">close</span>()</span><br><span class="line">    LOG(<span class="string">&#x27;loadSavestate: &#x27;</span> .. <span class="built_in">tostring</span>(ok) .. <span class="string">&#x27; &#x27;</span> .. <span class="built_in">tostring</span>(err))</span><br><span class="line">    doing = <span class="number">2</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;initial B2=$%02X B3=$%02X HP=%d&#x27;</span>,</span><br><span class="line">      rd(<span class="number">0xB2</span>), rd(<span class="number">0xB3</span>), rd(<span class="number">0xB2</span>)+rd(<span class="number">0xB3</span>)*<span class="number">256</span>))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0xE1D0</span>, <span class="number">0xE1D0</span>)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  frame = frame + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> doing ~= <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame &gt;= <span class="number">1800</span> <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">&#x27;=== done ===&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br><span class="line"></span><br><span class="line">LOG(<span class="string">&#x27;READY&#x27;</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h3 id="a.3-trace2.lua-同时监控-b2b3-和-048a048b">A.3 trace2.lua —
+同时监控
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mn>2</mn><mi>/</mi></mrow><annotation encoding="application/x-tex">B2/</annotation></semantics></math>B3
+和 $048A/$048B</h3>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- batman_trace2.lua : 同时监控 $00B2/$00B3 和 $048A/$048B</span></span><br><span class="line"><span class="keyword">local</span> logf = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">&#x27;/tmp/opencode/trace2.log&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">LOG</span><span class="params">(s)</span></span> logf:<span class="built_in">write</span>(s .. <span class="string">&#x27;\n&#x27;</span>); logf:<span class="built_in">flush</span>() <span class="keyword">end</span></span><br><span class="line">LOG(<span class="string">&#x27;=== trace2 started ===&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SS_PATH = <span class="string">&#x27;/home/sunjunior/.config/Mesen2/SaveStates/batman_6.mss&#x27;</span></span><br><span class="line"><span class="keyword">local</span> rd = <span class="function"><span class="keyword">function</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, emu.memType.nesMemory, <span class="literal">false</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> frame = <span class="number">0</span>; <span class="keyword">local</span> doing = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">snapHP</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> b2 = rd(<span class="number">0xB2</span>); <span class="keyword">local</span> b3 = rd(<span class="number">0xB3</span>)</span><br><span class="line">  <span class="keyword">local</span> a = rd(<span class="number">0x048A</span>); <span class="keyword">local</span> b = rd(<span class="number">0x048B</span>)</span><br><span class="line">  <span class="keyword">return</span> b2+b3*<span class="number">256</span>, a+b*<span class="number">256</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _, addr <span class="keyword">in</span> <span class="built_in">ipairs</span>(&#123;<span class="number">0xB2</span>, <span class="number">0xB3</span>, <span class="number">0x048A</span>, <span class="number">0x048B</span>&#125;) <span class="keyword">do</span></span><br><span class="line">  emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(a2, val)</span></span></span><br><span class="line">    <span class="keyword">if</span> doing == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">local</span> pc = emu.getState()[<span class="string">&#x27;cpu.pc&#x27;</span>] <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">      <span class="keyword">local</span> hp, disp = snapHP()</span><br><span class="line">      LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;@f%d STA $%04X=$%02X  (HP=%d dispHP=%d)  pc=$%04X&#x27;</span>,</span><br><span class="line">        frame, addr, val, hp, disp, pc))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, addr, addr)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">if</span> doing == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    doing = <span class="number">1</span></span><br><span class="line">    <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(SS_PATH, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f <span class="keyword">then</span> LOG(<span class="string">&#x27;ERROR: no save&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">1</span>); <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">local</span> ok, err = <span class="built_in">pcall</span>(emu.loadSavestate, f:<span class="built_in">read</span>(<span class="string">&#x27;*a&#x27;</span>)); f:<span class="built_in">close</span>()</span><br><span class="line">    LOG(<span class="string">&#x27;loadSavestate: &#x27;</span> .. <span class="built_in">tostring</span>(ok) .. <span class="string">&#x27; &#x27;</span> .. <span class="built_in">tostring</span>(err))</span><br><span class="line">    doing = <span class="number">2</span></span><br><span class="line">    <span class="keyword">local</span> hp, disp = snapHP()</span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;initial: HP(00B2/3)=%d  dispHP(048A/B)=%d&#x27;</span>, hp, disp))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.exec, <span class="number">0xE1D0</span>, <span class="number">0xE1D0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> prev_hp, prev_disp = <span class="number">-1</span>, <span class="number">-1</span></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  frame = frame + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> doing ~= <span class="number">2</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">local</span> hp, disp = snapHP()</span><br><span class="line">  <span class="keyword">if</span> hp ~= prev_hp <span class="keyword">or</span> disp ~= prev_disp <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&#x27;@f%d CHECK: HP=%d dispHP=%d&#x27;</span>, frame, hp, disp))</span><br><span class="line">    prev_hp, prev_disp = hp, disp</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">if</span> frame &gt;= <span class="number">2000</span> <span class="keyword">then</span></span><br><span class="line">    LOG(<span class="string">&#x27;=== done ===&#x27;</span>); logf:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br><span class="line"></span><br><span class="line">LOG(<span class="string">&#x27;READY&#x27;</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h3 id="a.4-dis6502.py-6502-反汇编器支持-fme-7-bank-映射">A.4 dis6502.py
+— 6502 反汇编器（支持 FME-7 bank 映射）</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;6502 反汇编器，支持 FME-7 (Mapper 69) 的 8KB bank 映射。</span></span><br><span class="line"><span class="string">支持 (reg09_page, reg0A_page) 元组参数，同时覆盖 $8000-$9FFF 和 $A000-$BFFF。&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6502 指令表（略，完整代码见仓库）</span></span><br><span class="line"><span class="comment"># 关键函数：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cpu_to_file_off</span>(<span class="params">cpu_addr, swap_bank=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;CPU addr -&gt; ROM file offset.</span></span><br><span class="line"><span class="string">    $C000-$FFFF = 固定最后 16KB PRG bank.</span></span><br><span class="line"><span class="string">    $8000-$9FFF = reg09 选择的 8KB 页.</span></span><br><span class="line"><span class="string">    $A000-$BFFF = reg0A 选择的 8KB 页.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="number">0xC000</span> &lt;= cpu_addr &lt;= <span class="number">0xFFFF</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">16</span> + <span class="number">7</span>*<span class="number">0x4000</span> + (cpu_addr - <span class="number">0xC000</span>)</span><br><span class="line">    <span class="keyword">if</span> swap_bank <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    reg09 = swap_bank[<span class="number">0</span>] <span class="keyword">if</span> <span class="built_in">isinstance</span>(swap_bank, <span class="built_in">tuple</span>) <span class="keyword">else</span> swap_bank</span><br><span class="line">    reg0A = swap_bank[<span class="number">1</span>] <span class="keyword">if</span> <span class="built_in">isinstance</span>(swap_bank, <span class="built_in">tuple</span>) <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">if</span> <span class="number">0x8000</span> &lt;= cpu_addr &lt;= <span class="number">0x9FFF</span> <span class="keyword">and</span> reg09 <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">16</span> + reg09*<span class="number">0x2000</span> + (cpu_addr - <span class="number">0x8000</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="number">0xA000</span> &lt;= cpu_addr &lt;= <span class="number">0xBFFF</span> <span class="keyword">and</span> reg0A <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">16</span> + reg0A*<span class="number">0x2000</span> + (cpu_addr - <span class="number">0xA000</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">disasm_at</span>(<span class="params">rom, cpu_addr, n=<span class="number">40</span>, swap_bank=<span class="literal">None</span></span>):</span><br><span class="line">    off = cpu_to_file_off(cpu_addr, swap_bank)</span><br><span class="line">    <span class="keyword">if</span> off <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">return</span></span><br><span class="line">    <span class="comment"># 使用 bus_mapper 将 file offset 映射回 CPU addr</span></span><br><span class="line">    sb = swap_bank <span class="keyword">if</span> swap_bank <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    mapper = <span class="keyword">lambda</span> o: file_off_to_cpu(o, swap_bank=sb)</span><br><span class="line">    <span class="keyword">for</span> entry <span class="keyword">in</span> disasm_range(rom, off, n, bus_mapper=mapper):</span><br><span class="line">        rom_off, bus, text, ln = entry</span><br><span class="line">        bus_s = <span class="string">f&#x27;$<span class="subst">&#123;bus:04X&#125;</span>&#x27;</span> <span class="keyword">if</span> bus <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="string">&#x27;----&#x27;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;bus_s&#125;</span>  <span class="subst">&#123;text&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>使用示例： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反汇编 bank5 (reg 0A = 页 11) 中的 $B27B</span></span><br><span class="line">python3 dis6502.py dis B27B 30 11</span><br><span class="line"></span><br><span class="line"><span class="comment"># 反汇编固定 bank 中的 $D527</span></span><br><span class="line">python3 dis6502.py dis D527 30</span><br></pre></td></tr></table></figure></p>
+<hr />
+<p>补丁 ROM
+直接用模拟器加载即可：<code>mesen batman_patched.nes</code>。</p>
+<p><strong>下载</strong>：<a
+href="/downloads/蝙蝠侠2代遇敌不掉血.nes">蝙蝠侠2代遇敌不掉血.nes</a>（已打补丁的
+BOSS 不掉血 ROM）</p>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="pre-post btn btn-default" title='封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档</span>
-    </a>
+
     
     
-    <a href="/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" class="next-post btn btn-default" title='重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
     
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/08/26/%E8%9D%99%E8%9D%A0%E4%BE%A02%E4%BB%A3-NES%E4%B8%8D%E6%8E%89%E8%A1%80Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="蝙蝠侠2代（NES &#x2F; FC）BOSS 攻击不掉血 Hack 技术文档">https://sunjunior.github.io/2026/08/26/蝙蝠侠2代-NES不掉血Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 逆向工程</a>
+          </div>
+
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景与目标"><span class="toc-text">1. 背景与目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ROM-与游戏信息"><span class="toc-text">2. ROM 与游戏信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键地址约定"><span class="toc-text">关键地址约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-分析环境与工具"><span class="toc-text">3. 分析环境与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-破解总体思路"><span class="toc-text">4. 破解总体思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-详细分析过程"><span class="toc-text">5. 详细分析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-ROM-结构与-FME-7-映射分析"><span class="toc-text">5.1 ROM 结构与 FME-7 映射分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-定位-POWER-地址"><span class="toc-text">5.2 定位 POWER 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-静态反汇编定位扣血指令"><span class="toc-text">5.3 静态反汇编定位扣血指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-动态写跟踪发现遗漏的伤害代码"><span class="toc-text">5.4 动态写跟踪发现遗漏的伤害代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-伤害点完整地图"><span class="toc-text">5.5 伤害点完整地图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-补丁实现"><span class="toc-text">6. 补丁实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-验证结果"><span class="toc-text">7. 验证结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-踩坑与经验总结"><span class="toc-text">8. 踩坑与经验总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录-A：关键-Lua-调试脚本"><span class="toc-text">附录 A：关键 Lua 调试脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-1-capture10-lua-—-HP-候选值监控（发现-B2-是-POWER-地址）"><span class="toc-text">A.1 capture10.lua — HP 候选值监控（发现 $B2 是 POWER 地址）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-2-trace-damage-lua-—-追踪-B2-写入（发现-Bank-6-的伤害代码）"><span class="toc-text">A.2 trace_damage.lua — 追踪 $B2 写入（发现 Bank 6 的伤害代码）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-3-trace2-lua-—-同时监控-B2-B3-和-048A-048B"><span class="toc-text">A.3 trace2.lua — 同时监控 $B2&#x2F;$B3 和 $048A&#x2F;$048B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-4-dis6502-py-—-6502-反汇编器（支持-FME-7-bank-映射）"><span class="toc-text">A.4 dis6502.py — 6502 反汇编器（支持 FME-7 bank 映射）</span></a></li></ol></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="重装机兵：回归（SFC&#x2F;SNES）三阶破解：初始金币 999999 + 全角色技能满级">
+                  <i class="fa fa-angle-left"></i> 重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级
+                </a>
             </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
+            <div class="post-nav-item">
+                <a href="/2026/08/27/%E5%B0%81%E7%A5%9E%E6%A6%9C%E4%B9%8B%E4%BC%8F%E9%AD%94%E4%B8%89%E5%A4%AA%E5%AD%90-NES%E5%B1%9E%E6%80%A7%E9%93%B6%E4%B8%A4Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="next" title="封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档">
+                  封神榜之伏魔三太子（NES）属性强化与银两 Hack 技术文档 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-        </div>
-    </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
 </body>
 </html>

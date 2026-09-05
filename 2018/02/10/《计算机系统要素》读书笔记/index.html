@@ -1,331 +1,401 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="sunjunior的个人技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://sunjunior.github.io">
-    <!--SEO-->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-<meta name="keywords" content="编程实践" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<meta name="description" content="概述作为一名软件开发人员，硬件知识的学习也是必不可少的一部分。只有理解了计算机硬件的基本组成，工作原理才能更好地优化程序。作为非计算机专业的开发人员来说，有２本书值得大家阅读，一本是《编码，隐匿..." />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="概述 作为一名软件开发人员，硬件知识的学习也是必不可少的一部分。只有理解了计算机硬件的基本组成，工作原理才能更好地优化程序。作为非计算机专业的开发人员来说，有２本书值得大家阅读，一本是《编码，隐匿在计算机软硬件背后的语言》，另外一本书则是本文要解读的《计算机系统要素》一书。两本书都是讲述了计算机底层的实现原理，侧重点有所不同。前者主要侧重理论，虽然书中讲的例子是利用了一些继电器开关，导线来组合基本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《计算机系统要素》读书笔记">
+<meta property="og:url" content="https://sunjunior.github.io/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="概述 作为一名软件开发人员，硬件知识的学习也是必不可少的一部分。只有理解了计算机硬件的基本组成，工作原理才能更好地优化程序。作为非计算机专业的开发人员来说，有２本书值得大家阅读，一本是《编码，隐匿在计算机软硬件背后的语言》，另外一本书则是本文要解读的《计算机系统要素》一书。两本书都是讲述了计算机底层的实现原理，侧重点有所不同。前者主要侧重理论，虽然书中讲的例子是利用了一些继电器开关，导线来组合基本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/dff.png">
+<meta property="article:published_time" content="2018-02-10T13:22:55.000Z">
+<meta property="article:modified_time" content="2020-05-04T00:41:39.436Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="编程实践">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/dff.png">
 
 
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    《计算机系统要素》读书笔记 |
-    
-    sunjunior的个人技术博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="sunjunior的个人技术博客" type="application/atom+xml">
+<link rel="canonical" href="https://sunjunior.github.io/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
 
 
-<link rel="icon" href="/favicon.ico">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/","path":"2018/02/10/《计算机系统要素》读书笔记/","title":"《计算机系统要素》读书笔记"}</script>
 
-    
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《计算机系统要素》读书笔记 | sunjunior的个人技术博客</title>
+  
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
 
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
 </div>
 
 
 
-
-    
-
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="main-header"  style="background-image:url(
-    /./img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='sunjunior'>
-            <img src="/img/avatar.png" alt="logo头像" class="img-responsive center-block">
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">技术控，爱折腾</h2>-->
-            
-            <h2>
-                技术控，爱折腾
-            </h2>
-            
-        </div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://sunjunior.github.io">
-                        sunjunior的个人技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/about"><i class="fa "></i>
-                                关于</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      </li>
+  </ul>
 </nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="《计算机系统要素》读书笔记">
-            
-            《计算机系统要素》读书笔记
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/" rel="tag">编程实践</a>
-            
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
         </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%B8%83%E5%B0%94%E9%80%BB%E8%BE%91"><span class="nav-number">2.</span> <span class="nav-text">第一章 布尔逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%B8%83%E5%B0%94%E4%BB%A3%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">第二章 布尔代数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%97%B6%E5%BA%8F%E9%80%BB%E8%BE%91"><span class="nav-number">4.</span> <span class="nav-text">第三章　时序逻辑</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="sunjunior">
     </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2018/02/10</span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
     </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《计算机系统要素》读书笔记 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《计算机系统要素》读书笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-02-10 21:22:55" itemprop="dateCreated datePublished" datetime="2018-02-10T21:22:55+08:00">2018-02-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-05-04 08:41:39" itemprop="dateModified" datetime="2020-05-04T08:41:39+08:00">2020-05-04</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
     
-    <span class="fa-wrap">
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="概述">概述</h3>
+<p>作为一名软件开发人员，硬件知识的学习也是必不可少的一部分。只有理解了计算机硬件的基本组成，工作原理才能更好地优化程序。作为非计算机专业的开发人员来说，有２本书值得大家阅读，一本是《编码，隐匿在计算机软硬件背后的语言》，另外一本书则是本文要解读的《计算机系统要素》一书。两本书都是讲述了计算机底层的实现原理，侧重点有所不同。前者主要侧重理论，虽然书中讲的例子是利用了一些继电器开关，导线来组合基本逻辑门电路，比如与门，或门，非门等等，而后再基于逻辑门电路来完成基本的电路元件，比如Ｄ型触发器，锁存器，ALU，计数器，ＲＡＭ阵列等等。但是对于我们真正意义上理解也是停留在理论阶段。我们不可能真去市场上买些继电器开关来完成书中所给的例子。本文要讲解的《计算机系统要素》也是讲解的这类知识，只是说书中有配套的小项目给我们来完成，从布尔代数，布尔逻辑来完成数字电路中组合逻辑和时序逻辑门电路。本书中给了一个模拟仿真器，虚拟机和一个可运行的操作系统，可以用HDL语言来完成逻辑功能。总的来说，这本书实战性较强，看完这两本书之后再去看计算机硬件的接口设计和汇编语言应该更容易理解。汇编语言写的通俗易懂的就是王爽编写的那边《汇编语言第三版》，推荐大家阅读。本文连续载录《计算机系统要素》每一章讲述的内容重点。</p>
+<h3 id="第一章-布尔逻辑">第一章 布尔逻辑</h3>
+<p>　　布尔逻辑简单点说就是真假逻辑，同一事物只能要么是真，要么是假，用数值来说就是只能是0或者1，用函数来表示为二值函数，比如现实中灯泡的亮与灭，开关的通断。基本的逻辑门包括非门（也称为反相器），或门和与门。由这三种最基础的门电路构成了计算机系统的基石。刘慈欣的《三体》中描述了的就是这类现象，通过简单的门电路来构造强大的计算机系统：冯诺依曼向秦始皇展现如何构造一台计算机系统。冯诺依曼则向秦始皇要三千万兵，每几个兵组成了非门，或门，与门，与非门等等，通过简单的逻辑门，然后再基于成千上万的逻辑门通过一定的秩序（这里需要时序逻辑）来完成复杂的芯片实现。书中介绍了基本的门逻辑其实是与非门或者是或非门，由这两种基本的门电路能实现所有的其他逻辑门，第一章项目中要我们实现的就是这一类问题。其实大家都很好奇，如何通过这简单的门电路来实现复杂的芯片呢，比如CPU中的ALU，寄存器，计算机内存等等，后面的章节应该会陆续介绍其实现机理。</p>
+<h3 id="第二章-布尔代数">第二章 布尔代数</h3>
+<p>　　本章的核心其实就是设计计算机CPU最核心的部件ALU，算术逻辑单元，我们知道计算机由CPU两大部分组成，主要包括了运算器，控制器（还包括其他的状态寄存器）。这里的运算器就是指的ALU，是计算机的核心部件。这里利用第一章所讲的东西，实现了半加器，全加器和16位加法器。其实本书可以和微软出版的《编码：隐匿在计算机软硬件背后的语言》一书相互借鉴。基本讲的都是一类东西，如何构造出一台计算机。文章第一部分就介绍了下背景知识，数的进制，一般人类喜欢用十进制，考虑到手指有10根，但是对于计算机来说，二进制比十进制要方便很多，其原因还是因为有布尔逻辑作为理论支撑，其次是为了计算机的实现，本质上逻辑门就是一个开关，开关对应于人的思维模式就是二元真假逻辑，映射（同构）到物理形态上可以用电流的有无，电压的高低，开关的通断，灯泡的亮灭等等来表达。接着要我们来实现一个半加器和全加器，半加器是全加器的基础，其实就是需不需要考虑进位作为输入而已。我们在十进制加法中也会考虑进位作为输出，全加器实现了两个bit相加得到的结果，实现16位加法器可以利用多个全加器来组合完成。最后就是综合所有的逻辑状态来实现ALU，输入中多了几个控制状态位来控制输出结果。其实计算机加法是基础，后面的减法，乘法和除法都可以基于加法来搞。当然由于提高效率，现代计算机有专门的乘法器来提供计算了。了解本章之后，对计算机的核心部件有了个基本认识。</p>
+<h3 id="第三章-时序逻辑">第三章　时序逻辑</h3>
+<p>　　本章的核心讲解时序逻辑，这章讲解的跟之前的组合逻辑有着显著的区别，时序逻辑电路是一种反馈电路，之前讲解的组合电路是不具备记忆保存功能的，即不能保存自身的状态，当输入发送变化时，其结果受到当前输入的影响。而时序逻辑是一种带有记忆功能的电路，最简单的就是D型触发器（Data
+Flip Flop,
+DFF），可以用２个或非门逻辑来完成其功能，其中每个逻辑门的输出作为另外一个逻辑门的输入，使其电路具有反馈功能，这样的电路就会带有“记忆”功能，触发器能保存1bit信息，那多个触发器就可以保存多个bit信息。D型触发器跟组合逻辑Nand门一样，是计算机中最底层的时序逻辑门了，后面的n位锁存器，计算器，RAM阵列都是基于DFF门来构建的。实际上也是这样一个道理，任何复杂的逻辑，如果分解到最小单元的话，一定是最简单的二元逻辑了。总的来说，有了基础的时序逻辑电路－－触发器之后，我们就可以利用多个触发器来组合成Memory
+Ram阵列，计数器，ALU等等计算机重要的部件了。</p>
+<figure>
+<img src="/img/dff.png" alt="具有记忆功能的D型触发器" />
+<figcaption aria-hidden="true">具有记忆功能的D型触发器</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2018/02/10/%E3%80%8A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E8%A6%81%E7%B4%A0%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="《计算机系统要素》读书笔记">https://sunjunior.github.io/2018/02/10/《计算机系统要素》读书笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/" rel="tag"><i class="fa fa-tag"></i> 编程实践</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/12/30/%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E5%AE%89%E8%A3%85Archlinux%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1/" rel="prev" title="安卓手机安装Archlinux系统搭建web服务">
+                  <i class="fa fa-angle-left"></i> 安卓手机安装Archlinux系统搭建web服务
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="next" title="利用qemu模拟器安装ppc操作系统">
+                  利用qemu模拟器安装ppc操作系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
-        <span id="page-pv"><i class="fa fa-spinner fa-pulse"></i></span>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
     </span>
-    
-    
 </div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                3129</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
-    </div>
-    
-    <div class="post-body post-content">
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>作为一名软件开发人员，硬件知识的学习也是必不可少的一部分。只有理解了计算机硬件的基本组成，工作原理才能更好地优化程序。作为非计算机专业的开发人员来说，有２本书值得大家阅读，一本是《编码，隐匿在计算机软硬件背后的语言》，另外一本书则是本文要解读的《计算机系统要素》一书。两本书都是讲述了计算机底层的实现原理，侧重点有所不同。前者主要侧重理论，虽然书中讲的例子是利用了一些继电器开关，导线来组合基本逻辑门电路，比如与门，或门，非门等等，而后再基于逻辑门电路来完成基本的电路元件，比如Ｄ型触发器，锁存器，ALU，计数器，ＲＡＭ阵列等等。但是对于我们真正意义上理解也是停留在理论阶段。我们不可能真去市场上买些继电器开关来完成书中所给的例子。本文要讲解的《计算机系统要素》也是讲解的这类知识，只是说书中有配套的小项目给我们来完成，从布尔代数，布尔逻辑来完成数字电路中组合逻辑和时序逻辑门电路。本书中给了一个模拟仿真器，虚拟机和一个可运行的操作系统，可以用HDL语言来完成逻辑功能。总的来说，这本书实战性较强，看完这两本书之后再去看计算机硬件的接口设计和汇编语言应该更容易理解。汇编语言写的通俗易懂的就是王爽编写的那边《汇编语言第三版》，推荐大家阅读。本文连续载录《计算机系统要素》每一章讲述的内容重点。</p>
-<h3 id="第一章-布尔逻辑"><a href="#第一章-布尔逻辑" class="headerlink" title="第一章 布尔逻辑"></a>第一章 布尔逻辑</h3><p>　　布尔逻辑简单点说就是真假逻辑，同一事物只能要么是真，要么是假，用数值来说就是只能是0或者1，用函数来表示为二值函数，比如现实中灯泡的亮与灭，开关的通断。基本的逻辑门包括非门（也称为反相器），或门和与门。由这三种最基础的门电路构成了计算机系统的基石。刘慈欣的《三体》中描述了的就是这类现象，通过简单的门电路来构造强大的计算机系统：冯诺依曼向秦始皇展现如何构造一台计算机系统。冯诺依曼则向秦始皇要三千万兵，每几个兵组成了非门，或门，与门，与非门等等，通过简单的逻辑门，然后再基于成千上万的逻辑门通过一定的秩序（这里需要时序逻辑）来完成复杂的芯片实现。书中介绍了基本的门逻辑其实是与非门或者是或非门，由这两种基本的门电路能实现所有的其他逻辑门，第一章项目中要我们实现的就是这一类问题。其实大家都很好奇，如何通过这简单的门电路来实现复杂的芯片呢，比如CPU中的ALU，寄存器，计算机内存等等，后面的章节应该会陆续介绍其实现机理。</p>
-<h3 id="第二章-布尔代数"><a href="#第二章-布尔代数" class="headerlink" title="第二章 布尔代数"></a>第二章 布尔代数</h3><p>　　本章的核心其实就是设计计算机CPU最核心的部件ALU，算术逻辑单元，我们知道计算机由CPU两大部分组成，主要包括了运算器，控制器（还包括其他的状态寄存器）。这里的运算器就是指的ALU，是计算机的核心部件。这里利用第一章所讲的东西，实现了半加器，全加器和16位加法器。其实本书可以和微软出版的《编码：隐匿在计算机软硬件背后的语言》一书相互借鉴。基本讲的都是一类东西，如何构造出一台计算机。文章第一部分就介绍了下背景知识，数的进制，一般人类喜欢用十进制，考虑到手指有10根，但是对于计算机来说，二进制比十进制要方便很多，其原因还是因为有布尔逻辑作为理论支撑，其次是为了计算机的实现，本质上逻辑门就是一个开关，开关对应于人的思维模式就是二元真假逻辑，映射（同构）到物理形态上可以用电流的有无，电压的高低，开关的通断，灯泡的亮灭等等来表达。接着要我们来实现一个半加器和全加器，半加器是全加器的基础，其实就是需不需要考虑进位作为输入而已。我们在十进制加法中也会考虑进位作为输出，全加器实现了两个bit相加得到的结果，实现16位加法器可以利用多个全加器来组合完成。最后就是综合所有的逻辑状态来实现ALU，输入中多了几个控制状态位来控制输出结果。其实计算机加法是基础，后面的减法，乘法和除法都可以基于加法来搞。当然由于提高效率，现代计算机有专门的乘法器来提供计算了。了解本章之后，对计算机的核心部件有了个基本认识。</p>
-<h3 id="第三章-时序逻辑"><a href="#第三章-时序逻辑" class="headerlink" title="第三章　时序逻辑"></a>第三章　时序逻辑</h3><p>　　本章的核心讲解时序逻辑，这章讲解的跟之前的组合逻辑有着显著的区别，时序逻辑电路是一种反馈电路，之前讲解的组合电路是不具备记忆保存功能的，即不能保存自身的状态，当输入发送变化时，其结果受到当前输入的影响。而时序逻辑是一种带有记忆功能的电路，最简单的就是D型触发器（Data Flip Flop, DFF），可以用２个或非门逻辑来完成其功能，其中每个逻辑门的输出作为另外一个逻辑门的输入，使其电路具有反馈功能，这样的电路就会带有“记忆”功能，触发器能保存1bit信息，那多个触发器就可以保存多个bit信息。D型触发器跟组合逻辑Nand门一样，是计算机中最底层的时序逻辑门了，后面的n位锁存器，计算器，RAM阵列都是基于DFF门来构建的。实际上也是这样一个道理，任何复杂的逻辑，如果分解到最小单元的话，一定是最简单的二元逻辑了。总的来说，有了基础的时序逻辑电路－－触发器之后，我们就可以利用多个触发器来组合成Memory Ram阵列，计数器，ALU等等计算机重要的部件了。</p>
-<p><img src="/img/dff.png" alt="具有记忆功能的D型触发器"></p>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
 
     </div>
-    
-    <div class="reward" ontouchstart>
-    <div class="reward-wrap">赏
-        <div class="reward-box">
-            
-            <span class="reward-type">
-                <img class="alipay" src="/img/alipay.jpg"><b>支付宝打赏</b>
-            </span>
-            
-            
-            <span class="reward-type">
-                <img class="wechat" src="/img/wepay.png"><b>微信打赏</b>
-            </span>
-            
-        </div>
-    </div>
-    <p class="reward-tip">
-        赠人玫瑰，手留余香
-    </p>
-</div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 ©
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2018/03/04/%E5%88%A9%E7%94%A8qemu%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85ppc%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="pre-post btn btn-default" title='利用qemu模拟器安装ppc操作系统'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            利用qemu模拟器安装ppc操作系统</span>
-    </a>
-    
-    
-    <a href="/2017/12/30/%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E5%AE%89%E8%A3%85Archlinux%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1/" class="next-post btn btn-default" title='安卓手机安装Archlinux系统搭建web服务'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            安卓手机安装Archlinux系统搭建web服务</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
-    
-</div>
+  </footer>
 
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
-        
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第一章-布尔逻辑"><span class="toc-text">第一章 布尔逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二章-布尔代数"><span class="toc-text">第二章 布尔代数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三章-时序逻辑"><span class="toc-text">第三章　时序逻辑</span></a></li></ol>
-        
-    </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
-</footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-<div class="busuanzi">
-    访问量:
-    <strong id="site-pv"><i class="fa fa-spinner fa-pulse"></i></strong>
-    &nbsp; | &nbsp;
-    访客数:
-    <strong id="site-uv"><i class="fa fa-spinner fa-pulse"></i></strong>
-</div>
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
 
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright©2017-2026 ALL RIGHTS RESERVED.
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
-
-
-<script>
-(function () {
-  var api = 'https://blog-counter.sunjun19860214.workers.dev';
-  var vid = localStorage.getItem('cf_uid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 12);
-  localStorage.setItem('cf_uid', vid);
-
-  function fill(elId, slug, inc, extra) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var q = 'slug=' + encodeURIComponent(slug) + (inc ? '&action=inc' : '') + (extra ? '&' + extra : '');
-    fetch(api + '/?' + q)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && typeof d.views !== 'undefined') el.textContent = d.views; })
-      .catch(function (e) { console.warn('counter:', e); });
-  }
-
-  fill('page-pv', window.location.pathname, true);
-  fill('site-pv', 'site_pv', true);
-  fill('site-uv', 'site_uv', true, 'vid=' + encodeURIComponent(vid));
-})();
-</script>
-
-
-<script src="/js/app.js?rev=@@hash.js"></script>
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
