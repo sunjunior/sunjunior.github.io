@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #2afff1;
+    background: #245945;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3097,8 +3097,8 @@ header.header {
   height: 0;
   border-left: 13px solid transparent;
   border-right: 13px solid transparent;
-  border-bottom: 20px solid #ff8c33;
-  top: 9px;
+  border-bottom: 18px solid #ff8c33;
+  top: 11px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -3106,9 +3106,9 @@ header.header {
   content: '';
   position: absolute;
   width: 7px;
-  height: 10px;
+  height: 16px;
   background: #ff8c33;
-  top: 24px;
+  top: 25px;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 0 0 2px 2px;
