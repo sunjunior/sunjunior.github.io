@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989） 破解演进（按修复先后顺序）：① 遇敌死亡不减少命（但仍需重开本关）→ ② 优化为遇敌不死 + 原地复活（4 秒无敌，不用重开）→ ③ 修复复活后背景音乐（BGM）缺失 交付物：三个阶段的补丁 ROM + IPS，最终版 The Bugs Bunny Crazy Castle (Respaw">
+    <meta name="description" content="目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989） 破解演进（按修复先后顺序）：① 遇敌死亡不减少命（但仍需重开本关）→ ② 优化为遇敌不死 + 原地复活（4 秒无敌，不用重开）→ ③ 修复复活后背景音乐（BGM）缺失 交付物：三个阶段的补丁 ROM + IPS，最终版 The Bugs Bunny Crazy Castle (Respawn">
 <meta property="og:type" content="article">
 <meta property="og:title" content="兔八哥（NES &#x2F; FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复）">
 <meta property="og:url" content="https://sunjunior.github.io/2026/08/07/%E5%85%94%E5%85%AB%E5%93%A5-NES%E9%81%87%E6%95%8C%E4%B8%8D%E6%AD%BBHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989） 破解演进（按修复先后顺序）：① 遇敌死亡不减少命（但仍需重开本关）→ ② 优化为遇敌不死 + 原地复活（4 秒无敌，不用重开）→ ③ 修复复活后背景音乐（BGM）缺失 交付物：三个阶段的补丁 ROM + IPS，最终版 The Bugs Bunny Crazy Castle (Respaw">
+<meta property="og:description" content="目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989） 破解演进（按修复先后顺序）：① 遇敌死亡不减少命（但仍需重开本关）→ ② 优化为遇敌不死 + 原地复活（4 秒无敌，不用重开）→ ③ 修复复活后背景音乐（BGM）缺失 交付物：三个阶段的补丁 ROM + IPS，最终版 The Bugs Bunny Crazy Castle (Respawn">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/bugs-first.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/bugs-respawn-1-gameplay.png">
@@ -270,7 +270,7 @@ pcwrite.lua：写回调里拿 PC 的可行性测试</span></a></li></ol></li><li
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="兔八哥（NES &#x2F; FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复） | sunjunior的个人技术博客">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989） 破解演进（按修复先后顺序）：① 遇敌死亡不减少命（但仍需重开本关）→ ② 优化为遇敌不死 + 原地复活（4 秒无敌，不用重开）→ ③ 修复复活后背景音乐（BGM）缺失 交付物：三个阶段的补丁 ROM + IPS，最终版 The Bugs Bunny Crazy Castle (Respawn...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -305,6 +305,7 @@ pcwrite.lua：写回调里拿 PC 的可行性测试</span></a></li></ol></li><li
     </span>
 </div>
 
+            <div class="post-description">目标游戏：The Bugs Bunny Crazy Castle（兔八哥疯狂城堡，Kemco, 1989） 破解演进（按修复先后顺序）：① 遇敌死亡不减少命（但仍需重开本关）→ ② 优化为遇敌不死 + 原地复活（4 秒无敌，不用重开）→ ③ 修复复活后背景音乐（BGM）缺失 交付物：三个阶段的补丁 ROM + IPS，最终版 The Bugs Bunny Crazy Castle (Respawn...</div>
         </div>
       </header>
 

@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="dup函数是用来复制一个现有的文件描述符，UNIX-LIKE系统下提供了2个这样函数，原型如下(由unistd.h头文件提供)： int dup(int filedes); int dup2(int filedes, int filedes2);  根据APUE书中所讲，dup返回的新文件描述符是可用文件描述符中的最小数值，而dup2可用用filedes2参数指定新描述符的数值。如果filedes">
+    <meta name="description" content="dup函数是用来复制一个现有的文件描述符，UNIX-LIKE系统下提供了2个这样函数，原型如下(由unistd.h头文件提供)： int dup(int filedes); int dup2(int filedes, int filedes2); 根据APUE书中所讲，dup返回的新文件描述符是可用文件描述符中的最小数值，而dup2可用用filedes2参数指定新描述符的数值。如果filedes2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DUP函数的使用场景">
 <meta property="og:url" content="https://sunjunior.github.io/2017/09/01/DUP%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="dup函数是用来复制一个现有的文件描述符，UNIX-LIKE系统下提供了2个这样函数，原型如下(由unistd.h头文件提供)： int dup(int filedes); int dup2(int filedes, int filedes2);  根据APUE书中所讲，dup返回的新文件描述符是可用文件描述符中的最小数值，而dup2可用用filedes2参数指定新描述符的数值。如果filedes">
+<meta property="og:description" content="dup函数是用来复制一个现有的文件描述符，UNIX-LIKE系统下提供了2个这样函数，原型如下(由unistd.h头文件提供)： int dup(int filedes); int dup2(int filedes, int filedes2); 根据APUE书中所讲，dup返回的新文件描述符是可用文件描述符中的最小数值，而dup2可用用filedes2参数指定新描述符的数值。如果filedes2">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-08-31T23:45:51.000Z">
 <meta property="article:modified_time" content="2018-01-18T13:42:50.585Z">
@@ -232,7 +232,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="DUP函数的使用场景 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="dup函数是用来复制一个现有的文件描述符，UNIX-LIKE系统下提供了2个这样函数，原型如下(由unistd.h头文件提供)： int dup(int filedes); int dup2(int filedes, int filedes2); 根据APUE书中所讲，dup返回的新文件描述符是可用文件描述符中的最小数值，而dup2可用用filedes2参数指定新描述符的数值。如果filedes2...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -267,6 +267,7 @@
     </span>
 </div>
 
+            <div class="post-description">dup函数是用来复制一个现有的文件描述符，UNIX-LIKE系统下提供了2个这样函数，原型如下(由unistd.h头文件提供)： int dup(int filedes); int dup2(int filedes, int filedes2); 根据APUE书中所讲，dup返回的新文件描述符是可用文件描述符中的最小数值，而dup2可用用filedes2参数指定新描述符的数值。如果filedes2...</div>
         </div>
       </header>
 

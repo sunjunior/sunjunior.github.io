@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：  确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单">
+    <meta name="description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括： 确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源">
 <meta property="og:type" content="article">
 <meta property="og:title" content="实现最短路径问题的2种常用算法">
 <meta property="og:url" content="https://sunjunior.github.io/2020/05/24/%E5%AE%9E%E7%8E%B0%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E7%9A%842%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括：  确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单">
+<meta property="og:description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括： 确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/dijkstra/dijkstra1.png">
 <meta property="article:published_time" content="2020-05-23T23:56:07.000Z">
@@ -235,7 +235,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="实现最短路径问题的2种常用算法 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括： 确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -270,6 +270,7 @@
     </span>
 </div>
 
+            <div class="post-description">背景 最短路径问题是计算机图论研究中的一个经典算法问题，旨在寻找图（由结点和路径组成的）中两结点之间的最短路径。维基百科中将最短路径问题划分了几种类型，算法具体的形式包括： 确定起点的单源最短路径问题 - 即已知起始结点，求最短路径的问题。适合使用Dijkstra算法 确定终点的最短路径问题 - 与确定起点的单源路径问题相反，该问题是已知终结结点，求最短路径的问题。在无向图中该问题与确定起点的单源...</div>
         </div>
       </header>
 
