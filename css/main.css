@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #ff7817;
+    background: #82c4ff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3094,4 +3094,19 @@ header.header {
 }
 .post-body figure figcaption {
   width: 100%;
+}
+.post-button .btn {
+  background: #e67e22 !important;
+  border-color: #e67e22 !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+  padding: 4px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+.post-button .btn:hover {
+  background: #d35400 !important;
+  border-color: #d35400 !important;
+  color: #fff !important;
+  transform: scale(1.05) !important;
 }
