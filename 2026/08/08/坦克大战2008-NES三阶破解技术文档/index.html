@@ -904,7 +904,18 @@ href="/files/eagle_watch.lua"><code>eagle_watch.lua</code></a></p>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </body>
 </html>
