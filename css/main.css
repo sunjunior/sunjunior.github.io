@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #acdf7d;
+    background: #571bb0;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3164,4 +3164,10 @@ header.header {
   border-color: #d35400 !important;
   color: #fff !important;
   transform: scale(1.05) !important;
+}
+.site-author-image {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 0 !important;
 }
