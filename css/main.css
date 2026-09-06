@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #e8ff25;
+    background: #cc8eff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3073,4 +3073,11 @@ header.header {
 .back-to-top {
   left: unset !important;
   right: 12px !important;
+}
+.site-title {
+  font-size: 1.1em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
 }
