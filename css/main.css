@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #f7bd2f;
+    background: #404b38;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3071,15 +3071,15 @@ header.header {
   }
 }
 .back-to-top {
-  width: 44px !important;
-  height: 44px !important;
+  width: 48px !important;
+  height: 48px !important;
   border-radius: 50% !important;
   left: unset !important;
   right: 24px !important;
   bottom: -100px !important;
-  background: radial-gradient(circle at center, #222 56%, transparent 57%) padding-box, conic-gradient(#e67e22 var(--progress, 0%), rgba(255,255,255,0.06) 0) border-box;
+  background: radial-gradient(circle at center, #2b2b2b 58%, transparent 59%) padding-box, conic-gradient(#ff9d3c var(--progress, 0%), #404040 0) border-box;
   border: 2px solid transparent !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
   justify-content: center !important;
   align-items: center !important;
   flex-direction: column !important;
@@ -3088,13 +3088,15 @@ header.header {
 }
 .back-to-top .fa {
   width: auto !important;
-  font-size: 16px !important;
+  font-size: 20px !important;
   line-height: 1 !important;
+  -webkit-text-stroke: 1px currentColor;
+  text-stroke: 1px currentColor;
 }
 .back-to-top span {
   margin: 0 !important;
-  font-size: 10px !important;
-  font-weight: 600 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
   color: #fff !important;
 }
 .back-to-top:hover {
