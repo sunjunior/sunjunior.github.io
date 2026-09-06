@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #8246c2;
+    background: #f0e9ff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3173,4 +3173,7 @@ header.header {
 }
 .post-description {
   display: none !important;
+}
+.post-body blockquote {
+  white-space: pre-line;
 }
