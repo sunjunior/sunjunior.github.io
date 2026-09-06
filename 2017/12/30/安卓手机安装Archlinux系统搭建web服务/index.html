@@ -32,13 +32,21 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch3.bmp">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch4.bmp">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch5.bmp">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch6.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch7.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch8.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch9.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch10.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch11.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch12.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch13.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch20.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch14.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch15.jpeg">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch18.jpeg">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch19.jpeg">
 <meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch16.jpeg">
+<meta property="og:image" content="https://sunjunior.github.io/img/archlinux/arch17.gif">
 <meta property="article:published_time" content="2017-12-30T09:51:35.000Z">
 <meta property="article:modified_time" content="2026-09-06T01:53:48.222Z">
 <meta property="article:author" content="sunjunior">
@@ -306,7 +314,7 @@
     
     <div class="post-body" itemprop="articleBody"><p>家里有2台闲置的安卓手机，长期摆放在家里，属于吃灰状态，目前我一直在找机会让其发挥余热。比如用此安卓手机来搭建个人博客，或者开启远程摄像头，监控家中的一切，手机长时间开着功耗也比较低，不费电。经过这几天的折腾，终于可以让其运行archlinux最新系统，后台运行个人博客web程序了。下面将这些流程用图文并茂的形势记录下来，以备后用。安卓手机内核运行的就是linux系统，因此理论上是可以安装其他发行版本的linux系统的，不过由于各个手机厂商的手机驱动不好获取，不然可以启动的时候就可以调到linux系统运行了（类似于PC机）。目前给安卓手机安装发行版linux系统基本都是基于chroot的，也就是说将发行版的linux镜像挂载在某个路径下，这里一般为/mnt，然后利用手机的资源分配给当前的linux挂载镜像，最后chroot到该系统下，即可以跑这个系统的版本了。由于我本人用archlinux，同时该系统有着良好的定制性，因此在老旧的手机下可以定制精简下linux系统，只安装核心程序，为跑后面的web服务腾出点系统资源。</p>
 <ol type="1">
-<li>首先查看手机CPU属于什么架构，目前的主流手机基本都采用的是arm架构处理器，我一共有2台安卓手机，都是华为荣耀系列的，一个是3C移动版，另外一个是4C移动联通4G板，下面只针对荣耀4C如何安装linux系统做介绍：
+<li>首先查看手机CPU属于什么架构，目前的主流手机基本都采用的是arm架构处理器，我一共有2台安卓手机，都是华为荣耀系列的，一个是3C移动版，另外一个是4C移动联通4G板，下面只针对荣耀4C如何安装linux系统做介绍：<br />
 <img src="/img/archlinux/arch1.jpeg" alt="荣耀4C配置" /></li>
 </ol>
 <p>网上查询了下荣耀4C是海思麒麟620处理器，属于armv7以上系列的，因此可以下载对应版本的linux版本。然后进入到archlinux
@@ -315,68 +323,74 @@ arm官方网站查询armv7可以对应哪些安装系统。</p>
 <img src="/img/archlinux/arch2.gif" alt="arm平台参数介绍" />
 <figcaption aria-hidden="true">arm平台参数介绍</figcaption>
 </figure>
-<p>这里我们选用ODROID-X这种参数对应的系统版本，那到哪儿下载怎么安装呢，接下来就是linux镜像制作了。
+<p>这里我们选用ODROID-X这种参数对应的系统版本，那到哪儿下载怎么安装呢，接下来就是linux镜像制作了。<br />
 <img src="/img/archlinux/arch3.bmp" alt="ODROID系统介绍" /></p>
 <ol start="2" type="1">
 <li><p>经过这几天的网上搜索，发现sourceforge上有个开源的linux on android
-项目，如下图所示： <img src="/img/archlinux/arch4.bmp"
-alt="archlinux系统介绍" /> 里面有各个版本的linux发行版，比如Ubuntu，Kali
+项目，如下图所示：<br />
+<img src="/img/archlinux/arch4.bmp" alt="archlinux系统介绍" /><br />
+里面有各个版本的linux发行版，比如Ubuntu，Kali
 Linux以及Archlinux系统。这里我们选用Archlinux系统，将其镜像下载下来，同时把对应的安装脚本一并下载下来后进行安装。这里我最终没有选用该开源项目的版本主要原因是版本太老了，挂载在手机后用pacman
 -Syu升级的时候直接提示未知错误，无法升级到最新版本，而且安装某些软件后，对其他已有软件造成so冲突。这里下载下来的原因主要是挂载之后，我们看下有哪些系统目录及关键文件（比如内核文件有哪些，看下/boot目录就知道了里面就一个zImage文件），便于后面自己创建镜像的时候有个把握。</p></li>
 <li><p>制作Linux
-img镜像文件，这里我在台式电脑上创建一个img文件，大小为3.5G左右。这里主要考虑到我的荣耀手机内部存储空间还剩下3.7G左右大小，其中还需要200M左右的空间来安装超级终端和juiceSSH等安卓程序，其他剩余空间就全部用来挂载该镜像了。打开pc端的linux终端控制台，输入如下命令：
-<code>dd if=/dev/zero of=archlinux.img bs=1M count=3500</code>
-创建好之后，利用系统格式化命令来格式化该镜像文件(这里选用linux最新的ext4格式)：
-<code>mkfs.ext4 archlinux.img</code>
-都弄好之后，我们将该系统挂载到/mnt目录下，以备后面使用。
+img镜像文件，这里我在台式电脑上创建一个img文件，大小为3.5G左右。这里主要考虑到我的荣耀手机内部存储空间还剩下3.7G左右大小，其中还需要200M左右的空间来安装超级终端和juiceSSH等安卓程序，其他剩余空间就全部用来挂载该镜像了。打开pc端的linux终端控制台，输入如下命令：<br />
+<code>dd if=/dev/zero of=archlinux.img bs=1M count=3500</code><br />
+创建好之后，利用系统格式化命令来格式化该镜像文件(这里选用linux最新的ext4格式)：<br />
+<code>mkfs.ext4 archlinux.img</code><br />
+都弄好之后，我们将该系统挂载到/mnt目录下，以备后面使用。<br />
 <code>mount -o rw,loop archlinux.img /mnt</code></p></li>
 <li><p>在网易镜像网站（<a
-target="_blank" rel="noopener" href="http://mirrors.163.com">http://mirrors.163.com</a>）上下载最新的系统安装包文件，这里我们选择开头介绍的odroid-x系统包文件。下载下来之后解压缩，将对应的目录放入到之前挂载好的/mnt路径下。
-<img src="/img/archlinux/arch5.bmp" alt="archlinux系统介绍" /> <img
-src="/img/archlinux/arch6.gif" alt="archlinux系统介绍" />
+target="_blank" rel="noopener" href="http://mirrors.163.com">http://mirrors.163.com</a>）上下载最新的系统安装包文件，这里我们选择开头介绍的odroid-x系统包文件。下载下来之后解压缩，将对应的目录放入到之前挂载好的/mnt路径下。<br />
+<img src="/img/archlinux/arch5.bmp" alt="archlinux系统介绍" /><br />
+<img src="/img/archlinux/arch6.gif" alt="archlinux系统介绍" /><br />
 结合开源项目下的文件存放路径，我们将下载的所有文件目录拷贝到挂载的img镜像中去，然后再umount
-/mnt 一下。这样archlinux.img文件中已经有了我们最新下载的系统文件了。
+/mnt
+一下。这样archlinux.img文件中已经有了我们最新下载的系统文件了。<br />
 这里我们借用开源镜像的bootscript.sh脚本，里面有最为关键的一部分如下所示，我们需要根据手机实际情况进行修改：</p></li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> $bbox mount -t ext4 /dev/block/loop255 $mnt</span><br><span class="line"> if [ $? -ne 0 ];then error_exit &quot;Unable to mount the loop device!&quot;; fi</span><br><span class="line"></span><br><span class="line"> ###########################################</span><br><span class="line"> # Mount all required partitions           #</span><br><span class="line"> ###########################################</span><br><span class="line"> $bbox mount -t devpts devpts $mnt/dev/pts;</span><br><span class="line"> if [ $? -ne 0 ]; then $bbox mount -o bind /dev $mnt/dev; $bbox mount -t devpts   devpts $mnt/dev/pts; fi</span><br><span class="line"> if [ $? -ne 0 ]; then error_exit &quot;Unable to mount $mnt/dev!&quot;; fi</span><br><span class="line"></span><br><span class="line"> $bbox mount -t proc proc $mnt/proc</span><br><span class="line"> if [ $? -ne 0 ];then error_exit &quot;Unable to mount $mnt/proc!&quot;; fi</span><br><span class="line"> $bbox mount -o bind /sys $mnt/sys</span><br><span class="line">if [ $? -ne 0 ];then error_exit &quot;Unable to mount $mnt/sys!&quot;; fi</span><br><span class="line">$bbox mount -o bind /sdcard $mnt/sdcard</span><br><span class="line">if [ $? -ne 0 ];then error_exit &quot;Unable to bind $mnt/sdcard!&quot;; fi</span><br><span class="line"></span><br><span class="line">if [[ ! -d $mnt/root/cfg ]]; then mkdir $mnt/root/cfg; fi</span><br><span class="line">$bbox mount -o bind $(dirname $imgfile) $mnt/root/cfg</span><br></pre></td></tr></table></figure>
 <p>修改之后，将archlinux.img放入到手机内存卡上，然后手机开启超级终端后，进入到内部存储对应的目录下，直接输入sh
 bootscript.sh就可以挂载了。这里便于演示，我直接用adb
-shell进入手机中，挂载这一流程： <img src="/img/archlinux/arch7.gif"
-alt="archlinux系统介绍" /></p>
+shell进入手机中，挂载这一流程：<br />
+<img src="/img/archlinux/arch7.gif" alt="archlinux系统介绍" /></p>
 <p>需要注意的是，如果之前已经挂载过了，再次挂载时，可能会有如下错误提示：unable
-to attach … <img src="/img/archlinux/arch8.gif"
-alt="archlinux系统介绍" /> 此时，我们只需要reboot一下手机就可以了。</p>
-<p>至此，安装上搭建linux系统已经完成，手机上运行archlinux系统跟PC上其实没啥区别，运行后需要修改源地址：在/etc/pacman.d/mirrorlist中将server地址修改为163的，这样速度会比原有的快很多。
+to attach …<br />
+<img src="/img/archlinux/arch8.gif" alt="archlinux系统介绍" /><br />
+此时，我们只需要reboot一下手机就可以了。</p>
+<p>至此，安装上搭建linux系统已经完成，手机上运行archlinux系统跟PC上其实没啥区别，运行后需要修改源地址：在/etc/pacman.d/mirrorlist中将server地址修改为163的，这样速度会比原有的快很多。<br />
 <code>Server = http://mirrors.163.com/archlinuxarm/$arch/$repo</code></p>
 <ol start="5" type="1">
 <li>部署手机web服务，看下内网能否连上web服务器，这里我们利用开源的facebooc来进行测试，首先git
 clone该项目，然后进入到src目录后修改main.c函数中的端口8080，将其修改为80，然后编译，运行(make
-run)。 <img src="/img/archlinux/arch9.gif" alt="web内网测试" /> <img
-src="/img/archlinux/arch10.gif" alt="web内网测试" /></li>
+run)。<br />
+<img src="/img/archlinux/arch9.gif" alt="web内网测试" /><br />
+<img src="/img/archlinux/arch10.gif" alt="web内网测试" /></li>
 </ol>
-<p>打开chrome浏览器，输入手机IP地址，查看是否有Facebooc的首页： <img
-src="/img/archlinux/arch11.gif" alt="web内网测试" /></p>
-<p>6）借用花生壳，实现内网穿透，在外面也能访问手机上部署的网站。
+<p>打开chrome浏览器，输入手机IP地址，查看是否有Facebooc的首页：<br />
+<img src="/img/archlinux/arch11.gif" alt="web内网测试" /></p>
+<p>6）借用花生壳，实现内网穿透，在外面也能访问手机上部署的网站。<br />
 首先在花生壳官方网站<a
 target="_blank" rel="noopener" href="https://www.oray.com/">https://www.oray.com/</a>注册一个账户，可以免费得到一个壳域名，不过我这里用的是自己花钱买的顶级域名<a
-target="_blank" rel="noopener" href="http://www.sunjunior.cn">www.sunjunior.cn</a>，注册之后，还需要开通内网穿透服务，我选择的是免费版的（开通费是6元），开通之后，每个月有1G流量，对于个人博客来说已经足够用了。这里由于是手机客户端，我们需要下载树莓派的版本客户端（CPU架构和手机一样的，所以可以使用）：
-<img src="/img/archlinux/arch12.gif" alt="内网穿透介绍" />
-下载之后，由于是deb包，需要解压之后得到data.tar文件包，然后再用
+target="_blank" rel="noopener" href="http://www.sunjunior.cn">www.sunjunior.cn</a>，注册之后，还需要开通内网穿透服务，我选择的是免费版的（开通费是6元），开通之后，每个月有1G流量，对于个人博客来说已经足够用了。这里由于是手机客户端，我们需要下载树莓派的版本客户端（CPU架构和手机一样的，所以可以使用）：<br />
+<img src="/img/archlinux/arch12.gif" alt="内网穿透介绍" /><br />
+下载之后，由于是deb包，需要解压之后得到data.tar文件包，然后再用<br />
 <code>tar xvf data.tar -C /</code>
-命令解压到文件系统中，后面的使用说明可以参考官网的链接 <a
-target="_blank" rel="noopener" href="http://service.oray.com/question/2680.html">http://service.oray.com/question/2680.html</a>。这里演示下如何在手机和花生壳网站开启内网穿透服务（花生壳网站中设置端口映射，将手机所在本地IP地址设置为映射的目的地址，用自诊断测试下，如果能连接成功那说明配置成功）：
-<img src="/img/archlinux/arch13.gif" alt="内网穿透介绍" /> <img
-src="/img/archlinux/arch20.png" alt="内网穿透介绍" />
-这样，我们再次在chrome中输入www.sunjunior.cn的时候，就会转发到手机的web服务了，手机上也会收到web请求。这里需要注意的是，手机具有休眠功能，为了防止休眠，可以在手机设置免休眠功能，或者打开超级终端，<strong>设置开启唤醒锁和开启Wifi锁</strong>）。这样手机长时间开启就不会因为休眠关web服务了。
-<img src="/img/archlinux/arch14.gif" alt="web外网测试" /> <img
-src="/img/archlinux/arch15.jpeg" alt="web外网测试" /> <img
-src="/img/archlinux/arch18.jpeg" alt="web手机测试" /> <img
-src="/img/archlinux/arch19.jpeg" alt="web外网测试" /> 总结：
+命令解压到文件系统中，后面的使用说明可以参考官网的链接<br />
+<a
+target="_blank" rel="noopener" href="http://service.oray.com/question/2680.html">http://service.oray.com/question/2680.html</a>。这里演示下如何在手机和花生壳网站开启内网穿透服务（花生壳网站中设置端口映射，将手机所在本地IP地址设置为映射的目的地址，用自诊断测试下，如果能连接成功那说明配置成功）：<br />
+<img src="/img/archlinux/arch13.gif" alt="内网穿透介绍" /><br />
+<img src="/img/archlinux/arch20.png" alt="内网穿透介绍" /><br />
+这样，我们再次在chrome中输入www.sunjunior.cn的时候，就会转发到手机的web服务了，手机上也会收到web请求。这里需要注意的是，手机具有休眠功能，为了防止休眠，可以在手机设置免休眠功能，或者打开超级终端，<strong>设置开启唤醒锁和开启Wifi锁</strong>）。这样手机长时间开启就不会因为休眠关web服务了。<br />
+<img src="/img/archlinux/arch14.gif" alt="web外网测试" /><br />
+<img src="/img/archlinux/arch15.jpeg" alt="web外网测试" /><br />
+<img src="/img/archlinux/arch18.jpeg" alt="web手机测试" /><br />
+<img src="/img/archlinux/arch19.jpeg" alt="web外网测试" /><br />
+总结：<br />
 通过以上步骤，我们可以把一台闲置的手机搭建个人博客，或者建立低流量web网站。手机安装个screenfetch指令，可以将手机的信息列出来，当然也可以直接用
 <code>cat /proc/cpuinfo</code> 和 cat
 /<code>proc/meminfo</code>查看手机信息，跟电脑上使用没啥两样。</p>
-<p><img src="/img/archlinux/arch16.jpeg" alt="ssh登录测试" /> <img
-src="/img/archlinux/arch17.gif" alt="ssh登录测试" /></p>
+<p><img src="/img/archlinux/arch16.jpeg" alt="ssh登录测试" /><br />
+<img src="/img/archlinux/arch17.gif" alt="ssh登录测试" /></p>
 <p><u>======下一步研究下安装手机启动时如何加载linux内核流程，如果能修改启动脚本，开启手机后直接进入archlinux就完美了，看看能不能实现吧！======**</u></p>
 
     </div>

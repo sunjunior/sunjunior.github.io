@@ -295,7 +295,7 @@
     
     
     <div class="post-body" itemprop="articleBody"><h1 id="gtest单元测试框架浅析">GTest单元测试框架浅析</h1>
-<p>Google发布的gtest是一款跨平台单元测试框架，本文是在archlinux上直接安装gtest之后，用codeblocks编写了一个简单的16进制字符串转数字的函数，最后利用gtest测试框架来输出测试用例，保证函数的正确性。在使用gtest时，需要在IDE编译选项中添加-lgtest选项，不然可能会链接报错。下面是简单的用法和执行结果：
+<p>Google发布的gtest是一款跨平台单元测试框架，本文是在archlinux上直接安装gtest之后，用codeblocks编写了一个简单的16进制字符串转数字的函数，最后利用gtest测试框架来输出测试用例，保证函数的正确性。在使用gtest时，需要在IDE编译选项中添加-lgtest选项，不然可能会链接报错。下面是简单的用法和执行结果：<br />
 #include &lt;gtest/gtest.h&gt;</p>
 <pre><code>bool String2Word(const char *ptr, unsigned int *puiValue)
 {
@@ -431,7 +431,7 @@ int main(int argc, char *argv[])
 
 
 }</code></pre>
-<p><img src="/img/gtest.gif" alt="gtest打桩测试结果显示" />
+<p><img src="/img/gtest.gif" alt="gtest打桩测试结果显示" /><br />
 总之，单元测试是软件开发中最要的一个环节，利用gtest可以方便测试我们自己编写的程序，写出程序少bug，其他gtest用法可以参考gtest附带的example，里面基本将常见的单元测试用法列举齐全了。最后附上程序猿的佛祖保佑图：</p>
 <pre><code>                   _ooOoo_
                   o8888888o

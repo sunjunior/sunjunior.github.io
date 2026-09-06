@@ -29,7 +29,10 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc1.jpg">
 <meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc2.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc3.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc4.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc5.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc6.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc7.jpg">
 <meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc8.jpg">
 <meta property="og:image" content="https://sunjunior.github.io/img/ppc/ppc9.jpg">
@@ -301,54 +304,56 @@
     
     <div class="post-body" itemprop="articleBody"><h3 id="背景介绍">背景介绍</h3>
 <p>由于从事嵌入式工作领域的缘故，本人需要研究下程序在不同CPU类型下的行为模式是否与预期一致。目前市场上大都CPU按照大小端架构体系来划分的话，大部分都属于小端字节序类型，大端CPU在市面上很少见。比如小端字节序的有arm（A9,A15），x86系列。大端则主要是基于PowerPC架构的，比如摩托罗拉68000型中央处理器，还有通讯领域采用的网络处理器，也有大端类型的。于是，个人需要找一款可以在PC电脑上模拟不同CPU类型的模拟器，来运行不同CPU架构的操作系统，验证程序在不同CPU类型下行为模式。如今，随着虚拟化技术进一步发展，市场上有许多可用的虚拟化工具来帮助我们来运行各类不同的操作系统，比如强大的VMware虚拟机，我本人之前用过破解版的VMware，该虚拟机确实对各类硬件模拟都有比较好的支持，可惜是正版要收费的。当然市场上也有不少免费的虚拟机工具，免费的虚拟机工具主要有以下２款：</p>
-<p>１）<strong>Oracle VirtualBox</strong>
+<p>１）<strong>Oracle VirtualBox</strong><br />
 维基百科上说最早VirtualBox是由德国InnoTek软件公司出品的虚拟机软件，现在则由甲骨文Oracle公司进行开发，是甲骨文公司xVM虚拟化平台技术的一部分。它提供用户在32位或64位的Windows、Solaris及Linux
 操作系统上虚拟其它x86的操作系统。用户可以在VirtualBox上安装并且运行Solaris、Windows、DOS、Linux、OS/2
 Warp、OpenBSD及FreeBSD等系统作为客户端操作系统。</p>
-<p>2）<strong>QEMU</strong> QEMU是一套由Fabrice
+<p>2）<strong>QEMU</strong><br />
+QEMU是一套由Fabrice
 Bellard所编写的模拟处理器的自由软件。它与Bochs，PearPC近似，但其具有某些后两者所不具备的特性，如高速度及跨平台的特性。经由KVM（早期为kqemu加速器，现在kqemu已被KVM取代）这个开源的加速器，QEMU能模拟至接近真实电脑的速度。QEMU有两种主要运作模式：</p>
 <p>User
-mode模拟模式，亦即是用户模式。QEMU能引导那些为不同中央处理器编译的Linux程序。而Wine及Dosemu是其主要目标。
+mode模拟模式，亦即是用户模式。QEMU能引导那些为不同中央处理器编译的Linux程序。而Wine及Dosemu是其主要目标。<br />
 System
 mode模拟模式，亦即是系统模式。QEMU能模拟整个电脑系统，包括中央处理器及其他周边设备。它使得为系统源代码进行测试及除错工作变得容易。其亦能用来在一部主机上模拟数部不同虚拟电脑。</p>
-<p>这2款虚拟化工具各有特点，virtualbox入手比较简单，安装之后可以安装部署步骤一步步傻瓜式安装，基本可以模拟市场上所有主流的操作系统。但是qemu自由度更大，而且适配的CPU类型更广，直白一点就是自由定制化程度较高，安卓模拟器内部用的就是qemu。这里我需要模拟大端cpu类型，典型的大端CPU架构就是powerpc。用qemu模拟ppc模拟器很简单，qemu安装之后就会有模拟ppc的命令提供使用。
+<p>这2款虚拟化工具各有特点，virtualbox入手比较简单，安装之后可以安装部署步骤一步步傻瓜式安装，基本可以模拟市场上所有主流的操作系统。但是qemu自由度更大，而且适配的CPU类型更广，直白一点就是自由定制化程度较高，安卓模拟器内部用的就是qemu。这里我需要模拟大端cpu类型，典型的大端CPU架构就是powerpc。用qemu模拟ppc模拟器很简单，qemu安装之后就会有模拟ppc的命令提供使用。<br />
 经过比较发现，这里选择用qemu来模拟比较合适。下面就开始介绍如何用qemu来模拟ppc，并且运行ppc操作系统的过程。</p>
 <h3 id="操作系统选择">操作系统选择</h3>
 <p>操作系统的话，大端字节序的目前比较稳定的版本有Ubuntu和debian系列。我这里采用Ubuntu发布版本，由于只是模拟CPU，使用的操作系统可以选择轻量级别的，比如lubuntu，于是首先下载lubuntu
 for ppc最新版本的，下载地址为<a
-target="_blank" rel="noopener" href="http://cdimage.ubuntu.com/lubuntu/releases/12.04/release/">lubuntu下载地址</a>。我们选择对硬件性能要求不高的alternate版本:
+target="_blank" rel="noopener" href="http://cdimage.ubuntu.com/lubuntu/releases/12.04/release/">lubuntu下载地址</a>。我们选择对硬件性能要求不高的alternate版本:<br />
 <img src="/img/ppc/ppc1.jpg" alt="lubuntu for ppc" /></p>
 <h3 id="制作qemu镜像">制作qemu镜像</h3>
-<p>下载操作系统之后，我们首先需要创建一个qemu文件系统镜像，大小为10G左右
+<p>下载操作系统之后，我们首先需要创建一个qemu文件系统镜像，大小为10G左右<br />
 <code>qemu-img create -f qcow2 ppc.img 10G</code></p>
-<p>创建完成之后，就可以将iso操作系统镜像当做cdrom来完成操作系统安装了，这里我们只需要设置内存大小为1G,硬盘模拟hda,安装操作系统的命令如下:
-<code>qemu-system-ppc -m 1024 -hda ppc.img -cdrom lubuntu-12.04-alternate-powerpc.iso -boot d</code>
-如下图所示，系统会弹出qemu启动界面，在里面输入install就可以启动Ubuntu系统安装程序了
-<img src="/img/ppc/ppc2.jpg" alt="创建img镜像" /> <img
-src="/img/ppc/ppc3.gif" alt="安装Ubuntu系统" /> <img
-src="/img/ppc/ppc4.gif" alt="Ubuntu系统运行" />
-这里安装时间花了约1小时，如果自己的PC机器性能较高，可以在模拟计算机硬件的时候，将分配的资源多一点，比如内存可以设置2G,CPU可以设置多个核等等。
-### 配置linux开发环境
-在系统安装完成之后，由于qemu不会安装bootloader，所以需要手动指定磁盘根目录和系统内核文件(这个需要在iso镜像中提取出来)。我们重新用qemu-system-ppc来启动ppc.img镜像看看:
-<code>qemu-system-ppc -m 1024 -hda disk.img -kernel vmlinux -initrd initrd.img -append "ro root=/dev/sda3"</code>
+<p>创建完成之后，就可以将iso操作系统镜像当做cdrom来完成操作系统安装了，这里我们只需要设置内存大小为1G,硬盘模拟hda,安装操作系统的命令如下:<br />
+<code>qemu-system-ppc -m 1024 -hda ppc.img -cdrom lubuntu-12.04-alternate-powerpc.iso -boot d</code><br />
+如下图所示，系统会弹出qemu启动界面，在里面输入install就可以启动Ubuntu系统安装程序了<br />
+<img src="/img/ppc/ppc2.jpg" alt="创建img镜像" /><br />
+<img src="/img/ppc/ppc3.gif" alt="安装Ubuntu系统" /><br />
+<img src="/img/ppc/ppc4.gif" alt="Ubuntu系统运行" /><br />
+这里安装时间花了约1小时，如果自己的PC机器性能较高，可以在模拟计算机硬件的时候，将分配的资源多一点，比如内存可以设置2G,CPU可以设置多个核等等。<br />
+### 配置linux开发环境<br />
+在系统安装完成之后，由于qemu不会安装bootloader，所以需要手动指定磁盘根目录和系统内核文件(这个需要在iso镜像中提取出来)。我们重新用qemu-system-ppc来启动ppc.img镜像看看:<br />
+<code>qemu-system-ppc -m 1024 -hda disk.img -kernel vmlinux -initrd initrd.img -append "ro root=/dev/sda3"</code><br />
 这里由于需要用guestfish工具来提取镜像，这个工具在redhat比较好用，这个工作暂时告一段落,懒得折腾了。如果个人使用是Redhat红帽系列的操作系统（Centos，Fedora等等），可以按照上面的步骤制作安装镜像。由于网上直接可以下载debian
 for ppc的qemu镜像文件，于是我下载了一个debian系列的qcow2文件(<a
-target="_blank" rel="noopener" href="https://people.debian.org/~aurel32/qemu/powerpc/">debian_wheezy_powerpc_standard.qcow2</a>)，下载完成之后就可以用qemu运行了:
+target="_blank" rel="noopener" href="https://people.debian.org/~aurel32/qemu/powerpc/">debian_wheezy_powerpc_standard.qcow2</a>)，下载完成之后就可以用qemu运行了:<br />
 <code>qemu-system-ppc -hda debian_wheezy_powerpc_standard.qcow2</code></p>
-<p><img src="/img/ppc/ppc5.jpg" alt="PPC系统下载" /> <img
-src="/img/ppc/ppc6.gif" alt="PPC系统加载" /></p>
-<p>进入到操作系统Shell控制终端，打开vi修改域名和软件源，否则可能无法更新工具链。
-<code>vi /etc/resolv.conf</code>
+<p><img src="/img/ppc/ppc5.jpg" alt="PPC系统下载" /><br />
+<img src="/img/ppc/ppc6.gif" alt="PPC系统加载" /></p>
+<p>进入到操作系统Shell控制终端，打开vi修改域名和软件源，否则可能无法更新工具链。<br />
+<code>vi /etc/resolv.conf</code><br />
 修改域名为国内的114.114.114.114,比较稳定。另外软件源用网易163或者其他国内镜像源都不好用，主要是没有powerpc
-32bit的源.这里我找到一个可以使用的源： <a
-target="_blank" rel="noopener" href="http://ftp.heanet.ie/mirrors/debian/">debian powerpc源</a>
-<code>vi /etc/apt/sources.list</code> <img src="/img/ppc/ppc7.jpg"
-alt="域名修改" /> <img src="/img/ppc/ppc8.jpg"
-alt="软件源地址修改" /></p>
+32bit的源.这里我找到一个可以使用的源：<br />
+<a target="_blank" rel="noopener" href="http://ftp.heanet.ie/mirrors/debian/">debian
+powerpc源</a><br />
+<code>vi /etc/apt/sources.list</code><br />
+<img src="/img/ppc/ppc7.jpg" alt="域名修改" /><br />
+<img src="/img/ppc/ppc8.jpg" alt="软件源地址修改" /></p>
 <p>修改完成之后，更新下源，然后安装linux
-C开发工具链，写一个简单的程序来验证下ppc系统下CPU访问和存储字节序的过程。
-<code>apt-get install vim gcc g++</code>
-可以看出，字节序跟预期一致，低地址存放的是高字节，高地址存放的是低字节。这个跟小端CPU存放顺序是相反的。
+C开发工具链，写一个简单的程序来验证下ppc系统下CPU访问和存储字节序的过程。<br />
+<code>apt-get install vim gcc g++</code><br />
+可以看出，字节序跟预期一致，低地址存放的是高字节，高地址存放的是低字节。这个跟小端CPU存放顺序是相反的。<br />
 <img src="/img/ppc/ppc9.jpg" alt="字节序验证程序" /></p>
 <h3 id="总结">总结</h3>
 <p>qemu模拟器是一款非常强大的工具，可以模拟各种类型的CPU和硬件类型,在后面的学习过程中，如果学习操作系统，系统编程等等方面的知识，可以用模拟器上做测试验证，方便得很。</p>

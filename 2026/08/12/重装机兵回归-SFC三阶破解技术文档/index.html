@@ -298,9 +298,10 @@
     
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>目标游戏：<strong>重装机兵：回归（Metal Max Return，SFC/SNES，1995
-Data East）</strong> 日期：2026-08-12
+Data East）</strong><br />
+日期：2026-08-12<br />
 本系列破解层层递进：<strong>初始金币 999999 → 主角技能满级 →
-全角色技能满级</strong>
+全角色技能满级</strong><br />
 最终交付物：<code>Metal Max Returns0.6 全员MAX_v3.SMC</code></p>
 </blockquote>
 <hr />
@@ -514,9 +515,9 @@ stub：stub 先用 16 位模式写入金币=999999，再调回原来的
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$73:CCA0  C2 20            REP #$20          ; 切 16 位 A</span><br><span class="line">$73:CCA2  A9 3F 42         LDA #$423F        ; 低 16 位 = 0x423F</span><br><span class="line">$73:CCA5  8F 02 91 7E      STA $7E9102       ; 金币低字</span><br><span class="line">$73:CCA9  A9 0F 00         LDA #$000F        ; 高 16 位 = 0x000F</span><br><span class="line">$73:CCAC  8F 04 91 7E      STA $7E9104       ; 金币高字</span><br><span class="line">$73:CCB0  E2 20            SEP #$20          ; 切回 8 位 A</span><br><span class="line">$73:CCB2  22 2F FB 96      JSL $96FB2F       ; 调用原最终处理</span><br><span class="line">$73:CCB6  6B               RTL               ; 返回原流程</span><br></pre></td></tr></table></figure>
 <p><strong>修改一</strong>（文件 <code>0xB7BC9</code> = CPU
 <code>$96:F9C9</code>）：<code>22 2F FB 96</code> →
-<code>22 A0 CC 73</code> <strong>修改二</strong>（文件
-<code>0x39CEA0</code> = CPU <code>$73:CCA0</code>）：写入上表 23 字节
-stub。</p>
+<code>22 A0 CC 73</code><br />
+<strong>修改二</strong>（文件 <code>0x39CEA0</code> = CPU
+<code>$73:CCA0</code>）：写入上表 23 字节 stub。</p>
 <h3 id="存读档一致性">4.5 存读档一致性</h3>
 <p>新游戏/读档两条路径<strong>都执行
 <code>$96:F8B9</code>（含钩子）</strong>，读档时钩子写的 999999 会在

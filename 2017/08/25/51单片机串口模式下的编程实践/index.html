@@ -28,6 +28,9 @@
 <meta property="og:description" content="51单片机串口模式下的编程实践 嵌入式领域工作5年，说实话，自己对嵌入式设备硬件还是在一知半解状态，工作中接触最多的就是硬件编程了，什么NIOS，FPGA，CPLD，I2C，SMI，EEPROM等专业词汇满天飞。而自己对这些元器件或者接口只知道大概作用，具体为什么有这种特性也不了解。好在我负责嵌入式软件层面的东西，对硬件东西不需要了解太深。最近在某宝上买了个51单片机，赠送了一大堆视频，主要讲解了">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/codeblocks.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/uart232.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/stcflash.jpg">
+<meta property="og:image" content="https://sunjunior.github.io/img/stc89c52.jpg">
 <meta property="article:published_time" content="2017-08-24T23:49:58.000Z">
 <meta property="article:modified_time" content="2026-09-06T01:53:48.199Z">
 <meta property="article:author" content="sunjunior">
@@ -618,11 +621,12 @@ void main()
 }</code></pre>
 <p>
 <p>由于我本人主要在linux上编程学习，这里我选用的是SDCC编译器，语法上与keil有少许差异。用SDCC加上CodeBlocks集成开发环境简直是完美，Codeblocks
-IDE本身也是支持创建MCS8051工程的。唯一遗憾的是将程序烧录到开发板中目前没有太好的方法(我用的是STC89C52芯片)，这里我还是用另外一台windows电脑烧录的，用winscp工具将生成好的hex程序从linux拷贝到windows上进行烧录的。下面放几张图片：
-<img src="/img/codeblocks.gif" alt="配置codeblocks环境" /> <img
-src="/img/uart232.gif" alt="串口模式下调试单片机" /> <img
-src="/img/stcflash.jpg" alt="windows环境下烧录固件进入设备" /> <img
-src="/img/stc89c52.jpg" alt="51单片机开发板" /></p>
+IDE本身也是支持创建MCS8051工程的。唯一遗憾的是将程序烧录到开发板中目前没有太好的方法(我用的是STC89C52芯片)，这里我还是用另外一台windows电脑烧录的，用winscp工具将生成好的hex程序从linux拷贝到windows上进行烧录的。下面放几张图片：<br />
+<img src="/img/codeblocks.gif" alt="配置codeblocks环境" /><br />
+<img src="/img/uart232.gif" alt="串口模式下调试单片机" /><br />
+<img src="/img/stcflash.jpg"
+alt="windows环境下烧录固件进入设备" /><br />
+<img src="/img/stc89c52.jpg" alt="51单片机开发板" /></p>
 
     </div>
 
