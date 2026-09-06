@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #6eb6ff;
+    background: #2afff1;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3086,23 +3086,32 @@ header.header {
   transition: all 0.3s ease-in-out !important;
   z-index: 60 !important;
 }
-.back-to-top .fa {
+.back-to-top .fa,
+.back-to-top span {
   display: none !important;
 }
 .back-to-top::before {
   content: '';
+  position: absolute;
   width: 0;
   height: 0;
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 16px solid #ffb45e;
-  margin-bottom: 3px;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  border-bottom: 20px solid #ff8c33;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
 }
-.back-to-top span {
-  margin: 0 !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: #fff !important;
+.back-to-top::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 10px;
+  background: #ff8c33;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 0 0 2px 2px;
 }
 .back-to-top:hover {
   opacity: 1 !important;
