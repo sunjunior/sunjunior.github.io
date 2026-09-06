@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #404b38;
+    background: #5dffff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3077,7 +3077,7 @@ header.header {
   left: unset !important;
   right: 24px !important;
   bottom: -100px !important;
-  background: radial-gradient(circle at center, #2b2b2b 58%, transparent 59%) padding-box, conic-gradient(#ff9d3c var(--progress, 0%), #404040 0) border-box;
+  background: radial-gradient(circle at center, #1c1108 58%, transparent 59%) padding-box, conic-gradient(#ff9d3c var(--progress, 0%), #404040 0) border-box;
   border: 2px solid transparent !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
   justify-content: center !important;
