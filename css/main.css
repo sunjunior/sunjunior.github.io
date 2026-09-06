@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #cc8eff;
+    background: #229126;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3080,4 +3080,15 @@ header.header {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   word-break: keep-all !important;
+}
+.post-body p:has(img) {
+  display: inline-flex;
+  width: 49%;
+  vertical-align: top;
+  margin: 0.25em 0;
+}
+.post-body p:has(img) img {
+  width: 100%;
+  height: auto;
+  margin: 0;
 }
