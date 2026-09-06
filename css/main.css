@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #5ee8ec;
+    background: #6eb6ff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3087,11 +3087,16 @@ header.header {
   z-index: 60 !important;
 }
 .back-to-top .fa {
-  width: auto !important;
-  font-size: 20px !important;
-  line-height: 1 !important;
-  -webkit-text-stroke: 1px currentColor;
-  text-stroke: 1px currentColor;
+  display: none !important;
+}
+.back-to-top::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 16px solid #ffb45e;
+  margin-bottom: 3px;
 }
 .back-to-top span {
   margin: 0 !important;
