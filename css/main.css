@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #0e26ff;
+    background: #93856a;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3176,4 +3176,10 @@ header.header {
 }
 .post-description {
   display: none !important;
+}
+@media (prefers-color-scheme: dark) {
+  .post-body .hljs-subst {
+    color: #ffd700 !important;
+    font-weight: bold !important;
+  }
 }
