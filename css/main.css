@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #d193ff;
+    background: #6c01b0;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3136,18 +3136,27 @@ header.header {
   text-overflow: ellipsis !important;
   word-break: keep-all !important;
 }
-.post-body figure:has(img) {
+.site-subtitle {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: clamp(11px, 1.7vw, 16px) !important;
+}
+.post-body figure:has(img):has(+ figure:has(img)),
+.post-body figure:has(img):has(figure:has(img) + *) {
   display: inline-flex;
   width: 49%;
   vertical-align: top;
   margin: 0.25em 0;
 }
-.post-body figure img {
+.post-body figure:has(img):has(+ figure:has(img)) img,
+.post-body figure:has(img):has(figure:has(img) + *) img {
   width: 100%;
   height: auto;
   margin: 0;
 }
-.post-body figure figcaption {
+.post-body figure:has(img):has(+ figure:has(img)) figcaption,
+.post-body figure:has(img):has(figure:has(img) + *) figcaption {
   width: 100%;
 }
 .post-button .btn {
