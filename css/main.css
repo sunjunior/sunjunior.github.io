@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #6c01b0;
+    background: #0e26ff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3135,12 +3135,6 @@ header.header {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   word-break: keep-all !important;
-}
-.site-subtitle {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  font-size: clamp(11px, 1.7vw, 16px) !important;
 }
 .post-body figure:has(img):has(+ figure:has(img)),
 .post-body figure:has(img):has(figure:has(img) + *) {
