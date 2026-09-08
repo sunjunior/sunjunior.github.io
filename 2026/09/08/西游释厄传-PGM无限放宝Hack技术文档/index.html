@@ -28,7 +28,7 @@
 <meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-08T01:13:59.483Z">
+<meta property="article:modified_time" content="2026-09-08T15:16:00.859Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机">
 <meta name="twitter:card" content="summary">
@@ -260,7 +260,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-08 00:00:00 / 修改时间：09:13:59" itemprop="dateCreated datePublished" datetime="2026-09-08T00:00:00+08:00">2026-09-08</time>
+      <time title="创建时间：2026-09-08 00:00:00 / 修改时间：23:16:00" itemprop="dateCreated datePublished" datetime="2026-09-08T00:00:00+08:00">2026-09-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -720,32 +720,30 @@ MENU）</strong>，无法进入投币界面。去掉 <code>-skip_gameinfo</code>
 <li>只改 ROM 最末 1
 个无关字节（<code>0x00</code>→<code>0x01</code>）</li>
 </ul>
-<p>结论：<strong>游戏/BIOS 存在对 ROM
-内容的完整性校验</strong>，任何字节修改都会触发，跳转维修测试菜单。校验的具体实现（可能是
-PGM 主板上 ASIC3 保护芯片对 ROM 的映射/加密，或启动时的
-checksum）尚未定位。PGM 的 ASIC3
-保护（<code>pgmprot_orlegend.cpp</code>）负责提供 region
-标识与加密握手，修改 ROM 可能导致校验失败。</p>
+<p>结论：<strong>PGM BIOS 在启动时检测到游戏 ROM 内容被修改，自动进入
+MAIN MENU（维修测试菜单）</strong>。通过调试器追踪确认：<br />
+- MAIN MENU 由 PGM BIOS（<code>pgm_p02s.u20</code>）渲染，PC 稳定在 BIOS
+代码区（<code>0xB700</code>–<code>0xB900</code>）<br />
+- BIOS 标志位 <code>$80375c</code> 从未被置
+1（排除通过该标志进入）<br />
+- 修改游戏 ROM 任意字节（包括完全无关的末字节）都触发检测<br />
+- 校验机制可能位于 PGM 主板 BIOS 的启动自检流程中，或与 ASIC3 保护芯片的
+region 握手有关</p>
+<blockquote>
+<p>绕过此校验需要对 PGM BIOS 进行逆向分析，定位并 NOP 检测点，或重新计算
+checksum 更新校验字段。此工作可继续攻关，但当前插件方案已可用。</p>
+</blockquote>
 <h3 id="后续方向">8.3 后续方向</h3>
 <ol type="1">
-<li><p><strong>定位 ROM 完整性校验并绕过</strong>：结合 MAME
-源码（<code>pgm.cpp</code> /
-<code>pgmprot_orlegend.cpp</code>）与调试器动态跟踪，找到校验点并 NOP
-掉，或重新计算 checksum 更新校验字段，实现 ROM 固化。具体策略：</p>
-<ul>
-<li>研究 pgm.cpp 中 <code>init_orlegend</code> 初始化流程，确认 ASIC3
-保护是否参与校验</li>
-<li>用调试器跟踪 patch 版 ROM 启动，定位进入 MAIN MENU 的分支点</li>
-<li>确认校验类型（全 ROM checksum / 特定字段比较 / 加密握手）</li>
-<li>绕过校验后，将 5 处 <code>subq.b #1, $1(a3)</code> →
-<code>tst.b $1(a3)</code> 固化到 ROM</li>
-<li>产出标准 IPS 补丁供分享</li>
-</ul></li>
-<li><p><strong>扩展到其他角色</strong>：验证龙马、小龙女等其他角色的放宝逻辑是否共用
+<li><strong>绕过 BIOS 校验固化 ROM</strong>：继续逆向 PGM
+BIOS（<code>pgm_p02s.u20</code>）启动流程，定位检测点并 NOP 掉，实现 ROM
+固化。结合 MAME 源码（<code>pgm.cpp</code> /
+<code>pgmprot_orlegend.cpp</code>）与调试器断点追踪。</li>
+<li><strong>扩展到其他角色</strong>：验证龙马、小龙女等其他角色的放宝逻辑是否共用
 <code>0x81118b</code>（同 22 处 <code>subq</code>
-结构，很可能共用）。</p></li>
-<li><p><strong>自动化验证脚本</strong>：编写 MAME Lua 脚本，自动测试补丁
-ROM 的启动流程与无限放宝效果。</p></li>
+结构，很可能共用）。</li>
+<li><strong>自动化验证脚本</strong>：编写 MAME Lua 脚本，自动测试补丁
+ROM 的启动流程与无限放宝效果。</li>
 </ol>
 <hr />
 <h2 id="附录-a候选地址时间线快照差分放宝-32">附录
