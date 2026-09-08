@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：修改游戏 ROM，使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回宝计数）+ 定位到写宝计数指令的静态分析结论 日期：2026-09-07 1. 背景与目标 《西游释厄传》是 IGS 于 19">
+    <meta name="description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="西游释厄传（PGM &#x2F; ARC）无限放宝 Hack 技术文档">
 <meta property="og:url" content="https://sunjunior.github.io/2026/09/08/%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-PGM%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：修改游戏 ROM，使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回宝计数）+ 定位到写宝计数指令的静态分析结论 日期：2026-09-07 1. 背景与目标 《西游释厄传》是 IGS 于 19">
+<meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-07T23:51:30.871Z">
+<meta property="article:modified_time" content="2026-09-08T01:08:34.301Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%AE%9D%E8%AE%A1%E6%95%B0%E5%9C%B0%E5%9D%80%E5%B7%AE%E5%88%86-%E5%B9%B3%E5%8F%B0%E6%9C%9F%E6%A3%80%E6%B5%8B"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位宝计数地址（差分 +
 平台期检测）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%86%99%E7%9B%91%E8%A7%86%E7%82%B9%E6%8A%93%E5%86%99%E5%AE%9D%E8%AE%A1%E6%95%B0%E7%9A%84-pc"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 用写监视点抓”写宝计数”的 PC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95-rom-%E8%A1%A5%E4%B8%81%E5%A4%B1%E8%B4%A5%E5%B9%B6%E5%A4%8D%E7%9B%98"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 尝试 ROM 补丁（失败并复盘）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%80%BB%E8%BE%91%E8%AE%A1%E6%95%B0%E5%99%A8%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86"><span class="nav-number">5.4.</span> <span class="nav-text">5.4
-定位真正的逻辑计数器（快照差分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%86%99%E5%9B%9E%E9%AA%8C%E8%AF%81-%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9D%E7%94%9F%E6%95%88"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件写回验证 → 无限放宝生效</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9%E6%8F%92%E4%BB%B6%E7%89%88%E5%8F%AF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物：插件版（可用）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.</span> <span class="nav-text">8. 后续方向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%80%99%E9%80%89%E5%9C%B0%E5%9D%80%E6%97%B6%E9%97%B4%E7%BA%BF%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86%E6%94%BE%E5%AE%9D-32"><span class="nav-number">9.</span> <span class="nav-text">附录
+定位真正的逻辑计数器（快照差分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%86%99%E5%9B%9E%E9%AA%8C%E8%AF%81-%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9D%E7%94%9F%E6%95%88"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件写回验证 → 无限放宝生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E9%80%92%E5%87%8F%E6%8C%87%E4%BB%A4subq-%E4%BB%A3%E7%A0%81"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 定位递减指令（subq 代码）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E5%B0%9D%E8%AF%95%E5%8F%97%E9%98%BB"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 ROM 补丁尝试（受阻）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9%E6%8F%92%E4%BB%B6%E7%89%88%E5%8F%AF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物：插件版（可用）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA%E4%B8%8E%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.</span> <span class="nav-text">8. 最终结论与后续方向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 最终结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E4%B8%BA%E4%BD%95%E5%8F%97%E9%98%BB"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 ROM 补丁为何受阻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 后续方向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%80%99%E9%80%89%E5%9C%B0%E5%9D%80%E6%97%B6%E9%97%B4%E7%BA%BF%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86%E6%94%BE%E5%AE%9D-32"><span class="nav-number">9.</span> <span class="nav-text">附录
 A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol></div>
         </div>
         <!--/noindex-->
@@ -244,7 +244,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="西游释厄传（PGM &#x2F; ARC）无限放宝 Hack 技术文档 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：修改游戏 ROM，使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回宝计数）+ 定位到写宝计数指令的静态分析结论 日期：2026-09-07 1. 背景与目标 《西游释厄传》是 IGS 于 19...">
+      <meta itemprop="description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -260,7 +260,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-08 00:00:00 / 修改时间：07:51:30" itemprop="dateCreated datePublished" datetime="2026-09-08T00:00:00+08:00">2026-09-08</time>
+      <time title="创建时间：2026-09-08 00:00:00 / 修改时间：09:08:34" itemprop="dateCreated datePublished" datetime="2026-09-08T00:00:00+08:00">2026-09-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -282,7 +282,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
     </span>
 </div>
 
-            <div class="post-description">目标游戏：西游释厄传（Oriental Legend / Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：修改游戏 ROM，使所有角色的法宝（宝）数量无限（无限放宝 / Infinite Items） 交付物：MAME 插件（每 5 tick 写回宝计数）+ 定位到写宝计数指令的静态分析结论 日期：2026-09-07 1. 背景与目标 《西游释厄传》是 IGS 于 19...</div>
+            <div class="post-description">目标游戏：西游释厄传（Oriental Legend / Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 / Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b = 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM...</div>
         </div>
       </header>
 
@@ -292,11 +292,10 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>目标游戏：<strong>西游释厄传（Oriental Legend / Xiyou Shi E Zhuan,
 PGM, 1997 IGS）</strong><br />
-目标：修改游戏 ROM，使所有角色的法宝（宝）数量无限（无限放宝 / Infinite
-Items）<br />
-交付物：MAME 插件（每 5 tick 写回宝计数）+
-定位到写宝计数指令的静态分析结论<br />
-日期：2026-09-07</p>
+目标：使所有角色的法宝（宝）数量无限（无限放宝 / Infinite Items）<br />
+交付物：MAME 插件（每 5 tick 写回
+<code>0x81118b = 3</code>，已确认有效）<br />
+日期：2026-09-08</p>
 </blockquote>
 <hr />
 <h2 id="背景与目标">1. 背景与目标</h2>
@@ -485,8 +484,36 @@ continue 界面，但画面不渲染。</p>
 <p>（另有若干 <code>2→1</code>、<code>1→0</code>
 的变化字节，多为运行时状态，需结合后续写入测试确认。）</p>
 <h3 id="插件写回验证-无限放宝生效">5.5 插件写回验证 → 无限放宝生效</h3>
-<p>写一个插件，每 5 tick 把 4 个候选地址全部写回 3：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> addrs = &#123;<span class="number">0x80c627</span>, <span class="number">0x81118b</span>, <span class="number">0x81cb4e</span>, <span class="number">0x81cd9a</span>&#125;</span><br><span class="line"><span class="keyword">if</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">for</span> _, a <span class="keyword">in</span> <span class="built_in">ipairs</span>(addrs) <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(a, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>逐一剥离测试 4 个候选地址，最终确认<strong>唯一逻辑计数器为
+<code>0x81118b</code></strong>：</p>
+<table>
+<thead>
+<tr>
+<th>测试地址</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>仅 <code>0x80c627</code> = 3</td>
+<td>仍只能放 3 次</td>
+</tr>
+<tr>
+<td>仅 <code>0x81cb4e</code> = 3</td>
+<td>仍只能放 3 次</td>
+</tr>
+<tr>
+<td>仅 <code>0x81cd9a</code> + <code>0x81cb4e</code> = 3</td>
+<td>仍只能放 3 次</td>
+</tr>
+<tr>
+<td><strong>仅 <code>0x81118b</code> = 3</strong></td>
+<td><strong>✅ 无限放宝生效</strong></td>
+</tr>
+</tbody>
+</table>
+<p>最终版插件核心代码（每 5 tick 写 <code>0x81118b = 3</code>）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(<span class="number">0x81118b</span>, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p><strong>实测：孙悟空选择确认，放宝后宝数量始终为
 3，无限放宝生效。</strong></p>
 <video width="75%" controls muted loop poster="/img/orlegend1.png">
@@ -497,20 +524,88 @@ continue 界面，但画面不渲染。</p>
 <p>上图为插件破解版的实机录屏：孙悟空的天罡火放宝后数量始终保持在
 3，连续放宝不消耗，验证无限放宝生效。</p>
 </blockquote>
-<blockquote>
-<p>4
-个地址中至少一个是真正的逻辑计数器（其余可能是同值的镜像/别名）。逐一剥离测试可进一步收敛到唯一地址，从而为
-ROM 补丁提供精确目标。</p>
-</blockquote>
+<h3 id="定位递减指令subq-代码">5.6 定位递减指令（subq 代码）</h3>
+<p>通过监视点（watchpoint）抓取对 <code>0x81118b</code> 的写入
+PC，发现递减由 <code>subq.b #1, $1(a3)</code> 指令执行，共 <strong>5
+处</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>指令</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x13D9D4</code></td>
+<td><code>subq.b #1, $1(a3)</code></td>
+<td>2（递减）</td>
+</tr>
+<tr>
+<td><code>0x13D9E2</code></td>
+<td><code>subq.b #1, $1(a3)</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>0x13D9F0</code></td>
+<td><code>subq.b #1, $1(a3)</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>0x13D9FC</code></td>
+<td><code>subq.b #1, $1(a3)</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>0x13DA08</code></td>
+<td><code>subq.b #1, $1(a3)</code></td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>这些指令位于一个跳转表/状态机函数中（<code>0x13D920</code>
+区域），对应角色技能系统的不同槽位。<code>$1(a3)</code> 中的 A3
+指向角色结构体，偏移 1 即为 <code>0x81118b</code>（当 A3 =
+<code>0x81118a</code> 时）。</p>
+<h3 id="rom-补丁尝试受阻">5.7 ROM 补丁尝试（受阻）</h3>
+<p>修改 <code>subq</code> → <code>tst</code>（不递减但保留标志位）后
+patch 到 ROM 文件，尝试三种方式：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全部 22 处 <code>subq</code> → NOP</td>
+<td>破坏启动流程 → MAIN MENU</td>
+</tr>
+<tr>
+<td>仅 5 处 <code>subq</code> → <code>tst</code></td>
+<td>仍进 MAIN MENU</td>
+</tr>
+<tr>
+<td>仅改 ROM 最末 1 个无关字节</td>
+<td>也进 MAIN MENU</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论：游戏/BIOS 对 ROM
+内容有完整性校验，任何字节修改都会触发，跳转维修测试菜单。</strong>
+运行时 <code>write_u8</code> 写入 ROM 地址被静默忽略（ROM 只读），因此
+ROM 固化补丁方案受阻。插件方案为最终可行方案。</p>
 <hr />
 <h2 id="交付物插件版可用">6. 交付物：插件版（可用）</h2>
 <p>当前可直接使用 <strong>MAME 插件</strong>方案实现无限放宝，无需修改
 ROM：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mame orlegend -bios v2 -noplugin data \</span><br><span class="line">  -pluginspath <span class="string">&quot;/home/sunjunior/.mame/orleg_hack/pluginroot&quot;</span> \</span><br><span class="line">  -plugin orlegdump</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mame orlegend -bios v2 -noplugin data \</span><br><span class="line">  -pluginspath <span class="string">&quot;pluginroot&quot;</span> \</span><br><span class="line">  -plugin orlegdump</span><br></pre></td></tr></table></figure>
 <p>插件目录结构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pluginroot/orlegdump/</span><br><span class="line">├── plugin.json   # MAME 插件定义（name/type/start）</span><br><span class="line">└── init.lua      # 核心逻辑：emu.register_periodic + write_u8</span><br></pre></td></tr></table></figure>
-<p>核心代码：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> ex = exports</span><br><span class="line"><span class="keyword">local</span> tick = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ex.startplugin</span><span class="params">()</span></span></span><br><span class="line">    emu.register_periodic(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">        tick = tick + <span class="number">1</span></span><br><span class="line">        <span class="keyword">local</span> m = manager.machine</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> m <span class="keyword">or</span> m.paused <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">local</span> prog = m.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> prog <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">if</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">for</span> _, a <span class="keyword">in</span> <span class="built_in">ipairs</span>(&#123;<span class="number">0x80c627</span>, <span class="number">0x81118b</span>, <span class="number">0x81cb4e</span>, <span class="number">0x81cd9a</span>&#125;) <span class="keyword">do</span></span><br><span class="line">                <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(a, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>核心代码（最终版，只写 <code>0x81118b</code>）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> ex = exports</span><br><span class="line"><span class="keyword">local</span> tick = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ex.startplugin</span><span class="params">()</span></span></span><br><span class="line">    emu.register_periodic(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">        tick = tick + <span class="number">1</span></span><br><span class="line">        <span class="keyword">local</span> m = manager.machine</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> m <span class="keyword">or</span> m.paused <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">local</span> prog = m.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> prog <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">if</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(<span class="number">0x81118b</span>, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <hr />
 <h2 id="踩坑与经验总结">7. 踩坑与经验总结</h2>
 <ol type="1">
@@ -529,9 +624,8 @@ width 参数单位是”位”（8/16/32/64），不是字节！</strong> 传
 级，不受机器帧限制）即可稳定工作</strong>。</p></li>
 <li><p><strong>“显示计数器” ≠ “逻辑计数器”。</strong>
 <code>0x8082c2</code> 是 HUD 图标对应的显示副本，写回 3 只会让图标保持
-3，判定放宝读的是另一份副本（4
-个候选地址）。<strong>定位必须用”放宝前后快照差分”而非”看起来像 3→2→1→0
-的地址”。</strong></p></li>
+3，判定放宝读的是另一份副本。<strong>定位必须用”放宝前后快照差分”而非”看起来像
+3→2→1→0 的地址”。</strong></p></li>
 <li><p><strong>68000 程序多用基址寄存器 + 偏移访问
 RAM，直接搜绝对地址搜不到。</strong> 监视点（watchpoint）+ 抓 PC
 才是正解；而抓到的 PC 往往落在”通用 store
@@ -551,21 +645,97 @@ RAM，直接搜绝对地址搜不到。</strong> 监视点（watchpoint）+ 抓 
 <code>data</code>），要用 <code>;</code>
 连接两个路径；<code>-noplugin data</code> 在 data 不在扫描列表时会报
 <code>Unknown plugin: data</code>。</p></li>
-<li><p><strong>/tmp 会被系统定时清理！</strong> 工作区、转储、插件放在
-<code>/tmp/opencode</code> 会在 systemd-tmpfiles
+<li><p><strong><code>/tmp</code> 会被系统定时清理！</strong>
+工作区、转储、插件放在临时目录会在系统 tmpfiles
 清理时全部消失（曾导致”dumps
-神秘消失”的假象）。<strong>务必把工作区放到持久目录</strong>（如
-<code>~/.mame/orleg_hack/</code>）。</p></li>
+神秘消失”的假象）。<strong>务必把工作区放到持久目录</strong>（如用户目录下）。</p></li>
+<li><p><strong>ROM 区是只读的，Lua 写入被静默忽略。</strong> 尝试运行时
+patch <code>p0103.rom</code> 所在地址（<code>0x13D9D4</code> 等）改
+<code>subq</code>→<code>tst</code>，写入后读回仍是原值
+<code>0x53</code>，<code>write_u8</code> 无报错但无效。<strong>MAME 中
+ROM 内存不可写，必须改 ROM 文件本身。</strong></p></li>
+<li><p><strong><code>-skip_gameinfo</code> 会破坏 PGM
+启动流程。</strong>
+加上该参数后，游戏跳过信息屏直接进”已知问题”确认屏，按任意键后<strong>误入维修测试菜单（MAIN
+MENU）</strong>，无法进入投币界面。去掉 <code>-skip_gameinfo</code>
+恢复两次确认屏后正常。<strong>PGM
+机板必须保留完整启动序列。</strong></p></li>
 </ol>
 <hr />
-<h2 id="后续方向">8. 后续方向</h2>
+<h2 id="最终结论与后续方向">8. 最终结论与后续方向</h2>
+<h3 id="最终结论">8.1 最终结论</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>显示计数器 <code>0x8082c2</code></td>
+<td>✅ 已定位</td>
+<td>HUD 图标副本</td>
+</tr>
+<tr>
+<td>逻辑计数器 <code>0x81118b</code></td>
+<td>✅ 已定位</td>
+<td>判定放宝的唯一地址（插件写 3 即无限宝）</td>
+</tr>
+<tr>
+<td>写计数器的 store 指令 <code>0x10224A</code></td>
+<td>✅ 已定位</td>
+<td><code>move.l $18(a7), $e(a1)</code></td>
+</tr>
+<tr>
+<td>递减指令</td>
+<td>✅ 已定位</td>
+<td><code>subq.b #1, $1(a3)</code> 共 5
+处（<code>0x13D9D4</code>、<code>0x13D9E2</code>、<code>0x13D9F0</code>、<code>0x13D9FC</code>、<code>0x13DA08</code>）</td>
+</tr>
+<tr>
+<td>插件版无限放宝</td>
+<td>✅ <strong>已生效</strong></td>
+<td>最终交付方案</td>
+</tr>
+<tr>
+<td>ROM 文件补丁固化</td>
+<td>❌ 受阻</td>
+<td>任何字节修改都触发启动自检 → MAIN MENU</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rom-补丁为何受阻">8.2 ROM 补丁为何受阻</h3>
+<p>尝试过多种 ROM 修改方式，<strong>全部</strong>导致进 MAIN MENU：</p>
+<ul>
+<li>NOP 全部 22 处 <code>subq.b #1, $1(a3)</code>（破坏启动流程）</li>
+<li>只改监视点确认的 5 处 <code>subq</code> →
+<code>tst</code>（保留标志位）</li>
+<li>只改 ROM 最末 1
+个无关字节（<code>0x00</code>→<code>0x01</code>）</li>
+</ul>
+<p>结论：<strong>游戏/BIOS 存在对 ROM
+内容的完整性校验</strong>，任何字节修改都会触发，跳转维修测试菜单。校验的具体实现（可能是
+PGM 主板上 ASIC3 保护芯片对 ROM 的映射/加密，或启动时的
+checksum）尚未定位。PGM 的 ASIC3
+保护（<code>pgmprot_orlegend.cpp</code>）负责提供 region
+标识与加密握手，修改 ROM 可能导致校验失败。</p>
+<h3 id="后续方向">8.3 后续方向</h3>
 <ol type="1">
-<li><strong>收敛唯一逻辑地址</strong>：把 4
-个候选地址逐一剥离测试，确定唯一控制放宝的地址。</li>
-<li><strong>ROM 补丁固化</strong>：定位真正递减/判定的调用方指令（NOP
-掉递减，或只改逻辑计数器的落地写入，避免破坏同结构的渲染字段），产出
-<code>p0103.rom</code> 补丁并重打包 <code>orlegend.zip</code>。</li>
-<li><strong>扩展到其他角色</strong>：验证龙马、小龙女等其他角色的放宝逻辑是否共用同一计数器。</li>
+<li><strong>定位 ROM 完整性校验</strong>：结合 MAME 源码
+<code>pgm.cpp</code> / <code>pgmprot_orlegend.cpp</code>
+与调试器断点，找到校验点并 NOP 掉，即可实现 ROM 固化。</li>
+<li><strong>扩展到其他角色</strong>：验证龙马、小龙女等其他角色的放宝逻辑是否共用
+<code>0x81118b</code>（同 22 处 <code>subq</code>
+结构，很可能共用）。</li>
+<li><strong>发布 IPS 补丁</strong>：若 ROM 固化成功，输出标准 IPS
+补丁供分享。</li>
 </ol>
 <hr />
 <h2 id="附录-a候选地址时间线快照差分放宝-32">附录
