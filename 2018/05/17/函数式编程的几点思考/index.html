@@ -20,36 +20,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到靠谱的那一款。 这里我们找到了一款比较靠谱的VPN软件，这是一款Google chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插件，就可以">
+    <meta name="description" content="函数式编程的几点思考 关于抽象 我们已经知道，过程就是一类抽象，它们描述了对于数的复合操作,比如，在定义： 1(define (cube x) (* x x x) 我们讨论的并不是某个特定数值的立方，而是对任意的数得到其立方的方法，当然，我们也完全可以不去定义这一过程，而是列出详细的表达步骤： 12(* x x x)(* y y y ) 这里如果不把cube抽象出来，当存在大量的复杂运算时，我们就">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用shadowsocks上外网">
-<meta property="og:url" content="https://sunjunior.github.io/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/index.html">
+<meta property="og:title" content="函数式编程的几点思考">
+<meta property="og:url" content="https://sunjunior.github.io/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到靠谱的那一款。 这里我们找到了一款比较靠谱的VPN软件，这是一款Google chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插件，就可以">
+<meta property="og:description" content="函数式编程的几点思考 关于抽象 我们已经知道，过程就是一类抽象，它们描述了对于数的复合操作,比如，在定义： 1(define (cube x) (* x x x) 我们讨论的并不是某个特定数值的立方，而是对任意的数得到其立方的方法，当然，我们也完全可以不去定义这一过程，而是列出详细的表达步骤： 12(* x x x)(* y y y ) 这里如果不把cube抽象出来，当存在大量的复杂运算时，我们就">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn1.png">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn2.png">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn5.gif">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn3.png">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn4.png">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn6.jpg">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn7.jpg">
-<meta property="og:image" content="https://sunjunior.github.io/img/vpn/vpn8.jpg">
-<meta property="article:published_time" content="2019-03-21T14:11:31.000Z">
-<meta property="article:modified_time" content="2026-09-06T01:53:48.214Z">
+<meta property="article:published_time" content="2018-05-17T08:31:05.000Z">
+<meta property="article:modified_time" content="2026-09-08T23:33:59.713Z">
 <meta property="article:author" content="sunjunior">
-<meta property="article:tag" content="VPN科学上网">
+<meta property="article:tag" content="编程思想">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://sunjunior.github.io/img/vpn/vpn1.png">
 
 
-<link rel="canonical" href="https://sunjunior.github.io/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/">
+<link rel="canonical" href="https://sunjunior.github.io/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/","path":"2019/03/21/利用shadowsocks科学外网/","title":"利用shadowsocks上外网"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/","path":"2018/05/17/函数式编程的几点思考/","title":"函数式编程的几点思考"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>利用shadowsocks上外网 | sunjunior的个人技术博客</title>
+<title>函数式编程的几点思考 | sunjunior的个人技术博客</title>
   
 
 
@@ -79,7 +70,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
 <script src="/js/third-party/math/mathjax.js" defer></script>
 
 
@@ -156,7 +147,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -169,6 +160,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83"><span class="nav-number">1.</span> <span class="nav-text">函数式编程的几点思考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%8A%BD%E8%B1%A1"><span class="nav-number">2.</span> <span class="nav-text">关于抽象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">过程(函数)作为参数</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -235,7 +227,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -248,12 +240,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="利用shadowsocks上外网 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到靠谱的那一款。 这里我们找到了一款比较靠谱的VPN软件，这是一款Google chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插件，就可以...">
+      <meta itemprop="name" content="函数式编程的几点思考 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="函数式编程的几点思考 关于抽象 我们已经知道，过程就是一类抽象，它们描述了对于数的复合操作,比如，在定义： 1(define (cube x) (* x x x) 我们讨论的并不是某个特定数值的立方，而是对任意的数得到其立方的方法，当然，我们也完全可以不去定义这一过程，而是列出详细的表达步骤： 12(* x x x)(* y y y ) 这里如果不把cube抽象出来，当存在大量的复杂运算时，我们就...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          利用shadowsocks上外网
+          函数式编程的几点思考
         </h1>
 
         <div class="post-meta-container">
@@ -264,14 +256,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2019-03-21 22:11:31" itemprop="dateCreated datePublished" datetime="2019-03-21T22:11:31+08:00">2019-03-21</time>
+      <time title="创建时间：2018-05-17 16:31:05" itemprop="dateCreated datePublished" datetime="2018-05-17T16:31:05+08:00">2018-05-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-06 09:53:48" itemprop="dateModified" datetime="2026-09-06T09:53:48+08:00">2026-09-06</time>
+      <time title="修改时间：2026-09-09 07:33:59" itemprop="dateModified" datetime="2026-09-09T07:33:59+08:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -279,7 +271,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BD%91%E7%BB%9C%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">网络技术</span></a>
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/" itemprop="url" rel="index"><span itemprop="name">编程思想</span></a>
         </span>
     </span>
 
@@ -293,55 +285,48 @@
     </span>
 </div>
 
-            <div class="post-description">本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到靠谱的那一款。 这里我们找到了一款比较靠谱的VPN软件，这是一款Google chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插件，就可以...</div>
+            <div class="post-description">函数式编程的几点思考 关于抽象 我们已经知道，过程就是一类抽象，它们描述了对于数的复合操作,比如，在定义： 1(define (cube x) (* x x x) 我们讨论的并不是某个特定数值的立方，而是对任意的数得到其立方的方法，当然，我们也完全可以不去定义这一过程，而是列出详细的表达步骤： 12(* x x x)(* y y y ) 这里如果不把cube抽象出来，当存在大量的复杂运算时，我们就...</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>本人作为一名IT工作者，对于了解国内外先进的黑科技是有必要的。由于谷歌在搜索体验上吊打百度，因此利用谷歌来获取额外的信息是非常有值得的。可是，国内谷歌被墙，需要上外网必须通过VPN，因此找一款合适的VPN也需要在市场上各类VPN中找到靠谱的那一款。</p>
-<p>这里我们找到了一款比较靠谱的VPN软件，这是一款Google
-chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插件，就可以用chrome浏览器上网了。如果没有付费，一般也能上谷歌搜索和谷歌邮箱，其他的网站就屏蔽了，比如Facebook，Twitter，YouTube等等。按照插件付费步骤付费（一个月也就16元人民币，不贵，一顿饭钱而已）之后，就可以享受科学上网的便利了。这里简单地看下Ghelper界面配置情况，如下图所示</p>
-<figure>
-<img src="/img/vpn/vpn1.png" alt="Ghelper设置界面" />
-<figcaption aria-hidden="true">Ghelper设置界面</figcaption>
-</figure>
-<figure>
-<img src="/img/vpn/vpn2.png" alt="手机设备选项" />
-<figcaption aria-hidden="true">手机设备选项</figcaption>
-</figure>
-<p>其实，只需要我们购买付费服务之后，就可以顺畅地上类似youtube视频网站了：</p>
-<figure>
-<img src="/img/vpn/vpn5.gif" alt="Youtube网站" />
-<figcaption aria-hidden="true">Youtube网站</figcaption>
-</figure>
-<p>此外，我们需要在手机设备一栏中，新增服务，加密方式一般选择aes-256-cfb方式即可。这样新增的服务中会出现VPN所有信息，包括主机地址，服务器端口，加密方式及密钥。</p>
-<figure>
-<img src="/img/vpn/vpn3.png" alt="手机设备新增服务" />
-<figcaption aria-hidden="true">手机设备新增服务</figcaption>
-</figure>
-<p>这里我创建了3个服务地址，方便手机软件轮流使用，防止某一线路不通导致无法上网：</p>
-<figure>
-<img src="/img/vpn/vpn4.png" alt="手机上网配置" />
-<figcaption aria-hidden="true">手机上网配置</figcaption>
-</figure>
-<p>打开手机安装的shadowsocks软件，右上角有个加号按钮，点击之后，如下图所示，这里我们既可以用二维码扫描方式配置（就是上图中模糊的二维码），也可以手动配置，效果是一样的，这样我们用手动设置：</p>
-<figure>
-<img src="/img/vpn/vpn6.jpg" alt="shadowsocks配置" />
-<figcaption aria-hidden="true">shadowsocks配置</figcaption>
-</figure>
-<p>进入手动设置配置界面，将Ghelper中手机设置中的某一个服务配置信息拿过来，进行一一对应填写上，确认就可以科学上网了：</p>
-<figure>
-<img src="/img/vpn/vpn7.jpg" alt="shadowsocks配置" />
-<figcaption aria-hidden="true">shadowsocks配置</figcaption>
-</figure>
-<figure>
-<img src="/img/vpn/vpn8.jpg" alt="shadowsocks配置" />
-<figcaption aria-hidden="true">shadowsocks配置</figcaption>
-</figure>
-<p>这样我们就可以顺利在手机上上网了，每次使用需要VPN连接的软件时，我们首先需要进入到shadowsocks软件下，点击连接后，状态显示已经连接，退出来之后，就可以愉快地上Google
-地图，Youtube，twiiter等客户端。</p>
+    <div class="post-body" itemprop="articleBody"><h3 id="函数式编程的几点思考">函数式编程的几点思考</h3>
+<h3 id="关于抽象">关于抽象</h3>
+<p>
+<p>我们已经知道，过程就是一类抽象，它们描述了对于数的复合操作,比如，在定义：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">cube</span> x) (<span class="name"><span class="built_in">*</span></span> x x x)	</span><br></pre></td></tr></table></figure>
+<p>我们讨论的并不是某个特定数值的立方，而是对任意的数得到其立方的方法，当然，我们也完全可以不去定义这一过程，而是列出详细的表达步骤：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">*</span></span> x x x)</span><br><span class="line">(<span class="name"><span class="built_in">*</span></span> y y y )</span><br></pre></td></tr></table></figure>
+<p>这里如果不把cube抽象出来，当存在大量的复杂运算时，我们就会把自己给绕晕了，理论上，把所有计算过程详细地列出来，也能很好的工作，但不能表述<strong><em>立方</em></strong>这一概念。我们对这些公共模块建立抽象之后，就可以直接在更高层次上工作。实际上，所有高级语言提供的的函数机制，其就提供了这种能力。如果只将过程（函数）作为输入参数，那么会限制我们建立抽象的能力。实际上，作为高级抽象语言，我们可以将任何数据都作为过程来看待，也就是说，过程的输出可以当做另外一个过程的输入，同时也可以将过程本身作为过程的参数，或者以过程作为返回值，这类能操作过程的过程称为高阶过程。</p>
+<h3 id="过程函数作为参数">过程(函数)作为参数</h3>
+下面用Lisp语言描述其步骤，最后给出如何用C语言书写等价代码，C语言需要通过回调机制来抽象求和步骤。<br />
+
+<p>
+<p>考虑下面三个过程，第一个计算从a到b的各个整数之和：<br />
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">sum-integers</span> a b)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">&gt;</span></span> a b)</span><br><span class="line">	  <span class="number">0</span></span><br><span class="line">	  (<span class="name"><span class="built_in">+</span></span> a (<span class="name">sum-integers</span> (<span class="name"><span class="built_in">+</span></span> a <span class="number">1</span>) b))))</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>第二个计算给定范围内的整数的立方之和：<br />
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">sum-cubes</span> a b)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">&gt;</span></span> a b)</span><br><span class="line">      <span class="number">0</span> </span><br><span class="line">      (<span class="name"><span class="built_in">+</span></span> (<span class="name">cube</span> a) (<span class="name">sum-cubes</span> (<span class="name"><span class="built_in">+</span></span> a <span class="number">1</span>) b))))</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>第三个计算下面的序列之和：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mrow><mn>1</mn><mo>⋅</mo><mn>3</mn></mrow></mfrac><mo>+</mo><mfrac><mn>1</mn><mrow><mn>5</mn><mo>⋅</mo><mn>7</mn></mrow></mfrac><mo>+</mo><mfrac><mn>1</mn><mrow><mn>9</mn><mo>⋅</mo><mn>11</mn></mrow></mfrac><mo>+</mo><mi>⋯</mi></mrow><annotation encoding="application/x-tex">
+\frac {1} {1 \cdot 3} +\frac {1} {5 \cdot 7} + \frac {1} {9 \cdot 11} +\cdots
+</annotation></semantics></math><br />
+它将收敛于:<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mi>π</mi><mn>8</mn></mfrac><annotation encoding="application/x-tex">\frac {\pi} {8}</annotation></semantics></math></p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">pi-sum</span> a b)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">&gt;</span></span> a b)</span><br><span class="line">      <span class="number">0</span></span><br><span class="line">      (<span class="name"><span class="built_in">+</span></span> (<span class="name"><span class="built_in">/</span></span> <span class="number">1.0</span> (<span class="name"><span class="built_in">*</span></span> a (<span class="name"><span class="built_in">+</span></span> a <span class="number">2</span>))) (<span class="name">pi-sum</span> (<span class="name"><span class="built_in">+</span></span> a <span class="number">4</span>) b))))</span><br><span class="line">      </span><br></pre></td></tr></table></figure>
+<p>
+<p>可以看出，这三个过程共享一种公共的模式。它们很大一部分是共同的，只在所用的过程名字上不一样：用于从a算出需要加的项的函数。我们可以通过填充下面模板中的各空位，产生出上面的各个过程：</p>
+<pre>
+(define (&lt;name> a b)
+  (if (> a b)
+      0
+      (+ (&lt;term> a)
+         (&lt;name> (&lt;next> a) b))))
+</pre>
+<p>数学家很早就认识到序列求和中的抽象模式，并提出了专门的“求和记法”，例如：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mi>a</mi></mrow><mi>b</mi></munderover><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>⋯</mi><mo>+</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+\sum_{n=a}^{b}f(n) = f(a) + \cdots + f(b)
+</annotation></semantics></math></p>
 
     </div>
 
@@ -359,7 +344,7 @@ chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插�
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://sunjunior.github.io/2019/03/21/%E5%88%A9%E7%94%A8shadowsocks%E7%A7%91%E5%AD%A6%E5%A4%96%E7%BD%91/" title="利用shadowsocks上外网">https://sunjunior.github.io/2019/03/21/利用shadowsocks科学外网/</a>
+      <a href="https://sunjunior.github.io/2018/05/17/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83/" title="函数式编程的几点思考">https://sunjunior.github.io/2018/05/17/函数式编程的几点思考/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -368,20 +353,20 @@ chrome插件，叫Ghelper，在网上搜索该款插件之后，安装chrome插�
 </div>
 
           <div class="post-tags">
-              <a href="/tags/VPN%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag"><i class="fa fa-tag"></i> VPN科学上网</a>
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/" rel="tag"><i class="fa fa-tag"></i> 编程思想</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2018/10/07/archlinux%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/" rel="prev" title="archlinux升级系统之后无法启动问题">
-                  <i class="fa fa-angle-left"></i> archlinux升级系统之后无法启动问题
+                <a href="/2018/03/17/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" rel="prev" title="汇编语言学习总结">
+                  <i class="fa fa-angle-left"></i> 汇编语言学习总结
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2019/03/31/%E6%B8%85%E6%B9%96%E7%A7%91%E7%9B%AE%E4%B8%893%E5%8F%B7%E7%BA%BF%E7%BB%86%E8%8A%82%E8%AE%B0%E5%BD%95/" rel="next" title="深圳清湖科目三路考3号线细节">
-                  深圳清湖科目三路考3号线细节 <i class="fa fa-angle-right"></i>
+                <a href="/2018/07/22/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E8%AF%BB%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/" rel="next" title="程序员必读技术书籍推荐">
+                  程序员必读技术书籍推荐 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
