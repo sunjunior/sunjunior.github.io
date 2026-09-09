@@ -28,7 +28,7 @@
 <meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-09T00:21:38.897Z">
+<meta property="article:modified_time" content="2026-09-09T01:08:50.447Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机">
 <meta name="twitter:card" content="summary">
@@ -266,7 +266,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 08:21:38" itemprop="dateModified" datetime="2026-09-09T08:21:38+08:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 09:08:50" itemprop="dateModified" datetime="2026-09-09T09:08:50+08:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -639,8 +639,17 @@ ROM。</p>
 <p>验证插件是否加载：正常启动进关卡后放宝不消耗即生效；或查看
 <code>~/.mame/orleg_hack/dumps/plugin_ok.txt</code> 是否存在（内容为
 <code>plugin loaded</code>）。</p>
-<p>核心代码（最终版，写全部 8 个槽位计数器）：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 8 个宝物槽位计数器地址：a4 + 槽位索引*2 + 0x67</span></span><br><span class="line"><span class="comment">-- a4 = 0x811124（由槽位 0 计数器 0x81118b 反推）</span></span><br><span class="line"><span class="keyword">local</span> SLOTS = &#123;</span><br><span class="line">    <span class="number">0x81118b</span>, <span class="number">0x81118d</span>, <span class="number">0x81118f</span>, <span class="number">0x811191</span>,</span><br><span class="line">    <span class="number">0x811193</span>, <span class="number">0x811195</span>, <span class="number">0x811197</span>, <span class="number">0x811199</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ex.startplugin</span><span class="params">()</span></span></span><br><span class="line">    emu.register_periodic(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">        tick = tick + <span class="number">1</span></span><br><span class="line">        <span class="keyword">local</span> m = manager.machine</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> m <span class="keyword">or</span> m.paused <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">local</span> prog = m.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> prog <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">if</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">for</span> _, a <span class="keyword">in</span> <span class="built_in">ipairs</span>(SLOTS) <span class="keyword">do</span></span><br><span class="line">                <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(a, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>核心代码（最终版，F9 切换无限宝 / 正常消耗）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> frozen = <span class="literal">true</span>  <span class="comment">-- 默认无限宝 ON</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 所有宝物槽位计数器（两套地址，兼容显示与逻辑副本）</span></span><br><span class="line"><span class="keyword">local</span> COUNTS = &#123;</span><br><span class="line">    <span class="number">0x81118b</span>, <span class="number">0x81118d</span>, <span class="number">0x81118f</span>, <span class="number">0x811191</span>,</span><br><span class="line">    <span class="number">0x811193</span>, <span class="number">0x811195</span>, <span class="number">0x811197</span>, <span class="number">0x811199</span>,</span><br><span class="line">    <span class="number">0x8111a1</span>, <span class="number">0x8111a3</span>, <span class="number">0x8111a5</span>, <span class="number">0x8111a7</span>,</span><br><span class="line">    <span class="number">0x8111a9</span>, <span class="number">0x8111ab</span>, <span class="number">0x8111ad</span>, <span class="number">0x8111af</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ex.startplugin</span><span class="params">()</span></span></span><br><span class="line">    emu.register_periodic(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">        tick = tick + <span class="number">1</span></span><br><span class="line">        <span class="keyword">local</span> m = manager.machine</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> m <span class="keyword">or</span> m.paused <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">local</span> prog = m.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> prog <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">-- F9 切换 冻结(无限宝) / 正常(可消耗) 模式</span></span><br><span class="line">        <span class="keyword">local</span> F9_CODE = m.<span class="built_in">input</span>:code_from_token(<span class="string">&quot;KEYCODE_F9&quot;</span>)</span><br><span class="line">        <span class="keyword">local</span> pressed = m.<span class="built_in">input</span>:code_pressed(F9_CODE)</span><br><span class="line">        <span class="keyword">if</span> pressed <span class="keyword">and</span> <span class="keyword">not</span> last_f9 <span class="keyword">then</span></span><br><span class="line">            frozen = <span class="keyword">not</span> frozen</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        last_f9 = pressed</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 冻结时强制计数器=3（无限宝）；正常时让游戏自己消耗</span></span><br><span class="line">        <span class="keyword">if</span> frozen <span class="keyword">and</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">for</span> _, a <span class="keyword">in</span> <span class="built_in">ipairs</span>(COUNTS) <span class="keyword">do</span></span><br><span class="line">                <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(a, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>F9 切换模式说明：</strong><br />
+- <strong>FROZEN（默认）</strong>：所有宝计数恒为 3，无限放宝。<br />
+-
+<strong>NORMAL</strong>：插件停止干预，宝可正常消耗（3→2→1→0），槽位用尽后空出，可拾取新宝物；拾取到新宝后<strong>再按
+F9 切回 FROZEN</strong>，新宝物即变为无限。<br />
+- 注意：槽位全空时切回 FROZEN
+无法放宝（无道具），需先拾取新宝物再切回。</p>
+</blockquote>
 <hr />
 <h2 id="踩坑与经验总结">7. 踩坑与经验总结</h2>
 <ol type="1">
@@ -724,9 +733,9 @@ MENU）</strong>，无法进入投币界面。去掉 <code>-skip_gameinfo</code>
 <td>默认宝的判定计数</td>
 </tr>
 <tr>
-<td><strong>8 个槽位计数器</strong></td>
+<td><strong>8 个槽位 type/counter 对</strong></td>
 <td>✅ 已定位</td>
-<td><code>0x811124 + 索引*2 + 0x67</code>（<code>0x81118b</code>~<code>0x811199</code>）</td>
+<td>基址 <code>0x8111A0</code>，每槽 2 字节（type 偶/counter 奇）</td>
 </tr>
 <tr>
 <td>写计数器的 store 指令 <code>0x10224A</code></td>
@@ -742,7 +751,7 @@ MENU）</strong>，无法进入投币界面。去掉 <code>-skip_gameinfo</code>
 <tr>
 <td>插件版无限放宝（全部宝物）</td>
 <td>✅ <strong>已生效</strong></td>
-<td>最终交付方案，可自动加载</td>
+<td>最终交付方案，可自动加载，F9 切换模式</td>
 </tr>
 <tr>
 <td>ROM 文件补丁固化</td>
