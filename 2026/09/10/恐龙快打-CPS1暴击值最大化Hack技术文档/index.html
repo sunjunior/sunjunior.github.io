@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T15:11:14.548Z">
+<meta property="article:modified_time" content="2026-09-10T15:19:47.414Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 暴击值递减机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 ROM 补丁方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-number">9.</span> <span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 暴击值递减机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88v2%E6%94%B9%E6%8C%87%E4%BB%A4%E4%B8%8D%E5%8A%A8%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 ROM
+补丁方案（v2：改指令，不动数据表）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-number">9.</span> <span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -259,7 +260,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-10 00:00:00 / 修改时间：23:11:14" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
+      <time title="创建时间：2026-09-10 00:00:00 / 修改时间：23:19:47" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -506,6 +507,12 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 </table>
 <p>默认暴击值 <strong>32（0x20）</strong>
 占据了表的主体。不同角色和段位的暴击值分布在 24~110 之间。</p>
+<blockquote>
+<p><strong>陷阱：</strong>
+该区域不仅包含暴击值表，还与其他道具（如手雷）的数据表共享内存。若将整表修改为
+0xFF，会破坏道具数据，导致丢手雷时触发 <code>ADDRESS ERROR</code>
+卡死。因此最终采用 §5.6 的”改指令、不改表”方案。</p>
+</blockquote>
 <h3 id="暴击值递减机制">5.4 暴击值递减机制</h3>
 <p>战斗中暴击值会被消耗——每次触发暴击效果后减少。反汇编找到递减指令：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">地址 0x04fe6e：subq.w #$1, $c6(a6)    ; 暴击值减 1</span><br><span class="line">地址 0x04fe7c：clr.w    $c6(a6)         ; 暴击值清 0</span><br></pre></td></tr></table></figure>
@@ -519,8 +526,12 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 - ✅ 攻击伤害<strong>大幅提升</strong>（普通一拳顶原来约 3-4 拳）<br />
 - ✅ 游戏完全正常，不会崩溃<br />
 - ✅ BOSS 战同样有效</p>
-<h3 id="rom-补丁方案">5.6 ROM 补丁方案</h3>
-<p>确认插件方案有效后，将其固化为 ROM 补丁，不再依赖插件：</p>
+<h3 id="rom-补丁方案v2改指令不动数据表">5.6 ROM
+补丁方案（v2：改指令，不动数据表）</h3>
+<p>最初尝试直接修改暴击值表 <code>0x2c9b6</code> 所有字节为
+0xFF，但发现该区域与<strong>手雷等道具的数据表共享</strong>。全表改为 FF
+后丢手雷会触发 <code>ADDRESS ERROR</code> 卡死。</p>
+<p>最终采用<strong>只改初始化指令、不动数据表</strong>的方案：</p>
 <table>
 <colgroup>
 <col style="width: 25%" />
@@ -538,10 +549,12 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 </thead>
 <tbody>
 <tr>
-<td>暴击值表全部 FF</td>
-<td><code>0x2c9b6-0x2cab6</code></td>
-<td><code>0x20</code>（32）等</td>
-<td><code>0xFF</code>（255）</td>
+<td>暴击值初始化指令</td>
+<td><code>0x11770</code></td>
+<td><code>move.b (a6,d1.w),$c6(a3)</code>
+(<code>17 76 10 00 00 c6</code>)</td>
+<td><code>move.b #$ff,$c6(a3)</code>
+(<code>17 7c 00 ff 00 c6</code>)</td>
 </tr>
 <tr>
 <td>NOP 暴击值递减</td>
@@ -557,12 +570,12 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 </tr>
 </tbody>
 </table>
-<p>只需修改 <code>cde_23a.8f</code>
-这一个文件（补丁范围全部在此文件内）。</p>
+<p>这样只需修改 <code>cde_23a.8f</code>
+这一个文件，且<strong>完全不触碰数据表区域</strong>，手雷等道具功能不受影响。</p>
 <hr />
 <h2 id="交付物">6. 交付物</h2>
 <h3 id="文件">6.1 文件</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cde_23a.8f（已修改，SHA1: 9aaebdc8115f365de519159522b76650dc7116f5）</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cde_23a.8f（已修改，SHA1: 6463f44ef92f3b5d7cf59011661843d46aeb68b6）</span><br></pre></td></tr></table></figure>
 <p>安装方式：将修改后的 <code>cde_23a.8f</code> 放入
 <code>~/.mame/roms/dino.zip</code> 中，替换原文件。</p>
 <h3 id="验证">6.2 验证</h3>
@@ -610,6 +623,11 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <td>角色数据表，默认 0x20</td>
 </tr>
 <tr>
+<td>暴击值初始化指令 <code>0x11770</code></td>
+<td>✅ 已修改</td>
+<td><code>move.b #$ff,$c6(a3)</code></td>
+</tr>
+<tr>
 <td>暴击值递减 <code>0x4fe6e</code></td>
 <td>✅ NOP’d</td>
 <td><code>subq.w #1,$c6(a6)</code></td>
@@ -627,7 +645,7 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <tr>
 <td>战斗验证（实际伤害）</td>
 <td>✅ 确认提升</td>
-<td>普通攻击显著增强</td>
+<td>一拳打掉敌人约两管血</td>
 </tr>
 </tbody>
 </table>
@@ -652,6 +670,11 @@ ROM 文件是最干净的交付方式。</p></li>
 脚本需先 swap 再搜索/修改。</p></li>
 <li><p><strong>战斗中的暴击值变化</strong>——暴击值在战斗中会动态变化（击中敌人递增、一段时间不攻击递减、被击中清空）。永久
 FF 只能通过<strong>阻断递减链路</strong>（NOP subq/clr）实现。</p></li>
+<li><p><strong>不要大范围改数据表</strong>——暴击值表所在区域与其他道具（手雷等）的数据表共享。若整表改为
+0xFF，会破坏道具数据，丢手雷时触发
+<code>ADDRESS ERROR</code>。应改为<strong>修改读取表的指令</strong>（如
+<code>move.b #$ff,$c6(a3)</code> 替代
+<code>move.b (a6,d1.w),$c6(a3)</code>），完全不触碰数据区。</p></li>
 </ol>
 <hr />
 <h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
