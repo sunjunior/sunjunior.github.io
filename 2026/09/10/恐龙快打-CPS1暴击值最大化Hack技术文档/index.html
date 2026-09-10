@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T15:19:47.414Z">
+<meta property="article:modified_time" content="2026-09-10T15:30:43.354Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,9 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 暴击值递减机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88v2%E6%94%B9%E6%8C%87%E4%BB%A4%E4%B8%8D%E5%8A%A8%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 ROM
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6%E8%B8%A9%E5%9D%91c6-%E5%A4%9A%E5%AF%B9%E8%B1%A1%E5%85%B1%E4%BA%AB"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 暴击值递减机制（踩坑：$c6
+多对象共享）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%86%B3%E7%AD%96%E5%8F%AA%E6%94%B9%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%8A%A8%E9%80%92%E5%87%8F"><span class="nav-number">5.5.</span> <span class="nav-text">5.5
+最终决策：只改初始化、不动递减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88%E6%9C%80%E7%BB%88%E7%89%88-v3"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 ROM 补丁方案（最终版 v3）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 插件验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88v2%E6%94%B9%E6%8C%87%E4%BB%A4%E4%B8%8D%E5%8A%A8%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">5.8.</span> <span class="nav-text">5.6 ROM
 补丁方案（v2：改指令，不动数据表）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-number">9.</span> <span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
         </div>
         <!--/noindex-->
@@ -260,7 +262,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-10 00:00:00 / 修改时间：23:19:47" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
+      <time title="创建时间：2026-09-10 00:00:00 / 修改时间：23:30:43" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -513,12 +515,76 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 0xFF，会破坏道具数据，导致丢手雷时触发 <code>ADDRESS ERROR</code>
 卡死。因此最终采用 §5.6 的”改指令、不改表”方案。</p>
 </blockquote>
-<h3 id="暴击值递减机制">5.4 暴击值递减机制</h3>
-<p>战斗中暴击值会被消耗——每次触发暴击效果后减少。反汇编找到递减指令：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">地址 0x04fe6e：subq.w #$1, $c6(a6)    ; 暴击值减 1</span><br><span class="line">地址 0x04fe7c：clr.w    $c6(a6)         ; 暴击值清 0</span><br></pre></td></tr></table></figure>
-<p>因此，即使初始化设为 FF，战斗中也可能被消耗到 0。<strong>必须同时 NOP
-掉递减和清零指令</strong>。</p>
-<h3 id="插件验证">5.5 插件验证</h3>
+<h3 id="暴击值递减机制踩坑c6-多对象共享">5.4 暴击值递减机制（踩坑：$c6
+多对象共享）</h3>
+<p>反汇编寻找 <code>$c6(aN)</code>
+的写指令，发现递减和清零位于一个<strong>通用的对象更新函数</strong>中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">04fe56: subq.w   #$1, $c8(a6)         ; 通用计时器递减</span><br><span class="line">04fe5a: bcc.b    $4fe68</span><br><span class="line">04fe5c: move.w   #$12c, $c8(a6)       ; 计时器重置（300 ticks ≈ 25 秒）</span><br><span class="line">04fe62: move.b   #$1, $502(a5)</span><br><span class="line">04fe68: move.b   #$1, $0(a6)</span><br><span class="line">04fe6e: subq.w   #$1, $c6(a6)         ; $c6 递减 ← 所有对象共用！</span><br><span class="line">04fe72: bcs.b    $4fe7c               ; $c6 已到 0？</span><br><span class="line">04fe74: move.b   #$2, $0(a6)</span><br><span class="line">04fe7a: bra.b    $4fe80</span><br><span class="line">04fe7c: clr.w    $c6(a6)              ; 清零 ← 所有对象共用！</span><br><span class="line">04fe80: moveq    #$0, d0</span><br><span class="line">04fe82: move.b   $5(a6), d0</span><br><span class="line">04fe86: add.w    d0, d0</span><br><span class="line">04fe88: movea.l  $4fe8e(pc, d0.w), a0</span><br><span class="line">04fe8c: jmp      (a0)                  ; 跳转表分派</span><br></pre></td></tr></table></figure>
+<p><strong>这里的 A6
+可以是任何对象（玩家、敌人、Boss、道具）</strong>：<br />
+- 当 A6 = 玩家时，<code>$c6</code> = 暴击值（每 ~25 秒减 1）<br />
+- 当 A6 = 敌人/Boss 时，<code>$c6</code> = 阶段计数器（比如 Boss
+下车/显隐控制）<br />
+- 当 A6 = 道具时，<code>$c6</code> = 倒计时（<code>0x04c1ac</code>
+处还会被设 10 做秒杀倒计时）</p>
+<blockquote>
+<p><strong>关键踩坑</strong>：NOP 掉 <code>0x4fe6e</code>（subq）和
+<code>0x4fe7c</code>（clr）后，Boss 的 <code>$c6</code> 不再变化→Boss
+被卡在”隐藏/下车”状态无法攻击（第三关下车后 Boss
+不可见）。必须恢复这两个通用指令。</p>
+</blockquote>
+<h3 id="最终决策只改初始化不动递减">5.5
+最终决策：只改初始化、不动递减</h3>
+<p>经实测验证：<br />
+-
+暴击值受击后<strong>不会归零或恢复原值</strong>（仅有通用计时器的慢速递减）<br />
+- 暴击值递减周期 ~25 秒，从 FF（255）到 0 约需 <strong>106
+分钟</strong>，远超过一局游戏时长<br />
+- Boss 的 <code>$c6</code> 变化必须正常（否则 Boss 卡隐藏）</p>
+<p>因此<strong>维持原版的递减/清零指令不变，只修改初始化指令</strong>即可满足需求。</p>
+<h3 id="rom-补丁方案最终版-v3">5.6 ROM 补丁方案（最终版 v3）</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>修改</th>
+<th>地址</th>
+<th>原内容</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击值初始化指令</td>
+<td><code>0x11770</code></td>
+<td><code>move.b (a6,d1.w),$c6(a3)</code>
+(<code>17 76 10 00 00 c6</code>)</td>
+<td><code>move.b #$ff,$c6(a3)</code>
+(<code>17 7c 00 ff 00 c6</code>)</td>
+</tr>
+<tr>
+<td><del>NOP 暴击值递减</del></td>
+<td><del><code>0x4fe6e</code></del></td>
+<td>维持原样（通用函数，不可动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><del>NOP 暴击值清零</del></td>
+<td><del><code>0x4fe7c</code></del></td>
+<td>维持原样（通用函数，不可动）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>只需修改 <code>cde_23a.8f</code>
+这一个文件，<strong>不改数据表、不动通用函数</strong>，手雷/Boss
+等一切正常。</p>
+<h3 id="插件验证">5.7 插件验证</h3>
 <p>先用 Lua 插件每帧强制写回
 <code>0xffb33a = 0xFF</code>，验证实际效果：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prog:write_u8(<span class="number">0xffb33a</span>, <span class="number">0xff</span>)</span><br></pre></td></tr></table></figure>
@@ -575,7 +641,7 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <hr />
 <h2 id="交付物">6. 交付物</h2>
 <h3 id="文件">6.1 文件</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cde_23a.8f（已修改，SHA1: 6463f44ef92f3b5d7cf59011661843d46aeb68b6）</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cde_23a.8f（已修改，SHA1: f988e6021c6b3178193930b3d89e827888af5756）</span><br></pre></td></tr></table></figure>
 <p>安装方式：将修改后的 <code>cde_23a.8f</code> 放入
 <code>~/.mame/roms/dino.zip</code> 中，替换原文件。</p>
 <h3 id="验证">6.2 验证</h3>
@@ -604,6 +670,11 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <hr />
 <h2 id="修改总结">7. 修改总结</h2>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>项目</th>
@@ -628,14 +699,9 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <td><code>move.b #$ff,$c6(a3)</code></td>
 </tr>
 <tr>
-<td>暴击值递减 <code>0x4fe6e</code></td>
-<td>✅ NOP’d</td>
-<td><code>subq.w #1,$c6(a6)</code></td>
-</tr>
-<tr>
-<td>暴击值清零 <code>0x4fe7c</code></td>
-<td>✅ NOP’d</td>
-<td><code>clr.w $c6(a6)</code></td>
+<td>暴击值递减/清零（通用函数）</td>
+<td>⚠️ 维持原样</td>
+<td>与其他对象共享（见 §8.7），不可 NOP</td>
 </tr>
 <tr>
 <td>ROM 补丁固化</td>
@@ -647,6 +713,11 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <td>✅ 确认提升</td>
 <td>一拳打掉敌人约两管血</td>
 </tr>
+<tr>
+<td>Boss 第三关下车后</td>
+<td>✅ 正常</td>
+<td>通用函数恢复后无异常</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -654,8 +725,8 @@ API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
 <ol type="1">
 <li><p><strong><code>$c6(aN)</code> 是多用途偏移</strong>——<span
 class="math inline">$c6(a6)
-在玩家对象上是暴击值，但在敌人/道具对象上可能是其他属性。NOP `subq.w
-#1,$</span>c6(a6)`
+在玩家对象上是暴击值，但在敌人/道具对象上可能是其他属性（阶段计数、显隐控制、倒计时）。NOP
+`subq.w #1,$</span>c6(a6)`
 时需确认上下文是玩家逻辑，否则可能破坏敌人行为。应优先定位到<strong>角色初始化表</strong>做修改，而非大范围
 NOP。</p></li>
 <li><p><strong>暴击值表与段位（连段等级）耦合</strong>——角色连段越高，暴击值也越高（表中可见
@@ -668,13 +739,24 @@ ROM 文件是最干净的交付方式。</p></li>
 的坑</strong>——在文件内直接搜索 CPU 地址对应的字节，必须考虑字交换：CPU
 看到 <code>0x536e</code>，文件内存的是 <code>0x6e53</code>。patch
 脚本需先 swap 再搜索/修改。</p></li>
-<li><p><strong>战斗中的暴击值变化</strong>——暴击值在战斗中会动态变化（击中敌人递增、一段时间不攻击递减、被击中清空）。永久
-FF 只能通过<strong>阻断递减链路</strong>（NOP subq/clr）实现。</p></li>
+<li><p><strong>暴击值受击不会归零</strong>——实测玩家被打后暴击值<strong>不会恢复原值或归零</strong>，仅按通用计时器每
+~25 秒减 1 慢速消耗。初始 FF（255）足够一整局游戏（约 106
+分钟），无需额外 NOP 递减。</p></li>
 <li><p><strong>不要大范围改数据表</strong>——暴击值表所在区域与其他道具（手雷等）的数据表共享。若整表改为
 0xFF，会破坏道具数据，丢手雷时触发
 <code>ADDRESS ERROR</code>。应改为<strong>修改读取表的指令</strong>（如
 <code>move.b #$ff,$c6(a3)</code> 替代
 <code>move.b (a6,d1.w),$c6(a3)</code>），完全不触碰数据区。</p></li>
+<li><p><strong>通用对象更新函数不可动</strong>——<code>0x4fe6e</code>/<code>0x4fe7c</code>
+的 <code>$c6</code>
+递减/清零位于一个被<strong>所有对象</strong>共用的更新函数中。NOP
+掉后，Boss 的 <code>$c6</code>（阶段计数器）不再变化，导致第三关下车后
+Boss
+卡在隐藏状态无法攻击。<strong>判定多用途偏移的指令时，必须回溯其所在函数是否被多对象调用。</strong></p></li>
+<li><p><strong>大范围修改前先备份</strong>——每次生成新补丁前，从
+<code>dino.7z</code> 重新提取原版
+<code>cde_23a.8f</code>，避免在已污染的 ROM
+上迭代导致错误累积。</p></li>
 </ol>
 <hr />
 <h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
@@ -700,19 +782,15 @@ FF 只能通过<strong>阻断递减链路</strong>（NOP subq/clr）实现。</p
 </tr>
 <tr>
 <td><code>0x11770</code></td>
-<td>暴击值表读取指令</td>
+<td>暴击值初始化指令（已改为 <code>move.b #$ff,$c6(a3)</code>）</td>
 </tr>
 <tr>
 <td><code>0x4fe6e</code></td>
-<td>暴击值递减 <code>subq.w #1</code></td>
+<td>通用对象 <code>$c6</code> 递减（<strong>不可 NOP</strong>）</td>
 </tr>
 <tr>
 <td><code>0x4fe7c</code></td>
-<td>暴击值清零 <code>clr.w</code></td>
-</tr>
-<tr>
-<td><code>0x24e04-0x24f14</code></td>
-<td>各武器弹药初始值设定</td>
+<td>通用对象 <code>$c6</code> 清零（<strong>不可 NOP</strong>）</td>
 </tr>
 <tr>
 <td><code>0xc6(a6)</code></td>
