@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 交付物：ROM 补丁（修改暴击值表 + NOP 递减） 日期：2026-09-10 1. 背景与目标 《恐龙快打》是 Capcom 于 1993 年推出的 CPS1 街机横版清关动作游戏（美版名 dino，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="恐龙快打（CPS1）暴击值最大化 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 交付物：ROM 补丁（修改暴击值表 + NOP 递减） 日期：2026-09-10 1. 背景与目标 《恐龙快打》是 Capcom 于 1993 年推出的 CPS1 街机横版清关动作游戏（美版名 dino，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
+<meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-10T15:11:14.548Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/dino.gif">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/09/10/恐龙快打-CPS1暴击值最大化Hack技术文档/","title":"恐龙快打（CPS1）暴击值最大化 Hack 技术文档"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>恐龙快打（CPS1）暴击值最大化 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 暴击值递减机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 ROM 补丁方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-number">9.</span> <span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="恐龙快打（CPS1）暴击值最大化 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 交付物：ROM 补丁（修改暴击值表 + NOP 递减） 日期：2026-09-10 1. 背景与目标 《恐龙快打》是 Capcom 于 1993 年推出的 CPS1 街机横版清关动作游戏（美版名 dino，...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          恐龙快打（CPS1）暴击值最大化 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-10 00:00:00 / 修改时间：23:11:14" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs / Dino, CPS1, 1993 Capcom） 目标：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 交付物：ROM 补丁（修改暴击值表 + NOP 递减） 日期：2026-09-10 1. 背景与目标 《恐龙快打》是 Capcom 于 1993 年推出的 CPS1 街机横版清关动作游戏（美版名 dino，...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>恐龙快打（Cadillacs &amp; Dinosaurs / Dino, CPS1,
+1993 Capcom）</strong><br />
+目标：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害<br />
+交付物：ROM 补丁（修改暴击值表 + NOP 递减）<br />
+日期：2026-09-10</p>
+</blockquote>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《恐龙快打》是 Capcom 于 1993 年推出的 CPS1
+街机横版清关动作游戏（美版名 <code>dino</code>，日版名
+<code>dinou</code>）。玩家可从 4
+名角色中选择一位，击退劫掠者并拯救恐龙。</p>
+<p>游戏中每个角色拥有一个隐藏的”<strong>暴击值</strong>”（Critical Hit
+Value），影响攻击造成的伤害。该值越高，每次命中敌人时的伤害加成越大。默认暴击值约为
+<strong>32（0x20）</strong>，本次任务的目标：</p>
+<ol type="1">
+<li>定位暴击值在 RAM 中的存储地址。</li>
+<li>找到其初始化来源（角色数据表）。</li>
+<li>修改 ROM，使暴击值始终为最大值 0xFF（255）。</li>
+<li>交付可用的补丁文件。</li>
+</ol>
+<p>最终成果：<strong>ROM 直接烧录补丁，无需插件</strong>，暴击值恒为
+FF，大幅提升角色输出。</p>
+<hr />
+<h2 id="rom-与游戏信息">2. ROM 与游戏信息</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM 集</td>
+<td><code>dino.zip</code>（美版，World）</td>
+</tr>
+<tr>
+<td>主板</td>
+<td>CPS1（Capcom Play System 1, <code>cps1</code> 驱动）</td>
+</tr>
+<tr>
+<td>主 CPU</td>
+<td>Motorola
+<strong>MC68000</strong>（<code>maincpu</code>，12MHz）</td>
+</tr>
+<tr>
+<td>程序 ROM</td>
+<td><code>cde_23a.8f</code> + <code>cde_22a.7f</code> +
+<code>cde_21a.6f</code>（共
+1.5MB，<code>ROM_LOAD16_WORD_SWAP</code>）</td>
+</tr>
+<tr>
+<td>主 RAM</td>
+<td><code>0xff0000-0xffffff</code>（64KB，<code>mainram</code>）</td>
+</tr>
+<tr>
+<td>校验</td>
+<td>无 BIOS 校验（CPS1 直接执行 ROM）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="关键地址约定">关键地址约定</h3>
+<ul>
+<li><strong>CPU 地址</strong>：MAME 调试器 / Lua 看到的主 CPU 地址（如
+<code>0x24E34</code>）。</li>
+<li><strong>文件偏移</strong>：由于
+<code>ROM_LOAD16_WORD_SWAP</code>，<strong>文件内每个 16 位字的字节序与
+CPU 视图相反</strong>。打补丁时必须按字交换处理。</li>
+</ul>
+<h3 id="玩家对象结构">玩家对象结构</h3>
+<table>
+<thead>
+<tr>
+<th>偏移</th>
+<th>内容</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+0x00</code>-<code>0xBF</code></td>
+<td>基本属性</td>
+<td>ID、坐标、状态、血量等</td>
+</tr>
+<tr>
+<td><strong><code>+0xC6</code></strong></td>
+<td><strong>暴击值</strong></td>
+<td>攻击伤害加成系数，可递增/递减</td>
+</tr>
+<tr>
+<td><code>+0x5E</code></td>
+<td>拳值</td>
+<td>普通攻击系数</td>
+</tr>
+</tbody>
+</table>
+<p>P1 玩家对象基址为
+<strong><code>0xffb274</code></strong>，因此暴击值地址为
+<code>0xffb274 + 0xC6 = 0xffb33a</code>。</p>
+<hr />
+<h2 id="分析环境与工具">3. 分析环境与工具</h2>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td><strong>MAME 0.289</strong>（Arch Linux 官方包）</td>
+</tr>
+<tr>
+<td>内存读取</td>
+<td>MAME Lua
+API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
+</tr>
+<tr>
+<td>调试器</td>
+<td>MAME 内置调试器（<code>-debug</code>）+ Lua
+<code>machine.debugger</code></td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>Python + capstone（68000）</td>
+</tr>
+<tr>
+<td>快照差分</td>
+<td>Python 全量 RAM 转储 + 字节级对比</td>
+</tr>
+<tr>
+<td>插件机制</td>
+<td>自定义 MAME 插件（<code>plugin.json</code> +
+<code>init.lua</code>）</td>
+</tr>
+<tr>
+<td>最终交付</td>
+<td>直接修改 <code>cde_23a.8f</code>（主程序 ROM 文件）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="破解总体思路">4. 破解总体思路</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">MAME Lua 每帧校验暴击值</span><br><span class="line">   ↓  发现 0xffb33a = 32（0x20）</span><br><span class="line">反向搜索写入源</span><br><span class="line">   ↓  找到角色数据表 0x2c9b6</span><br><span class="line">修改表所有值为 0xFF</span><br><span class="line">   ↓  暴击值初始化 = 255</span><br><span class="line">NOP 掉递减代码</span><br><span class="line">   ↓  暴击值战斗中不再减少</span><br><span class="line">ROM 固化补丁</span><br><span class="line">   ↓  cde_23a.8f（纯 ROM 修改，零依赖）</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="详细分析过程">5. 详细分析过程</h2>
+<h3 id="定位暴击值地址">5.1 定位暴击值地址</h3>
+<p>根据宝典资料，P1 玩家对象基址 <code>0xffb274</code>，偏移
+<code>+0xC6</code> = 暴击值。从 RAM 快照中读取确认：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0xffb33a = 32 (0x20)</span><br></pre></td></tr></table></figure>
+<p>通过插件每帧写入 <code>0xffb33a = 0xFF</code>，验证：<br />
+- 攻击敌人时<strong>伤害明显提升</strong>（暴击生效）<br />
+- 暴击值确为 <code>0xffb33a</code>（P1 专属地址）</p>
+<h3 id="追踪暴击值初始化">5.2 追踪暴击值初始化</h3>
+<p>反汇编搜索所有写 <code>$c6(aN)</code>
+的指令，找到角色数据<strong>表加载指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">地址 0x011770：move.b (a6, d1.w), $c6(a3)</span><br></pre></td></tr></table></figure>
+<p>上下文分析：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">011768: move.l   a6, -(a7)</span><br><span class="line">01176a: movea.l  #$2c9b6, a6       ; A6 = 暴击值表基址</span><br><span class="line">011770: move.b   (a6, d1.w), $c6(a3) ; 从表读出暴击值，写入玩家对象</span><br><span class="line">011776: movea.l  (a7)+, a6</span><br><span class="line">011778: rts</span><br></pre></td></tr></table></figure>
+<p>说明：角色暴击值在初始化时从<strong>地址 <code>0x2c9b6</code>
+的表中读取</strong>，索引 <code>d1</code> 由角色类型和当前段数决定。</p>
+<h3 id="分析暴击值表">5.3 分析暴击值表</h3>
+<p>转储 <code>0x2c9b6</code> 区域的数据：</p>
+<table>
+<thead>
+<tr>
+<th>偏移</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x2c9b6</code></td>
+<td><code>0x18</code> (24)</td>
+<td>角色 1 段 1</td>
+</tr>
+<tr>
+<td><code>0x2c9b7</code></td>
+<td><code>0x1c</code> (28)</td>
+<td>角色 1 段 2</td>
+</tr>
+<tr>
+<td><code>0x2c9b8-0x2c9d2</code></td>
+<td><code>0x20</code> (32)</td>
+<td><strong>默认值（大量填充）</strong></td>
+</tr>
+<tr>
+<td><code>0x2c9d3</code></td>
+<td><code>0x24</code> (36)</td>
+<td>高段位</td>
+</tr>
+<tr>
+<td><code>0x2c9d4</code></td>
+<td><code>0x2a</code> (42)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>0x2c9d5</code></td>
+<td><code>0x30</code> (48)</td>
+<td></td>
+</tr>
+<tr>
+<td>…</td>
+<td><code>0x20-0x40</code></td>
+<td>不同角色/段位的多样值</td>
+</tr>
+</tbody>
+</table>
+<p>默认暴击值 <strong>32（0x20）</strong>
+占据了表的主体。不同角色和段位的暴击值分布在 24~110 之间。</p>
+<h3 id="暴击值递减机制">5.4 暴击值递减机制</h3>
+<p>战斗中暴击值会被消耗——每次触发暴击效果后减少。反汇编找到递减指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">地址 0x04fe6e：subq.w #$1, $c6(a6)    ; 暴击值减 1</span><br><span class="line">地址 0x04fe7c：clr.w    $c6(a6)         ; 暴击值清 0</span><br></pre></td></tr></table></figure>
+<p>因此，即使初始化设为 FF，战斗中也可能被消耗到 0。<strong>必须同时 NOP
+掉递减和清零指令</strong>。</p>
+<h3 id="插件验证">5.5 插件验证</h3>
+<p>先用 Lua 插件每帧强制写回
+<code>0xffb33a = 0xFF</code>，验证实际效果：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prog:write_u8(<span class="number">0xffb33a</span>, <span class="number">0xff</span>)</span><br></pre></td></tr></table></figure>
+<p>实测结果：<br />
+- ✅ 攻击伤害<strong>大幅提升</strong>（普通一拳顶原来约 3-4 拳）<br />
+- ✅ 游戏完全正常，不会崩溃<br />
+- ✅ BOSS 战同样有效</p>
+<h3 id="rom-补丁方案">5.6 ROM 补丁方案</h3>
+<p>确认插件方案有效后，将其固化为 ROM 补丁，不再依赖插件：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>修改</th>
+<th>地址</th>
+<th>原内容</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击值表全部 FF</td>
+<td><code>0x2c9b6-0x2cab6</code></td>
+<td><code>0x20</code>（32）等</td>
+<td><code>0xFF</code>（255）</td>
+</tr>
+<tr>
+<td>NOP 暴击值递减</td>
+<td><code>0x4fe6e</code></td>
+<td><code>subq.w #1,$c6(a6)</code> (<code>53 6e 00 c6</code>)</td>
+<td><code>NOP</code> (<code>4e 71 4e 71</code>)</td>
+</tr>
+<tr>
+<td>NOP 暴击值清零</td>
+<td><code>0x4fe7c</code></td>
+<td><code>clr.w $c6(a6)</code> (<code>42 6e 00 c6</code>)</td>
+<td><code>NOP</code> (<code>4e 71 4e 71</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>只需修改 <code>cde_23a.8f</code>
+这一个文件（补丁范围全部在此文件内）。</p>
+<hr />
+<h2 id="交付物">6. 交付物</h2>
+<h3 id="文件">6.1 文件</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cde_23a.8f（已修改，SHA1: 9aaebdc8115f365de519159522b76650dc7116f5）</span><br></pre></td></tr></table></figure>
+<p>安装方式：将修改后的 <code>cde_23a.8f</code> 放入
+<code>~/.mame/roms/dino.zip</code> 中，替换原文件。</p>
+<h3 id="验证">6.2 验证</h3>
+<p>启动 MAME，进入游戏后通过调试器或 Lua 读取
+<code>0xffb33a</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">debugger&gt; print b@ffb33a</span><br><span class="line">255</span><br></pre></td></tr></table></figure>
+<p>暴击值 = 0xFF ✓</p>
+<h3 id="效果验证">6.3 效果验证</h3>
+<p>实测打出一拳即可打掉敌人<strong>约两管血条</strong>，攻击伤害相对原版大幅提升（暴击值由
+32 提升至 255，约 8 倍）：</p>
+<figure>
+<img src="/img/dino.gif" alt="恐龙快打暴击值最大化效果演示" />
+<figcaption aria-hidden="true">恐龙快打暴击值最大化效果演示</figcaption>
+</figure>
+<video width="75%" controls muted autoplay loop poster="/img/dino.gif">
+<source src="/img/dino.gif" type="video/gif">
+您的浏览器不支持 GIF 演示。
+</video>
+<blockquote>
+<p>上图为暴击值 FF
+补丁后的实机演示：一拳打掉敌人近两管血，攻击力倍增。</p>
+</blockquote>
+<h3 id="可选恢复原版">6.4 可选：恢复原版</h3>
+<p><code>dino.zip.backup</code> 和 <code>dino.7z</code>（原始 ROM
+集）中保存着原版文件，可随时还原。</p>
+<hr />
+<h2 id="修改总结">7. 修改总结</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击值地址 <code>0xffb33a</code></td>
+<td>✅ 已定位</td>
+<td>P1 玩家对象 +0xC6</td>
+</tr>
+<tr>
+<td>暴击值初始化表 <code>0x2c9b6</code></td>
+<td>✅ 已定位</td>
+<td>角色数据表，默认 0x20</td>
+</tr>
+<tr>
+<td>暴击值递减 <code>0x4fe6e</code></td>
+<td>✅ NOP’d</td>
+<td><code>subq.w #1,$c6(a6)</code></td>
+</tr>
+<tr>
+<td>暴击值清零 <code>0x4fe7c</code></td>
+<td>✅ NOP’d</td>
+<td><code>clr.w $c6(a6)</code></td>
+</tr>
+<tr>
+<td>ROM 补丁固化</td>
+<td>✅ <strong>已交付</strong></td>
+<td>纯 ROM 修改，不依赖插件</td>
+</tr>
+<tr>
+<td>战斗验证（实际伤害）</td>
+<td>✅ 确认提升</td>
+<td>普通攻击显著增强</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="踩坑与经验总结">8. 踩坑与经验总结</h2>
+<ol type="1">
+<li><p><strong><code>$c6(aN)</code> 是多用途偏移</strong>——<span
+class="math inline">$c6(a6)
+在玩家对象上是暴击值，但在敌人/道具对象上可能是其他属性。NOP `subq.w
+#1,$</span>c6(a6)`
+时需确认上下文是玩家逻辑，否则可能破坏敌人行为。应优先定位到<strong>角色初始化表</strong>做修改，而非大范围
+NOP。</p></li>
+<li><p><strong>暴击值表与段位（连段等级）耦合</strong>——角色连段越高，暴击值也越高（表中可见
+24→28→32→36→42→48 的递增）。若将全表设为
+FF，所有段位的暴击值相同，弱化了段位奖励机制。接受此副作用（或保留表的梯度但整体平移）。</p></li>
+<li><p><strong>ROM 补丁 vs 插件方案</strong>——CPS1 无 BIOS 校验（不同于
+PGM），ROM 文件可随意修改，比西游释厄传（PGM 有校验）更简单。直接修改
+ROM 文件是最干净的交付方式。</p></li>
+<li><p><strong><code>ROM_LOAD16_WORD_SWAP</code>
+的坑</strong>——在文件内直接搜索 CPU 地址对应的字节，必须考虑字交换：CPU
+看到 <code>0x536e</code>，文件内存的是 <code>0x6e53</code>。patch
+脚本需先 swap 再搜索/修改。</p></li>
+<li><p><strong>战斗中的暴击值变化</strong>——暴击值在战斗中会动态变化（击中敌人递增、一段时间不攻击递减、被击中清空）。永久
+FF 只能通过<strong>阻断递减链路</strong>（NOP subq/clr）实现。</p></li>
+</ol>
+<hr />
+<h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
+<table>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xffb33a</code></td>
+<td>P1 暴击值</td>
+</tr>
+<tr>
+<td><code>0xffb33c</code></td>
+<td>P2 暴击值（若存在）</td>
+</tr>
+<tr>
+<td><code>0x2c9b6</code></td>
+<td>暴击值表基址</td>
+</tr>
+<tr>
+<td><code>0x11770</code></td>
+<td>暴击值表读取指令</td>
+</tr>
+<tr>
+<td><code>0x4fe6e</code></td>
+<td>暴击值递减 <code>subq.w #1</code></td>
+</tr>
+<tr>
+<td><code>0x4fe7c</code></td>
+<td>暴击值清零 <code>clr.w</code></td>
+</tr>
+<tr>
+<td><code>0x24e04-0x24f14</code></td>
+<td>各武器弹药初始值设定</td>
+</tr>
+<tr>
+<td><code>0xc6(a6)</code></td>
+<td>暴击值在玩家对象中的偏移</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="恐龙快打（CPS1）暴击值最大化 Hack 技术文档">https://sunjunior.github.io/2026/09/10/恐龙快打-CPS1暴击值最大化Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-MAME-%E8%A1%97%E6%9C%BA-%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, MAME, 街机, 恐龙快打</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/08/%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-PGM%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="西游释厄传（PGM &#x2F; ARC）无限放宝 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 西游释厄传（PGM / ARC）无限放宝 Hack 技术文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
