@@ -28,7 +28,7 @@
 <meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-09T14:45:04.820Z">
+<meta property="article:modified_time" content="2026-09-11T22:42:52.845Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机">
 <meta name="twitter:card" content="summary">
@@ -163,7 +163,8 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%AE%9D%E8%AE%A1%E6%95%B0%E5%9C%B0%E5%9D%80%E5%B7%AE%E5%88%86-%E5%B9%B3%E5%8F%B0%E6%9C%9F%E6%A3%80%E6%B5%8B"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位宝计数地址（差分 +
 平台期检测）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%86%99%E7%9B%91%E8%A7%86%E7%82%B9%E6%8A%93%E5%86%99%E5%AE%9D%E8%AE%A1%E6%95%B0%E7%9A%84-pc"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 用写监视点抓”写宝计数”的 PC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95-rom-%E8%A1%A5%E4%B8%81%E5%A4%B1%E8%B4%A5%E5%B9%B6%E5%A4%8D%E7%9B%98"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 尝试 ROM 补丁（失败并复盘）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%80%BB%E8%BE%91%E8%AE%A1%E6%95%B0%E5%99%A8%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86"><span class="nav-number">5.4.</span> <span class="nav-text">5.4
 定位真正的逻辑计数器（快照差分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%86%99%E5%9B%9E%E9%AA%8C%E8%AF%81-%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9D%E7%94%9F%E6%95%88"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件写回验证 → 无限放宝生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E9%80%92%E5%87%8F%E6%8C%87%E4%BB%A4subq-%E4%BB%A3%E7%A0%81"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 定位递减指令（subq 代码）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E5%B0%9D%E8%AF%95%E5%8F%97%E9%98%BB"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 ROM 补丁尝试（受阻）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9%E6%8F%92%E4%BB%B6%E7%89%88%E5%8F%AF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物：插件版（可用）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 插件安装（路径）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A9-mame-%E6%89%BE%E5%88%B0%E6%8F%92%E4%BB%B6"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 让 MAME 找到插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E6%8F%92%E4%BB%B6%E9%BB%98%E8%AE%A4%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 启用插件（默认自动加载）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 启动方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA%E4%B8%8E%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.</span> <span class="nav-text">8. 最终结论与后续方向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 最终结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-superolds%E7%A0%B4%E8%A7%A3"><span class="nav-number">8.2.</span> <span class="nav-text">8.1.1 西游释厄传
-Super（olds）破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E4%B8%BA%E4%BD%95%E5%8F%97%E9%98%BB"><span class="nav-number">8.3.</span> <span class="nav-text">8.2 ROM 补丁为何受阻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.4.</span> <span class="nav-text">8.3 后续方向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%80%99%E9%80%89%E5%9C%B0%E5%9D%80%E6%97%B6%E9%97%B4%E7%BA%BF%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86%E6%94%BE%E5%AE%9D-32"><span class="nav-number">9.</span> <span class="nav-text">附录
+Super（olds）破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-%E7%BE%A4%E9%AD%94%E4%B9%B1%E8%88%9Eoldsplus%E7%A0%B4%E8%A7%A3"><span class="nav-number">8.3.</span> <span class="nav-text">8.1.2 西游释厄传
+群魔乱舞（oldsplus）破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E4%B8%BA%E4%BD%95%E5%8F%97%E9%98%BB"><span class="nav-number">8.4.</span> <span class="nav-text">8.2 ROM 补丁为何受阻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.5.</span> <span class="nav-text">8.3 后续方向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%80%99%E9%80%89%E5%9C%B0%E5%9D%80%E6%97%B6%E9%97%B4%E7%BA%BF%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86%E6%94%BE%E5%AE%9D-32"><span class="nav-number">9.</span> <span class="nav-text">附录
 A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol></div>
         </div>
         <!--/noindex-->
@@ -267,7 +268,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 22:45:04" itemprop="dateModified" datetime="2026-09-09T22:45:04+08:00">2026-09-09</time>
+      <time title="修改时间：2026-09-12 06:42:52" itemprop="dateModified" datetime="2026-09-12T06:42:52+08:00">2026-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -609,21 +610,22 @@ ROM 固化补丁方案受阻。插件方案为最终可行方案。</p>
 <p>当前可直接使用 <strong>MAME 插件</strong>方案实现无限放宝，无需修改
 ROM。</p>
 <h3 id="插件安装路径">6.1 插件安装（路径）</h3>
-<p>将插件目录复制到 MAME
-插件搜索路径下。推荐放到用户配置目录的独立子目录中：</p>
+<p>将插件目录放到 MAME
+插件搜索路径下。推荐放到用户配置目录的独立子目录中（下述
+<code>~/.mame</code> 为 MAME 用户配置目录，请按实际环境调整）：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/orleg_hack/pluginroot/orlegdump/</span><br><span class="line">├── plugin.json   # MAME 插件定义（name/type/start）</span><br><span class="line">└── init.lua      # 核心逻辑：emu.register_periodic + write_u8</span><br></pre></td></tr></table></figure>
 <p><code>plugin.json</code> 内容（<code>"start": "true"</code>
 表示插件自动启动，无需手动指定）：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;plugin&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;orlegdump&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Infinite Items: write 0x81118b = 3 every 5 ticks&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;author&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sunjunior&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;plugin&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;plugin&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;orlegdump&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Infinite Items: orlegend/olds/oldsplus infinite items + F9 toggle&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5.3&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;author&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sunjunior&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;plugin&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 <h3 id="让-mame-找到插件">6.2 让 MAME 找到插件</h3>
 <p>在 <code>~/.mame/mame.ini</code> 中把插件目录追加到
 <code>pluginspath</code>（用 <code>;</code>
 分隔多个路径，保留系统默认插件目录）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pluginspath   /usr/lib/mame/plugins;~/.mame/orleg_hack/pluginroot</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pluginspath   &lt;MAME系统插件目录&gt;;~/.mame/orleg_hack/pluginroot</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注意：<code>pluginspath</code>
-会<strong>整体替换</strong>默认目录，必须保留系统插件路径（如
-<code>/usr/lib/mame/plugins</code>），否则其他内置插件（如
+会<strong>整体替换</strong>默认目录，必须保留系统插件目录（MAME
+安装目录下的 <code>plugins</code> 文件夹），否则其他内置插件（如
 <code>layout</code>、<code>inputmacro</code>）会失效。</p>
 </blockquote>
 <h3 id="启用插件默认自动加载">6.3 启用插件（默认自动加载）</h3>
@@ -640,18 +642,21 @@ ROM。</p>
 <p>验证插件是否加载：正常启动进关卡后放宝不消耗即生效；或查看
 <code>~/.mame/orleg_hack/dumps/plugin_ok.txt</code> 是否存在（内容为
 <code>plugin loaded</code>）。</p>
-<p>核心代码（最终版 v3.4，orlegend + olds 双游戏 + F9 切换）：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> frozen = <span class="literal">true</span>  <span class="comment">-- 默认无限宝 ON</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- orlegend 槽位计数器（基址 0x8111A0+i*2+1，双地址兼容显示/逻辑副本）</span></span><br><span class="line"><span class="keyword">local</span> ORLEGEND_COUNTS = &#123;</span><br><span class="line">    <span class="number">0x81118b</span>, <span class="number">0x81118d</span>, <span class="number">0x81118f</span>, <span class="number">0x811191</span>,</span><br><span class="line">    <span class="number">0x811193</span>, <span class="number">0x811195</span>, <span class="number">0x811197</span>, <span class="number">0x811199</span>,</span><br><span class="line">    <span class="number">0x8111a1</span>, <span class="number">0x8111a3</span>, <span class="number">0x8111a5</span>, <span class="number">0x8111a7</span>,</span><br><span class="line">    <span class="number">0x8111a9</span>, <span class="number">0x8111ab</span>, <span class="number">0x8111ad</span>, <span class="number">0x8111af</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- olds 槽位计数器（基址 0x812188+i*2+1）</span></span><br><span class="line"><span class="keyword">local</span> OLDS_COUNTS = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i = <span class="number">0</span>, <span class="number">7</span> <span class="keyword">do</span></span><br><span class="line">    OLDS_COUNTS[i+<span class="number">1</span>] = <span class="number">0x812189</span> + i * <span class="number">2</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ex.startplugin</span><span class="params">()</span></span></span><br><span class="line">    emu.register_periodic(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">        tick = tick + <span class="number">1</span></span><br><span class="line">        <span class="keyword">local</span> m = manager.machine</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> m <span class="keyword">or</span> m.paused <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">local</span> prog = m.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> prog <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">-- F9 切换 冻结(无限宝) / 正常(可消耗) 模式</span></span><br><span class="line">        <span class="keyword">local</span> F9_CODE = m.<span class="built_in">input</span>:code_from_token(<span class="string">&quot;KEYCODE_F9&quot;</span>)</span><br><span class="line">        <span class="keyword">local</span> pressed = m.<span class="built_in">input</span>:code_pressed(F9_CODE)</span><br><span class="line">        <span class="keyword">if</span> pressed <span class="keyword">and</span> <span class="keyword">not</span> last_f9 <span class="keyword">then</span></span><br><span class="line">            frozen = <span class="keyword">not</span> frozen</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        last_f9 = pressed</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 按运行游戏选择地址集：检测 orlegend 槽位区是否有数据</span></span><br><span class="line">        <span class="keyword">local</span> set = ORLEGEND_COUNTS</span><br><span class="line">        <span class="keyword">local</span> probe = prog:read_u8(<span class="number">0x8111a0</span>)</span><br><span class="line">        <span class="keyword">if</span> probe == <span class="number">0</span> <span class="keyword">or</span> probe &gt; <span class="number">0x20</span> <span class="keyword">then</span></span><br><span class="line">            set = OLDS_COUNTS</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 冻结时强制计数器=3（无限宝）；正常时让游戏自己消耗</span></span><br><span class="line">        <span class="keyword">if</span> frozen <span class="keyword">and</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">for</span> _, a <span class="keyword">in</span> <span class="built_in">ipairs</span>(set) <span class="keyword">do</span></span><br><span class="line">                <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(a, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>核心代码（最终版 v5.3，orlegend + olds + oldsplus 三游戏 + F9
+统一切换）：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> frozen = <span class="literal">true</span>  <span class="comment">-- 默认无限宝 ON</span></span><br><span class="line"><span class="keyword">local</span> last_f9 = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- orlegend 槽位计数器（基址 0x8111A0+i*2+1，双地址兼容显示/逻辑副本）</span></span><br><span class="line"><span class="keyword">local</span> ORLEGEND_COUNTS = &#123;</span><br><span class="line">    <span class="number">0x81118b</span>, <span class="number">0x81118d</span>, <span class="number">0x81118f</span>, <span class="number">0x811191</span>,</span><br><span class="line">    <span class="number">0x811193</span>, <span class="number">0x811195</span>, <span class="number">0x811197</span>, <span class="number">0x811199</span>,</span><br><span class="line">    <span class="number">0x8111a1</span>, <span class="number">0x8111a3</span>, <span class="number">0x8111a5</span>, <span class="number">0x8111a7</span>,</span><br><span class="line">    <span class="number">0x8111a9</span>, <span class="number">0x8111ab</span>, <span class="number">0x8111ad</span>, <span class="number">0x8111af</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- olds 槽位计数器（基址 0x812188+i*2+1）</span></span><br><span class="line"><span class="keyword">local</span> OLDS_COUNTS = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i = <span class="number">0</span>, <span class="number">7</span> <span class="keyword">do</span></span><br><span class="line">    OLDS_COUNTS[i+<span class="number">1</span>] = <span class="number">0x812189</span> + i * <span class="number">2</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- oldsplus：8 槽结构 0x8127D0 + 4 辅助地址</span></span><br><span class="line"><span class="keyword">local</span> OLDSPLUS_COUNTS = &#123;</span><br><span class="line">    <span class="number">0x803c9d</span>, <span class="number">0x80d1d8</span>, <span class="number">0x80d45e</span>, <span class="number">0x80d6e4</span>,</span><br><span class="line">    <span class="number">0x8127d1</span>, <span class="number">0x8127d3</span>, <span class="number">0x8127d5</span>, <span class="number">0x8127d7</span>,</span><br><span class="line">    <span class="number">0x8127d9</span>, <span class="number">0x8127db</span>, <span class="number">0x8127dd</span>, <span class="number">0x8127df</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ex.startplugin</span><span class="params">()</span></span></span><br><span class="line">    emu.register_periodic(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">        tick = tick + <span class="number">1</span></span><br><span class="line">        <span class="keyword">local</span> m = manager.machine</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> m <span class="keyword">or</span> m.paused <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">local</span> prog = m.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> prog <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">-- F9 切换 冻结(无限宝) / 正常(可消耗) 模式</span></span><br><span class="line">        <span class="keyword">local</span> F9_CODE = m.<span class="built_in">input</span>:code_from_token(<span class="string">&quot;KEYCODE_F9&quot;</span>)</span><br><span class="line">        <span class="keyword">local</span> pressed = m.<span class="built_in">input</span>:code_pressed(F9_CODE)</span><br><span class="line">        <span class="keyword">if</span> pressed <span class="keyword">and</span> <span class="keyword">not</span> last_f9 <span class="keyword">then</span> frozen = <span class="keyword">not</span> frozen <span class="keyword">end</span></span><br><span class="line">        last_f9 = pressed</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 按运行游戏选择地址集</span></span><br><span class="line">        <span class="keyword">local</span> set</span><br><span class="line">        <span class="keyword">local</span> probe_orl = <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> <span class="keyword">return</span> prog:read_u8(<span class="number">0x8111a0</span>) <span class="keyword">end</span>)</span><br><span class="line">        <span class="keyword">if</span> probe_orl <span class="keyword">and</span> probe_orl &gt; <span class="number">0</span> <span class="keyword">and</span> probe_orl &lt;= <span class="number">0x20</span> <span class="keyword">then</span></span><br><span class="line">            set = ORLEGEND_COUNTS</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">local</span> probe_olds = <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> <span class="keyword">return</span> prog:read_u8(<span class="number">0x812188</span>) <span class="keyword">end</span>)</span><br><span class="line">            <span class="keyword">if</span> probe_olds <span class="keyword">and</span> probe_olds &gt; <span class="number">0</span> <span class="keyword">and</span> probe_olds &lt;= <span class="number">0x20</span> <span class="keyword">then</span></span><br><span class="line">                set = OLDS_COUNTS</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                set = OLDSPLUS_COUNTS</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 冻结时强制计数器=3（无限宝）</span></span><br><span class="line">        <span class="keyword">if</span> frozen <span class="keyword">and</span> tick % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">for</span> _, a <span class="keyword">in</span> <span class="built_in">ipairs</span>(set) <span class="keyword">do</span></span><br><span class="line">                <span class="built_in">pcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> prog:write_u8(a, <span class="number">3</span>) <span class="keyword">end</span>)</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p><strong>F9 切换模式说明：</strong><br />
+<p><strong>F9 切换模式说明（三款游戏统一按键）：</strong><br />
 - <strong>FROZEN（默认）</strong>：所有宝计数恒为 3，无限放宝。<br />
 -
 <strong>NORMAL</strong>：插件停止干预，宝可正常消耗（3→2→1→0），槽位用尽后空出，可拾取新宝物；拾取到新宝后<strong>再按
 F9 切回 FROZEN</strong>，新宝物即变为无限。<br />
 - 注意：槽位全空时切回 FROZEN
 无法放宝（无道具），需先拾取新宝物再切回。<br />
-- 插件自动识别 orlegend / olds：检测 <code>0x8111A0</code>
-槽位区数据（type 0x01~0x20）判断，两个游戏共用一份插件。</p>
+- 插件自动识别 orlegend / olds / oldsplus：依次检测
+<code>0x8111A0</code>（orlegend）、<code>0x812188</code>（olds）槽位区数据（type
+0x01~0x20）判断，均无数据时按 oldsplus 的 12
+地址集处理。三款游戏共用一份插件。</p>
 </blockquote>
 <hr />
 <h2 id="踩坑与经验总结">7. 踩坑与经验总结</h2>
@@ -762,6 +767,11 @@ MENU）</strong>，无法进入投币界面。去掉 <code>-skip_gameinfo</code>
 <td>槽位基址 <code>0x812188</code>，F9 切换模式</td>
 </tr>
 <tr>
+<td>插件版无限放宝（oldsplus）</td>
+<td>✅ <strong>已生效</strong></td>
+<td>8 槽结构 <code>0x8127D0</code> + 4 辅助地址，F9 切换模式</td>
+</tr>
+<tr>
 <td>ROM 文件补丁固化</td>
 <td>❌ 受阻</td>
 <td>任何字节修改都触发 BIOS 启动校验 → MAIN MENU</td>
@@ -820,6 +830,103 @@ olds 的 <code>0x812189+i*2</code> 计数器集。</p>
 Super）插件破解版实机录屏：龙马放宝后数量始终不减少，无限放宝生效；按 F9
 可切换为正常消耗模式。</p>
 </blockquote>
+<h3 id="西游释厄传-群魔乱舞oldsplus破解">8.1.2 西游释厄传
+群魔乱舞（oldsplus）破解</h3>
+<p>《西游释厄传 群魔乱舞》（<code>oldsplus.zip</code>，2000）同样是 PGM
+主板，但保护芯片为
+<strong>IGS027A</strong>（<code>oldsplus_igs027a.bin</code> 状态
+<code>nodump</code>），启动必须 <code>-bios v1</code>（v2 报 SYSTEM
+SETTING ERROR）。</p>
+<p><strong>难度：</strong> 直接对 RAM 逐字节扫描/批量写会触发 IGS027A
+保护卡死，只能一次性整块快照后离线分析。早期靠”放宝前后快照差分”找到了默认宝（天罡火）的
+5 个计数器地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x803c9d  0x80d1d8  0x80d45e  0x80d6e4  0x8127d1</span><br></pre></td></tr></table></figure>
+<p>冻结这 5 个地址 →
+<strong>默认宝无限</strong>，但拾取的宝物仍有限次。</p>
+<p><strong>突破：</strong>
+用临时调试版插件在游戏内按快照键（调试版占用的 F9 快照 A / F10 快照
+B，交付版已改回统一的 F9
+切换）触发<strong>放宝前后快照差分</strong>，发现 <code>0x8127D0</code>
+区域就是完整的 <strong>8 槽位结构</strong>（与 orlegend/olds
+布局一致，type 偶/counter 奇）：</p>
+<table>
+<thead>
+<tr>
+<th>槽位</th>
+<th>type 地址</th>
+<th>type 值</th>
+<th>counter 地址</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>0x8127d0</code></td>
+<td>13</td>
+<td><code>0x8127d1</code></td>
+<td>默认宝（天罡火）</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>0x8127d2</code></td>
+<td>24</td>
+<td><code>0x8127d3</code></td>
+<td>拾取宝（差分 1→0 消失）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>0x8127d4</code></td>
+<td>6</td>
+<td><code>0x8127d5</code></td>
+<td>拾取宝</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>0x8127d6</code></td>
+<td>9</td>
+<td><code>0x8127d7</code></td>
+<td>拾取宝</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>0x8127d8</code></td>
+<td>18</td>
+<td><code>0x8127d9</code></td>
+<td>拾取宝</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>0x8127da</code></td>
+<td>27</td>
+<td><code>0x8127db</code></td>
+<td>拾取宝</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>0x8127dc</code></td>
+<td>21</td>
+<td><code>0x8127dd</code></td>
+<td>拾取宝</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>0x8127de</code></td>
+<td>0</td>
+<td><code>0x8127df</code></td>
+<td>空</td>
+</tr>
+</tbody>
+</table>
+<p><strong>最终方案：</strong> 冻结全部 8 槽计数器
+<code>0x8127d1..0x8127df</code>（奇数地址）+ 保留 4
+个辅助地址（<code>0x803c9d, 0x80d1d8, 0x80d45e, 0x80d6e4</code>），共 12
+个地址每 5 tick 写回 3：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- oldsplus: 8-slot structure at 0x8127D0 + 4 known auxiliary counters</span></span><br><span class="line">set = &#123;</span><br><span class="line">    <span class="number">0x803c9d</span>, <span class="number">0x80d1d8</span>, <span class="number">0x80d45e</span>, <span class="number">0x80d6e4</span>,</span><br><span class="line">    <span class="number">0x8127d1</span>, <span class="number">0x8127d3</span>, <span class="number">0x8127d5</span>, <span class="number">0x8127d7</span>,</span><br><span class="line">    <span class="number">0x8127d9</span>, <span class="number">0x8127db</span>, <span class="number">0x8127dd</span>, <span class="number">0x8127df</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>实测：拾取的宝物也可无限放宝，不再消耗。</strong>
+三款游戏插件统一，按运行游戏自动选择地址集（检测
+<code>0x8111A0</code>/<code>0x812188</code> 槽位数据，fallback 到
+oldsplus 的 12 地址集）。</p>
 <h3 id="rom-补丁为何受阻">8.2 ROM 补丁为何受阻</h3>
 <p>尝试过多种 ROM 修改方式，<strong>全部</strong>导致进 MAIN MENU：</p>
 <ul>
