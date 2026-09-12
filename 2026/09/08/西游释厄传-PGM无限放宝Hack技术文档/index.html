@@ -27,11 +27,13 @@
 <meta property="og:site_name" content="sunjunior的个人技术博客">
 <meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/oldplus.gif">
 <meta property="article:published_time" content="2026-09-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-11T22:42:52.845Z">
+<meta property="article:modified_time" content="2026-09-12T00:49:15.026Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/oldplus.gif">
 
 
 <link rel="canonical" href="https://sunjunior.github.io/2026/09/08/%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-PGM%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
@@ -268,7 +270,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-12 06:42:52" itemprop="dateModified" datetime="2026-09-12T06:42:52+08:00">2026-09-12</time>
+      <time title="修改时间：2026-09-12 08:49:15" itemprop="dateModified" datetime="2026-09-12T08:49:15+08:00">2026-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -927,6 +929,12 @@ B，交付版已改回统一的 F9
 三款游戏插件统一，按运行游戏自动选择地址集（检测
 <code>0x8111A0</code>/<code>0x812188</code> 槽位数据，fallback 到
 oldsplus 的 12 地址集）。</p>
+<p><img src="/img/oldplus.gif" width="75%" alt="oldsplus 无限放宝验证"></p>
+<blockquote>
+<p>上图为 oldsplus（西游释厄传
+群魔乱舞）插件破解版实机录屏：拾取宝物后连续放宝，数量始终不减少，无限放宝生效；按
+F9 可切换为正常消耗模式。</p>
+</blockquote>
 <h3 id="rom-补丁为何受阻">8.2 ROM 补丁为何受阻</h3>
 <p>尝试过多种 ROM 修改方式，<strong>全部</strong>导致进 MAIN MENU：</p>
 <ul>
