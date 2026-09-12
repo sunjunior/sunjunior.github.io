@@ -28,7 +28,7 @@
 <meta property="og:description" content="目标游戏：西游释厄传（Oriental Legend &#x2F; Xiyou Shi E Zhuan, PGM, 1997 IGS） 目标：使所有角色的法宝（宝）数量无限（无限放宝 &#x2F; Infinite Items） 交付物：MAME 插件（每 5 tick 写回 0x81118b &#x3D; 3，已确认有效） 日期：2026-09-08 1. 背景与目标 《西游释厄传》是 IGS 于 1997 年推出的 PGM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-12T00:55:08.363Z">
+<meta property="article:modified_time" content="2026-09-12T01:03:17.394Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机">
 <meta name="twitter:card" content="summary">
@@ -164,7 +164,8 @@
 平台期检测）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%86%99%E7%9B%91%E8%A7%86%E7%82%B9%E6%8A%93%E5%86%99%E5%AE%9D%E8%AE%A1%E6%95%B0%E7%9A%84-pc"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 用写监视点抓”写宝计数”的 PC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95-rom-%E8%A1%A5%E4%B8%81%E5%A4%B1%E8%B4%A5%E5%B9%B6%E5%A4%8D%E7%9B%98"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 尝试 ROM 补丁（失败并复盘）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%80%BB%E8%BE%91%E8%AE%A1%E6%95%B0%E5%99%A8%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86"><span class="nav-number">5.4.</span> <span class="nav-text">5.4
 定位真正的逻辑计数器（快照差分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%86%99%E5%9B%9E%E9%AA%8C%E8%AF%81-%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9D%E7%94%9F%E6%95%88"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 插件写回验证 → 无限放宝生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E9%80%92%E5%87%8F%E6%8C%87%E4%BB%A4subq-%E4%BB%A3%E7%A0%81"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 定位递减指令（subq 代码）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E5%B0%9D%E8%AF%95%E5%8F%97%E9%98%BB"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 ROM 补丁尝试（受阻）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9%E6%8F%92%E4%BB%B6%E7%89%88%E5%8F%AF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物：插件版（可用）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 插件安装（路径）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A9-mame-%E6%89%BE%E5%88%B0%E6%8F%92%E4%BB%B6"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 让 MAME 找到插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E6%8F%92%E4%BB%B6%E9%BB%98%E8%AE%A4%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 启用插件（默认自动加载）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 启动方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA%E4%B8%8E%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.</span> <span class="nav-text">8. 最终结论与后续方向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 最终结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-superolds%E7%A0%B4%E8%A7%A3"><span class="nav-number">8.2.</span> <span class="nav-text">8.1.1 西游释厄传
 Super（olds）破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-%E7%BE%A4%E9%AD%94%E4%B9%B1%E8%88%9Eoldsplus%E7%A0%B4%E8%A7%A3"><span class="nav-number">8.3.</span> <span class="nav-text">8.1.2 西游释厄传
-群魔乱舞（oldsplus）破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E4%B8%BA%E4%BD%95%E5%8F%97%E9%98%BB"><span class="nav-number">8.4.</span> <span class="nav-text">8.2 ROM 补丁为何受阻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.5.</span> <span class="nav-text">8.3 后续方向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%80%99%E9%80%89%E5%9C%B0%E5%9D%80%E6%97%B6%E9%97%B4%E7%BA%BF%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86%E6%94%BE%E5%AE%9D-32"><span class="nav-number">9.</span> <span class="nav-text">附录
+群魔乱舞（oldsplus）破解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E4%B8%BA%E4%BD%95%E5%8F%97%E9%98%BB"><span class="nav-number">8.4.</span> <span class="nav-text">8.2 ROM 补丁为何受阻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%96%B9%E5%90%91"><span class="nav-number">8.5.</span> <span class="nav-text">8.3 后续方向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8F%91%E6%96%B9%E5%BC%8F%E7%BB%99%E5%85%B6%E4%BB%96%E4%BA%BA%E4%BD%BF%E7%94%A8"><span class="nav-number">8.6.</span> <span class="nav-text">8.4 分发方式：给其他人使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mame-json-cheat-%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">8.6.1.</span> <span class="nav-text">MAME JSON Cheat 使用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#retroarch-cheat-.cht-%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">8.6.2.</span> <span class="nav-text">RetroArch Cheat (.cht)
+使用方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%80%99%E9%80%89%E5%9C%B0%E5%9D%80%E6%97%B6%E9%97%B4%E7%BA%BF%E5%BF%AB%E7%85%A7%E5%B7%AE%E5%88%86%E6%94%BE%E5%AE%9D-32"><span class="nav-number">9.</span> <span class="nav-text">附录
 A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol></div>
         </div>
         <!--/noindex-->
@@ -268,7 +269,7 @@ A：候选地址时间线（快照差分，放宝 3→2）</span></a></li></ol><
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-12 08:55:08" itemprop="dateModified" datetime="2026-09-12T08:55:08+08:00">2026-09-12</time>
+      <time title="修改时间：2026-09-12 09:03:17" itemprop="dateModified" datetime="2026-09-12T09:03:17+08:00">2026-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -970,6 +971,66 @@ BIOS（<code>pgm_p02s.u20</code>）启动流程，定位检测点并 NOP 掉，�
 <li><strong>自动化验证脚本</strong>：编写 MAME Lua 脚本，自动测试补丁
 ROM 的启动流程与无限放宝效果。</li>
 </ol>
+<h3 id="分发方式给其他人使用">8.4 分发方式：给其他人使用</h3>
+<p>由于 PGM BIOS 校验 ROM 完整性，<strong>IPS
+补丁不可行</strong>（任何字节修改都触发 MAIN
+MENU）。以下是可用的分发方式速查表：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>方案</th>
+<th>适用</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MAME Lua 插件</strong>（推荐）</td>
+<td>MAME 0.2xx+</td>
+<td>功能完整，F9 切换/自动识别三游戏</td>
+<td>需配置 pluginspath</td>
+</tr>
+<tr>
+<td><strong>MAME JSON Cheat</strong></td>
+<td>MAME 0.2xx+（Cheat 插件）</td>
+<td>无需插件配置，放文件即用</td>
+<td>无法实时切换模式，无自动识别</td>
+</tr>
+<tr>
+<td><strong>RetroArch Cheat (.cht)</strong></td>
+<td>RetroArch + MAME 核心</td>
+<td>通用，其他前端也可用</td>
+<td>需逐核心配置，Rom 名需对应</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mame-json-cheat-使用方式">MAME JSON Cheat 使用方式</h4>
+<p>在 MAME 配置目录下创建 <code>cheat/</code>
+目录（若不存在），放入对应游戏名的 <code>.json</code> 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/cheat/orlegend.json    # 西游释厄传</span><br><span class="line">~/.mame/cheat/olds.json        # 西游释厄传 Super</span><br><span class="line">~/.mame/cheat/oldsplus.json    # 西游释厄传 群魔乱舞</span><br></pre></td></tr></table></figure>
+<p>在 <code>~/.mame/ini/plugin.ini</code> 中启用 Cheat 插件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cheat        1</span><br></pre></td></tr></table></figure>
+<p>启动游戏后按 <strong>Tab</strong> → <strong>Cheat</strong> →
+<strong>Infinite Items</strong> → 设为 <strong>On</strong>
+即可生效。</p>
+<p>Cheat 文件核心 JSON 格式（以 oldsplus 为例）：<br />
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;desc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Infinite Items (oldsplus)&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;space&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;m&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;tag&quot;</span><span class="punctuation">:</span> <span class="string">&quot;:maincpu&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;program&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;run&quot;</span><span class="punctuation">:</span> <span class="string">&quot;for _,a in ipairs(&#123;0x803c9d,0x80d1d8,0x80d45e,0x80d6e4,0x8127d1,0x8127d3,0x8127d5,0x8127d7,0x8127d9,0x8127db,0x8127dd,0x8127df&#125;) do m:write_u8(a,3) end&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">]</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="retroarch-cheat-.cht-使用方式">RetroArch Cheat (.cht)
+使用方式</h4>
+<p>在 RetroArch 的 MAME 核心下，进入游戏后按
+<strong>F1</strong>（或热键）→ <strong>Cheats</strong> → <strong>Load
+Cheat File</strong>，加载对应游戏的 <code>.cht</code> 文件。</p>
+<p><code>.cht</code> 文件格式（以 oldsplus 为例）：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cheat0 = &quot;Infinite Items (oldsplus)&quot;</span><br><span class="line">cheat0_address = &quot;0x803c9d&quot;</span><br><span class="line">cheat0_value = &quot;3&quot;</span><br><span class="line">cheat0_repeat_add_to_address = &quot;0&quot;</span><br><span class="line">cheat0_repeat_add_to_value = &quot;0&quot;</span><br><span class="line">cheat0_repeat_count = &quot;0&quot;</span><br><span class="line">cheat0_type = &quot;value_increment&quot;</span><br><span class="line">cheat0_memory_search_size = &quot;1&quot;</span><br><span class="line">cheat0_big_endian = true</span><br><span class="line">cheat0_enable = false</span><br></pre></td></tr></table></figure><br />
+注意：RetroArch 的 <code>.cht</code> 单个地址需逐个配置，建议参考对应
+MAME JSON Cheat 中的地址列表自行转换。</p>
 <hr />
 <h2 id="附录-a候选地址时间线快照差分放宝-32">附录
 A：候选地址时间线（快照差分，放宝 3→2）</h2>
