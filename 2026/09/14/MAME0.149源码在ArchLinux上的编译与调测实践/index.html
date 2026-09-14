@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标软件：MAME 0.149（2013 年发布的模拟器版本） 目标平台：Arch Linux &#x2F; x86_64，GCC 16.2.1，系统 SDL2 2.32.72 交付物：可运行的 mame64、mame.ini、源码补丁清单；恐龙快打等街机可正常游玩 日期：2026-09-14 1. 背景与目标 1.1 为什么要编译一个 8 年前的 MAME 街机模拟器 MAME（Multiple Arca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）">
+<meta property="og:url" content="https://sunjunior.github.io/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标软件：MAME 0.149（2013 年发布的模拟器版本） 目标平台：Arch Linux &#x2F; x86_64，GCC 16.2.1，系统 SDL2 2.32.72 交付物：可运行的 mame64、mame.ini、源码补丁清单；恐龙快打等街机可正常游玩 日期：2026-09-14 1. 背景与目标 1.1 为什么要编译一个 8 年前的 MAME 街机模拟器 MAME（Multiple Arca">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-14T04:52:57.557Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="编译实践, MAME, 调试, Arch Linux, SDL2">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/","path":"2026/09/14/MAME0.149源码在ArchLinux上的编译与调测实践/","title":"MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证） | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AA-8-%E5%B9%B4%E5%89%8D%E7%9A%84-mame"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 为什么要编译一个 8 年前的
+MAME</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 目标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E7%A1%AC%E4%BB%B6%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96%E8%BD%AF%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">2. 软硬件环境（依赖软件）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E7%8E%AF%E5%A2%83"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 硬件环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E7%8E%AF%E5%A2%83%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%97%B6%E5%AE%9E%E6%B5%8B%E7%89%88%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">2.2
+软件环境（编译执行时实测版本）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">3. 整体编译流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%8E%E7%A1%AE%E6%9E%84%E5%BB%BA%E5%8F%82%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 明确构建参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%89%8D%E7%9A%84%E6%BA%90%E7%A0%81%E9%A2%84%E5%A4%84%E7%90%86%E9%92%88%E5%AF%B9%E6%96%B0%E7%89%88%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">3.2.</span> <span class="nav-text">3.2
+构建前的源码预处理（针对新版工具链）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E6%9E%84%E5%BB%BA%E9%80%9A%E8%BF%87%E8%BF%9B%E5%BA%A6%E7%9A%84%E7%8E%B0%E8%B1%A1"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 首次构建通过进度的现象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 生成配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E9%AA%8C%E8%AF%81"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 冒烟验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4.
+编译与调测过程中遇到的问题及解决思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python2-%E7%94%9F%E6%88%90%E5%99%A8%E5%9C%A8-python3-%E4%B8%8A%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Python2 生成器在
+Python3 上无法运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#simple_set.h-%E7%B1%BB%E5%9E%8B%E7%AC%94%E8%AF%AF%E5%AF%BC%E8%87%B4%E7%BC%96%E8%AF%91%E5%A4%B1%E8%B4%A5%E4%B8%8A%E6%B8%B8%E8%87%AA%E5%B7%B1%E5%B0%B1%E5%86%99%E9%94%99%E4%BA%86"><span class="nav-number">4.2.</span> <span class="nav-text">4.2
+simple_set.h 类型笔误导致编译失败（上游自己就写错了）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#input.c-%E6%91%87%E6%9D%86-api-%E5%85%BC%E5%AE%B9-sdl1sdl2"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 input.c 摇杆
+API 兼容 SDL1&#x2F;SDL2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asan-%E6%9E%84%E5%BB%BA%E6%9C%9F%E6%84%8F%E5%A4%96%E6%8A%93%E5%88%B0-m68kmake.c-%E7%9A%84-memcpy-%E9%87%8D%E5%8F%A0"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 ASan
+构建期意外抓到 m68kmake.c 的 memcpy 重叠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%88%98%E5%BD%B9%E4%BB%BB%E4%BD%95%E6%B8%B8%E6%88%8F%E5%90%AF%E5%8A%A8%E5%8D%B3%E6%AE%B5%E9%94%99%E8%AF%AF%E5%90%AF%E5%8A%A8%E6%9C%9F%E5%A0%86%E6%8D%9F%E5%9D%8F"><span class="nav-number">4.5.</span> <span class="nav-text">4.5
+主战役：任何游戏启动即段错误（启动期堆损坏）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A9%E7%9B%96%E6%B8%85%E9%9B%B6%E9%97%AE%E9%A2%98%E5%90%8E%E7%9A%84%E5%8E%86%E5%8F%B2%E9%81%97%E7%95%99%E7%82%B8%E9%9B%B7%E5%88%A4%E7%A9%BA%E9%A1%BA%E5%BA%8F-bug"><span class="nav-number">4.6.</span> <span class="nav-text">4.6
+掩盖清零问题后的”历史遗留炸雷”（判空顺序 bug）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81%E7%9F%A9%E9%98%B5"><span class="nav-number">4.7.</span> <span class="nav-text">4.7 回归验证矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">5. 交付件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 可执行文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 运行方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E8%A1%A5%E4%B8%81%E6%B8%85%E5%8D%95%E6%9C%AC%E8%BD%AE%E7%B4%AF%E8%AE%A1"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 源码补丁清单（本轮累计）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%97%E7%95%99%E6%8F%90%E7%A4%BA"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 遗留提示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">6. 小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证） | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标软件：MAME 0.149（2013 年发布的模拟器版本） 目标平台：Arch Linux &#x2F; x86_64，GCC 16.2.1，系统 SDL2 2.32.72 交付物：可运行的 mame64、mame.ini、源码补丁清单；恐龙快打等街机可正常游玩 日期：2026-09-14 1. 背景与目标 1.1 为什么要编译一个 8 年前的 MAME 街机模拟器 MAME（Multiple Arca...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-14 00:00:00 / 修改时间：12:52:57" itemprop="dateCreated datePublished" datetime="2026-09-14T00:00:00+08:00">2026-09-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E8%AF%91%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">编译实践</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标软件：MAME 0.149（2013 年发布的模拟器版本） 目标平台：Arch Linux / x86_64，GCC 16.2.1，系统 SDL2 2.32.72 交付物：可运行的 mame64、mame.ini、源码补丁清单；恐龙快打等街机可正常游玩 日期：2026-09-14 1. 背景与目标 1.1 为什么要编译一个 8 年前的 MAME 街机模拟器 MAME（Multiple Arca...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标软件：MAME 0.149（2013 年发布的模拟器版本）<br />
+目标平台：Arch Linux / x86_64，GCC 16.2.1，系统 SDL2 2.32.72<br />
+交付物：可运行的
+<code>mame64</code>、<code>mame.ini</code>、源码补丁清单；恐龙快打等街机可正常游玩<br />
+日期：2026-09-14</p>
+</blockquote>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<h3 id="为什么要编译一个-8-年前的-mame">1.1 为什么要编译一个 8 年前的
+MAME</h3>
+<p>街机模拟器 <strong>MAME（Multiple Arcade Machine Emulator）</strong>
+版本众多。手头有一套 <strong>MAME 0.149 时代的 ROM 包</strong>（共
+28,510 个 zip，打包备份约
+45.8GB）。这里有一个容易被忽略的版本配套问题：</p>
+<blockquote>
+<p><strong>MAME 的 ROM 校验与加载机制是版本绑定的</strong>。新版 MAME 对
+ROM 的字节序、合并方式（parent/clone、CHD 分离、qsound
+存放位置等）做了大量调整，直接拿 0.149 的 ROM 包去跑新版
+MAME，会大量报错甚至拒绝加载。反过来，0.149
+官方二进制在国内网络环境下也不易获取、且未必能在新版系统依赖上直接跑起来。</p>
+</blockquote>
+<p>因此最稳妥的方案是：<strong>拿到 MAME 0.149
+的源码，在本地系统上从零编译一份，与手中的 ROM
+包配对使用</strong>。这既解决”版本配套”问题，也是一次很好的源码级编译调试训练。</p>
+<h3 id="目标">1.2 目标</h3>
+<ol type="1">
+<li>在 Arch Linux 上从源码编译出可用的 <code>mame64</code>。</li>
+<li>能正常启动并游玩 <strong>恐龙快打（Cadillacs &amp; Dinosaurs，驱动名
+<code>dino</code>，1993 Capcom，CPS1.5 基板）</strong>。</li>
+<li>顺带验证 CPS1 / CPS2 / NeoGeo / IREM / Toaplan / Psikyo
+等多基板机种。</li>
+<li>输出可复现的构建步骤、遇到的所有问题与解决思路、以及最终交付件。</li>
+</ol>
+<hr />
+<h2 id="软硬件环境依赖软件">2. 软硬件环境（依赖软件）</h2>
+<h3 id="硬件环境">2.1 硬件环境</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主机</td>
+<td>x86_64 桌面 PC，有 X11 显示器（1920x1080）</td>
+</tr>
+<tr>
+<td>外设</td>
+<td>普通键鼠；无手柄（摇杆路径顺带适配了 SDL2，见 4.3）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意：当前登录用户<strong>没有免密 sudo</strong>，后台长任务无法用
+<code>sudo systemd-run</code> 起服务。本机恰好有用户级
+systemd，于是所有耗时编译都用 <code>systemd-run --user --unit=xxx</code>
+放入用户级服务单元后台执行，用 <code>systemctl --user show</code>
+轮询状态，规避了权限问题。这是本文大量使用的一个技巧。</p>
+</blockquote>
+<h3 id="软件环境编译执行时实测版本">2.2
+软件环境（编译执行时实测版本）</h3>
+<table>
+<thead>
+<tr>
+<th>软件</th>
+<th>版本</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Arch Linux（滚动发行）</td>
+<td>新版 glibc / binutils</td>
+</tr>
+<tr>
+<td>GCC / G++</td>
+<td>16.2.1 20260810</td>
+<td><strong>新版编译器是本次主要矛盾</strong></td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.14.7</td>
+<td>无 python2，导致 0.149 生成器无法直接运行</td>
+</tr>
+<tr>
+<td>SDL2</td>
+<td>2.32.72</td>
+<td>系统库 <code>/usr/lib/libSDL2.so</code>，配合 SDL2_ttf</td>
+</tr>
+<tr>
+<td>make</td>
+<td>GNU make</td>
+<td>构建驱动</td>
+</tr>
+<tr>
+<td>gdb</td>
+<td>较新版本</td>
+<td>反汇编 / 断点 / 寄存器分析</td>
+</tr>
+<tr>
+<td>编译器</td>
+<td>AddressSanitizer</td>
+<td>GCC 内建，用于定位内存问题</td>
+</tr>
+</tbody>
+</table>
+<p>MAME 0.149 源码解压于
+<code>/home/sunjunior/mame/src/mame0149/</code>；ROM 包位于
+<code>/home/sunjunior/mame/roms/</code>；哈希表使用源码自带
+<code>src/mame0149/hash</code>。</p>
+<hr />
+<h2 id="整体编译流程">3. 整体编译流程</h2>
+<h3 id="明确构建参数">3.1 明确构建参数</h3>
+<p>MAME 0.149 的 makefile 通过变量控制构建内容，本轮使用的关键参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j8 TARGET=mame SDL_LIBVER=sdl2 \</span><br><span class="line">  NOWERROR=1 NO_DEBUGGER=1 NO_USE_QTDEBUG=1 OPTIMIZE=2</span><br></pre></td></tr></table></figure>
+<p>参数含义：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TARGET=mame</code></td>
+<td>构建标准街机模拟器</td>
+</tr>
+<tr>
+<td><code>SDL_LIBVER=sdl2</code></td>
+<td>链接系统的 SDL2（而不是依赖自带的旧 SDL1）</td>
+</tr>
+<tr>
+<td><code>NOWERROR=1</code></td>
+<td>大量老代码在新 GCC 下会产生新告警，关闭 <code>-Werror</code>
+避免当错误</td>
+</tr>
+<tr>
+<td><code>NO_DEBUGGER=1</code></td>
+<td>不带内置调试器（自用不需要）</td>
+</tr>
+<tr>
+<td><code>NO_USE_QTDEBUG=1</code></td>
+<td>不依赖 Qt（避免引入额外依赖）</td>
+</tr>
+<tr>
+<td><code>OPTIMIZE=2</code></td>
+<td>优化级别 O2（<strong>这一项在后续调测中极为关键，见
+4.5</strong>）</td>
+</tr>
+</tbody>
+</table>
+<p>零散补充：<code>-j8</code> 是 8 核并行；<code>SYMBOLS=1</code> 与
+<code>OPTIMIZE</code> 组合改变 strip
+与优化级别，调试专用，最后交付用不带 SYMBOLS 的配置。</p>
+<h3 id="构建前的源码预处理针对新版工具链">3.2
+构建前的源码预处理（针对新版工具链）</h3>
+<p>0.149 源码是在 2013 年、用当时工具链写的，放在 2026 年的 Arch
+上会有一批”历史遗留”不兼容。本轮共打了 3 处编译期补丁 + 1
+处构建期顺手修复（详见第 4 章）：Python
+生成器移植、<code>simple_set.h</code> 类型笔误、<code>input.c</code>
+摇杆 API、<code>m68kmake.c</code> 的 memcpy 重叠。另外有 <strong>17 个
+<code>.inc</code> 文件</strong>需要由生成器产出（mcs96 系 3 个、m6502 系
+10 个、m6809 系 3 个、tms57002 1 个）。由于这些生成器当初是 python2
+写的，我们直接按 makefile 里 cpu.mak 的配方用移植后的 py3
+脚本手工预生成到 <code>obj/sdl64/emu/cpu/...</code>。</p>
+<h3 id="首次构建通过进度的现象">3.3 首次构建通过进度的现象</h3>
+<p>完整的干净构建会编译约 3,300 个目标文件，链接产物约 107
+MB。全程用用户级 systemd 后台跑，日志落盘便于失败排查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user reset-failed mamebuild</span><br><span class="line">systemd-run --user --unit=mamebuild --setenv=HOME=/home/sunjunior \</span><br><span class="line">  /bin/bash -c <span class="string">&quot;cd /home/sunjunior/mame/src/mame0149 &amp;&amp; make -j8 ...&quot;</span></span><br><span class="line"><span class="comment"># 轮询：systemctl --user show mamebuild -p SubState</span></span><br></pre></td></tr></table></figure>
+<h3 id="生成配置文件">3.4 生成配置文件</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bin/mame -createconfig        <span class="comment"># 生成 mame.ini</span></span><br><span class="line"><span class="comment"># 编辑 rompath=/home/sunjunior/mame/roms</span></span><br><span class="line"><span class="comment"># 编辑 hashpath=/home/sunjunior/mame/src/mame0149/hash</span></span><br></pre></td></tr></table></figure>
+<p>一个坑：MAME 默认优先加载
+<code>$HOME/.mame/mame.ini</code>（此前装过新版
+MAME，留下的旧配置指向已搬走的 rom 目录）。为了<strong>新旧两个 MAME
+的配置互不干扰</strong>，0.149 统一用
+<code>-inipath /home/sunjunior/mame</code> 强制加载我们自己的
+mame.ini。后续所有命令都带该参数。</p>
+<h3 id="冒烟验证">3.5 冒烟验证</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bin/mame -inipath /home/sunjunior/mame -showusage          <span class="comment"># 帮助</span></span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame -verifyroms dino    <span class="comment"># dino romset best available</span></span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame -verifyroms kof94    <span class="comment"># romset is good</span></span><br></pre></td></tr></table></figure>
+<p><code>dino</code> 报 <code>qsound.bin ROM NEEDS REDUMP</code>
+属正常：0.149 驱动里把 qsound.bin 标成”已知坏
+dump，需要重抓”，缺失只警告、不阻断运行（后文在 4.6
+会解释它为什么没有继续把游戏搞崩）。</p>
+<hr />
+<h2 id="编译与调测过程中遇到的问题及解决思路">4.
+编译与调测过程中遇到的问题及解决思路</h2>
+<p>这一章是全文核心。问题可以分成两类：<strong>编译期不兼容</strong>（4.1<sub>4.4）和<strong>运行期段错误</strong>（4.5</sub>4.6）。运行期问题占了绝大多数精力，也最有价值。</p>
+<h3 id="python2-生成器在-python3-上无法运行">4.1 Python2 生成器在
+Python3 上无法运行</h3>
+<p><strong>现象</strong>：构建到 CPU 模块时报错，生成 <code>.inc</code>
+的脚本（mcs96make.py / m6502make.py / m6809make.py / tmsmake.py）是 2013
+年的 python2 代码，而系统只有 Python 3.14。</p>
+<p><strong>解决思路</strong>：逐文件移植为 python3 语法（print
+函数化、<code>iteritems</code>→<code>items</code>、编码处理等），并逐个验证能生成与预期一致的
+<code>.inc</code>。其中 m6809make.py 移植后仍有 <code>\:</code> 的
+SyntaxWarning，无害，忽略。之后按 makefile 里 cpu.mak 的原始 recipe
+显式运行生成器，一次性预生成全部 17 个 <code>.inc</code>。</p>
+<h3 id="simple_set.h-类型笔误导致编译失败上游自己就写错了">4.2
+<code>simple_set.h</code> 类型笔误导致编译失败（上游自己就写错了）</h3>
+<p><strong>现象</strong>：编译 <code>src/lib/util/simple_set.h</code>
+报”指针类型不匹配”类错误。</p>
+<p><strong>解决思路</strong>：对照上游可发现这是 <strong>0.149
+源码自带的笔误</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 上游 0.149 原文（错误）</span></span><br><span class="line">simple_set&lt;T&gt;* node1Parent = node1-&gt;parent;   <span class="comment">// node1-&gt;parent 类型是 tree_node*</span></span><br><span class="line"><span class="comment">// 修正</span></span><br><span class="line">tree_node* node1Parent = node1-&gt;parent;</span><br></pre></td></tr></table></figure>
+<p><code>node1-&gt;parent</code> 明明是 <code>tree_node*</code>，却赋给
+<code>simple_set&lt;T&gt;*</code>。旧编译器或许在具体实例化路径上放过了它，GCC
+16
+严格检查下直接编译失败，改对类型即可。这也提醒：<strong>考古编译老代码时，源码自身的
+bug 往往是第一类高发点</strong>。</p>
+<h3 id="input.c-摇杆-api-兼容-sdl1sdl2">4.3 <code>input.c</code> 摇杆
+API 兼容 SDL1/SDL2</h3>
+<p><strong>现象</strong>：<code>sdl_joystick_init</code> 里调用
+<code>SDL_JoystickName(physical_stick)</code>，SDL2 的该函数参数是
+<strong>SDL_Joystick*</strong>（句柄）而不是设备号，类型/语义都不对。</p>
+<p><strong>解决思路</strong>：在 <code>#ifdef SDLMAME_SDL2</code>
+分支里，先 <code>SDL_JoystickOpen(id)</code> 取句柄再取名，用完
+<code>SDL_JoystickClose</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SDLMAME_SDL2</span></span><br><span class="line">    SDL_Joystick *tmpjoy = <span class="built_in">SDL_JoystickOpen</span>(physical_stick);</span><br><span class="line">    <span class="type">char</span> *joy_name = <span class="built_in">remove_spaces</span>(machine, tmpjoy ? <span class="built_in">SDL_JoystickName</span>(tmpjoy) : <span class="string">&quot;Unknown&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (tmpjoy) <span class="built_in">SDL_JoystickClose</span>(tmpjoy);</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    <span class="type">char</span> *joy_name = <span class="built_in">remove_spaces</span>(machine, <span class="built_in">SDL_JoystickName</span>(physical_stick));</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="asan-构建期意外抓到-m68kmake.c-的-memcpy-重叠">4.4 ASan
+构建期意外抓到 <code>m68kmake.c</code> 的 memcpy 重叠</h3>
+<p><strong>现象</strong>：为排查运行期崩溃，尝试做一次
+<code>SANITIZE=address</code> 全量构建，结果编译到 m68k
+生成器时直接爆出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddressSanitizer: memcpy-param-overlap src/emu/cpu/m68000/m68kmake.c:602 in fgetline</span><br></pre></td></tr></table></figure>
+<p><strong>解决思路</strong>：这是一个<strong>真实的上游
+bug</strong>——<code>fgetline</code> 里有一处
+<code>memcpy(buff, buff+1, nchars-1)</code>
+源目标重叠，属于未定义行为。普通构建下侥幸”能跑”，ASan
+一开立即现形。顺手改成 <code>memmove</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(buff[<span class="number">0</span>] == <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">    <span class="built_in">memmove</span>(buff, buff + <span class="number">1</span>, nchars - <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>经验</strong>：老代码 + 现代编译器 = 大量潜伏 UB。ASan
+不仅能找运行期问题，<strong>构建期生成的宿主工具也会被注入检查</strong>，等于多了一层免费体检。</p>
+<h3 id="主战役任何游戏启动即段错误启动期堆损坏">4.5
+主战役：任何游戏启动即段错误（启动期堆损坏）</h3>
+<p>这是耗时最长、最有含金量的一段。先说结论，再讲推理链。</p>
+<p><strong>症状</strong>：编译成功的
+<code>mame64</code>，CLI（<code>-showusage</code>、<code>-listfull</code>、<code>-verifyroms</code>）全部正常；但<strong>只要真正启动一个游戏</strong>（如
+<code>dino</code>），几乎必然 <code>SIGSEGV</code>（退出码
+139），且<strong>崩溃点每次不同</strong>：</p>
+<ul>
+<li>有时崩在 <code>sdlvideo_init()</code> 里遍历显示器链表（比较
+<code>"auto"</code> 与 <code>monitor_device</code> 的
+<code>strcmp</code>）；</li>
+<li>有时崩在 <code>sdlinput_init()</code> 遍历键盘设备链表；</li>
+<li>有时崩在 window 创建路径。</li>
+</ul>
+<p>同一份代码，崩的地方漂移——这正是 <strong>heap
+已被写坏</strong>的典型特征（不是某一行逻辑错误，而是内存被提前污染，随后在任意一处读取脏指针才炸）。</p>
+<p><strong>排查过程（推理链）</strong>：</p>
+<ol type="1">
+<li><strong>用带符号的二进制反编译</strong>。交付用的二进制被
+<code>-s</code> strip 了，先
+<code>touch drivlist.o &amp;&amp; make SYMBOLS=1</code>
+只重链不去符号（不影响 <code>.o</code> 的优化级别，几十秒就好），再用
+gdb 反汇编、断点、看寄存器。</li>
+<li><strong>打点缩小范围</strong>。在 <code>sdlvideo_init</code> 的
+<code>init_monitors()</code> 之后、<code>sdlwindow_init()</code>
+之后各加一行临时 <code>fprintf</code>，打印显示器单链表
+<code>sdl_monitor_list</code> 的头节点指针和
+<code>-&gt;next</code>。结果发现：<strong><code>global_alloc_clear(sdl_monitor_info)</code>
+分配的节点，<code>-&gt;next</code>
+字段直接就是垃圾值</strong>（一个悬空指针），而该字段本应被清零。</li>
+<li><strong>对照实验给出方向</strong>。<code>-O0</code>（ASan
+构建恰好会因为 SYMBOLS=1 退到默认
+<code>OPTIMIZE=0</code>）构建<strong>不崩</strong>，<code>-O2</code>/<code>-O3</code>
+必崩。这就把问题锁定在”优化级别相关”——高度怀疑是<strong>编译器优化引入的问题而非纯逻辑
+bug</strong>。</li>
+<li><strong>反汇编实锤</strong>。对 <code>-O2</code> 未剥离二进制反汇编
+<code>sdlvideo_init</code>，盯着 <code>global_alloc_clear</code>
+内联后的指令看：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">call  malloc_file_line           ; monitor = operator new(..., zeromem)</span><br><span class="line">...</span><br><span class="line">pxor  %xmm0,%xmm0                ; 只清了自己的寄存器</span><br><span class="line">movups %xmm0,0x10(%rax)          ; 清零只写给了 resource_pool_object，没写给 monitor</span><br><span class="line">...</span><br><span class="line">call  snprintf                   ; 之后才写 monitor 的 device/w/h 字段</span><br></pre></td></tr></table></figure>
+<p><strong>monitor 结构体的 <code>next</code>
+字段从没被写过零</strong>——也就是说，<strong><code>global_alloc_clear</code>
+里那个 <code>memset</code> 被 GCC 16 在 <code>-O2</code>
+下整段”死代码消除”了</strong>。</p>
+<ol start="5" type="1">
+<li><p><strong>为什么能合法消除</strong>：<code>global_alloc_clear(T)</code>
+展开成
+<code>pool.add_object(new(__FILE__,__LINE__,zeromem) T)</code>。编译器内联后认为：这个块是由
+<code>malloc</code> 刚搞出来的，而紧随其后的代码（snprintf
+等）把所有”会被读到”的字段都写了；<code>next</code>
+这类暂时只写不读的字段，其初始值”永远不会被观察到”，于是
+<code>memset</code>
+就成了可删除的死代码。编译器甚至不关心”下次遍历链表时 next
+会被读出来当指针用”——在它眼里那属于”读取未初始化内存”的
+UB，怎么处理都不违约。<strong><code>-O0</code>
+不做这类优化，所以老代码在旧工具链上活得好好的，在新 GCC
+上集体翻车。</strong></p></li>
+<li><p><strong>修复</strong>：让清零变得<strong>不可优化</strong>。把
+<code>operator new(..., zeromem)</code> 里的 <code>memset</code> 换成用
+<strong>volatile 指针逐字节写零</strong>：</p></li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ATTR_FORCE_INLINE <span class="keyword">inline</span> <span class="type">void</span> <span class="title">zero_mem_clear</span><span class="params">(<span class="type">void</span> *result, std::<span class="type">size_t</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> *p = (<span class="type">char</span> *)result;</span><br><span class="line">    <span class="keyword">for</span> (std::<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; size; i++)</span><br><span class="line">        ((<span class="keyword">volatile</span> <span class="type">char</span> *)p)[i] = <span class="number">0</span>;   <span class="comment">// volatile 写，编译器无权删除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>两个 zeromem operator new（普通 + 数组）都改用它。改动集中在
+<code>src/emu/emualloc.h</code>，影响所有翻译单元，需要一次全量重编（约
+35~45 分钟）。</p>
+<p><strong>修复效果</strong>：监视器链表、键盘链表等节点的字段终于正确清零，启动崩溃消失；随后崩溃点后移到真正的历史
+bug 上（4.6）。</p>
+<h3 id="掩盖清零问题后的历史遗留炸雷判空顺序-bug">4.6
+掩盖清零问题后的”历史遗留炸雷”（判空顺序 bug）</h3>
+<p>清零问题修复（<code>-O2</code>）后，<code>dino</code> 能一路跑到 ROM
+加载与第一帧渲染，然后又开始崩。逐个 gdb
+回栈，发现<strong>全是同一类代码模式</strong>：<code>memregion("&lt;tag&gt;")-&gt;base()</code>
+<strong>先解引用、后判空</strong>。当某个驱动确实没有这个 region
+时，<code>memregion()</code> 返回 <code>NULL</code>，再
+<code>-&gt;base()</code> 必然段错误。</p>
+<p>两个实例：</p>
+<p><strong>① CPS1 星场渲染（影响 dino/punisher/slammast 等 CPS1.5
+机种）</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/mame/video/cps1.c cps1_render_stars()</span></span><br><span class="line">UINT8 *stars_rom = <span class="built_in">memregion</span>(<span class="string">&quot;stars&quot;</span>)-&gt;<span class="built_in">base</span>();      <span class="comment">// ← memregion(&quot;stars&quot;)==NULL 时崩溃</span></span><br><span class="line"><span class="keyword">if</span> (!stars_rom &amp;&amp; (m_stars_enabled[<span class="number">0</span>] || m_stars_enabled[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">return</span>;</span><br></pre></td></tr></table></figure>
+<p><code>dino</code> 用的是 CPS1.5 基板，0.149 驱动里<strong>没有定义
+<code>"stars"</code> 区域</strong>，结果一进
+<code>screen_update_cps1</code> 就炸。修复：先取区域指针并判空，再取
+base：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memory_region *stars_region = <span class="built_in">memregion</span>(<span class="string">&quot;stars&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (stars_region == <span class="literal">NULL</span>) <span class="keyword">return</span>;   <span class="comment">// 没有星场区域则跳过星场渲染</span></span><br><span class="line">UINT8 *stars_rom = stars_region-&gt;<span class="built_in">base</span>();</span><br></pre></td></tr></table></figure>
+<p><strong>② NeoGeo YM2610 的 <code>.deltat</code> 区域（影响
+kof94/mslug 等无 Delta-T 卡带）</strong></p>
+<p>NeoGeo 卡带装载逻辑在 <code>neogeo.c</code> 里有一条关键注释：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// removing the region will fix sound glitches in non-Delta-T games</span></span><br><span class="line"><span class="built_in">machine</span>().<span class="built_in">memory</span>().<span class="built_in">region_free</span>(<span class="string">&quot;:ymsnd.deltat&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>即无 Delta-T 声音数据的卡带会<strong>主动删掉
+<code>ymsnd.deltat</code> 区域</strong>。而音频芯片 <code>ym2610</code>
+在 <code>device_start()</code>（src/emu/sound/2610intf.c）与
+<code>ym2610_reset_chip()</code>（src/emu/sound/fm.c）两处都是这么写的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pcmbufb  = (<span class="type">void</span> *)(<span class="built_in">machine</span>().<span class="built_in">root_device</span>().<span class="built_in">memregion</span>(name)-&gt;<span class="built_in">base</span>());  <span class="comment">// name 形如 &quot;:ymsnd.deltat&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>region_free</code> 之后这里 <code>memregion</code> 返回
+<code>NULL</code> → 必崩。修复：先判空，为空则回退到主 PCM 区域：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">memory_region *deltat_region = <span class="built_in">machine</span>().<span class="built_in">root_device</span>().<span class="built_in">memregion</span>(name);</span><br><span class="line"><span class="keyword">if</span> (deltat_region != <span class="literal">NULL</span>)</span><br><span class="line">&#123;</span><br><span class="line">    pcmbufb  = deltat_region-&gt;<span class="built_in">base</span>();</span><br><span class="line">    pcmsizeb = deltat_region-&gt;<span class="built_in">bytes</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    pcmbufb = pcmbufa;</span><br><span class="line">    pcmsizeb = pcmsizea;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>为什么这些”雷”以前没炸</strong>：要么是以前编译器不会顺手优化导致运行到该处时概率性通过；要么这些机种在旧版工具的特定内存布局下没触发。但它们本质上就是真实的逻辑缺陷，属于”<strong>判空顺序</strong>反模式”，在任何环境下都是隐患。</p>
+<h3 id="回归验证矩阵">4.7 回归验证矩阵</h3>
+<p>修复 + <code>OPTIMIZE=2</code> 全量重编后，用
+<code>-window -video soft -seconds_to_run N</code> 自动跑 N
+秒验证（能打印 <code>Average speed: xxx%</code>
+即代表真正进入游戏主循环）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>基板</th>
+<th>机种</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPS1</td>
+<td>sf2 / sf2ce / ffight</td>
+<td>✅ ~100%</td>
+</tr>
+<tr>
+<td>CPS1.5</td>
+<td>dino / punisher / slammast</td>
+<td>✅ ~100%</td>
+</tr>
+<tr>
+<td>CPS2</td>
+<td>ssf2t / xmen / dstlk / 3wonders / spf2t</td>
+<td>✅ ~100%</td>
+</tr>
+<tr>
+<td>NeoGeo</td>
+<td>kof94 / mslug / rbff1 / samsho2 / garou / 2020bb</td>
+<td>✅ <sub>96</sub>100%</td>
+</tr>
+<tr>
+<td>SEGA System16</td>
+<td>shinobi / astorm</td>
+<td>✅ ~100%</td>
+</tr>
+<tr>
+<td>Konami / IREM</td>
+<td>tmnt / inthunt</td>
+<td>✅ ~100%</td>
+</tr>
+<tr>
+<td>Psikyo / Toaplan / Taito</td>
+<td>s1945 / batsugun / rastan</td>
+<td>✅ ~100%</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>说明：<code>rmanc2</code>（Racing Maniac 2）退出码
+5，是因为<strong>手里这套 0.149 ROM 包内没有该 romset</strong>（只有
+rmancp2j），属于缺 ROM，不是模拟器缺陷。</p>
+</blockquote>
+<hr />
+<h2 id="交付件">5. 交付件</h2>
+<h3 id="可执行文件">5.1 可执行文件</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>交付物</th>
+<th>路径 / 说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mame64</code>（发布版）</td>
+<td><code>/home/sunjunior/mame/bin/mame</code>，约
+107MB，stripped，<code>OPTIMIZE=2</code>；<code>ldd</code> 仅依赖系统
+<code>libSDL2-2.0.so.0</code> 与
+<code>libSDL2_ttf-2.0.so.0</code>，无缺失动态库</td>
+</tr>
+<tr>
+<td>源码树</td>
+<td><code>/home/sunjunior/mame/src/mame0149/</code></td>
+</tr>
+<tr>
+<td>配置文件</td>
+<td><code>/home/sunjunior/mame/mame.ini</code>（rompath/hashpath
+已配好）</td>
+</tr>
+<tr>
+<td>ROM 包</td>
+<td><code>/home/sunjunior/mame/roms/</code>（28,510 个 zip），备份
+<code>/home/sunjunior/mame/MAME_0.149_ROMs.zip</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="运行方式">5.2 运行方式</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/sunjunior/mame</span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame -window dino     <span class="comment"># 恐龙快打，窗口模式</span></span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame dino             <span class="comment"># 全屏模式</span></span><br></pre></td></tr></table></figure>
+<p>务必带 <code>-inipath /home/sunjunior/mame</code>，避免误读旧版 MAME
+留在 <code>~/.mame/mame.ini</code> 的配置。</p>
+<h3 id="源码补丁清单本轮累计">5.3 源码补丁清单（本轮累计）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>文件</th>
+<th>问题</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/lib/util/simple_set.h</code></td>
+<td>上游类型笔误 <code>simple_set&lt;T&gt;*</code></td>
+<td>改为 <code>tree_node*</code></td>
+</tr>
+<tr>
+<td><code>src/osd/sdl/input.c</code></td>
+<td>SDL2 摇杆取名 API 不兼容</td>
+<td><code>#ifdef SDLMAME_SDL2</code> 分支先打开句柄再取名</td>
+</tr>
+<tr>
+<td><code>src/emu/cpu/{mcs96,m6502,m6809,tms57002}/*make.py</code></td>
+<td>python2→python3</td>
+<td>全部移植并逐一验证</td>
+</tr>
+<tr>
+<td><code>src/emu/cpu/m68000/m68kmake.c:602</code></td>
+<td><code>memcpy</code> 源目标重叠（UB）</td>
+<td>改 <code>memmove</code></td>
+</tr>
+<tr>
+<td><code>src/emu/emualloc.h</code></td>
+<td><strong>GCC16 -O2 死代码消除 zeromem 的 memset</strong></td>
+<td>volatile 逐字节清零，防消除</td>
+</tr>
+<tr>
+<td><code>src/mame/video/cps1.c</code></td>
+<td><code>cps1_render_stars</code>
+先解引用后判空（“stars”区域缺失）</td>
+<td>先判空再取 base</td>
+</tr>
+<tr>
+<td><code>src/emu/sound/2610intf.c</code>、<code>src/emu/sound/fm.c</code></td>
+<td>ym2610 <code>.deltat</code> 区域缺失时崩溃</td>
+<td>判空并回退主 PCM 区域</td>
+</tr>
+</tbody>
+</table>
+<h3 id="遗留提示">5.4 遗留提示</h3>
+<ol type="1">
+<li>恐龙快打启动时 <code>qsound.bin ROM NEEDS REDUMP</code> 的警告是
+0.149 驱动本身把该 ROM 标记为”已知坏
+dump”所致，<strong>不影响游玩</strong>。</li>
+<li>MAME 0.149 没有 <code>-skip_gameinfo</code> 等较新参数；配合本 ROM
+包使用，勿改用新版 MAME。</li>
+<li>若日后要换回 <code>-O3</code>
+或换工具链版本，建议先重跑一次本轮的回归矩阵（4.7），防止新的编译器行为再次”合法销毁”初始化。</li>
+</ol>
+<hr />
+<h2 id="小结">6. 小结</h2>
+<p>这次”编译老
+MAME”最有价值的收获不是”能跑恐龙快打”这个结果，而是完整的调测闭环：</p>
+<blockquote>
+<p>症状（崩溃点漂移的启动段错误）→ 打点缩小范围 → 对照实验（-O0 不崩 /
+-O2 必崩）→ 反汇编实锤（GCC16 死代码消除 memset）→ 根治（volatile
+清零）→ 暴露并修复两个历史判空 bug → 全矩阵回归。</p>
+</blockquote>
+<p>一句话总结：<strong>博览时代的老 C++
+代码最大的敌人不是旧依赖，而是”现代编译器是否更严格地践行了标准允许的未定义行为”。</strong>
+<code>-O0</code>
+侥幸能跑，恰恰证明了问题真实存在，只是旧工具链替你装修好了裂缝。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/" title="MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）">https://sunjunior.github.io/2026/09/14/MAME0.149源码在ArchLinux上的编译与调测实践/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E8%AF%91%E5%AE%9E%E8%B7%B5-MAME-%E8%B0%83%E8%AF%95-Arch-Linux-SDL2/" rel="tag"><i class="fa fa-tag"></i> 编译实践, MAME, 调试, Arch Linux, SDL2</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="恐龙快打（CPS1）暴击值最大化 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 恐龙快打（CPS1）暴击值最大化 Hack 技术文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
