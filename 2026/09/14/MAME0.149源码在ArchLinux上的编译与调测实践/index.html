@@ -28,7 +28,7 @@
 <meta property="og:description" content="目标软件：MAME 0.149（2013 年发布的模拟器版本） 目标平台：Arch Linux &#x2F; x86_64，GCC 16.2.1，系统 SDL2 2.32.72 交付物：可运行的 mame64、mame.ini、源码补丁清单；恐龙快打等街机可正常游玩 日期：2026-09-14 1. 背景与目标 1.1 为什么要编译一个 8 年前的 MAME 街机模拟器 MAME（Multiple Arca">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-13T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-14T04:52:57.557Z">
+<meta property="article:modified_time" content="2026-09-14T05:03:03.368Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="编译实践, MAME, 调试, Arch Linux, SDL2">
 <meta name="twitter:card" content="summary">
@@ -267,7 +267,7 @@ API 兼容 SDL1&#x2F;SDL2</span></a></li><li class="nav-item nav-level-3"><a cla
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-14 00:00:00 / 修改时间：12:52:57" itemprop="dateCreated datePublished" datetime="2026-09-14T00:00:00+08:00">2026-09-14</time>
+      <time title="创建时间：2026-09-14 00:00:00 / 修改时间：13:03:03" itemprop="dateCreated datePublished" datetime="2026-09-14T00:00:00+08:00">2026-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -406,9 +406,8 @@ systemd，于是所有耗时编译都用 <code>systemd-run --user --unit=xxx</co
 </tr>
 </tbody>
 </table>
-<p>MAME 0.149 源码解压于
-<code>/home/sunjunior/mame/src/mame0149/</code>；ROM 包位于
-<code>/home/sunjunior/mame/roms/</code>；哈希表使用源码自带
+<p>MAME 0.149 源码解压于 <code>~/mame/src/mame0149/</code>；ROM 包位于
+<code>~/mame/roms/</code>；哈希表使用源码自带
 <code>src/mame0149/hash</code>。</p>
 <hr />
 <h2 id="整体编译流程">3. 整体编译流程</h2>
@@ -473,17 +472,16 @@ systemd，于是所有耗时编译都用 <code>systemd-run --user --unit=xxx</co
 <h3 id="首次构建通过进度的现象">3.3 首次构建通过进度的现象</h3>
 <p>完整的干净构建会编译约 3,300 个目标文件，链接产物约 107
 MB。全程用用户级 systemd 后台跑，日志落盘便于失败排查：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user reset-failed mamebuild</span><br><span class="line">systemd-run --user --unit=mamebuild --setenv=HOME=/home/sunjunior \</span><br><span class="line">  /bin/bash -c <span class="string">&quot;cd /home/sunjunior/mame/src/mame0149 &amp;&amp; make -j8 ...&quot;</span></span><br><span class="line"><span class="comment"># 轮询：systemctl --user show mamebuild -p SubState</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user reset-failed mamebuild</span><br><span class="line">systemd-run --user --unit=mamebuild --setenv=HOME=<span class="variable">$HOME</span> \</span><br><span class="line">  /bin/bash -c <span class="string">&quot;cd ~/mame/src/mame0149 &amp;&amp; make -j8 ...&quot;</span></span><br><span class="line"><span class="comment"># 轮询：systemctl --user show mamebuild -p SubState</span></span><br></pre></td></tr></table></figure>
 <h3 id="生成配置文件">3.4 生成配置文件</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bin/mame -createconfig        <span class="comment"># 生成 mame.ini</span></span><br><span class="line"><span class="comment"># 编辑 rompath=/home/sunjunior/mame/roms</span></span><br><span class="line"><span class="comment"># 编辑 hashpath=/home/sunjunior/mame/src/mame0149/hash</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bin/mame -createconfig        <span class="comment"># 生成 mame.ini</span></span><br><span class="line"><span class="comment"># 编辑 rompath=~/mame/roms</span></span><br><span class="line"><span class="comment"># 编辑 hashpath=~/mame/src/mame0149/hash</span></span><br></pre></td></tr></table></figure>
 <p>一个坑：MAME 默认优先加载
 <code>$HOME/.mame/mame.ini</code>（此前装过新版
 MAME，留下的旧配置指向已搬走的 rom 目录）。为了<strong>新旧两个 MAME
-的配置互不干扰</strong>，0.149 统一用
-<code>-inipath /home/sunjunior/mame</code> 强制加载我们自己的
-mame.ini。后续所有命令都带该参数。</p>
+的配置互不干扰</strong>，0.149 统一用 <code>-inipath ~/mame</code>
+强制加载我们自己的 mame.ini。后续所有命令都带该参数。</p>
 <h3 id="冒烟验证">3.5 冒烟验证</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bin/mame -inipath /home/sunjunior/mame -showusage          <span class="comment"># 帮助</span></span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame -verifyroms dino    <span class="comment"># dino romset best available</span></span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame -verifyroms kof94    <span class="comment"># romset is good</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bin/mame -inipath ~/mame -showusage          <span class="comment"># 帮助</span></span><br><span class="line">./bin/mame -inipath ~/mame -verifyroms dino    <span class="comment"># dino romset best available</span></span><br><span class="line">./bin/mame -inipath ~/mame -verifyroms kof94    <span class="comment"># romset is good</span></span><br></pre></td></tr></table></figure>
 <p><code>dino</code> 报 <code>qsound.bin ROM NEEDS REDUMP</code>
 属正常：0.149 驱动里把 qsound.bin 标成”已知坏
 dump，需要重抓”，缺失只警告、不阻断运行（后文在 4.6
@@ -712,31 +710,30 @@ rmancp2j），属于缺 ROM，不是模拟器缺陷。</p>
 <tbody>
 <tr>
 <td><code>mame64</code>（发布版）</td>
-<td><code>/home/sunjunior/mame/bin/mame</code>，约
+<td><code>~/mame/bin/mame</code>，约
 107MB，stripped，<code>OPTIMIZE=2</code>；<code>ldd</code> 仅依赖系统
 <code>libSDL2-2.0.so.0</code> 与
 <code>libSDL2_ttf-2.0.so.0</code>，无缺失动态库</td>
 </tr>
 <tr>
 <td>源码树</td>
-<td><code>/home/sunjunior/mame/src/mame0149/</code></td>
+<td><code>~/mame/src/mame0149/</code></td>
 </tr>
 <tr>
 <td>配置文件</td>
-<td><code>/home/sunjunior/mame/mame.ini</code>（rompath/hashpath
-已配好）</td>
+<td><code>~/mame/mame.ini</code>（rompath/hashpath 已配好）</td>
 </tr>
 <tr>
 <td>ROM 包</td>
-<td><code>/home/sunjunior/mame/roms/</code>（28,510 个 zip），备份
-<code>/home/sunjunior/mame/MAME_0.149_ROMs.zip</code></td>
+<td><code>~/mame/roms/</code>（28,510 个 zip），备份
+<code>~/mame/MAME_0.149_ROMs.zip</code></td>
 </tr>
 </tbody>
 </table>
 <h3 id="运行方式">5.2 运行方式</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/sunjunior/mame</span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame -window dino     <span class="comment"># 恐龙快打，窗口模式</span></span><br><span class="line">./bin/mame -inipath /home/sunjunior/mame dino             <span class="comment"># 全屏模式</span></span><br></pre></td></tr></table></figure>
-<p>务必带 <code>-inipath /home/sunjunior/mame</code>，避免误读旧版 MAME
-留在 <code>~/.mame/mame.ini</code> 的配置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/mame</span><br><span class="line">./bin/mame -inipath ~/mame -window dino     <span class="comment"># 恐龙快打，窗口模式</span></span><br><span class="line">./bin/mame -inipath ~/mame dino             <span class="comment"># 全屏模式</span></span><br></pre></td></tr></table></figure>
+<p>务必带 <code>-inipath ~/mame</code>，避免误读旧版 MAME 留在
+<code>~/.mame/mame.ini</code> 的配置。</p>
 <h3 id="源码补丁清单本轮累计">5.3 源码补丁清单（本轮累计）</h3>
 <table>
 <colgroup>
