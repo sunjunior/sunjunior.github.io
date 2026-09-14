@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T15:35:38.697Z">
+<meta property="article:modified_time" content="2026-09-14T08:57:21.307Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -165,7 +165,10 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6%E8%B8%A9%E5%9D%91c6-%E5%A4%9A%E5%AF%B9%E8%B1%A1%E5%85%B1%E4%BA%AB"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 暴击值递减机制（踩坑：$c6
 多对象共享）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%86%B3%E7%AD%96%E5%8F%AA%E6%94%B9%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%8A%A8%E9%80%92%E5%87%8F"><span class="nav-number">5.5.</span> <span class="nav-text">5.5
 最终决策：只改初始化、不动递减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88%E6%9C%80%E7%BB%88%E7%89%88-v3"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 ROM 补丁方案（最终版 v3）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 插件验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88v2%E6%94%B9%E6%8C%87%E4%BB%A4%E4%B8%8D%E5%8A%A8%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">5.8.</span> <span class="nav-text">5.6 ROM
-补丁方案（v2：改指令，不动数据表）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-number">9.</span> <span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
+补丁方案（v2：改指令，不动数据表）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">6.</span> <span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-number">9.</span> <span class="nav-text">9. MAME 0.149
+移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-number">9.1.</span> <span class="nav-text">9.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-number">9.2.</span> <span class="nav-text">9.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-number">9.3.</span> <span class="nav-text">9.3 可选：0.149 XML
+cheat（防慢速递减）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E8%AE%BA"><span class="nav-number">9.4.</span> <span class="nav-text">9.4 测试结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%A7%E9%85%8D%E5%A5%97%E6%94%B9%E5%8A%A8%E6%9C%AC%E6%AC%A1%E6%9E%84%E5%BB%BA%E6%96%B0%E5%A2%9E"><span class="nav-number">9.5.</span> <span class="nav-text">9.5 0.149
+侧配套改动（本次构建新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-number">10.</span> <span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -260,9 +263,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-09-10 00:00:00 / 修改时间：23:35:38" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
+      <time title="创建时间：2026-09-10 00:00:00" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-14 16:57:21" itemprop="dateModified" datetime="2026-09-14T16:57:21+08:00">2026-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -751,6 +760,112 @@ Boss
 <code>cde_23a.8f</code>，避免在已污染的 ROM
 上迭代导致错误累积。</p></li>
 </ol>
+<hr />
+<h2 id="mame-0.149-移植与验证2026-09-14-更新">9. MAME 0.149
+移植与验证（2026-09-14 更新）</h2>
+<blockquote>
+<p>本文前 8 章基于 MAME 0.289 完成。第 9
+章记录将”暴击值最大化”成果迁移到本次自编译的 <strong>MAME
+0.149</strong>（源码编译版
+<code>~/mame/bin/mame</code>）的调测方案与测试结论。</p>
+</blockquote>
+<h3 id="结论先行">9.1 结论先行</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM 补丁文件</td>
+<td>✅ <strong>完全通用</strong>：0.149 与 0.289 使用同一份
+<code>cde_23a.8f</code>（原版 CRC <code>8f4e585e</code>），补丁版 SHA1
+<code>f988e6021c6b3178193930b3d89e827888af5756</code>
+一致，零改动直用</td>
+</tr>
+<tr>
+<td>暴击值地址</td>
+<td>✅ 一致：P1 对象基址 <code>0xffb274</code> + <code>0xC6</code> =
+<code>0xffb33a</code>（同一游戏二进制布局，仅驱动外壳不同）</td>
+</tr>
+<tr>
+<td>已安装</td>
+<td>✅ <code>roms/dino.zip</code> 内替换为补丁
+<code>cde_23a.8f</code>（原件备份为 <code>dino.zip.orig</code>）</td>
+</tr>
+<tr>
+<td>启动</td>
+<td>✅ 100% 速度，仅报预期中的
+<code>cde_23a.8f WRONG CHECKSUMS</code>（hack ROM 的正常告警）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="调测方案">9.2 调测方案</h3>
+<ol type="1">
+<li><strong>核对 ROM 一致性</strong>：SHA1/CRC 对比 0.149
+驱动定义（<code>src/mame/drivers/cps1.c</code>，原版 CRC
+<code>8f4e585e</code>）与 0.289 产出的补丁文件（SHA1
+<code>f988e602…</code>），确认是<strong>同一份文件</strong>，复用补丁无需重新
+PATCH。</li>
+<li><strong>替换 ROM</strong>：备份原件后把补丁 <code>cde_23a.8f</code>
+写回 <code>dino.zip</code>（<code>zip</code> 内保持同名）。</li>
+<li><strong>根因理解</strong>：0.149 的 cps1.c 对 <code>dino</code>
+使用相同 ROM 布局，暴击值初始化指令与 RAM
+偏移全部沿用，因此零成本移植。</li>
+</ol>
+<h3 id="可选0.149-xml-cheat防慢速递减">9.3 可选：0.149 XML
+cheat（防慢速递减）</h3>
+<p>0.149 无插件系统、Lua 也无法写内存（详见《西游释厄传》文档
+§9），但内置 XML cheat 引擎可逐帧写回：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Crit = 0xFF&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        &lt;action&gt;b@<span class="number">0xffb33a</span> = <span class="number">0xff</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>放至 <code>cheat/dino.xml</code>，<code>-cheat</code> 启动后
+Tab→Cheats 开启；若使用已打 <code>start="on"</code> 补丁的
+0.149，则可开机自启、F9 一键切换。</p>
+<h3 id="测试结论">9.4 测试结论</h3>
+<ul>
+<li>✅ 0.149 下 <code>dino</code> 正常进游戏，速度 100%。</li>
+<li>✅ 补丁 ROM 校验告警符合预期（hack ROM），不影响运行。</li>
+<li>ℹ️ 伤害效果人肉验证：同一补丁在 0.289
+已实机确认（一拳约两管血）；0.149
+因命中同一初始化指令，行为应一致，进游戏 5 秒即可复核。</li>
+</ul>
+<h3 id="侧配套改动本次构建新增">9.5 0.149
+侧配套改动（本次构建新增）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>补丁</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/emu/cheat.c</code> 支持
+<code>&lt;cheat start="on"&gt;</code></td>
+<td>载入即自动运行，达成”开机即生效”</td>
+</tr>
+<tr>
+<td><code>src/emu/cheat.c</code> 引擎默认启用 +
+<code>frame_update</code> 受 <code>!m_disabled</code> 门控</td>
+<td>F9 一键”冻结/放行”真正生效（修复原版开关拦不住 run 脚本的缺陷）</td>
+</tr>
+<tr>
+<td><code>src/emu/inpttype.h</code> <code>UI_TOGGLE_CHEAT</code> 默认键
+F6→F9</td>
+<td>单键切换（Frameskip+ 让位 F9）</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
 <table>
