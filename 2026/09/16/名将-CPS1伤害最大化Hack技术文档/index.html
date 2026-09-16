@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：名将 Captain Commando（captcomm, World 911202, CPS1, 1991 Capcom） 目标：将角色攻击伤害最大化（一拳秒小兵），交付纯 ROM 补丁 + XML 金手指 核心结论：名将没有”暴击值”这个东西——伤害 &#x3D; 动作状态 ID（$59），连击越深伤害越高是状态机自然推进的结果 日期：2026-09-16 1. 背景与目标 《名将》是 Cap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="名将（CPS1）伤害最大化 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/09/16/%E5%90%8D%E5%B0%86-CPS1%E4%BC%A4%E5%AE%B3%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：名将 Captain Commando（captcomm, World 911202, CPS1, 1991 Capcom） 目标：将角色攻击伤害最大化（一拳秒小兵），交付纯 ROM 补丁 + XML 金手指 核心结论：名将没有”暴击值”这个东西——伤害 &#x3D; 动作状态 ID（$59），连击越深伤害越高是状态机自然推进的结果 日期：2026-09-16 1. 背景与目标 《名将》是 Cap">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/captcomm.gif">
+<meta property="article:published_time" content="2026-09-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-16T01:15:44.341Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, MAME, 街机, 名将">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/captcomm.gif">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/09/16/%E5%90%8D%E5%B0%86-CPS1%E4%BC%A4%E5%AE%B3%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/09/16/%E5%90%8D%E5%B0%86-CPS1%E4%BC%A4%E5%AE%B3%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/09/16/名将-CPS1伤害最大化Hack技术文档/","title":"名将（CPS1）伤害最大化 Hack 技术文档"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>名将（CPS1）伤害最大化 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84%E9%80%86%E5%90%91%E7%BB%93%E8%AE%BA"><span class="nav-text">对象结构（逆向结论）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-text">4. 破解总体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B2%E7%8C%9C%E9%98%B6%E6%AE%B5%E5%A4%B1%E8%B4%A5%E4%BD%86%E6%8E%92%E9%99%A4%E4%BA%86%E9%94%99%E8%AF%AF%E6%96%B9%E5%90%91"><span class="nav-text">5.1
+盲猜阶段（失败，但排除了错误方向）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8F%91%E7%8E%B0%E4%BC%A4%E5%AE%B3-%E5%8A%A8%E4%BD%9C%E7%8A%B6%E6%80%81-id"><span class="nav-text">5.2 核心发现：伤害 &#x3D; 动作状态 ID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v1-%E8%A1%A5%E4%B8%816-%E5%A4%84%E5%B7%AE%E5%80%BC%E5%9E%8B%E5%91%BD%E4%B8%AD-255"><span class="nav-text">5.3 v1 补丁：6 处差值型命中 →
+255</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v2-%E8%A1%A5%E4%B8%8119-%E5%A4%84%E7%8A%B6%E6%80%81%E5%9E%8B%E5%91%BD%E4%B8%AD-64"><span class="nav-text">5.4 v2 补丁：19 处状态型命中 →
+64</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">6. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-text">6.1 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">6.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">6.3 效果验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">7. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">8. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/09/16/%E5%90%8D%E5%B0%86-CPS1%E4%BC%A4%E5%AE%B3%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="名将（CPS1）伤害最大化 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：名将 Captain Commando（captcomm, World 911202, CPS1, 1991 Capcom） 目标：将角色攻击伤害最大化（一拳秒小兵），交付纯 ROM 补丁 + XML 金手指 核心结论：名将没有”暴击值”这个东西——伤害 &#x3D; 动作状态 ID（$59），连击越深伤害越高是状态机自然推进的结果 日期：2026-09-16 1. 背景与目标 《名将》是 Cap...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          名将（CPS1）伤害最大化 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-16 00:00:00 / 修改时间：09:15:44" itemprop="dateCreated datePublished" datetime="2026-09-16T00:00:00+08:00">2026-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标游戏：名将 Captain Commando（captcomm, World 911202, CPS1, 1991 Capcom） 目标：将角色攻击伤害最大化（一拳秒小兵），交付纯 ROM 补丁 + XML 金手指 核心结论：名将没有”暴击值”这个东西——伤害 = 动作状态 ID（$59），连击越深伤害越高是状态机自然推进的结果 日期：2026-09-16 1. 背景与目标 《名将》是 Cap...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>名将 Captain Commando（<code>captcomm</code>, World
+911202, CPS1, 1991 Capcom）</strong><br />
+目标：将角色攻击伤害最大化（一拳秒小兵），交付纯 ROM 补丁 + XML
+金手指<br />
+核心结论：<strong>名将没有”暴击值”这个东西——伤害 = 动作状态
+ID</strong>（<code>$59</code>），连击越深伤害越高是状态机自然推进的结果<br />
+日期：2026-09-16</p>
+</blockquote>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《名将》是 Capcom 1991 年 CPS1 基板横版清关游戏（MAME 驱动名
+<code>captcomm</code>，常用 World 911202
+版本）。任务最初的提法是”把暴击值调到最大”（对标《恐龙快打》<code>dino.xml</code>
+的 <code>b@0xffb33a = 0xff</code>
+常驻暴击），但逆向结论是：<strong>名将没有独立的暴击数值</strong>，街机论坛
+FFSKY
+伤害测试帖早就写明”这个游戏里面所有招式的伤害值是确定的”——队长组合拳
+3/4/5/10、Baby 跳坐 16、小兵 HP 16~46。</p>
+<p>所以真正的 Hack
+目标改为：<strong>找到伤害的来源并把它改大</strong>，做到普通小兵一拳秒杀。最终交付
+v2 补丁（19+6 共 25 处，全部等长替换），配合能量锁实现不死 + 高伤。</p>
+<hr />
+<h2 id="rom-与游戏信息">2. ROM 与游戏信息</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM 集</td>
+<td><code>captcomm.zip</code>（World 911202）</td>
+</tr>
+<tr>
+<td>主板</td>
+<td>CPS1（<code>cps1</code> 驱动）</td>
+</tr>
+<tr>
+<td>主 CPU</td>
+<td>Motorola
+<strong>MC68000</strong>（<code>maincpu</code>，10MHz）</td>
+</tr>
+<tr>
+<td>程序 ROM</td>
+<td><code>cce_23f.8f</code>（0x000000）+
+<code>cc_22f.7f</code>（0x080000），<code>ROM_LOAD16_WORD_SWAP</code>；<code>cc_24f.9e</code>/<code>cc_28f.9f</code>
+为字节交错（0x100000）</td>
+</tr>
+<tr>
+<td>主 RAM</td>
+<td><code>0xff0000-0xffffff</code>（64KB，<code>mainram</code>）</td>
+</tr>
+<tr>
+<td>模拟器</td>
+<td>自编译 <strong>MAME
+0.149</strong>（<code>~/mame/bin/mame</code>，<code>cheatpath=~/mame/cheat</code>）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="关键地址约定">关键地址约定</h3>
+<ul>
+<li><strong>CPU 地址</strong>：68k 视角地址（如
+<code>0x9B1A6</code>）。</li>
+<li><strong>文件偏移</strong>：<code>ROM_LOAD16_WORD_SWAP</code> 的两个
+512K 文件内<strong>每个 16 位字字节相反</strong>，打补丁必须先
+swap；补丁脚本统一处理，文档中只给 CPU 视角字节。</li>
+</ul>
+<h3 id="对象结构逆向结论">对象结构（逆向结论）</h3>
+<table>
+<thead>
+<tr>
+<th>偏移</th>
+<th>内容</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+$3C</code></td>
+<td>HP（字）</td>
+<td>受击 <code>sub.w D0,$3C</code> 扣减</td>
+</tr>
+<tr>
+<td><strong><code>+$59</code></strong></td>
+<td><strong>动作状态 ID（字节）= 本次攻击伤害</strong></td>
+<td>见 §5.2</td>
+</tr>
+<tr>
+<td><code>+$38</code></td>
+<td>受击硬直/无敌计时</td>
+<td>命中前 <code>tst.w $38</code> 判定</td>
+</tr>
+</tbody>
+</table>
+<p>玩家 P1 能量（HP 显示 72）地址 <code>0xFFA9D1</code>，结构步长 P1→P2
+为 <code>0x100</code>（与 FBNeo/Kawaks 金手指交叉验证一致；注意 Kawaks
+的 CPS1 地址与 MAME 差 XOR1，如 Kawaks <code>FFA9D0</code> = MAME
+<code>FFA9D1</code>）。</p>
+<hr />
+<h2 id="分析环境与工具">3. 分析环境与工具</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td>自编译 MAME 0.149（<code>bin/mame captcomm -cheat</code>）</td>
+</tr>
+<tr>
+<td>金手指</td>
+<td>0.149 XML cheat（<code>b@addr = val</code>，支持
+<code>start="on"</code>）</td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>Python + capstone（68000），ROM 先按 WORD_SWAP 还原再分析</td>
+</tr>
+<tr>
+<td>补丁</td>
+<td>Python 脚本（断言门控：任一地址原字节不符即中止，ROM 零污染）</td>
+</tr>
+<tr>
+<td>备份</td>
+<td><code>roms/captcomm.zip.orig</code>（md5
+<code>0610efd74fa02a6fa507b774e8641bdc</code>，与修改前一致）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="破解总体思路">4. 破解总体思路</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&quot;dino式暴击地址&quot;盲猜 FFAA2A/FFAA87/FFAA9F</span><br><span class="line">   ↓  实机逐个验证：A无效 / B(FFAA87) ADDRESS ERROR 卡死 / C无效</span><br><span class="line">结论：此路不通，回头做静态分析</span><br><span class="line">   ↓  全 ROM 扫描 sub.w D0,$3C（67 处 HP 扣减点）</span><br><span class="line">顺藤摸瓜找 D0 来源</span><br><span class="line">   ↓  发现通用命中公式：move.b $59(攻击方),D0 / sub.w D0,$3C(受害方)</span><br><span class="line">实锤&quot;伤害=动作ID&quot;（FFSKY数值逐个对上，见§5.2）</span><br><span class="line">   ↓  v1：6处差值型命中改255 → v2：19处状态型命中改64</span><br><span class="line">实机一拳秒小兵 + 能量锁不死</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="详细分析过程">5. 详细分析过程</h2>
+<h3 id="盲猜阶段失败但排除了错误方向">5.1
+盲猜阶段（失败，但排除了错误方向）</h3>
+<p>参照 dino 暴击（P1 基址 <code>0xFFB274</code> + <code>0xC6</code> =
+<code>0xFFB33A</code>）按结构体偏移移植了三个候选：<code>FFAA2A</code>（能量+0x59）、<code>FFAA87</code>、<code>FFAA9F</code>，做成
+<code>cheat/captcomm.xml</code> 进游戏实测：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>候选</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A <code>FFAA2A=FF</code></td>
+<td>无效，伤害不变</td>
+</tr>
+<tr>
+<td>B <code>FFAA87=FF</code></td>
+<td>❌ <code>ADDRESS ERROR 00900207</code>
+卡死——该地址是指针/索引类，<strong>不可碰</strong></td>
+</tr>
+<tr>
+<td>C <code>FFAA9F=FF</code></td>
+<td>无效，不崩溃</td>
+</tr>
+</tbody>
+</table>
+<p>同时确认两件事：① cheat 默认全 Off，必须在 Tab→Cheat
+里手动打开（后把确定项改为 <code>start="on"</code>）；②
+<code>P1 Invincibility</code>（<code>FFAA69=C8</code>）会导致走路拖影（无敌闪烁），默认关闭，只用能量锁即可不死。</p>
+<h3 id="核心发现伤害-动作状态-id">5.2 核心发现：伤害 = 动作状态 ID</h3>
+<p>对 67 处 <code>sub.w D0,$3C</code> 回溯 D0 来源，发现 19
+处标准命中公式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x8330: move.b $59(a0), d0    ; D0 = 攻击方.动作ID</span><br><span class="line">0x8334: sub.w  d0, $3c(a1)    ; 受害方.HP -= D0</span><br></pre></td></tr></table></figure>
+<p><code>$59</code> 全 ROM 引用统计：<code>tst.b</code> 83
+次、<code>clr.b</code> 12 次、<code>addq.b #1</code> 1
+次（<code>0x7BD9C</code>）——典型<strong>状态机</strong>用法。与 FFSKY
+伤害表逐项对照，全部吻合：</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>队长组合拳 3/4/5/10</td>
+<td>第 1/2/3 段是状态 3/4/5，第 4 段是状态 10</td>
+</tr>
+<tr>
+<td>Baby 四拳全是 6</td>
+<td>四段共用状态 6</td>
+</tr>
+<tr>
+<td>喷火 13 / 投技 14 / 坐 16</td>
+<td>对应状态号</td>
+</tr>
+<tr>
+<td>连击越打越疼</td>
+<td><code>addq.b #1,$59</code>：出下一拳时状态+1，伤害自然+1</td>
+</tr>
+<tr>
+<td>攻击结束伤害清零</td>
+<td><code>clr.b $59</code>：状态回 idle</td>
+</tr>
+</tbody>
+</table>
+<p>即：<strong>没有伤害表，状态机本身就是伤害表</strong>。<code>$59</code>
+高位还有标志位（<code>ori.b #$5A/$57</code> 等），但常规攻击状态值
+≤32。</p>
+<h3 id="v1-补丁6-处差值型命中-255">5.3 v1 补丁：6 处差值型命中 →
+255</h3>
+<p><code>0x9B</code>
+簇（<code>0x9B1A6/20E/43E/48A/4E2/554</code>）是另一种命中公式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">move.w $3E(a0), d0</span><br><span class="line">sub.w  $3C(a0), d0     ; 90 68 00 3C（4字节）</span><br><span class="line">move.w $3C(a0), $3E(a0)</span><br><span class="line">sub.w  d0, $3C(a6)</span><br></pre></td></tr></table></figure>
+<p>等长替换为
+<code>move.w #$00FF,D0</code>（<code>30 3C 00 FF</code>），每次命中按
+255 算。实测：主角被打不再掉血（能量锁每帧回满 72
+兜底），但<strong>打人不疼的问题没解决</strong>——说明打人走的是 §5.2 的
+19 处，不是这里。</p>
+<h3 id="v2-补丁19-处状态型命中-64">5.4 v2 补丁：19 处状态型命中 →
+64</h3>
+<p>把 19 处 <code>move.b $59(Ax),D0</code>（<code>10 28 00 59</code> /
+<code>10 29 00 59</code>）等长替换为
+<code>move.b #$40,D0</code>（<code>10 3C 00 40</code>，编码已用 ROM 中
+37 处现成 <code>move.b #imm,D0</code> 确认过 <code>103C</code>
+无误）。</p>
+<p><strong>为什么是 64 而不是 255</strong>：命中公式敌我共用。64 &gt;
+小兵最高 HP 46（一拳秒），且
+72−64=8，主角被打中也只剩血皮、下帧回满，<strong>无论先扣血还是先回血都死不了</strong>；255
+在字 HP 下 72−255 为负，有暴毙风险。另有 27 处以 <code>$86</code>
+为伤害源的命中点（疑似投技/特殊路径）本次未动，留作后续。</p>
+<p>补丁点（CPU 地址 → 原字节 → 新字节）：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>组</th>
+<th>地址</th>
+<th>原字节</th>
+<th>新字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1 ×6（<code>cc_22f.7f</code> 内，文件偏移 = 地址−0x80000）</td>
+<td><code>9B1A6, 9B20E, 9B43E, 9B48A, 9B4E2, 9B554</code></td>
+<td><code>90 68 00 3C</code></td>
+<td><code>30 3C 00 FF</code></td>
+</tr>
+<tr>
+<td>v2 ×19（<code>cce_23f.8f</code> 内，文件偏移 = 地址）</td>
+<td><code>8330, 83F6, 8688, 91D2, 9418, 974A, 98D0, 9D3C, 9F26, 9FEC, A45C, A63A, A70A, A8A2, A956, AE6A, B0B8, D2BE, D592</code></td>
+<td><code>10 28 00 59</code>（<code>D2BE</code> 为
+<code>10 29 00 59</code>）</td>
+<td><code>10 3C 00 40</code></td>
+</tr>
+</tbody>
+</table>
+<p>补丁脚本每次从 <code>captcomm.zip.orig</code> 重建（幂等），25
+处断言全过才写盘；回滚：<code>python3 /tmp/captcomm_maxdmg.py --restore</code>。</p>
+<hr />
+<h2 id="交付物">6. 交付物</h2>
+<h3 id="文件">6.1 文件</h3>
+<ul>
+<li><code>roms/captcomm.zip</code>（已打 v1+v2，25 处；MAME 启动报
+<code>cce_23f.8f</code> / <code>cc_22f.7f WRONG CHECKSUMS</code> 为 hack
+ROM 预期告警，确认通过即可）</li>
+<li><code>roms/captcomm.zip.orig</code>（原版备份）</li>
+<li><code>cheat/captcomm.xml</code>（P1/P2 能量锁 72 + 无限命自动
+On；无敌默认 Off 防拖影；实验候选已删除/停用）</li>
+<li><code>/tmp/captcomm_maxdmg.py</code>（补丁/回滚脚本）</li>
+</ul>
+<h3 id="验证">6.2 验证</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bin/mame captcomm -cheat -verbose</span><br><span class="line">→ cce_23f.8f WRONG CHECKSUMS:      ← 补丁文件在跑</span><br><span class="line">→ cc_22f.7f WRONG CHECKSUMS:</span><br><span class="line">→ Loading cheats file from cheat/captcomm.xml   ← 金手指正常加载</span><br><span class="line">→ Average speed: 100.00%           ← 满速</span><br></pre></td></tr></table></figure>
+<h3 id="效果验证">6.3 效果验证</h3>
+<p>队长（第 2
+个角色，可跳跃喷火）打第一关绿兵（HP16）：<strong>一拳一个</strong>，此前要一套组合拳；BOSS
+数拳可杀；主角被打血条不掉（能量锁每帧回满 72）。</p>
+<p><img src="/img/captcomm.gif" width="75%" alt="名将伤害最大化效果演示（一拳秒小兵）"></p>
+<blockquote>
+<p>上图为 v2 补丁实机演示：队长普通攻击一拳秒小兵，血条全程不掉。</p>
+</blockquote>
+<hr />
+<h2 id="修改总结">7. 修改总结</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击地址盲猜（A/B/C）</td>
+<td>❌ 已证伪</td>
+<td>A/C 无效；B 是指针，写 FF 卡死</td>
+</tr>
+<tr>
+<td>HP 偏移 <code>+$3C</code> / 状态偏移 <code>+$59</code></td>
+<td>✅ 已定位</td>
+<td>67 处 HP 扣减点全枚举</td>
+</tr>
+<tr>
+<td>“伤害=动作ID”机制</td>
+<td>✅ 已实锤</td>
+<td>FFSKY 数值逐项对上 + <code>addq.b #1,$59</code> 连段递进</td>
+</tr>
+<tr>
+<td>v1 补丁（6 处 →255）</td>
+<td>✅ 已交付</td>
+<td><code>cc_22f.7f</code> 内</td>
+</tr>
+<tr>
+<td>v2 补丁（19 处 →64）</td>
+<td>✅ 已交付</td>
+<td><code>cce_23f.8f</code> 内，一拳秒小兵</td>
+</tr>
+<tr>
+<td>能量锁/无限命 cheat</td>
+<td>✅ 已交付</td>
+<td>自动 On；无敌默认 Off（防拖影）</td>
+</tr>
+<tr>
+<td>原版备份</td>
+<td>✅ 已交付</td>
+<td><code>captcomm.zip.orig</code>，md5 一致</td>
+</tr>
+<tr>
+<td>BOSS 高 HP（&gt;64）</td>
+<td>ℹ️ 需多拳</td>
+<td>$86 路径 27 处未动，留作 v3</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="踩坑与经验总结">8. 踩坑与经验总结</h2>
+<ol type="1">
+<li><strong>先实机验证再下结论</strong>：三个候选地址本来”推理得很漂亮”，实机一测一死两无效。盲猜超过
+3 次必须换方法（转静态分析），不要第 4 次猜。</li>
+<li><strong>FFAA87 的教训</strong>：<code>ADDRESS ERROR 00900207</code>
+说明写到的不是数值而是指针/索引。RAM poke
+前先反汇编看看谁读写该地址。</li>
+<li><strong>FFSKY”伤害值确定”是关键线索</strong>：固定伤害 + 小整数 +
+随连段递增 = 状态机编码伤害。看到这种分布就该去找”动作 ID
+参与运算”的地方，而不是找数值表（字节表/字表搜索果然全空）。</li>
+<li><strong>补丁值 64
+是算出来的不是拍脑袋的</strong>：敌我共用公式下，最大值必须满足
+72−D&gt;0（字 HP）且 D&gt;46（秒小兵），64 是兼顾两头的选择；255
+只敢用在已实测不伤主角的 v1 路径上。</li>
+<li><strong><code>103C</code>
+编码不要手算</strong>：<code>move.b #$40,D0</code> 的机器码是去 ROM 里找
+37 处现成 <code>move.b #imm,D0</code>
+对出来的，不是背手册背出来的。</li>
+<li><strong>Kawaks 地址与 MAME 差
+XOR1</strong>：<code>captcomm.dat</code> 的 <code>FFA9D0</code> = MAME
+的 <code>FFA9D1</code>，抄地址时必须换算，否则能量锁都会打偏。</li>
+<li><strong>每次从原版重建补丁</strong>：脚本从 <code>.orig</code>
+开始、25 处断言全过才写盘，避免在已污染 ROM 上迭代；MAME 的 WRONG
+CHECKSUMS 告警正好反向证明补丁文件在跑。</li>
+</ol>
+<hr />
+<h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
+<table>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xFFA9D1</code></td>
+<td>P1 能量（72），能量锁目标</td>
+</tr>
+<tr>
+<td><code>0xFFAA7C</code></td>
+<td>P1 命数</td>
+</tr>
+<tr>
+<td><code>0xFFAA69</code></td>
+<td>无敌标志（开后有拖影，默认 Off）</td>
+</tr>
+<tr>
+<td><code>$3C</code></td>
+<td>对象 HP（字）</td>
+</tr>
+<tr>
+<td><code>$59</code></td>
+<td>对象动作状态 ID = 基础伤害（字节）</td>
+</tr>
+<tr>
+<td><code>$38</code></td>
+<td>受击硬直/无敌计时（命中前 <code>tst.w</code> 判定）</td>
+</tr>
+<tr>
+<td><code>0x7BD9C</code></td>
+<td><code>addq.b #1,$59</code>：连段推进</td>
+</tr>
+<tr>
+<td><code>0x8330</code> 等 19 处</td>
+<td><code>move.b $59,D0</code> 命中读取点（v2 改 64）</td>
+</tr>
+<tr>
+<td><code>0x9B1A6</code> 等 6 处</td>
+<td>差值型命中点（v1 改 255）</td>
+</tr>
+<tr>
+<td><code>$86</code></td>
+<td>另一伤害源（27 处，v3 候选）</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/09/16/%E5%90%8D%E5%B0%86-CPS1%E4%BC%A4%E5%AE%B3%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="名将（CPS1）伤害最大化 Hack 技术文档">https://sunjunior.github.io/2026/09/16/名将-CPS1伤害最大化Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-MAME-%E8%A1%97%E6%9C%BA-%E5%90%8D%E5%B0%86/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, MAME, 街机, 名将</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/" rel="prev" title="MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）">
+                  <i class="fa fa-angle-left"></i> MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
