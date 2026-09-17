@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-17T05:13:29.714Z">
+<meta property="article:modified_time" content="2026-09-17T05:44:18.538Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -176,9 +176,9 @@
 变体（当前交付版本，0x24B74&#x3D;0x05）实机演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-text">8.6 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">9. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">10. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-text">11. MAME 0.149
 移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-text">11.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-text">11.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-text">11.3 可选：0.149 XML
 cheat（防慢速递减）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E8%AE%BA"><span class="nav-text">11.4 测试结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%A7%E9%85%8D%E5%A5%97%E6%94%B9%E5%8A%A8%E6%9C%AC%E6%AC%A1%E6%9E%84%E5%BB%BA%E6%96%B0%E5%A2%9E"><span class="nav-text">11.5 0.149
-侧配套改动（本次构建新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack2026-09-17"><span class="nav-text">12. 敌兵翻倍 Hack（2026-09-17）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-text">12.1 目标与挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E7%89%88%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%A0%B9%E5%9B%A0%E6%80%BB%E7%BB%93"><span class="nav-text">12.2 八版失败的根因总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E5%9B%A0%E8%BF%9B%E4%BD%8D%E6%A0%87%E5%BF%97c-flag%E8%A2%AB%E4%B8%AD%E9%97%B4%E6%8C%87%E4%BB%A4%E6%B1%A1%E6%9F%93"><span class="nav-text">12.3 根因：进位标志（C
+侧配套改动（本次构建新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack2026-09-17"><span class="nav-text">12. 敌兵翻倍 Hack（2026-09-17）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-text">12.1 目标与挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E7%89%88%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%A0%B9%E5%9B%A0%E6%80%BB%E7%BB%93"><span class="nav-text">12.2 八版失败的根因总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E5%9B%A0%E8%BF%9B%E4%BD%8D%E6%A0%87%E5%BF%97c-flag%E8%A2%AB%E4%B8%AD%E9%97%B4%E6%8C%87%E4%BB%A4%E6%B1%A1%E6%9F%93"><span class="nav-text">12.3 根因：进位标志（C
 flag）被中间指令污染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zengfr-%E6%96%87%E6%A1%A3%E6%8F%90%E4%BE%9B%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="nav-text">12.4 zengfr 文档提供的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v8-%E6%9C%80%E7%BB%88%E5%AE%9E%E7%8E%B0"><span class="nav-text">12.5 v8 最终实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%BC%96%E7%A0%81%E9%99%B7%E9%98%B1moveq-dbra-%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A0%81"><span class="nav-text">12.6 关键编码陷阱：MOVEQ &#x2F;
-DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">12.7 备份与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-text">12.8 效果演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">12.9 参考资料</span></a></li></ol></li></ol></div>
+DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">12.7 备份与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-text">12.8 效果演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">12.9 参考资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -281,7 +281,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-17 13:13:29" itemprop="dateModified" datetime="2026-09-17T13:13:29+08:00">2026-09-17</time>
+      <time title="修改时间：2026-09-17 13:44:18" itemprop="dateModified" datetime="2026-09-17T13:44:18+08:00">2026-09-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1264,132 +1264,6 @@ F6→F9</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
-<h3 id="a.1-暴击值相关">A.1 暴击值相关</h3>
-<table>
-<thead>
-<tr>
-<th>地址（CPU 视图）</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0xffb33a</code></td>
-<td>P1 暴击值</td>
-</tr>
-<tr>
-<td><code>0xffb33c</code></td>
-<td>P2 暴击值（若存在）</td>
-</tr>
-<tr>
-<td><code>0x2c9b6</code></td>
-<td>暴击值表基址</td>
-</tr>
-<tr>
-<td><code>0x11770</code></td>
-<td>暴击值初始化指令（已改为 <code>move.b #$ff,$c6(a3)</code>）</td>
-</tr>
-<tr>
-<td><code>0x4fe6e</code></td>
-<td>通用对象 <code>$c6</code> 递减（<strong>不可 NOP</strong>）</td>
-</tr>
-<tr>
-<td><code>0x4fe7c</code></td>
-<td>通用对象 <code>$c6</code> 清零（<strong>不可 NOP</strong>）</td>
-</tr>
-<tr>
-<td><code>0xc6(a6)</code></td>
-<td>暴击值在玩家对象中的偏移</td>
-</tr>
-</tbody>
-</table>
-<h3 id="a.2-掉落-hack-相关">A.2 掉落 Hack 相关</h3>
-<table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>地址（CPU 视图）</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0x24B48</code></td>
-<td>掉落判定子程序入口（主掉落表 <code>$b64f2</code>）</td>
-</tr>
-<tr>
-<td><code>0x24B36</code></td>
-<td>第二掉落入口（表 <code>$b6d12</code>，机制相同）</td>
-</tr>
-<tr>
-<td><code>0x24B72</code></td>
-<td>补丁点：d1==0 改走强制掉落（方案 A/B 核心跳转）</td>
-</tr>
-<tr>
-<td><code>0x24B74</code></td>
-<td>方案选择立即数：<code>01</code>=猎枪（方案 A）、<code>05</code>=M16
-48 发（方案 B，当前交付）、<code>04</code>=Uzi 48 发</td>
-</tr>
-<tr>
-<td><code>0x24B90</code></td>
-<td>武器掉落写入：<code>$26 = (d1-1)*2</code></td>
-</tr>
-<tr>
-<td><code>0x24D60</code></td>
-<td><code>$26</code> 武器索引分发器</td>
-</tr>
-<tr>
-<td><code>0x24D6C</code></td>
-<td><code>$26</code> → 武器初始化块跳转表</td>
-</tr>
-<tr>
-<td><code>0x24E1C</code></td>
-<td>Uzi 初始化块（<code>moveq #$30</code> = 48 发）</td>
-</tr>
-<tr>
-<td><code>0x24E46</code></td>
-<td>M16 初始化块（<code>moveq #$30</code> = 48 发）</td>
-</tr>
-<tr>
-<td><code>0x24D9E</code></td>
-<td>猎枪初始化块内弹药（<code>moveq #$6</code> = 6 发）</td>
-</tr>
-<tr>
-<td><code>0x24EAA</code></td>
-<td>火箭筒初始化块内弹药（<code>moveq #$4</code> = 4 发）</td>
-</tr>
-<tr>
-<td><code>0x119c</code></td>
-<td>掉落 RNG 子程序</td>
-</tr>
-<tr>
-<td><code>0x4818</code></td>
-<td>对象槽出队（槽满则放弃掉落）</td>
-</tr>
-<tr>
-<td><code>0x24BBE</code> / <code>0x24C00</code></td>
-<td>食物/药品类掉落分支</td>
-</tr>
-<tr>
-<td><code>0x24C3A</code></td>
-<td>宝藏类掉落分支</td>
-</tr>
-<tr>
-<td><code>0x96(a6)</code></td>
-<td>死亡对象的”掉落预设索引”字段</td>
-</tr>
-<tr>
-<td><code>0x26(a0)</code></td>
-<td>掉落物对象的”武器索引”字段</td>
-</tr>
-</tbody>
-</table>
-<hr />
 <h2 id="敌兵翻倍-hack2026-09-17">12. 敌兵翻倍 Hack（2026-09-17）</h2>
 <blockquote>
 <p>前述章节实现了暴击值最大化与 100% M16
@@ -1674,6 +1548,198 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <li>MAME 0.149 源码 <code>cps1.c</code> — ROM
 芯片映射（<code>ROM_LOAD16_WORD_SWAP</code>，3×<code>0x80000</code>）</li>
 </ul>
+<hr />
+<h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
+<h3 id="a.1-暴击值相关">A.1 暴击值相关</h3>
+<table>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xffb33a</code></td>
+<td>P1 暴击值</td>
+</tr>
+<tr>
+<td><code>0xffb33c</code></td>
+<td>P2 暴击值（若存在）</td>
+</tr>
+<tr>
+<td><code>0x2c9b6</code></td>
+<td>暴击值表基址</td>
+</tr>
+<tr>
+<td><code>0x11770</code></td>
+<td>暴击值初始化指令（已改为 <code>move.b #$ff,$c6(a3)</code>）</td>
+</tr>
+<tr>
+<td><code>0x4fe6e</code></td>
+<td>通用对象 <code>$c6</code> 递减（<strong>不可 NOP</strong>）</td>
+</tr>
+<tr>
+<td><code>0x4fe7c</code></td>
+<td>通用对象 <code>$c6</code> 清零（<strong>不可 NOP</strong>）</td>
+</tr>
+<tr>
+<td><code>0xc6(a6)</code></td>
+<td>暴击值在玩家对象中的偏移</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a.2-掉落-hack-相关">A.2 掉落 Hack 相关</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x24B48</code></td>
+<td>掉落判定子程序入口（主掉落表 <code>$b64f2</code>）</td>
+</tr>
+<tr>
+<td><code>0x24B36</code></td>
+<td>第二掉落入口（表 <code>$b6d12</code>，机制相同）</td>
+</tr>
+<tr>
+<td><code>0x24B72</code></td>
+<td>补丁点：d1==0 改走强制掉落（方案 A/B 核心跳转）</td>
+</tr>
+<tr>
+<td><code>0x24B74</code></td>
+<td>方案选择立即数：<code>01</code>=猎枪（方案 A）、<code>05</code>=M16
+48 发（方案 B，当前交付）、<code>04</code>=Uzi 48 发</td>
+</tr>
+<tr>
+<td><code>0x24B90</code></td>
+<td>武器掉落写入：<code>$26 = (d1-1)*2</code></td>
+</tr>
+<tr>
+<td><code>0x24D60</code></td>
+<td><code>$26</code> 武器索引分发器</td>
+</tr>
+<tr>
+<td><code>0x24D6C</code></td>
+<td><code>$26</code> → 武器初始化块跳转表</td>
+</tr>
+<tr>
+<td><code>0x24E1C</code></td>
+<td>Uzi 初始化块（<code>moveq #$30</code> = 48 发）</td>
+</tr>
+<tr>
+<td><code>0x24E46</code></td>
+<td>M16 初始化块（<code>moveq #$30</code> = 48 发）</td>
+</tr>
+<tr>
+<td><code>0x24D9E</code></td>
+<td>猎枪初始化块内弹药（<code>moveq #$6</code> = 6 发）</td>
+</tr>
+<tr>
+<td><code>0x24EAA</code></td>
+<td>火箭筒初始化块内弹药（<code>moveq #$4</code> = 4 发）</td>
+</tr>
+<tr>
+<td><code>0x119c</code></td>
+<td>掉落 RNG 子程序</td>
+</tr>
+<tr>
+<td><code>0x4818</code></td>
+<td>对象槽出队（槽满则放弃掉落）</td>
+</tr>
+<tr>
+<td><code>0x24BBE</code> / <code>0x24C00</code></td>
+<td>食物/药品类掉落分支</td>
+</tr>
+<tr>
+<td><code>0x24C3A</code></td>
+<td>宝藏类掉落分支</td>
+</tr>
+<tr>
+<td><code>0x96(a6)</code></td>
+<td>死亡对象的”掉落预设索引”字段</td>
+</tr>
+<tr>
+<td><code>0x26(a0)</code></td>
+<td>掉落物对象的”武器索引”字段</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a.3-敌兵翻倍-hack-相关">A.3 敌兵翻倍 Hack 相关</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xFD2A</code></td>
+<td>翻倍入口：原 <code>bsr.w $fdae</code> 改为
+<code>jmp.l $104430</code></td>
+</tr>
+<tr>
+<td><code>0x104430</code></td>
+<td>翻倍补丁区（21a 芯片）：<code>moveq #1,d4; jsr $fdae; dbra</code>
+循环 2 次</td>
+</tr>
+<tr>
+<td><code>0x6F00(a5)</code></td>
+<td>（实验版本）帧延迟翻倍用的保存槽</td>
+</tr>
+<tr>
+<td><code>0x013C98</code>—<code>0x013CD3</code></td>
+<td>（实验版本）零区 cave 空间，用于帧延迟翻倍失败尝试</td>
+</tr>
+<tr>
+<td><code>0x041EC6</code>—<code>0x041EE9</code></td>
+<td>（实验版本）远 cave 空间</td>
+</tr>
+<tr>
+<td><code>0x01370C</code></td>
+<td>（实验版本）近 cave 空间（25 字节）</td>
+</tr>
+<tr>
+<td><code>0xFE36</code></td>
+<td><code>$FDAE</code> 字段拷贝入口（hack ROM 在此处插入 jsr
+<code>$10788A</code>）</td>
+</tr>
+<tr>
+<td><code>0x4D9(a5)</code></td>
+<td>场景/episode 状态标志</td>
+</tr>
+<tr>
+<td><code>0x4DC(a5)</code></td>
+<td>walker 滚动比较模式选择</td>
+</tr>
+<tr>
+<td><code>0x5EE(a5)</code></td>
+<td>敌人 tier 配额</td>
+</tr>
+<tr>
+<td><code>0x65F4</code>—<code>0x6606</code>(a5)</td>
+<td>5 组对象空闲链表（计数器 + 指针）</td>
+</tr>
+<tr>
+<td><code>0x4818</code> / <code>0x483C</code> / <code>0x4860</code></td>
+<td>对象槽出队函数（根据敌人类型分配不同组）</td>
+</tr>
+</tbody>
+</table>
+<hr />
 
     </div>
 
