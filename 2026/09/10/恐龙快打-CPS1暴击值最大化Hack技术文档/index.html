@@ -30,8 +30,9 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino2.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-15T14:27:36.808Z">
+<meta property="article:modified_time" content="2026-09-17T05:13:29.714Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -175,7 +176,9 @@
 变体（当前交付版本，0x24B74&#x3D;0x05）实机演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-text">8.6 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">9. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">10. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-text">11. MAME 0.149
 移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-text">11.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-text">11.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-text">11.3 可选：0.149 XML
 cheat（防慢速递减）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E8%AE%BA"><span class="nav-text">11.4 测试结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%A7%E9%85%8D%E5%A5%97%E6%94%B9%E5%8A%A8%E6%9C%AC%E6%AC%A1%E6%9E%84%E5%BB%BA%E6%96%B0%E5%A2%9E"><span class="nav-text">11.5 0.149
-侧配套改动（本次构建新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li></ol></li></ol></div>
+侧配套改动（本次构建新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack2026-09-17"><span class="nav-text">12. 敌兵翻倍 Hack（2026-09-17）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-text">12.1 目标与挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E7%89%88%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%A0%B9%E5%9B%A0%E6%80%BB%E7%BB%93"><span class="nav-text">12.2 八版失败的根因总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E5%9B%A0%E8%BF%9B%E4%BD%8D%E6%A0%87%E5%BF%97c-flag%E8%A2%AB%E4%B8%AD%E9%97%B4%E6%8C%87%E4%BB%A4%E6%B1%A1%E6%9F%93"><span class="nav-text">12.3 根因：进位标志（C
+flag）被中间指令污染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zengfr-%E6%96%87%E6%A1%A3%E6%8F%90%E4%BE%9B%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="nav-text">12.4 zengfr 文档提供的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v8-%E6%9C%80%E7%BB%88%E5%AE%9E%E7%8E%B0"><span class="nav-text">12.5 v8 最终实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%BC%96%E7%A0%81%E9%99%B7%E9%98%B1moveq-dbra-%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A0%81"><span class="nav-text">12.6 关键编码陷阱：MOVEQ &#x2F;
+DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">12.7 备份与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-text">12.8 效果演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">12.9 参考资料</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -278,7 +281,7 @@ cheat（防慢速递减）</span></a></li><li class="nav-item nav-level-3"><a cl
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-15 22:27:36" itemprop="dateModified" datetime="2026-09-15T22:27:36+08:00">2026-09-15</time>
+      <time title="修改时间：2026-09-17 13:13:29" itemprop="dateModified" datetime="2026-09-17T13:13:29+08:00">2026-09-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1386,6 +1389,291 @@ F6→F9</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="敌兵翻倍-hack2026-09-17">12. 敌兵翻倍 Hack（2026-09-17）</h2>
+<blockquote>
+<p>前述章节实现了暴击值最大化与 100% M16
+掉落。本节在前述成果之上新增第三大 Hack
+目标——<strong>将场上所有敌人（小兵、Boss）翻倍</strong>，且不影响暴击与掉落模块。参考资源来自
+zengfr 的 <a target="_blank" rel="noopener" href="https://github.com/zengfr/romhack">romhack
+仓库</a>（<code>dino/</code> 目录）。</p>
+</blockquote>
+<h3 id="目标与挑战">12.1 目标与挑战</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>效果</td>
+<td>每个敌人同时出现<strong>两个</strong>（小兵 ×2、Boss ×2，掉落亦
+×2）</td>
+</tr>
+<tr>
+<td>交付</td>
+<td>纯 ROM 补丁，不依赖插件/内存修改器</td>
+</tr>
+<tr>
+<td>基础</td>
+<td>叠加在暴击 FF + M16 掉落补丁之上</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心挑战</strong>：游戏对象池（<code>0xFFC834-0xFFD994</code>，约
+20
+槽）在每帧内只支持每个出兵条目处理一次。若在同一帧内对同一条目两次调用敌兵生成器
+<code>$FDAE</code>，会因对象初始化共享状态（全局”当前对象”指针/计数器）被覆盖，导致<strong>非确定性内存损坏</strong>——崩溃点随机变化（有时
+10 秒、有时 1 分钟、有时过完第一关才崩）。</p>
+<h3 id="八版失败的根因总结">12.2 八版失败的根因总结</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>方案</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1</td>
+<td>仅远 cave
+点（<code>$7B42C</code>/<code>$7BFCE</code>/<code>$7C09A</code>）翻倍</td>
+<td>无可见效果</td>
+</tr>
+<tr>
+<td>v2</td>
+<td>近 cave（<code>$FD2A</code>）+ 远 cave 全翻倍</td>
+<td>肥肥波次崩溃</td>
+</tr>
+<tr>
+<td>v3</td>
+<td>+ bit7 过滤（避免脚本命令被翻倍）</td>
+<td>M16 兵处崩溃</td>
+</tr>
+<tr>
+<td>v4</td>
+<td>+ 第二个兵坐标偏移</td>
+<td>打小兵就崩溃</td>
+</tr>
+<tr>
+<td>v5</td>
+<td>仅近 cave + bit7 过滤</td>
+<td>首次过第一关，但<strong>随机崩溃</strong>（重跑复现，证明非确定性）</td>
+</tr>
+<tr>
+<td>v6</td>
+<td>触发值过滤（Boss 区不翻倍）</td>
+<td>肥肥波次崩溃</td>
+</tr>
+<tr>
+<td>v7</td>
+<td>帧延迟翻倍（保存 a2，下一帧再 spawn）</td>
+<td>时序错乱、未清兵就提前通关</td>
+</tr>
+<tr>
+<td><strong>v8（终版）</strong></td>
+<td><strong>严格按 zengfr 文档：<code>jmp.l</code>
+直跳方案</strong></td>
+<td>✅ <strong>稳定连续 2 关，全部双倍，无异常</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="根因进位标志c-flag被中间指令污染">12.3 根因：进位标志（C
+flag）被中间指令污染</h3>
+<p>所有 v1-v7 的共同缺陷：使用 <code>bsr</code>/<code>rts</code>
+往返，cave 中的中间指令破坏了 <code>$FDAE</code>
+返回的<strong>进位标志（C flag）</strong>。</p>
+<p><code>$FD2A</code> 之后的 walker 决策：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$FD2E: bcs.w $fd3c   ; C=1 → 对象池满，停止</span><br><span class="line">$FD32: lea $10(a2),a2 ; C=0 → 推进出兵表指针，继续</span><br></pre></td></tr></table></figure></p>
+<p>v1-v7 的 cave 用 <code>rts</code> 返回时，C 已被中间指令污染：成功时
+C 被清 0 却被判失败，或失败时 C 被置 1 却继续推进 → 时序乱 / 提前通关 /
+随机崩溃。</p>
+<p><strong>关键指令对 C/V 标志的影响</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>C 标志</th>
+<th>V 标志</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MOVE</code>、<code>CLR</code>、<code>MOVEQ</code>、<code>SUBQ</code>、<code>ADDQ</code></td>
+<td><strong>清零</strong></td>
+<td>清零</td>
+</tr>
+<tr>
+<td><code>TST</code>、<code>ANDI</code>、<code>ORI</code></td>
+<td>清零</td>
+<td>清零</td>
+</tr>
+<tr>
+<td><code>MOVEM</code></td>
+<td><strong>不变</strong></td>
+<td>不变</td>
+</tr>
+<tr>
+<td><code>ST</code>/<code>SF</code>（Scc）</td>
+<td><strong>不变</strong></td>
+<td>不变</td>
+</tr>
+<tr>
+<td><code>JMP</code>、<code>RTS</code>、<code>BRA</code>、<code>BCC</code></td>
+<td>不变</td>
+<td>不变</td>
+</tr>
+</tbody>
+</table>
+<p>因此保留 C 标志的关键是：<strong>不要在成功/失败分支中使用 MOVE
+族指令，或干脆不返回</strong>。</p>
+<h3 id="zengfr-文档提供的思路">12.4 zengfr 文档提供的思路</h3>
+<p>zengfr 的 <code>dino增加敌兵翻倍.txt</code>（原文）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">org        $104430</span><br><span class="line">_ADD_ADD1</span><br><span class="line">                move.w #$4,d4</span><br><span class="line">_loop</span><br><span class="line">                jsr        $fdae</span><br><span class="line">                dbne        d4,_loop</span><br><span class="line">                bcs        _fd3c</span><br><span class="line">                jmp        $fd32</span><br><span class="line">_fd3c</span><br><span class="line">                jmp        $fd3c</span><br><span class="line">; 一个 jsr $fdae 为1倍</span><br><span class="line">; 你加个cmp筛选下需要翻倍的兵就好了</span><br></pre></td></tr></table></figure>
+<p>关键区别：<br />
+1. <code>jsr $fdae</code>（绝对长调用）——补丁区可在任意 ROM 地址，不受
+<code>bsr</code> ±32KB 限制<br />
+2. <code>jmp $fd32</code>/<code>jmp $fd3c</code> 直接返回
+walker——<strong>不 rts</strong>，彻底回避 C 标志污染<br />
+3. 补丁区 <code>$104430</code>（21a 芯片偏移 <code>0x4430</code>，原 ROM
+为全零，64 字节可用）</p>
+<h3 id="v8-最终实现">12.5 v8 最终实现</h3>
+<p><strong>修改点 1：<code>$FD2A</code>（23a 芯片）</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址</th>
+<th>原内容</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU <code>$FD2A</code></td>
+<td><code>61 00 00 82</code>（<code>bsr.w $fdae</code>）</td>
+<td><code>4E F9 00 10 44 30</code>（<code>jmp.l $104430</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>6 字节覆盖原 <code>$FD2A-$FD2F</code>，其余 2 字节
+<code>$FD30-$FD31</code> 为不可达代码，无需清理。</p>
+<p><strong>修改点 2：<code>$104430</code>（21a 芯片偏移
+<code>0x4430</code>）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">104430: 78 01                 moveq #1,d4        ; 循环计数（2 次）</span><br><span class="line">104432: 4E B9 00 00 FD AE     jsr.l $FDAE        ; 敌兵生成器</span><br><span class="line">104438: 51 CC FF F8           dbra d4, $104432   ; d4--; if d4≠-1 → 再生成一次</span><br><span class="line">10443C: 65 06                 bcs.b $104444      ; 最后一次失败 → 停止</span><br><span class="line">10443E: 4E F9 00 00 FD 32     jmp.l $FD32        ; 成功 → walker 推进表指针</span><br><span class="line">104444: 4E F9 00 00 FD 3C     jmp.l $FD3C        ; 失败 → walker 停止</span><br></pre></td></tr></table></figure>
+<p><strong>暴击 + M16 补丁不变</strong>：<code>$FD2A</code>
+只改跳转，不碰其他地址。暴击（<code>$11770</code>）与 M16
+掉落（<code>$24B72</code>）完整保留。</p>
+<h3 id="关键编码陷阱moveq-dbra-寄存器编码">12.6 关键编码陷阱：MOVEQ /
+DBRA 寄存器编码</h3>
+<p>68000 的 <code>MOVEQ</code> 与 <code>DBRA</code>
+寄存器号编码在<strong>低位 bits 2-0</strong>，手拼极易出错：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>意图</th>
+<th>正确编码</th>
+<th>错误编码（实际效果）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>moveq #1,d4</code></td>
+<td><code>78 01</code></td>
+<td><code>7C 01</code> = 实际上是 <strong>D6</strong>（循环计数用垃圾 d4
+→ 卡死）</td>
+</tr>
+<tr>
+<td><code>dbra d4,−8</code></td>
+<td><code>51 CC FF F8</code></td>
+<td><code>51 C4 FF F8</code>（bit3=0）→ 解码为 <code>SF/SUBQ</code> 变体
+→ 卡死</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>教训：凭直觉拼字节极易出错。<strong>使用 MAME
+自带反汇编器验证</strong>（<code>src/emu/cpu/m68000/m68kdasm.c</code>：DBRA
+mask <code>0xfff8</code> match <code>0x51c8</code>，寄存器在 bits
+2-0，故 D4 = <code>0x51cc</code>）。</p>
+</blockquote>
+<h3 id="备份与安装">12.7 备份与安装</h3>
+<p>v8 成品文件（美版 dinou）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>芯片</th>
+<th>SHA1</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cdu_21a.6f</code></td>
+<td><code>99a5d935adfc12a57fc5e4cb0e2a10410679e321</code></td>
+<td><code>0x104430</code> 翻倍补丁</td>
+</tr>
+<tr>
+<td><code>cdu_22a.7f</code></td>
+<td><code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code></td>
+<td>未修改</td>
+</tr>
+<tr>
+<td><code>cdu_23a.8f</code></td>
+<td><code>17e31b81b6405422c9086d4d23f729cd9ce87063</code></td>
+<td>翻倍跳转 + 暴击 + M16</td>
+</tr>
+</tbody>
+</table>
+<p>安装：三个文件替换入 <code>dinou.zip</code>（美版）/
+<code>dino.zip</code>（世界版，改
+<code>cde_21a.6f</code>/<code>cde_23a.8f</code> 对应文件）。MAME 0.149
+自编译版实测<strong>连续 2 关无异常</strong>。</p>
+<h3 id="效果演示">12.8 效果演示</h3>
+<p>v8 翻倍补丁实机演示截图（双小兵 + 双 Boss 同时在场）：</p>
+<p><img src="/img/dino4.gif" width="75%" alt="恐龙快打敌兵翻倍 Hack 效果演示"></p>
+<blockquote>
+<p>上图为 v8
+翻倍补丁的实机演示：画面中同时出现<strong>双倍小兵</strong>与<strong>双倍
+Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。暴击值 0xFF
+最大化与 100% M16 掉落同时生效。MAME 0.149 自编译版实测连续 2
+关无异常。</p>
+</blockquote>
+<h3 id="参考资料">12.9 参考资料</h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/zengfr/romhack">zengfr/romhack</a> —
+恐龙快打 hack 资料（出兵表、调试脚本、翻倍文档、hack ROM）</li>
+<li><code>dino增加敌兵翻倍.txt</code> —
+翻倍补丁核心文档（<code>$104430</code> 方案）</li>
+<li><code>dino.tb.出兵.txt</code> / <code>dino.tb1.txt</code> —
+出兵表结构（tb1 步长 <code>0x0E</code>）</li>
+<li><code>Cadillacs+and+Dinosaurs Memory Map.txt</code> — RAM
+地址映射</li>
+<li>MAME 0.149 源码 <code>cps1.c</code> — ROM
+芯片映射（<code>ROM_LOAD16_WORD_SWAP</code>，3×<code>0x80000</code>）</li>
+</ul>
 
     </div>
 
