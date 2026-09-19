@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标：基于上游 v0.14 的 NotepadNext 个人汉化分支，补全偏好设置&#x2F;视图&#x2F;搜索菜单中文翻译，打 Release 包并发布 AppImage 日期：2026-09-19 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https:&#x2F;&#x2F;github.com&#x2F;sunjunior&#x2F;notepadnext ，安装包：https:&#x2F;&#x2F;github.c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NotepadNext 中文汉化与 AppImage 打包实战">
+<meta property="og:url" content="https://sunjunior.github.io/2026/09/19/NotepadNext%E4%B8%AD%E6%96%87%E6%B1%89%E5%8C%96%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标：基于上游 v0.14 的 NotepadNext 个人汉化分支，补全偏好设置&#x2F;视图&#x2F;搜索菜单中文翻译，打 Release 包并发布 AppImage 日期：2026-09-19 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https:&#x2F;&#x2F;github.com&#x2F;sunjunior&#x2F;notepadnext ，安装包：https:&#x2F;&#x2F;github.c">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-19T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-19T10:07:00.469Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="NotepadNext, 汉化, Qt, AppImage, Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/09/19/NotepadNext%E4%B8%AD%E6%96%87%E6%B1%89%E5%8C%96%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/09/19/NotepadNext%E4%B8%AD%E6%96%87%E6%B1%89%E5%8C%96%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/","path":"2026/09/19/NotepadNext中文汉化与AppImage打包实战/","title":"NotepadNext 中文汉化与 AppImage 打包实战"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>NotepadNext 中文汉化与 AppImage 打包实战 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%AF%B9%E8%AF%9D%E6%A1%86%E7%BB%84%E6%A0%87%E9%A2%98%E4%B8%8E%E9%80%89%E9%A1%B9%E9%97%B4%E8%B7%9D%E5%AF%B9%E9%BD%90"><span class="nav-text">2.
+查找对话框：组标题与选项间距对齐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%A5%BD%E8%AE%BE%E7%BD%AE%E5%AF%B9%E8%AF%9D%E6%A1%86%E6%B1%89%E5%8C%9623-%E6%9D%A1"><span class="nav-text">3. 偏好设置对话框汉化（23 条）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE%E6%90%9C%E7%B4%A2%E8%8F%9C%E5%8D%95%E6%B1%89%E5%8C%96%E5%8F%82%E7%85%A7-notepad"><span class="nav-text">4. 视图&#x2F;搜索菜单汉化（参照
+Notepad++）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%BB-debug-info%E6%89%93-release-%E5%8C%85"><span class="nav-text">5. 去 Debug Info，打 Release 包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#appimage-%E6%89%93%E5%8C%85%E4%B8%89%E4%B8%AA%E5%9D%91"><span class="nav-text">6. AppImage 打包：三个坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83"><span class="nav-text">7. 发布</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/09/19/NotepadNext%E4%B8%AD%E6%96%87%E6%B1%89%E5%8C%96%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="NotepadNext 中文汉化与 AppImage 打包实战 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标：基于上游 v0.14 的 NotepadNext 个人汉化分支，补全偏好设置&#x2F;视图&#x2F;搜索菜单中文翻译，打 Release 包并发布 AppImage 日期：2026-09-19 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https:&#x2F;&#x2F;github.com&#x2F;sunjunior&#x2F;notepadnext ，安装包：https:&#x2F;&#x2F;github.c...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NotepadNext 中文汉化与 AppImage 打包实战
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-19 18:00:00 / 修改时间：18:07:00" itemprop="dateCreated datePublished" datetime="2026-09-19T18:00:00+08:00">2026-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">实战</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标：基于上游 v0.14 的 NotepadNext 个人汉化分支，补全偏好设置/视图/搜索菜单中文翻译，打 Release 包并发布 AppImage 日期：2026-09-19 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https://github.com/sunjunior/notepadnext ，安装包：https://github.c...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标：基于上游 v0.14 的 NotepadNext
+个人汉化分支，补全偏好设置/视图/搜索菜单中文翻译，打 Release 包并发布
+AppImage<br />
+日期：2026-09-19<br />
+环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16<br />
+仓库：https://github.com/sunjunior/notepadnext
+，安装包：https://github.com/sunjunior/notepadnext/releases/tag/v0.14-zh1</p>
+</blockquote>
+<hr />
+<h2 id="背景">1. 背景</h2>
+<p>NotepadNext（上游 <code>dail8859/NotepadNext</code>
+v0.14）主界面虽有中文，但偏好设置对话框、视图/搜索菜单里仍有大量英文残留：<code>Show menu bar</code>、<code>Fold All</code>、<code>Cut Bookmarked Lines</code>、<code>Mark All Occurrences</code>
+等。本次把这三处全部汉化，术语参照 Notepad++
+官方简体中文语言包，顺手修了查找对话框的间距问题，去掉帮助菜单的
+<code>Debug Info</code>，最后打 Release 包并发布 AppImage。</p>
+<h2 id="查找对话框组标题与选项间距对齐">2.
+查找对话框：组标题与选项间距对齐</h2>
+<p><code>Search Mode</code> 分组标题和第一个单选框 <code>Normal</code>
+贴得太近，视觉间隔明显小于选项之间的间隔；<code>Transparency</code>
+分组同理。用截图逐像素测量确认：</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>调整前标题→首选项</th>
+<th>选项之间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search Mode</td>
+<td>~2px</td>
+<td>~17px（框间距）</td>
+</tr>
+<tr>
+<td>Transparency</td>
+<td>~3px</td>
+<td>~11px</td>
+</tr>
+</tbody>
+</table>
+<p>根因是 <code>QGroupBox</code>
+标题嵌在边框线上，<code>topMargin</code> 给小了。改
+<code>FindReplaceDialog.ui</code>：</p>
+<ul>
+<li>Search Mode 组 <code>topMargin</code>：16 → 26</li>
+<li>Transparency 组 <code>topMargin</code>：10 → 18</li>
+</ul>
+<p>改完复测：标题→首选项与选项之间均为 17px，完全一致。</p>
+<p>另外给该对话框（以及偏好设置对话框）加了浅色主题
+QSS：复选框显示真实对勾、单选框显示实心圆点（运行时用
+<code>QPainter</code> 生成 glyph 图，避免样式自带的色块）。</p>
+<h2 id="偏好设置对话框汉化23-条">3. 偏好设置对话框汉化（23 条）</h2>
+<p>系统语言 <code>zh_CN</code> 加载的是
+<code>NotepadNext_zh_CN.qm</code>。该文件 <code>PreferencesDialog</code>
+上下文有 23 条 <code>unfinished</code>，直接在 <code>.ts</code>
+里补齐，同时同步到
+<code>NotepadNext_zh.ts</code>（两者此前缺失项完全一致）：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>英文</th>
+<th>中文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show menu bar / toolbar / status bar</td>
+<td>显示菜单栏/工具栏/状态栏</td>
+</tr>
+<tr>
+<td>Restore previous session / Temporary files</td>
+<td>恢复上次会话 / 临时文件</td>
+</tr>
+<tr>
+<td>Translation:</td>
+<td>语言：</td>
+</tr>
+<tr>
+<td>Exit on last tab closed</td>
+<td>关闭最后一个标签页时退出</td>
+</tr>
+<tr>
+<td>Default Font / Font Size</td>
+<td>默认字体 / 字号</td>
+</tr>
+<tr>
+<td>Default Line Endings</td>
+<td>默认行尾格式</td>
+</tr>
+<tr>
+<td>Follow Current Document / Last Used Directory</td>
+<td>跟随当前文档 / 上次使用的目录</td>
+</tr>
+<tr>
+<td>An application restart is required…</td>
+<td>应用某些设置需要重启程序。</td>
+</tr>
+</tbody>
+</table>
+<p>其中
+<code>Windows (CR LF)</code>、<code>Linux (LF)</code>、<code>Macintosh (CR)</code>
+按已有风格保留英文原文，仅去掉 <code>unfinished</code>
+标记。<code>.ts</code> 改完后构建时 <code>qt_add_translations</code>
+自动跑 <code>lrelease</code> 生成 <code>.qm</code> 打进
+<code>:/i18n</code> 资源，无需手工操作（<code>.qm</code> 内字符串是
+UTF-16BE，直接 grep UTF-8 会误判为缺失）。</p>
+<h2 id="视图搜索菜单汉化参照-notepad">4. 视图/搜索菜单汉化（参照
+Notepad++）</h2>
+<p>从 <code>MainWindow.ui</code> 提取视图/搜索两菜单全部 action，逐个查
+<code>zh_CN.ts</code> 翻译状态，未翻译的集中补上。术语以 Notepad++ 官方
+<code>chineseSimplified.xml</code> 为准：</p>
+<ul>
+<li><code>Fold All</code> →
+<strong>折叠所有层级</strong>（NPP：折叠所有层次；本仓库已有”折叠层级”译法，统一用”层级”）</li>
+<li><code>Unfold All</code> →
+<strong>展开所有层级</strong>，<code>Fold/Unfold Level N</code> →
+<strong>折叠/展开层级 N</strong>（1–9）</li>
+<li><code>Cut/Copy/Delete Bookmarked Lines</code> →
+<strong>剪切/复制/删除书签行</strong>（与 NPP 一致）</li>
+<li><code>Mark All Occurrences</code> →
+<strong>用格式标记全部</strong>，<code>Mark Style N</code> →
+<strong>使用格式 N</strong>，<code>Clear Marks</code> →
+<strong>清除格式标记</strong>，<code>Clear All Styles</code> →
+<strong>清除所有格式标记</strong></li>
+<li>缩放指示器 <code>Zoom: %1%</code> → <strong>缩放：%1%</strong></li>
+</ul>
+<p>剩余未翻译的多为快捷键名（<code>Ctrl+N</code>
+等，无需翻译）和错误提示串，不在本次范围。</p>
+<h2 id="去-debug-info打-release-包">5. 去 Debug Info，打 Release 包</h2>
+<p>帮助菜单去掉 <code>Debug Info...</code>（删 ui 菜单项 + action 定义 +
+<code>MainWindow.cpp</code> 槽函数，<code>main.cpp</code> 启动日志用的
+<code>debugInfo()</code> 方法保留）。构建配置从
+<code>CMAKE_BUILD_TYPE=None</code> 切到
+<code>Release</code>（<code>-O3 -DNDEBUG</code>）全量重编：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cmake -S ~/notepadnext/src/notepadnext -B ~/notepadnext/src/notepadnext/build -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">cmake --build ~/notepadnext/src/notepadnext/build --target NotepadNext -j8</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> ~/notepadnext/src/notepadnext/build/src/NotepadNext /usr/bin/NotepadNext</span><br></pre></td></tr></table></figure>
+<h2 id="appimage-打包三个坑">6. AppImage 打包：三个坑</h2>
+<p>仓库自带 <code>appimage</code> target（自动下载
+linuxdeploy），但在本机 Arch 上连踩三坑：</p>
+<p><strong>坑 1：Qt 插件误用 Qt5 的
+qmake。</strong><code>linuxdeploy-plugin-qt</code> 默认找到
+<code>/usr/bin/qmake-qt5</code>，报
+<code>Could not find Qt modules to deploy</code>。解决：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> QMAKE=/usr/bin/qmake6</span><br></pre></td></tr></table></figure>
+<p><strong>坑 2：自带 <code>strip</code> 太老。</strong>Arch
+新工具链接出的库含 <code>.relr.dyn</code> 节，linuxdeploy 内置 strip
+不认识，大量 <code>Strip call failed</code> 后以
+<code>Failed to execute deferred operations</code> 失败。解决：把两个
+AppImage 用 <code>--appimage-extract</code> 解包，用系统 binutils 2.47
+的 <code>strip</code> 替换
+<code>squashfs-root*/usr/bin/strip</code>，再手动跑解包后的
+<code>AppRun</code>（参数照抄 <code>cmake/PackagingLinux.cmake</code> 里
+<code>appimage</code> target 的那一行，另需给插件写个 PATH 垫片）。</p>
+<p><strong>坑
+3：单实例旧锁导致”静默退出”。</strong>凡是”一点反应没有、退出码 0”，先查
+<code>/dev/shm</code>。之前 kill 掉的进程留下 <code>NQd7ehOB…</code>
+锁文件，新实例误判自己是第二个实例直接 <code>exit(0)</code>；且 Release
+下 <code>qInfo</code>
+日志到不了控制台，看起来就是静默退出。删掉锁文件再启动即正常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f /dev/shm/NQd7ehOB*</span><br></pre></td></tr></table></figure>
+<p>（附带教训：<code>pkill -f "NotepadNext-v0.14"</code>
+会匹配到执行这条命令的 shell 自身，直接把自己杀掉；用
+<code>pkill -x</code> 或 <code>[...]</code> 写法避开。）</p>
+<p>最终产物 <code>NotepadNext-v0.14-zh-x86_64.AppImage</code>（51MB，Qt
+已打进包），本机启动截图中文界面正常。</p>
+<h2 id="发布">7. 发布</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag v0.14-zh1 main &amp;&amp; git push github v0.14-zh1</span><br><span class="line">gh release create v0.14-zh1 --title <span class="string">&quot;v0.14 中文汉化版&quot;</span> --notes <span class="string">&quot;...&quot;</span> NotepadNext-v0.14-zh-x86_64.AppImage</span><br></pre></td></tr></table></figure>
+<p>用户侧两条命令即用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x NotepadNext-v0.14-zh-x86_64.AppImage</span><br><span class="line">./NotepadNext-v0.14-zh-x86_64.AppImage</span><br></pre></td></tr></table></figure>
+<p>另：GitHub 会按仓库 <code>.github/dependabot.yml</code> 自动开
+actions 升级 PR（与本次修改无关），已随手关闭。</p>
+<hr />
+<p>本次源码改动共 6
+个文件（<code>FindReplaceDialog.ui/.cpp</code>、<code>MainWindow.ui/.cpp</code>、<code>NotepadNext_zh_CN.ts</code>、<code>NotepadNext_zh.ts</code>），<code>build/</code>、<code>.cpm-cache/</code>
+等本地临时目录已在 <code>.gitignore</code> 中，不会进仓库。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/09/19/NotepadNext%E4%B8%AD%E6%96%87%E6%B1%89%E5%8C%96%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/" title="NotepadNext 中文汉化与 AppImage 打包实战">https://sunjunior.github.io/2026/09/19/NotepadNext中文汉化与AppImage打包实战/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/NotepadNext-%E6%B1%89%E5%8C%96-Qt-AppImage-Linux/" rel="tag"><i class="fa fa-tag"></i> NotepadNext, 汉化, Qt, AppImage, Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/16/%E5%90%8D%E5%B0%86-CPS1%E4%BC%A4%E5%AE%B3%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="名将（CPS1）伤害最大化 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 名将（CPS1）伤害最大化 Hack 技术文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
