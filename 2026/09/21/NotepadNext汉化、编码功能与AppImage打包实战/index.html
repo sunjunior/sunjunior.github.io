@@ -20,19 +20,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3">
+    <meta name="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（①全局菜单脚本化审计清零残留；②新增「列选模式」提示项并查证矩形选择原生实现；③编码菜单新增”以 X 编码打开”组） 环境：Arc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NotepadNext 中文汉化、编码功能增强与 AppImage 打包实战">
 <meta property="og:url" content="https://sunjunior.github.io/2026/09/21/NotepadNext%E6%B1%89%E5%8C%96%E3%80%81%E7%BC%96%E7%A0%81%E5%8A%9F%E8%83%BD%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3">
+<meta property="og:description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（①全局菜单脚本化审计清零残留；②新增「列选模式」提示项并查证矩形选择原生实现；③编码菜单新增”以 X 编码打开”组） 环境：Arc">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/screenshot.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/utf16-open.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/encoding-menu.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/screenshot.gif">
 <meta property="article:published_time" content="2026-09-21T06:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-21T07:05:47.384Z">
+<meta property="article:modified_time" content="2026-09-21T09:09:59.119Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="NotepadNext, 汉化, 编码, UTF-8, UTF-16, GBK, Qt, AppImage, Linux">
 <meta name="twitter:card" content="summary">
@@ -167,7 +167,9 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E4%B8%AD%E6%96%87%E6%B1%89%E5%8C%96%E6%94%B6%E5%B0%BE"><span class="nav-text">2. 第一部分：中文汉化收尾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E5%A5%BD%E8%AE%BE%E7%BD%AE%E5%AF%B9%E8%AF%9D%E6%A1%8623-%E6%9D%A1"><span class="nav-text">2.1 偏好设置对话框（23 条）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE%E6%90%9C%E7%B4%A2%E8%8F%9C%E5%8D%95%E6%9C%AF%E8%AF%AD%E5%8F%82%E7%85%A7-notepad"><span class="nav-text">2.2 视图&#x2F;搜索菜单（术语参照
 Notepad++）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E7%A1%AE%E8%AE%A4%E6%A1%86%E6%8C%89%E9%92%AE%E5%8A%A0%E8%BD%BD%E7%B3%BB%E7%BB%9F-qt-%E7%BF%BB%E8%AF%91"><span class="nav-text">2.3 保存确认框按钮：加载系统 Qt
-翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E7%BB%86%E8%8A%82"><span class="nav-text">2.4 界面细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E6%96%87%E4%BB%B6%E7%BC%96%E7%A0%81%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA%E6%9C%AC%E6%AC%A1%E6%A0%B8%E5%BF%83"><span class="nav-text">3.
+翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E7%BB%86%E8%8A%82"><span class="nav-text">2.4 界面细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E5%8C%96%E5%85%A8%E5%B1%80%E8%8F%9C%E5%8D%95%E5%AE%A1%E8%AE%A1%E6%8A%8A%E6%B1%89%E5%8C%96%E6%AE%8B%E7%95%99%E6%B8%85%E9%9B%B6"><span class="nav-text">2.5
+脚本化全局菜单审计：把汉化残留清零</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E9%80%89%E6%A8%A1%E5%BC%8F%E6%8F%90%E7%A4%BA%E9%A1%B9%E4%B8%8E%E7%9F%A9%E5%BD%A2%E9%80%89%E6%8B%A9%E7%9A%84%E7%9C%9F%E7%9B%B8"><span class="nav-text">2.6
+「列选模式」提示项与矩形选择的真相</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E6%96%87%E4%BB%B6%E7%BC%96%E7%A0%81%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA%E6%9C%AC%E6%AC%A1%E6%A0%B8%E5%BF%83"><span class="nav-text">3.
 第二部分：文件编码功能增强（本次核心）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E6%B8%B8%E7%8E%B0%E7%8A%B6%E7%9B%98%E7%82%B9"><span class="nav-text">3.1 上游现状盘点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9"><span class="nav-text">3.2 设计要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-text">3.3 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">3.4 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E8%B8%A9%E5%9D%91%E4%B8%89%E5%88%99"><span class="nav-text">3.5 自动化测试踩坑三则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86appimage-%E6%89%93%E5%8C%85%E4%B8%89%E4%B8%AA%E5%9D%91"><span class="nav-text">4. 第三部分：AppImage
 打包：三个坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82"><span class="nav-text">5. 发布与系统要求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82x86_64-linux%E5%B7%B2%E5%AE%9E%E6%B5%8B%E6%A0%B8%E5%AE%9E"><span class="nav-text">系统要求（x86_64
 Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%98%E6%9B%B4%E7%9B%98%E7%82%B9"><span class="nav-text">6. 代码变更盘点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-text">7. 小结</span></a></li></ol></div>
@@ -251,7 +253,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="NotepadNext 中文汉化、编码功能增强与 AppImage 打包实战 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3...">
+      <meta itemprop="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（①全局菜单脚本化审计清零残留；②新增「列选模式」提示项并查证矩形选择原生实现；③编码菜单新增”以 X 编码打开”组） 环境：Arc...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -267,7 +269,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-21 14:30:00 / 修改时间：15:05:47" itemprop="dateCreated datePublished" datetime="2026-09-21T14:30:00+08:00">2026-09-21</time>
+      <time title="创建时间：2026-09-21 14:30:00 / 修改时间：17:09:59" itemprop="dateCreated datePublished" datetime="2026-09-21T14:30:00+08:00">2026-09-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -289,7 +291,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
     </span>
 </div>
 
-            <div class="post-description">目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI/UTF-8/UTF-8 BOM/UTF-16 LE/BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3...</div>
+            <div class="post-description">目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI/UTF-8/UTF-8 BOM/UTF-16 LE/BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（①全局菜单脚本化审计清零残留；②新增「列选模式」提示项并查证矩形选择原生实现；③编码菜单新增”以 X 编码打开”组） 环境：Arc...</div>
         </div>
       </header>
 
@@ -301,8 +303,8 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI/UTF-8/UTF-8
 BOM/UTF-16 LE/BE、转换与按编码重新打开）；③打出 Release 包并发布
 AppImage<br />
-更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++
-式重解读字节）<br />
+更新：2026-09-21（①全局菜单脚本化审计清零残留；②新增「列选模式」提示项并查证矩形选择原生实现；③编码菜单新增”以
+X 编码打开”组）<br />
 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16<br />
 仓库：https://github.com/sunjunior/notepadnext
 ，安装包：https://github.com/sunjunior/notepadnext/releases/tag/v0.14-zh1</p>
@@ -424,6 +426,56 @@ QSS：复选框真实对勾、单选框实心圆点（<code>QPainter</code> 运�
 glyph）；</li>
 <li>帮助菜单移除 <code>Debug Info...</code>。</li>
 </ul>
+<h3 id="脚本化全局菜单审计把汉化残留清零">2.5
+脚本化全局菜单审计：把汉化残留清零</h3>
+<p>零敲碎打地”发现一条补一条”永远补不完，索性写个审计脚本：解析
+<code>MainWindow.ui</code> 全部 241 条 <code>&lt;string&gt;</code>
+源文本，逐条对照 <code>zh_CN.ts</code> 的 MainWindow
+上下文（缺失/空译文/<code>type="unfinished"</code>
+三种形态都算未汉化），排除快捷键后一次性列出清单：</p>
+<ul>
+<li><strong>编辑 →
+行操作</strong>：<code>Remove Duplicate Lines</code>（移除重复行）、<code>Remove Consecutive Duplicate Lines</code>（移除连续重复行）、<code>Reverse Line Order</code>（反转行顺序）、六种
+<code>Sort Lines …</code>（行升序/降序排序、忽略大小写、按行长）——这些在
+ts 里原本就是空译文占位；</li>
+<li><code>Next Tab</code>/<code>Previous Tab</code>（下一个/上一个标签页）、<code>Toggle Overtype</code>（切换改写模式）、<code>Open %1 Here</code>（在此打开
+%1，终端项）；</li>
+<li><strong>文件被外部修改的重载确认提示</strong>（含
+<code>&lt;b&gt;</code> 富文本）与<strong>全部 15 条文件 IO
+错误标题</strong>（读取/写入/重命名/权限错误…）——这类错误框平时不弹，弹的时候全英文最扎眼；</li>
+<li>工作区”按文件名排序”、搜索结果面板”将结果复制到剪贴板”。</li>
+</ul>
+<p>批量回填两个 <code>.ts</code>
+后复跑审计，剩余未译项只有两类：快捷键串（<code>Ctrl+N</code>
+等，本就不该译）和快捷查找面板的符号按钮（<code>Aa</code>、<code>|A|</code>、<code>. *</code>）。两个小坑：译文里的
+<code>&lt;b&gt;</code> 标签必须转义成
+<code>&amp;lt;b&amp;gt;</code>，否则 <code>lrelease</code>
+直接报错中断构建；往 <code>.ts</code>
+插新条目时要顺手删掉同源的旧空条目，不然会出现”一份空译文 +
+一份译文”的重复 <code>&lt;message&gt;</code>。</p>
+<h3 id="列选模式提示项与矩形选择的真相">2.6
+「列选模式」提示项与矩形选择的真相</h3>
+<p>编辑菜单”列编辑模式…“上方新增<strong>「列选模式」</strong>只读提示项（<code>QMessageBox::about</code>
+风格），弹窗标题”列模式提示”，正文写明两种操作方法：</p>
+<ol type="1">
+<li>（键盘和鼠标）按住 Alt 键，同时鼠标左键拖动；</li>
+<li>（只需键盘）按住 Alt+Shift 键，并使用方向键。</li>
+</ol>
+<p><strong>功能实现上反而没写多少代码</strong>——查证过程很有意思：先给
+<code>ScintillaNext</code> 写了 <code>keyPressEvent</code> 拦截
+Alt+Shift+方向键去调 RECTEXTEND 命令，随后翻 Scintilla
+源码发现跨平台默认键表 <code>KeyMap.cxx</code> 的
+<code>MapDefault</code> 里<strong>本来就绑了全方向</strong>（上下左右 +
+Home/End/PageUp/PageDown），鼠标法也是 Qt
+端口自带（<code>rectangularSelectionModifier = SCMOD_ALT</code>，且工程开启了
+<code>SCVS_RECTANGULARSELECTION</code>）——我写的是纯冗余代码，回滚后整个功能收敛到
++50 行（菜单项+提示框+翻译）。实测 Alt+Shift+↓×3
+一次插入四个行，键盘列选完全可用。</p>
+<p><strong>Alt+拖拽的一个环境坑</strong>：xdotool 模拟
+Alt+左键拖拽时，整个窗口跟着鼠标跑了——被 Xfce 的 xfwm4”按住 Alt
+拖动移动窗口”全局劫持，事件根本到不了编辑器。这是桌面设置问题不是应用问题（Notepad++
+装在同一桌面同样中招）；释放方法：设置 → 窗口管理器 → 高级 →
+“移动窗口快捷键”改为”无”。顺带还踩到”编辑器不会自动重载被外部脚本改写的文件”导致两轮测试对着旧缓冲白测——自动化测试前务必重启应用。</p>
 <h2 id="第二部分文件编码功能增强本次核心">3.
 第二部分：文件编码功能增强（本次核心）</h2>
 <h3 id="上游现状盘点">3.1 上游现状盘点</h3>
@@ -658,6 +710,17 @@ Release 页说明。本包在 Arch（glibc
 编码”打开组</strong>：以指定编码重解读文件字节（N++
 式），未编辑时直接重解码盘上原始字节并保持干净状态</td>
 </tr>
+<tr>
+<td><code>69403428</code></td>
+<td><strong>列选模式提示项</strong>：编辑菜单新增「列选模式」只读提示对话框（两种操作方法；功能经证实为
+Scintilla 原生能力）</td>
+</tr>
+<tr>
+<td><code>73d513e9</code></td>
+<td><strong>全局汉化审计清零</strong>：行操作 9
+项、标签页/改写模式/终端项、外部修改重载提示、15 条文件 IO 错误标题等 24
+条</td>
+</tr>
 </tbody>
 </table>
 <p>构建过程产生的文件不进仓库：<code>build/</code>（编译产物、<code>AppDir/</code>、<code>squashfs-root-*</code>、下载的
@@ -670,7 +733,9 @@ linuxdeploy）和 <code>.cpm-cache/</code> 都被 <code>.gitignore</code>
 文件从”打开乱码、保存损坏”变成开箱即用；GBK/ANSI 文件自动识别；Encoding
 菜单从占位符变成”重解读 + 转换”两组十个真正可用的项，Notepad++ 里”以 X
 编码打开救乱码、转为 X 换保存编码”的完整工作流在 Linux
-上也成立了。加上汉化收尾，这套个人分支现在对中文用户基本没有硬伤了。下一步可考虑：支持
+上也成立了。汉化侧则用脚本审计把行操作、错误提示等最后的残留清零，并补上「列选模式」提示项——查证过程还顺带确认了矩形列选本就是
+Scintilla
+原生能力。这套个人分支现在对中文用户基本没有硬伤了。下一步可考虑：支持
 Big5/Shift-JIS 等更多传统编码、状态栏编码标签点击直接弹出编码菜单。</p>
 
     </div>
