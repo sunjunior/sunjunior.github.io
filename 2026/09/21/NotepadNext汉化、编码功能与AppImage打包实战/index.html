@@ -20,19 +20,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE 与相互转换）；③打出 Release 包并发布 AppImage 更新：2026-09-21（新增编码功能章节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https:&#x2F;&#x2F;github">
+    <meta name="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NotepadNext 中文汉化、编码功能增强与 AppImage 打包实战">
 <meta property="og:url" content="https://sunjunior.github.io/2026/09/21/NotepadNext%E6%B1%89%E5%8C%96%E3%80%81%E7%BC%96%E7%A0%81%E5%8A%9F%E8%83%BD%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE 与相互转换）；③打出 Release 包并发布 AppImage 更新：2026-09-21（新增编码功能章节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https:&#x2F;&#x2F;github">
+<meta property="og:description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/screenshot.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/utf16-open.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/encoding-menu.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/screenshot.gif">
 <meta property="article:published_time" content="2026-09-21T06:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-21T06:27:06.312Z">
+<meta property="article:modified_time" content="2026-09-21T07:05:47.384Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="NotepadNext, 汉化, 编码, UTF-8, UTF-16, GBK, Qt, AppImage, Linux">
 <meta name="twitter:card" content="summary">
@@ -251,7 +251,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="NotepadNext 中文汉化、编码功能增强与 AppImage 打包实战 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE 与相互转换）；③打出 Release 包并发布 AppImage 更新：2026-09-21（新增编码功能章节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https:&#x2F;&#x2F;github...">
+      <meta itemprop="description" content="目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI&#x2F;UTF-8&#x2F;UTF-8 BOM&#x2F;UTF-16 LE&#x2F;BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -267,7 +267,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-21 14:30:00 / 修改时间：14:27:06" itemprop="dateCreated datePublished" datetime="2026-09-21T14:30:00+08:00">2026-09-21</time>
+      <time title="创建时间：2026-09-21 14:30:00 / 修改时间：15:05:47" itemprop="dateCreated datePublished" datetime="2026-09-21T14:30:00+08:00">2026-09-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -289,7 +289,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
     </span>
 </div>
 
-            <div class="post-description">目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI/UTF-8/UTF-8 BOM/UTF-16 LE/BE 与相互转换）；③打出 Release 包并发布 AppImage 更新：2026-09-21（新增编码功能章节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16 仓库：https://github...</div>
+            <div class="post-description">目标：基于上游 v0.14 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI/UTF-8/UTF-8 BOM/UTF-16 LE/BE、转换与按编码重新打开）；③打出 Release 包并发布 AppImage 更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++ 式重解读字节） 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3...</div>
         </div>
       </header>
 
@@ -299,8 +299,10 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>目标：基于上游 v0.14
 的个人分支，完成三件事——①界面中文汉化收尾；②从零实现文件编码功能（ANSI/UTF-8/UTF-8
-BOM/UTF-16 LE/BE 与相互转换）；③打出 Release 包并发布 AppImage<br />
-更新：2026-09-21（新增编码功能章节）<br />
+BOM/UTF-16 LE/BE、转换与按编码重新打开）；③打出 Release 包并发布
+AppImage<br />
+更新：2026-09-21（编码菜单新增”以 X 编码”打开组，N++
+式重解读字节）<br />
 环境：Arch Linux，Qt 6.11.2，CMake 4.4.3，GCC 16<br />
 仓库：https://github.com/sunjunior/notepadnext
 ，安装包：https://github.com/sunjunior/notepadnext/releases/tag/v0.14-zh1</p>
@@ -483,10 +485,13 @@ GB18030 兜底。这样”文档打开以默认识别的编码为准”，常见
 <li><strong>“ANSI” 映射为 GB18030</strong>（GBK 超集）：Linux 上没有
 Windows 系统代码页，用 <code>codecForLocale()</code> 的话 zh_CN.UTF-8 下
 ANSI≡UTF-8 形同虚设，直接定 GB18030 最实用；</li>
-<li><strong>“转为 X” =
-更换保存编码</strong>：内存文本不变，只改落盘编码并标脏。刻意不做”用新编码重新解码字节”——那会让最常见的”GBK
-文档转为
-UTF-8”变成双重转码事故（先错解码再保存，内容全毁）。救援乱码的正确姿势就是重新打开，自动识别已覆盖；</li>
+<li><strong>菜单两组、职责严格分离</strong>（对齐
+Notepad++）：<strong>“转为 X”</strong>
+只更换保存编码，内存文本不动、标脏——刻意不让它重新解码，否则最常见的”GBK
+文档转为 UTF-8”会变成双重转码事故（先错解再保存，内容全毁）；<strong>“X
+编码”</strong>（最前 5
+项）负责重解读：文档未编辑时直接拿盘上原始字节用新编码重新解码，且解读后仍是干净状态（选错一键切回、Ctrl+S
+空操作、关标签不弹保存），有未保存修改时则把当前文本按原编码还原成字节视图再重解读。救援乱码、验证”这文件到底是什么编码”全靠这一组；</li>
 <li><strong>标脏机制</strong>：转换后 Scintilla 的 <code>modify()</code>
 可能仍为 false（文本没变），加了 <code>encodingDirty</code> 标志并入
 <code>canSaveToDisk()</code>，保证标题出现未保存星号、关标签页会提醒。</li>
@@ -497,9 +502,13 @@ UTF-8”变成双重转码事故（先错解码再保存，内容全毁）。救
 <code>convertTo()</code>，加载/保存走同一组静态助手：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> Encoding <span class="title">detectEncoding</span><span class="params">(<span class="type">const</span> QByteArray &amp;data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (data.<span class="built_in">startsWith</span>(BOM_UTF16LE)) <span class="keyword">return</span> Encoding::Utf16LeBom;</span><br><span class="line">    <span class="keyword">if</span> (data.<span class="built_in">startsWith</span>(BOM_UTF16BE)) <span class="keyword">return</span> Encoding::Utf16BeBom;</span><br><span class="line">    <span class="keyword">if</span> (data.<span class="built_in">startsWith</span>(BOM_UTF8))    <span class="keyword">return</span> Encoding::Utf8Bom;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">isValidUtf8Text</span>(data))        <span class="keyword">return</span> Encoding::Utf8;   <span class="comment">// 严格校验</span></span><br><span class="line">    <span class="keyword">return</span> Encoding::Ansi;                                      <span class="comment">// GB18030 兜底</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ScintillaNext::convertTo</span><span class="params">(Encoding encoding)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (encoding == currentEncoding) <span class="keyword">return</span>;</span><br><span class="line">    currentEncoding = encoding;</span><br><span class="line">    encodingDirty = <span class="literal">true</span>;          <span class="comment">// 文本不变也要提示保存</span></span><br><span class="line">    <span class="function">emit <span class="title">encodingChanged</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>保存侧 <code>encodeFromText()</code> 按目标编码转字节并加 BOM；UTF-16
-用逐码元手工大小端转换（代理对原样保留）。UI
-侧：<code>MainWindow.ui</code> 五个 checkable action 挂
-<code>QActionGroup</code>，选中项与状态栏（<code>ANSI</code> /
+用逐码元手工大小端转换（代理对原样保留）。重解读核心
+<code>openWith()</code> 十来行：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">bool</span> fromDisk = <span class="built_in">isFile</span>() &amp;&amp; !<span class="built_in">modify</span>() &amp;&amp; !encodingDirty;</span><br><span class="line">QByteArray source = fromDisk ? diskData                       <span class="comment">// 未编辑：用盘上原始字节</span></span><br><span class="line">                             : <span class="built_in">encodeFromText</span>(utf8, currentEncoding); <span class="comment">// 已编辑：还原字节视图</span></span><br><span class="line"><span class="built_in">setTargetRange</span>(<span class="number">0</span>, <span class="built_in">textLength</span>());</span><br><span class="line"><span class="built_in">replaceTarget</span>(newUtf8.<span class="built_in">size</span>(), <span class="built_in">decodeToText</span>(source, encoding).<span class="built_in">toUtf8</span>().<span class="built_in">constData</span>());</span><br><span class="line"><span class="keyword">if</span> (fromDisk) <span class="built_in">setSavePoint</span>();   <span class="comment">// 纯重解读，不算改动</span></span><br></pre></td></tr></table></figure>
+<p>UI 侧：<code>MainWindow.ui</code> 十个 action——上半组 5 个”ANSI 编码
+/ UTF-8 编码 / UTF-8 BOM 编码 / UTF-16 BE BOM 编码 / UTF-16 LE BOM
+编码”执行重解读；分隔线下 5 个”转为 X”（checkable，挂
+<code>QActionGroup</code>）执行转换，勾选与状态栏（<code>ANSI</code> /
 <code>UTF-8</code> / <code>UTF-8 BOM</code> / <code>UTF-16LE BOM</code>
 /
 <code>UTF-16BE BOM</code>）随当前编辑器联动，中英文菜单均已翻译。顺带修了上游
@@ -510,18 +519,23 @@ UTF-8”变成双重转码事故（先错解码再保存，内容全毁）。救
 项断言全过——五种编码逐一”编码→检测→解码”往返一致、纯 ASCII
 字节不变、GB18030 四字节 <code>✓</code>、emoji 代理对、空文件判
 UTF-8；</li>
-<li><strong>GUI 端到端</strong>：xdotool 操作真实界面，把同一个文件
-<code>UTF-8 BOM → ANSI → UTF-16LE</code> 连转两次、每步 Ctrl+S 后
-hexdump 落盘字节：GB18030 的
+<li><strong>GUI 端到端（转换组）</strong>：xdotool
+操作真实界面，把同一个文件 <code>UTF-8 BOM → ANSI → UTF-16LE</code>
+连转两次、每步 Ctrl+S 后 hexdump 落盘字节：GB18030 的
 <code>b2 e2 ca d4</code>（测试）、<code>81 37 bd 37</code>（✓）、UTF-16LE
 的 <code>6d 4b d5 8b</code> 全部正确；</li>
+<li><strong>GUI 端到端（重解读组）</strong>：拿真实 GBK
+文件走完整工作流——“UTF-8 编码”打开 → 编辑器立刻变乱码（证明重解码生效）→
+Ctrl+S 空操作（证明重解读不脏化文档）→ “ANSI 编码”一键恢复 → 再”转为
+UTF-8”保存 → hexdump 确认落盘已是正确中文的 UTF-8 文件；</li>
 <li>UTF-16 文件现在打开即正常显示，状态栏正确标注：</li>
 </ul>
 <figure>
 <img src="/img/notepadnext/utf16-open.png" alt="UTF-16LE 文件打开" />
 <figcaption aria-hidden="true">UTF-16LE 文件打开</figcaption>
 </figure>
-<p>Encoding 菜单（当前编码勾选”转为 ANSI”）：</p>
+<p>Encoding 菜单（上：5 个”X 编码”重解读项；下：5 个”转为
+X”转换项，当前编码已勾选）：</p>
 <figure>
 <img src="/img/notepadnext/encoding-menu.png" alt="编码转换菜单" />
 <figcaption aria-hidden="true">编码转换菜单</figcaption>
@@ -635,8 +649,14 @@ Release 页说明。本包在 Arch（glibc
 </tr>
 <tr>
 <td><code>77d0b2f5</code></td>
-<td><strong>编码功能</strong>：<code>ScintillaNext.h/.cpp</code>（检测/转码/转换）、<code>MainWindow.ui/.cpp/.h</code>（编码菜单）、<code>EditorInfoStatusBar.cpp</code>（状态栏）、两个
+<td><strong>编码功能</strong>：<code>ScintillaNext.h/.cpp</code>（检测/转码/转换）、<code>MainWindow.ui/.cpp/.h</code>（编码转换菜单）、<code>EditorInfoStatusBar.cpp</code>（状态栏）、两个
 <code>.ts</code></td>
+</tr>
+<tr>
+<td><code>765d04bc</code></td>
+<td><strong>编码菜单新增”X
+编码”打开组</strong>：以指定编码重解读文件字节（N++
+式），未编辑时直接重解码盘上原始字节并保持干净状态</td>
 </tr>
 </tbody>
 </table>
@@ -648,8 +668,10 @@ linuxdeploy）和 <code>.cpm-cache/</code> 都被 <code>.gitignore</code>
 <p>NotepadNext 的编码缺失本质是”只写了 BOM
 检测，没写转码层”。补齐这层之后：UTF-16
 文件从”打开乱码、保存损坏”变成开箱即用；GBK/ANSI 文件自动识别；Encoding
-菜单从占位符变成五个真正可用的转换项。加上汉化收尾，这套个人分支现在对中文用户基本没有硬伤了。下一步可考虑：编码标签点击直接弹出转换菜单、支持
-Big5/Shift-JIS 等更多传统编码。</p>
+菜单从占位符变成”重解读 + 转换”两组十个真正可用的项，Notepad++ 里”以 X
+编码打开救乱码、转为 X 换保存编码”的完整工作流在 Linux
+上也成立了。加上汉化收尾，这套个人分支现在对中文用户基本没有硬伤了。下一步可考虑：支持
+Big5/Shift-JIS 等更多传统编码、状态栏编码标签点击直接弹出编码菜单。</p>
 
     </div>
 
