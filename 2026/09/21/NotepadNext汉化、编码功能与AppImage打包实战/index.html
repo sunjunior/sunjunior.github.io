@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/encoding-menu.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/notepadnext/screenshot.gif">
 <meta property="article:published_time" content="2026-09-21T06:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-21T11:28:53.112Z">
+<meta property="article:modified_time" content="2026-09-21T12:58:24.673Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="NotepadNext, 汉化, 编码, UTF-8, UTF-16, GBK, Qt, AppImage, Linux">
 <meta name="twitter:card" content="summary">
@@ -270,7 +270,7 @@ Linux，已实测核实）</span></a></li></ol></li><li class="nav-item nav-leve
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-21 14:30:00 / 修改时间：19:28:53" itemprop="dateCreated datePublished" datetime="2026-09-21T14:30:00+08:00">2026-09-21</time>
+      <time title="创建时间：2026-09-21 14:30:00 / 修改时间：20:58:24" itemprop="dateCreated datePublished" datetime="2026-09-21T14:30:00+08:00">2026-09-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -631,7 +631,7 @@ AppImage 用 <code>--appimage-extract</code> 解包，用系统 binutils 2.47
 锁文件，新实例误判自己是第二个实例直接
 <code>exit(0)</code>，控制台没有任何输出，看起来就是”打不开”。删掉锁文件再启动即正常：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f /dev/shm/NQd7ehOB*</span><br></pre></td></tr></table></figure>
-<p>最终产物 <code>NotepadNext-v0.14-zh-x86_64.AppImage</code>（约
+<p>最终产物 <code>NotepadNext-v0.14-zh-linux-x86_64.AppImage</code>（约
 50MB，Qt 已打进包），本机启动后中文界面正常，操作演示如下：</p>
 <figure>
 <img src="/img/notepadnext/screenshot.gif" alt="AppImage 运行演示" />
@@ -687,9 +687,9 @@ MB），要求 Windows 10/11 x64（Qt 6 不支持 Win7/8），Qt
 运行库与中文翻译全打包、免装 VC++。此后 Windows 版发版 = 推 tag 或
 Actions 页点一次 Run，全自动。</p>
 <h2 id="发布与系统要求">6. 发布与系统要求</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag v0.14-zh1 main &amp;&amp; git push github v0.14-zh1</span><br><span class="line">gh release create v0.14-zh1 --title <span class="string">&quot;v0.14 中文汉化版&quot;</span> --notes <span class="string">&quot;...&quot;</span> NotepadNext-v0.14-zh-x86_64.AppImage</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag v0.14-zh1 main &amp;&amp; git push github v0.14-zh1</span><br><span class="line">gh release create v0.14-zh1 --title <span class="string">&quot;v0.14 中文汉化版&quot;</span> --notes <span class="string">&quot;...&quot;</span> NotepadNext-v0.14-zh-linux-x86_64.AppImage</span><br></pre></td></tr></table></figure>
 <p>用户侧两条命令即用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x NotepadNext-v0.14-zh-x86_64.AppImage</span><br><span class="line">./NotepadNext-v0.14-zh-x86_64.AppImage</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x NotepadNext-v0.14-zh-linux-x86_64.AppImage</span><br><span class="line">./NotepadNext-v0.14-zh-linux-x86_64.AppImage</span><br></pre></td></tr></table></figure>
 <h3 id="系统要求x86_64-linux已实测核实">系统要求（x86_64
 Linux，已实测核实）</h3>
 <p>Qt 等主体依赖已打进包，用户侧只需满足两项：<strong>FUSE
