@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-18T14:50:32.779Z">
+<meta property="article:modified_time" content="2026-09-23T13:56:27.712Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -171,8 +171,8 @@
 0x24B48</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E9%A2%84%E8%AE%BE%E8%A1%A8%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%9F%BA%E5%9D%80"><span class="nav-text">6.2 掉落预设表的两个基址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E7%B4%A2%E5%BC%95%E8%B7%B3%E8%BD%AC%E8%A1%A8-0x24d6c"><span class="nav-text">6.3 武器索引跳转表
 0x24D6C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E5%9D%97%E7%A4%BA%E4%BE%8Buzi266"><span class="nav-text">6.4 武器初始化块示例（Uzi，$26&#x3D;6）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%89%E8%90%BD-hack%E5%BF%85%E6%8E%89%E6%8C%87%E5%AE%9A%E6%9E%AA%E6%A2%B0"><span class="nav-text">7. 掉落 Hack：必掉指定枪械</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-a%E5%BF%85%E6%8E%89%E7%8C%8E%E6%9E%AAd11"><span class="nav-text">7.1 方案 A：必掉猎枪（d1&#x3D;1）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b%E5%BF%85%E6%8E%89-m16-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d15%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98"><span class="nav-text">7.2 方案 B：必掉 M16
 机关枪 48 发（d1&#x3D;5，当前交付）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E5%80%BC%E5%8F%98%E4%BD%93uzi-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d14"><span class="nav-text">7.3 同值变体：Uzi 机关枪 48
-发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-text">8.1 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%A8%B3%E5%AE%9A%E7%89%88v9-%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5-%E6%9A%B4%E5%87%BB-ff-100-m16-%E6%8E%89%E8%90%BD-%E5%85%A8-8-%E5%85%B3%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2"><span class="nav-text">最终稳定版（v9
-双倍出兵 + 暴击 FF + 100% M16 掉落 + 全 8 关敌兵替换）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
+发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-text">8.1 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%ACv8-%E7%A8%B3%E5%AE%9A%E7%89%88%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5-%E6%9A%B4%E5%87%BB-ff-100-m16-%E6%8E%89%E8%90%BD"><span class="nav-text">交付版本：v8
+稳定版（双倍出兵 + 暴击 FF + 100% M16 掉落）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%B7%B1%E5%85%A5%E8%B0%83%E6%9F%A5%E5%90%8E%E6%94%BE%E5%BC%83%E5%AE%8C%E6%95%B4%E5%A4%B1%E8%B4%A5%E5%88%86%E6%9E%90"><span class="nav-text">敌兵替换功能：深入调查后放弃（完整失败分析）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
 掉落机关枪 48 发）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#m16-%E5%8F%98%E4%BD%93%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%AC0x24b740x05%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA"><span class="nav-text">M16
 变体（当前交付版本，0x24B74&#x3D;0x05）实机演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-text">8.6 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">9. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">10. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-text">11. MAME 0.149
 移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-text">11.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-text">11.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-text">11.3 可选：0.149 XML
@@ -285,7 +285,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-18 22:50:32" itemprop="dateModified" datetime="2026-09-18T22:50:32+08:00">2026-09-18</time>
+      <time title="修改时间：2026-09-23 21:56:27" itemprop="dateModified" datetime="2026-09-23T21:56:27+08:00">2026-09-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -952,12 +952,11 @@ Uzi / M16
 <hr />
 <h2 id="交付物">8. 交付物</h2>
 <h3 id="文件">8.1 文件</h3>
-<h4
-id="最终稳定版v9-双倍出兵-暴击-ff-100-m16-掉落-全-8-关敌兵替换">最终稳定版（v9
-双倍出兵 + 暴击 FF + 100% M16 掉落 + 全 8 关敌兵替换）</h4>
+<h4 id="交付版本v8-稳定版双倍出兵-暴击-ff-100-m16-掉落">交付版本：v8
+稳定版（双倍出兵 + 暴击 FF + 100% M16 掉落）</h4>
 <blockquote>
-<p>这是经过<strong>全 8
-关端到端实机验证</strong>的最终稳定版，四个功能同时生效。</p>
+<p>经<strong>全 8
+关端到端实机验证</strong>的稳定版，三个功能同时生效。</p>
 </blockquote>
 <table>
 <colgroup>
@@ -973,13 +972,13 @@ id="最终稳定版v9-双倍出兵-暴击-ff-100-m16-掉落-全-8-关敌兵替�
 <tbody>
 <tr>
 <td>文件名</td>
-<td><code>dinou_双倍出兵+暴击FF+M16掉落+随机替换final.zip</code>（美版），也可自行打补丁到世界版</td>
+<td><code>dinou_双倍出兵+暴击FF+M16_v8稳定版.zip</code>（美版）</td>
 </tr>
 <tr>
 <td>功能</td>
-<td>① <strong>全敌双倍</strong>（小兵/Boss 均翻倍，通过
-<code>$FD2A→jmp.l $104430</code> + <code>dbra</code>
-循环实现，第二个敌人延迟约 300ms 出现以规避对象初始化冲突）</td>
+<td>① <strong>全敌双倍</strong>（小兵/Boss
+均翻倍，<code>$FD2A→jmp.l $104430</code> + <code>dbra</code>
+循环，第二只延迟约 300ms 出现以规避对象初始化冲突）</td>
 </tr>
 <tr>
 <td></td>
@@ -992,28 +991,22 @@ id="最终稳定版v9-双倍出兵-暴击-ff-100-m16-掉落-全-8-关敌兵替�
 强制掉落类型 <code>d1=5</code>）</td>
 </tr>
 <tr>
-<td></td>
-<td>④ <strong>全 8
-关敌兵替换</strong>：普通小兵（街头拳手/铁锤/戴帽/猎人/朋克飞踢男）按地址精确替换为肥肥/飞刀客（133
-处，交替 0x28/0x38），Boss 地址与场景脚本一律不碰</td>
-</tr>
-<tr>
 <td>MAME 版本</td>
 <td>支持 0.149 自编译版与 0.289 正式版</td>
 </tr>
 <tr>
 <td>安装方式</td>
-<td>三个文件（<code>cdu_21a.6f</code> + <code>cdu_22a.7f</code> +
-<code>cdu_23a.8f</code>）替换入 <code>dinou.zip</code></td>
+<td>zip 内三个文件替换入 <code>dinou.zip</code>（世界版改
+<code>cde_</code> 前缀）</td>
 </tr>
 <tr>
 <td><a
-href="/downloads/dinou_双倍出兵+暴击FF+M16掉落+随机替换final.zip">下载</a></td>
+href="/files/dinou_双倍出兵+暴击FF+M16_v8稳定版.zip">下载</a></td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<p>SHA1（zip 内三个文件）：</p>
+<p>SHA1：</p>
 <table>
 <thead>
 <tr>
@@ -1028,7 +1021,7 @@ href="/downloads/dinou_双倍出兵+暴击FF+M16掉落+随机替换final.zip">�
 </tr>
 <tr>
 <td>cdu_22a.7f</td>
-<td><code>040272ebba18b1c4087cb22879c8881c673e2a06</code></td>
+<td><code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code>（原版）</td>
 </tr>
 <tr>
 <td>cdu_23a.8f</td>
@@ -1036,13 +1029,44 @@ href="/downloads/dinou_双倍出兵+暴击FF+M16掉落+随机替换final.zip">�
 </tr>
 </tbody>
 </table>
-<p>安装步骤：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将下载的 zip 内三个文件放入 dinou.zip</span></span><br><span class="line"><span class="comment"># （或世界版 dino.zip，需对应改为 cde_ 前缀文件）</span></span><br><span class="line">unzip -o dinou_双倍出兵+暴击FF+M16掉落+随机替换final.zip -d /tmp/dino_patch</span><br><span class="line"><span class="built_in">cd</span> /tmp/dino_patch</span><br><span class="line">zip -q ~/.mame/roms/dinou.zip cdu_21a.6f cdu_22a.7f cdu_23a.8f</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">unzip -o dinou_双倍出兵+暴击FF+M16_v8稳定版.zip -d /tmp/dino_patch</span><br><span class="line"><span class="built_in">cd</span> /tmp/dino_patch</span><br><span class="line">zip -q ~/.mame/roms/dinou.zip cdu_21a.6f cdu_22a.7f cdu_23a.8f</span><br></pre></td></tr></table></figure>
+<h4
+id="敌兵替换功能深入调查后放弃完整失败分析">敌兵替换功能：深入调查后放弃（完整失败分析）</h4>
 <blockquote>
-<p><strong>已知坑</strong>：地址 <code>0xAE102</code>（第二关沼泽，原
-type=0x0034
-猎人）<strong>不可替换为肥肥</strong>——实测替换后第二关沼泽行进至沉睡恐龙后方会出现重影卡死（<code>ADDRESS ERROR</code>）。final
-版已将该地址保留为猎人，其余 133 处替换全部安全。</p>
+<p>目标：把普通小兵（街头拳手/猎人/朋克飞踢男等）按地址替换为肥肥/飞刀客，做出类似”斗神版”的强敌氛围。<strong>完成全
+8 关类型采集并做出 133→137
+处替换后，因无法消除的随机崩溃，放弃该功能。</strong></p>
+</blockquote>
+<p><strong>调查过程</strong>（全部经 0.289 调试器采集 + 0.149
+实机二分定位）：</p>
+<ol type="1">
+<li><strong>第一版（v8+133 处替换）</strong>：第二关沼泽崩溃
+<code>ADDRESS ERROR 00044C67</code>。二分锁定沼泽 7 处中
+<code>0xAE102</code>（猎人）单独替换即崩。</li>
+<li><strong>修复版（跳过
+AE102）</strong>：沼泽仍出现”主角重影、无法攻击”软故障。继续二分发现是<strong>累积效应</strong>：同一批地址单独测全部安全，14
+处共存正常、15 处重影、16 处崩溃。</li>
+<li><strong>第三关（开车关）</strong>：40
+处替换一次通过一次崩，换最轻量的跳蚤人（0018）也崩——排除”对象大小”与”特定地址”因素。</li>
+<li><strong>决定性实验</strong>：三个版本<strong>第一关字节完全相同</strong>，一次稳定通关前
+4 关、一次 Boss 战崩、一次出场即崩，崩溃地址在
+<code>0x44C67</code>/<code>0x121B07</code>/<code>0x3F306</code>/<code>0x3B942</code>/<code>0xD0DF3</code>
+间随机漂移。同时关闭 M16 必掉仍崩（排除掉落物堆积因素）。</li>
+</ol>
+<p><strong>根因结论</strong>：肥肥/飞刀客是”重对象”（判定框大、动画多、附带投掷物），比原版小兵多占对象池槽位（游戏对象池仅约
+20 槽）。替换后特定帧序下对象池溢出，踩坏相邻 RAM
+中的函数指针/返回地址，CPU 跳入 ROM 数据区 →
+<code>ILLEGAL INST</code>/<code>ADDRESS ERROR</code>。<strong>崩溃概率随替换数量增加，但任何非零替换量都无法做到全稳定</strong>——ROM
+静态替换类型这条路本质上不可行。</p>
+<p><strong>留下的可复用资产</strong>：<br />
+- 全 8 关敌兵类型表 + Boss 地址排除清单（附录
+A.4，全部经调试器+画面双重确认）<br />
+- 高风险区标注：第二关沼泽全段、第三关开车段、各关 Boss 战前后<br />
+- 二分定位方法论：组批 → 单地址 → 组合累积测试，配合 0.149 快速回归</p>
+<blockquote>
+<p>若未来重做此功能，建议方向：<strong>运行时按类型映射</strong>（仿
+zengfr 随机版思路，在 <code>$FE36</code>
+把”任意轻量类型↔︎任意轻量类型”互换，如街头拳手↔︎猎人），不改变对象重量分布，或可规避池溢出。</p>
 </blockquote>
 <h4 id="其他版本历史存档">其他版本（历史存档）</h4>
 <table>
@@ -1068,8 +1092,7 @@ cdu_23a.8f=<code>f988e6021c6b3178193930b3d89e827888af5756</code></td>
 </tr>
 <tr>
 <td>v26 地址精确替换版</td>
-<td>在 v8 基础上第 1-2 关 24 处替换（沼泽 7 处含 <code>0xAE102</code>
-未排除，不稳定）</td>
+<td>在 v8 基础上第 1-2 关 24 处替换（已因随机崩溃放弃，见上文分析）</td>
 </tr>
 </tbody>
 </table>
@@ -1921,6 +1944,12 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <td>替换目标</td>
 </tr>
 <tr>
+<td><code>0x0030</code></td>
+<td>未命名场景</td>
+<td>场景</td>
+<td>第二关入口 <code>0xADEE2</code>，w1=0001</td>
+</tr>
+<tr>
 <td><code>0x0034</code></td>
 <td>猎人（拿枪）</td>
 <td>小兵</td>
@@ -1939,10 +1968,16 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <td>w1=0001 场景路径，不替换</td>
 </tr>
 <tr>
+<td><code>0x0040</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第二关 <code>0xAE042</code>，w1=0000</td>
+</tr>
+<tr>
 <td><code>0x0048</code></td>
 <td>Walther（Boss）</td>
 <td><strong>BOSS</strong></td>
-<td>一/五/六/八关复出，按地址排除</td>
+<td>一/三/五/六/八关复出，按地址排除</td>
 </tr>
 <tr>
 <td><code>0x0050</code></td>
@@ -1954,13 +1989,19 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <td><code>0x0060</code></td>
 <td>未命名小兵</td>
 <td>小兵</td>
-<td>第五关，w1=0000</td>
+<td>第二关沼泽+第五关，w1=0000</td>
 </tr>
 <tr>
 <td><code>0x0064</code></td>
 <td>斯莱恩（Slice）</td>
 <td><strong>BOSS</strong></td>
 <td>第四关 Boss</td>
+</tr>
+<tr>
+<td><code>0x006C</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第四关 <code>0xAEEA0~EC0</code>，w1=0000</td>
 </tr>
 <tr>
 <td><code>0x0074</code></td>
@@ -1987,10 +2028,22 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <td>第五关 Boss 第一形态</td>
 </tr>
 <tr>
+<td><code>0x0098</code></td>
+<td>沼泽特殊敌</td>
+<td>小兵</td>
+<td>第二关沼泽 <code>0xAE0A2/112</code>，w1=0000</td>
+</tr>
+<tr>
 <td><code>0x00A8</code></td>
 <td>未命名场景</td>
 <td>场景</td>
 <td>第八关，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x00AC</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第四关 <code>0xAEE90</code>，w1=0000</td>
 </tr>
 <tr>
 <td><code>0x00B0</code></td>
@@ -2053,10 +2106,28 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <td>第七关，w1=0000</td>
 </tr>
 <tr>
+<td><code>0x0120</code></td>
+<td>沼泽场景敌</td>
+<td>场景</td>
+<td>第二关沼泽 <code>0xAE072/122</code>，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x0138</code></td>
+<td>沼泽特殊敌</td>
+<td>小兵</td>
+<td>第二关沼泽 <code>0xAE0B2/0D2</code>，w1=0000</td>
+</tr>
+<tr>
 <td><code>0x013C</code></td>
 <td>肥肥（精英）</td>
 <td>强敌</td>
 <td>五/六关确认</td>
+</tr>
+<tr>
+<td><code>0x0140</code></td>
+<td>沼泽特殊敌</td>
+<td>小兵</td>
+<td>第二关沼泽 <code>0xAE0C2</code>，w1=0000</td>
 </tr>
 <tr>
 <td><code>0x0148</code></td>
@@ -2078,11 +2149,6 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>未出现类型
-<code>0x0098</code>、<code>0x0120</code>、<code>0x0138</code>、<code>0x0140</code>：全
-8 关采集未命中，视为不存在或非敌兵。</p>
-</blockquote>
 <h4 id="已确认的-boss-地址必须排除不可修改">已确认的 Boss
 地址（必须排除，不可修改）</h4>
 <table>
@@ -2126,10 +2192,22 @@ Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。�
 <td>霍戈（Hog）</td>
 </tr>
 <tr>
+<td>第三关</td>
+<td><code>0xAE674</code>、<code>0xAE824/834/844</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
+</tr>
+<tr>
 <td>第四关</td>
 <td><code>0xAF2B0</code></td>
 <td><code>0064</code></td>
 <td>斯莱恩（Slice）</td>
+</tr>
+<tr>
+<td>第四关</td>
+<td><code>0xAF340</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
 </tr>
 <tr>
 <td>第五关</td>
@@ -2191,7 +2269,10 @@ Boss 地址）<br />
 - <strong>按地址精确修改法</strong>（v22+）：只改调试器确认过的具体
 <code>w1=0x00</code>
 且类型为普通小兵（0008/000C/0014/0034/0050）的条目，避开 Boss 地址 →
-稳定不崩<br />
+<strong>局部稳定，但全局仍会随机崩</strong>（见 8.1
+失败分析：肥肥/刀客重对象累积撑爆对象池）<br />
+- <strong>高风险区实测清单</strong>：第二关沼泽全段（累积 15+
+处即软故障）、第三关开车段（任何类型替换均崩）、各关 Boss 战前后<br />
 - **不可用运行时 hook（<span
 class="math inline">$FE36）**：`$</span>FE36<code>同时处理敌兵与非敌兵（武器/场景/玩家）对象，误替换非敌兵对象导致崩溃 - **不可直接批量改 tb2 表**：部分</code>w1=0<code>条目实际是场景控制脚本（如沉睡恐龙），误改死机 - **Boss 多关复出**：</code>0x0048<code>（Walther）、</code>0x000C`（铁锤）在后续关卡以
 Boss 形式出现，必须按地址排除而非按 type 一刀切</p>
