@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-24T12:31:28.325Z">
+<meta property="article:modified_time" content="2026-09-24T14:19:16.587Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -171,7 +171,7 @@
 0x24B48</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E9%A2%84%E8%AE%BE%E8%A1%A8%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%9F%BA%E5%9D%80"><span class="nav-text">6.2 掉落预设表的两个基址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E7%B4%A2%E5%BC%95%E8%B7%B3%E8%BD%AC%E8%A1%A8-0x24d6c"><span class="nav-text">6.3 武器索引跳转表
 0x24D6C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E5%9D%97%E7%A4%BA%E4%BE%8Buzi266"><span class="nav-text">6.4 武器初始化块示例（Uzi，$26&#x3D;6）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%89%E8%90%BD-hack%E5%BF%85%E6%8E%89%E6%8C%87%E5%AE%9A%E6%9E%AA%E6%A2%B0"><span class="nav-text">7. 掉落 Hack：必掉指定枪械</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-a%E5%BF%85%E6%8E%89%E7%8C%8E%E6%9E%AAd11"><span class="nav-text">7.1 方案 A：必掉猎枪（d1&#x3D;1）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b%E5%BF%85%E6%8E%89-m16-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d15%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98"><span class="nav-text">7.2 方案 B：必掉 M16
 机关枪 48 发（d1&#x3D;5，当前交付）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E5%80%BC%E5%8F%98%E4%BD%93uzi-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d14"><span class="nav-text">7.3 同值变体：Uzi 机关枪 48
-发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-text">8.1 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%AC%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5%E5%8F%98%E6%80%81%E6%8C%81%E9%81%93%E5%85%B7%E6%9A%B4%E5%87%BB%E7%89%88%E6%9C%AC"><span class="nav-text">交付版本：恐龙快打双倍出兵变态+持道具暴击版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%B7%B1%E5%85%A5%E8%B0%83%E6%9F%A5%E5%90%8E%E6%94%BE%E5%BC%83%E5%AE%8C%E6%95%B4%E5%A4%B1%E8%B4%A5%E5%88%86%E6%9E%90"><span class="nav-text">敌兵替换功能：深入调查后放弃（完整失败分析）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
+发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-text">8.1 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%AC%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5%E5%8F%98%E6%80%81%E6%8C%81%E9%81%93%E5%85%B7%E6%9A%B4%E5%87%BB%E7%89%88%E6%9C%AC"><span class="nav-text">交付版本：恐龙快打双倍出兵变态+持道具暴击版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E4%BD%93%E6%AD%A3%E5%B8%B8%E5%87%BA%E5%85%B5%E8%8A%82%E5%A5%8F%E7%89%88%E6%97%A0%E7%BF%BB%E5%80%8D"><span class="nav-text">变体：正常出兵节奏版（无翻倍）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%B7%B1%E5%85%A5%E8%B0%83%E6%9F%A5%E5%90%8E%E6%94%BE%E5%BC%83%E5%AE%8C%E6%95%B4%E5%A4%B1%E8%B4%A5%E5%88%86%E6%9E%90"><span class="nav-text">敌兵替换功能：深入调查后放弃（完整失败分析）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
 掉落机关枪 48 发）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#m16-%E5%8F%98%E4%BD%93%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%AC0x24b740x05%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA"><span class="nav-text">M16
 变体（当前交付版本，0x24B74&#x3D;0x05）实机演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-text">8.6 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">9. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">10. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-text">11. MAME 0.149
 移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-text">11.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-text">11.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-text">11.3 可选：0.149 XML
@@ -286,7 +286,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-24 20:31:28" itemprop="dateModified" datetime="2026-09-24T20:31:28+08:00">2026-09-24</time>
+      <time title="修改时间：2026-09-24 22:19:16" itemprop="dateModified" datetime="2026-09-24T22:19:16+08:00">2026-09-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1047,6 +1047,45 @@ href="/files/恐龙快打双倍出兵变态+持道具暴击版本.zip">下载</a
 </tbody>
 </table>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装（唯一要求：zip 文件名必须叫 dinou.zip，MAME 按名字找 ROM、不看包内内容，多一个说明 txt 无妨）</span></span><br><span class="line">unzip -o 恐龙快打双倍出兵变态+持道具暴击版本.zip dinou.zip -d &lt;你的roms目录&gt;</span><br><span class="line"><span class="comment"># 已有的 dinou.zip 无需&quot;覆盖&quot;：先备份旧文件，再直接放入本包 dinou.zip 替换即可</span></span><br><span class="line"><span class="comment"># （世界版 dino 想玩本补丁：解出内层 dinou.zip 里的 cdu_* 改名 cde_* 后 zip 进 dino.zip）</span></span><br></pre></td></tr></table></figure>
+<h4 id="变体正常出兵节奏版无翻倍">变体：正常出兵节奏版（无翻倍）</h4>
+<p>部分玩家觉得双倍出兵太密集，提供<strong>去掉翻倍、其余功能完全相同</strong>的变体包：<strong><a
+href="/files/恐龙快打随机出兵强化+持道具暴击版本.zip">恐龙快打随机出兵强化+持道具暴击版本.zip</a></strong>（同为解压即用）。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>SHA1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cdu_21a.6f</td>
+<td><code>b88c33a9e54c9f93befbc7e4567121f4c892954e</code></td>
+</tr>
+<tr>
+<td>cdu_22a.7f</td>
+<td><code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code>（原版未改）</td>
+</tr>
+<tr>
+<td>cdu_23a.8f</td>
+<td><code>399ffc8f5f8f40b5b807b0f8851e621be1454be4</code></td>
+</tr>
+</tbody>
+</table>
+<p>制作方法是主交付版的<strong>逆操作</strong>：撤销 §12.4 的
+<code>$FD2A</code> 跳转（恢复原版 <code>bsr.w</code>+<code>bne.w</code>
+四条字节序）并保持 21a <code>$4430</code> 代码区为原版零洞；§13
+的运行时随机强化（<code>$FE36</code> 钩子 + 21a <code>$4460</code>
+子程序）与暴击、M16 全部保留。<strong>实测 1-3
+关连续通过无异常。</strong></p>
+<blockquote>
+<p>构建教训（本版本第一次尝试即翻车）：还原翻倍时必须以<strong>干净的
+v8_rand 芯片</strong>为基座。若误用带后续实验补丁（如血槽钩子）的在测
+ROM 作基座，撤销翻倍后残留的 <code>$18D88</code>
+跳转会指向已被换回原版的代码空洞，CPU 滑入数据区产生
+<code>ILLEGAL INST 1111 @0010478C</code> 类异常。多轮实验后的 roms 目录
+≠ 交付基座，打包前务必核对 SHA1。</p>
+</blockquote>
 <h4
 id="敌兵替换功能深入调查后放弃完整失败分析">敌兵替换功能：深入调查后放弃（完整失败分析）</h4>
 <blockquote>
