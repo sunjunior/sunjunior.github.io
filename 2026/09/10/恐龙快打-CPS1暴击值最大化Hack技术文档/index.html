@@ -20,19 +20,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 交付物：ROM 补丁（暴击值初始化 + 掉落判定逻辑，纯 ROM 修改，零依赖">
+    <meta name="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 目标三（翻倍）：所有波次敌兵双倍出兵，含 Boss（第 12 章，2026-0">
 <meta property="og:type" content="article">
 <meta property="og:title" content="恐龙快打（CPS1）暴击值与掉落 Hack 技术文档">
 <meta property="og:url" content="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 交付物：ROM 补丁（暴击值初始化 + 掉落判定逻辑，纯 ROM 修改，零依赖">
+<meta property="og:description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 目标三（翻倍）：所有波次敌兵双倍出兵，含 Boss（第 12 章，2026-0">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino2.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-24T12:02:47.489Z">
+<meta property="article:modified_time" content="2026-09-24T12:07:55.593Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -264,7 +264,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="恐龙快打（CPS1）暴击值与掉落 Hack 技术文档 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 交付物：ROM 补丁（暴击值初始化 + 掉落判定逻辑，纯 ROM 修改，零依赖...">
+      <meta itemprop="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 目标三（翻倍）：所有波次敌兵双倍出兵，含 Boss（第 12 章，2026-0...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -286,7 +286,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-24 20:02:47" itemprop="dateModified" datetime="2026-09-24T20:02:47+08:00">2026-09-24</time>
+      <time title="修改时间：2026-09-24 20:07:55" itemprop="dateModified" datetime="2026-09-24T20:07:55+08:00">2026-09-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -308,7 +308,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
     </span>
 </div>
 
-            <div class="post-description">目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs / Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 / 方案 B：M16 机关枪 48 发） 交付物：ROM 补丁（暴击值初始化 + 掉落判定逻辑，纯 ROM 修改，零依赖...</div>
+            <div class="post-description">目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs / Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定为 0xFF（255），大幅提升攻击伤害 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 / 方案 B：M16 机关枪 48 发） 目标三（翻倍）：所有波次敌兵双倍出兵，含 Boss（第 12 章，2026-0...</div>
         </div>
       </header>
 
@@ -322,23 +322,31 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
 0xFF（255），大幅提升攻击伤害<br />
 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 /
 方案 B：M16 机关枪 48 发）<br />
-交付物：ROM 补丁（暴击值初始化 + 掉落判定逻辑，纯 ROM
-修改，零依赖）<br />
-日期：2026-09-10（掉落 Hack 章节更新于 2026-09-15）</p>
+目标三（翻倍）：所有波次敌兵双倍出兵，含 Boss（第 12
+章，2026-09-17）<br />
+目标四（敌兵强化）：运行时随机敌兵变身，波次表零改动（第 13
+章，2026-09-24）<br />
+交付物：<code>恐龙快打双倍出兵变态+持道具暴击版本.zip</code>——四功能合一的纯
+ROM 补丁（零依赖，全 8 关实机验证），详见 §8.1<br />
+日期：2026-09-10（掉落 09-15，翻倍 09-17，运行时强化 09-24 更新）</p>
 </blockquote>
 <hr />
 <h2 id="背景与目标">1. 背景与目标</h2>
 <p>《恐龙快打》是 Capcom 于 1993 年推出的 CPS1
-街机横版清关动作游戏（美版名 <code>dino</code>，日版名
-<code>dinou</code>）。玩家可从 4
+街机横版清关动作游戏（世界版 ROM 名 <code>dino</code>，美版
+<code>dinou</code>，日版 <code>dinoj</code>）。玩家可从 4
 名角色中选择一位，击退劫掠者并拯救恐龙。</p>
-<p>本文覆盖两个相互独立的 Hack 主题，它们的分析手段（68000 反汇编 + MAME
+<p>本文覆盖四个 Hack 主题，分析手段（68000 反汇编 + MAME
 实机验证）一致，但破解对象与结论各自成章：</p>
 <ul>
 <li><strong>暴击值最大化</strong>（§5）：将角色隐藏的”暴击值”固定为
 0xFF，大幅提升每次命中伤害。</li>
 <li><strong>掉落枪械定制</strong>（§6、§7）：修改敌人死亡时”是否掉落 /
 掉落哪种武器”的判定逻辑，实现每次击杀必掉指定枪械。</li>
+<li><strong>敌兵翻倍</strong>（§12）：所有出兵条目双倍生成（含
+Boss），纯 ROM 补丁实现。</li>
+<li><strong>敌兵运行时随机强化</strong>（§13）：运行时改写对象类型实现敌兵随机变身强敌；附
+§8.1 静态表替换方案的完整失败分析。</li>
 </ul>
 <h3 id="暴击值目标">1.1 暴击值目标</h3>
 <p>游戏中每个角色拥有一个隐藏的”<strong>暴击值</strong>”（Critical Hit
@@ -1241,6 +1249,21 @@ cdu_23a.8f=<code>f988e6021c6b3178193930b3d89e827888af5756</code></td>
 <td>纯 ROM 修改，不依赖插件</td>
 </tr>
 <tr>
+<td>敌兵翻倍 <code>$FD2A→$104430</code></td>
+<td>✅ <strong>已交付</strong></td>
+<td>双倍出兵含 Boss，第二只延迟约 300ms（§12）</td>
+</tr>
+<tr>
+<td>运行时随机强化 <code>$FE36→$104460</code></td>
+<td>✅ <strong>已交付</strong></td>
+<td>对象级类型改写，波次表零改动，Boss/剧情不受影响（§13）</td>
+</tr>
+<tr>
+<td>静态表替换（133-137 处）</td>
+<td>❌ 已放弃</td>
+<td>对象池溢出随机崩溃，被运行时方案取代（§8.1 失败分析）</td>
+</tr>
+<tr>
 <td>战斗验证（实际伤害）</td>
 <td>✅ 确认提升</td>
 <td>一拳打掉敌人约两管血</td>
@@ -1508,7 +1531,8 @@ zengfr 的 <a target="_blank" rel="noopener" href="https://github.com/zengfr/rom
 <td><strong>v8（终版）</strong></td>
 <td><strong>严格按 zengfr 文档：<code>jmp.l</code>
 直跳方案</strong></td>
-<td>✅ <strong>稳定连续 2 关，全部双倍，无异常</strong></td>
+<td>✅ <strong>稳定连续 2
+关，全部双倍，无异常</strong>（后续升级为交付版后已验证全 8 关）</td>
 </tr>
 </tbody>
 </table>
@@ -1676,7 +1700,9 @@ mask <code>0xfff8</code> match <code>0x51c8</code>，寄存器在 bits
 <p>安装：三个文件替换入 <code>dinou.zip</code>（美版）/
 <code>dino.zip</code>（世界版，改
 <code>cde_21a.6f</code>/<code>cde_23a.8f</code> 对应文件）。MAME 0.149
-自编译版实测<strong>连续 2 关无异常</strong>。</p>
+自编译版实测<strong>连续 2
+关无异常</strong>；作为交付版基座后已验证<strong>全 8
+关无异常</strong>（§13.7）。</p>
 <h3 id="效果演示">12.8 效果演示</h3>
 <p>v8 翻倍补丁实机演示截图（双小兵 + 双 Boss 同时在场）：</p>
 <p><img src="/img/dino4.gif" width="75%" alt="恐龙快打敌兵翻倍 Hack 效果演示"></p>
@@ -1685,7 +1711,7 @@ mask <code>0xfff8</code> match <code>0x51c8</code>，寄存器在 bits
 翻倍补丁的实机演示：画面中同时出现<strong>双倍小兵</strong>与<strong>双倍
 Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。暴击值 0xFF
 最大化与 100% M16 掉落同时生效。MAME 0.149 自编译版实测连续 2
-关无异常。</p>
+关无异常（后在交付版中完成全 8 关验证）。</p>
 </blockquote>
 <h3 id="参考资料">12.9 参考资料</h3>
 <ul>
