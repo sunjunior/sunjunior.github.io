@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-24T14:44:08.949Z">
+<meta property="article:modified_time" content="2026-09-26T15:13:43.468Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -171,7 +171,8 @@
 0x24B48</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E9%A2%84%E8%AE%BE%E8%A1%A8%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%9F%BA%E5%9D%80"><span class="nav-text">6.2 掉落预设表的两个基址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E7%B4%A2%E5%BC%95%E8%B7%B3%E8%BD%AC%E8%A1%A8-0x24d6c"><span class="nav-text">6.3 武器索引跳转表
 0x24D6C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E5%9D%97%E7%A4%BA%E4%BE%8Buzi266"><span class="nav-text">6.4 武器初始化块示例（Uzi，$26&#x3D;6）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%89%E8%90%BD-hack%E5%BF%85%E6%8E%89%E6%8C%87%E5%AE%9A%E6%9E%AA%E6%A2%B0"><span class="nav-text">7. 掉落 Hack：必掉指定枪械</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-a%E5%BF%85%E6%8E%89%E7%8C%8E%E6%9E%AAd11"><span class="nav-text">7.1 方案 A：必掉猎枪（d1&#x3D;1）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b%E5%BF%85%E6%8E%89-m16-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d15%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98"><span class="nav-text">7.2 方案 B：必掉 M16
 机关枪 48 发（d1&#x3D;5，当前交付）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E5%80%BC%E5%8F%98%E4%BD%93uzi-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d14"><span class="nav-text">7.3 同值变体：Uzi 机关枪 48
-发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E7%89%88%E6%9C%AC%E6%80%BB%E8%A1%A8%E4%B8%8E%E4%B8%8B%E8%BD%BD"><span class="nav-text">8.1 ROM 版本总表与下载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5%E5%8F%98%E6%80%81%E7%89%88"><span class="nav-text">① v11 双倍出兵变态版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E6%AD%A3%E5%B8%B8%E5%87%BA%E5%85%B5%E5%BC%BA%E5%8C%96%E7%89%88"><span class="nav-text">② v11 正常出兵强化版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E7%BA%AF%E6%9A%B4%E5%87%BB%E6%8C%81%E4%B9%85%E8%A1%A5%E4%B8%81%E7%89%88%E7%8B%AC%E7%AB%8B"><span class="nav-text">③ v11 纯暴击持久补丁版（独立）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v8-%E7%A8%B3%E5%AE%9A%E7%89%88%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">④ v8 稳定版（历史存档）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%B7%B1%E5%85%A5%E8%B0%83%E6%9F%A5%E5%90%8E%E6%94%BE%E5%BC%83%E5%AE%8C%E6%95%B4%E5%A4%B1%E8%B4%A5%E5%88%86%E6%9E%90"><span class="nav-text">敌兵替换功能：深入调查后放弃（完整失败分析）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
+发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E7%89%88%E6%9C%AC%E6%80%BB%E8%A1%A8%E4%B8%8E%E4%B8%8B%E8%BD%BD"><span class="nav-text">8.1 ROM 版本总表与下载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5%E5%8F%98%E6%80%81%E7%89%88"><span class="nav-text">① v11 双倍出兵变态版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E6%AD%A3%E5%B8%B8%E5%87%BA%E5%85%B5%E5%BC%BA%E5%8C%96%E7%89%88"><span class="nav-text">② v11 正常出兵强化版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E7%BA%AF%E6%9A%B4%E5%87%BB%E6%8C%81%E4%B9%85%E8%A1%A5%E4%B8%81%E7%89%88%E7%8B%AC%E7%AB%8B"><span class="nav-text">③ v11 纯暴击持久补丁版（独立）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v8-%E7%A8%B3%E5%AE%9A%E7%89%88%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">④ v8 稳定版（历史存档）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%8A%A0%E5%BC%BA%E7%89%88-%E6%9A%B4%E5%87%BB%E5%B8%B8%E9%A9%BB-ff%E4%B8%96%E7%95%8C%E7%89%88%E6%9C%BA%E5%8F%B0-dino"><span class="nav-text">⑤ 2020
+大杂烩多模式加强版 + 暴击常驻 FF（世界版机台 dino）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%B7%B1%E5%85%A5%E8%B0%83%E6%9F%A5%E5%90%8E%E6%94%BE%E5%BC%83%E5%AE%8C%E6%95%B4%E5%A4%B1%E8%B4%A5%E5%88%86%E6%9E%90"><span class="nav-text">敌兵替换功能：深入调查后放弃（完整失败分析）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
 掉落机关枪 48 发）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#m16-%E5%8F%98%E4%BD%93%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%AC0x24b740x05%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA"><span class="nav-text">M16
 变体（当前交付版本，0x24B74&#x3D;0x05）实机演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-text">8.6 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">9. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">10. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-text">11. MAME 0.149
 移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-text">11.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-text">11.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-text">11.3 可选：0.149 XML
@@ -181,11 +182,13 @@ flag）被中间指令污染</span></a></li><li class="nav-item nav-level-3"><a 
 DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">12.7 备份与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-text">12.8 效果演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">12.9 参考资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E8%BF%90%E8%A1%8C%E6%97%B6%E9%9A%8F%E6%9C%BA%E5%BC%BA%E5%8C%962026-09-24"><span class="nav-text">13.
 敌兵运行时随机强化（2026-09-24）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">13.1 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">13.2 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E7%82%B9"><span class="nav-text">13.3 补丁点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91"><span class="nav-text">13.4 子程序逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E8%A1%A8"><span class="nav-text">13.5 映射表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%B8%A9%E5%9D%91"><span class="nav-text">13.6 构建与踩坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E9%AA%8C%E8%AF%81"><span class="nav-text">13.7 实机验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E5%B8%B8%E9%A9%BB%E5%8C%96v10v112026-09-24"><span class="nav-text">14.
 暴击值常驻化（v10→v11，2026-09-24）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A7%E6%96%B9%E6%A1%88%E7%9A%84%E7%BC%BA%E9%99%B7%E6%9A%B4%E5%87%BB%E6%A7%BD%E4%BC%9A%E8%A1%B0%E5%87%8F"><span class="nav-text">14.1 旧方案的缺陷：暴击槽会衰减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E9%A9%BB%E5%8C%96%E9%92%A9%E5%AD%90v10%E9%92%89-ffv11%E5%9B%9E%E8%B0%83%E4%B8%BA-90"><span class="nav-text">14.2 常驻化钩子（v10：钉
-$FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">14.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E6%95%8C%E5%85%B5%E7%B1%BB%E5%9E%8B-id-%E6%98%A0%E5%B0%84%E8%A1%A8mame-%E8%B0%83%E8%AF%95%E5%99%A8%E5%AE%9E%E6%B5%8B"><span class="nav-text">A.4 敌兵类型 ID
+$FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">14.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E9%80%86%E5%90%91%E4%B8%8E%E5%B8%B8%E9%A9%BB-ffv4v92026-09-26"><span class="nav-text">15. 2020
+大杂烩框架的暴击系统逆向与常驻 FF（v4→v9，2026-09-26）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E6%AD%BB%E4%BB%A3%E7%A0%81%E9%99%B7%E9%98%B1"><span class="nav-text">15.1 背景与”死代码”陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%99%AE%E6%9F%A5%E4%BD%8D%E7%A7%BB%E5%AD%97%E8%8A%82%E5%85%A8%E5%BA%93%E6%89%AB%E6%8F%8F"><span class="nav-text">15.2 静态普查：位移字节全库扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watchpoint-%E6%8A%93-pc%E7%9C%9F%E5%87%B6%E5%AE%9A%E6%A1%88"><span class="nav-text">15.3 watchpoint 抓 PC：真凶定案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%A4%A7%E8%B8%A9%E5%9D%91v4v7-%E8%A1%80%E6%B3%AA"><span class="nav-text">15.4 三大踩坑（v4→v7 血泪）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%A1%A5%E4%B8%81v97-%E5%A4%84"><span class="nav-text">15.5 最终补丁（v9，7 处）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E6%95%8C%E5%85%B5%E7%B1%BB%E5%9E%8B-id-%E6%98%A0%E5%B0%84%E8%A1%A8mame-%E8%B0%83%E8%AF%95%E5%99%A8%E5%AE%9E%E6%B5%8B"><span class="nav-text">A.4 敌兵类型 ID
 映射表（MAME 调试器实测）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E5%AE%8C%E5%85%A8%E7%A1%AE%E8%AE%A4%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%85%A8-8-%E5%85%B3%E5%AE%9E%E6%9C%BA%E5%AF%B9%E7%85%A7%E9%AA%8C%E8%AF%81"><span class="nav-text">已完全确认的类型（全 8
 关实机对照验证）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E7%A1%AE%E8%AE%A4%E7%9A%84-boss-%E5%9C%B0%E5%9D%80%E5%BF%85%E9%A1%BB%E6%8E%92%E9%99%A4%E4%B8%8D%E5%8F%AF%E4%BF%AE%E6%94%B9"><span class="nav-text">已确认的 Boss
 地址（必须排除，不可修改）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.5-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%8C%E5%85%B5%E9%9A%8F%E6%9C%BA%E5%BC%BA%E5%8C%96%E7%9B%B8%E5%85%B3%E7%AC%AC-13-%E7%AB%A0"><span class="nav-text">A.5
-运行时敌兵随机强化相关（第 13 章）</span></a></li></ol></li></ol></div>
+运行时敌兵随机强化相关（第 13 章）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.6-2020-%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E7%AC%AC-15-%E7%AB%A0%E4%B8%96%E7%95%8C%E7%89%88-cde_-%E8%8A%AF%E7%89%87"><span class="nav-text">A.6
+2020 大杂烩框架暴击系统相关（第 15 章，世界版 cde_* 芯片）</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -288,7 +291,7 @@ $FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a 
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-24 22:44:08" itemprop="dateModified" datetime="2026-09-24T22:44:08+08:00">2026-09-24</time>
+      <time title="修改时间：2026-09-26 23:13:43" itemprop="dateModified" datetime="2026-09-26T23:13:43+08:00">2026-09-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -328,11 +331,14 @@ $FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a 
 章，2026-09-17）<br />
 目标四（敌兵强化）：运行时随机敌兵变身，波次表零改动（第 13
 章，2026-09-24）<br />
-交付物：<strong>三个在版 ROM 包 + 一个历史包</strong>，均解压即用（详见
-§8.1 版本总表）——v11 双倍 / v11 正常 / v11 纯暴击补丁（含世界版）；v8
+目标五（2020 版移植）：把常驻满暴击打到 zengfr 2020
+大杂烩框架的自有暴击系统上，全程钉 $FF（第 15 章，2026-09-26）<br />
+交付物：<strong>四个在版 ROM 包 + 一个历史包</strong>，均解压即用（详见
+§8.1 版本总表）——v11 双倍 / v11 正常 / v11
+纯暴击补丁（含世界版）/<strong>2020 大杂烩+暴击常驻 FF</strong>；v8
 稳定版存档<br />
-日期：2026-09-10（掉落 09-15，翻倍 09-17，运行时强化/暴击常驻 09-24
-更新）</p>
+日期：2026-09-10（掉落 09-15，翻倍 09-17，运行时强化/暴击常驻
+09-24，2020 版 FF 09-26 更新）</p>
 </blockquote>
 <hr />
 <h2 id="背景与目标">1. 背景与目标</h2>
@@ -1024,6 +1030,15 @@ ignore。芯片 SHA1 以 TORRENTZIPPED 存盘形式计，<code>cdu_22a.7f</code>
 <td>最小侵入，其余 100% 原版</td>
 </tr>
 <tr>
+<td><strong>2020 大杂烩+FF</strong>（§15）</td>
+<td>zengfr 2020 多模式</td>
+<td>✗</td>
+<td>✗</td>
+<td>常驻 $FF</td>
+<td>世界版壳</td>
+<td>8 倍血多层血条+满暴走</td>
+</tr>
+<tr>
 <td>v8 稳定版（历史）</td>
 <td>×2</td>
 <td>✗</td>
@@ -1130,7 +1145,46 @@ ROM，二选一使用）</p>
 href="/files/dinou_双倍出兵+暴击FF+M16_v8稳定版.zip">dinou_双倍出兵+暴击FF+M16_v8稳定版.zip</a></strong></p>
 <p>随机强化（§13）与暴击常驻化（§14）之前的历史版本：双倍+暴击（出生写一次
 $FF，<strong>每击衰减、徒手几乎无效</strong>）+M16。保留仅作谱系对照。芯片：21a=<code>99a5d935adfc12a57fc5e4cb0e2a10410679e321</code>、23a=<code>17e31b81b6405422c9086d4d23f729cd9ce87063</code>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装（任何版本同法）</span></span><br><span class="line">unzip -o &lt;下载包&gt;.zip dinou.zip -d &lt;你的roms目录&gt;</span><br><span class="line"><span class="comment"># 世界版玩法：v11 ①②包可解出内层 dinou.zip 的 cdu_* 改名 cde_* 后 zip 进 dino.zip；v11 ③包直接自带 dino.zip</span></span><br></pre></td></tr></table></figure>
+<h4 id="大杂烩多模式加强版-暴击常驻-ff世界版机台-dino">⑤ 2020
+大杂烩多模式加强版 + 暴击常驻 FF（世界版机台 <code>dino</code>）</h4>
+<p><strong><a
+href="/files/恐龙快打2020大杂烩+暴击常驻FF版.zip">恐龙快打2020大杂烩+暴击常驻FF版.zip</a></strong>（内含成品
+<code>dino.zip</code>，解压即玩）</p>
+<p>基座为 zengfr「2020 大杂烩多模式加强版」：8
+倍血量、多层血条、投币后上下键选 MODE（0A~59，十位定
+Boss/混兵规则、个位定同屏敌兵数）、部分模式无限弹药。在其<strong>自有暴击系统</strong>（与原版
+<code>$629F0</code> 衰减例程完全不同，后者在 2020 里是零调用死代码）上打
+7 处最小补丁，把玩家暴击字节全程钉
+<code>$FF</code>：拳/脚/摔/武器/枪械/手雷每击满暴击，HUD 常驻 FF
+不跳变，敌兵伤害不受影响。完整逆向过程与三大踩坑见 §15。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>芯片（存盘形式）</th>
+<th>SHA1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cde_21a.6f</td>
+<td><code>694a2fdd1c76e5db1768333a5c16a17a8c32a6ed</code></td>
+</tr>
+<tr>
+<td>cde_22a.7f</td>
+<td><code>98c970eb242558d1360285b10b173d77608bf1b5</code>（2020
+框架原版，未动）</td>
+</tr>
+<tr>
+<td>cde_23a.8f</td>
+<td><code>2d294c79fbfd0ac23b50dce4e9a6ddb2ac9b96d2</code></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装（任何版本同法；⑤号包解压出的就是 dino.zip，直接放入 roms 即可）</span></span><br><span class="line">unzip -o &lt;下载包&gt;.zip dinou.zip -d &lt;你的roms目录&gt;</span><br><span class="line"><span class="comment"># 世界版玩法：v11 ①②包可解出内层 dinou.zip 的 cdu_* 改名 cde_* 后 zip 进 dino.zip；v11 ③包直接自带 dino.zip</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>构建教训</strong>（v10
 首包翻车实录）：还原/叠加补丁必须以<strong>干净基座芯片</strong>（<code>dino.zip.orig</code>、<code>dinou.zip.pre2x</code>、<code>dinou_v8_rand.zip</code>）为源，绝不能拿在测
@@ -1354,6 +1408,12 @@ cdu_23a.8f=<code>f988e6021c6b3178193930b3d89e827888af5756</code></td>
 <td>✅ <strong>已交付</strong></td>
 <td>接管衰减例程，玩家 $c6 钉 $90（v10 曾钉 $FF
 过猛），敌兵逻辑原样回放（§14）</td>
+</tr>
+<tr>
+<td>2020 大杂烩暴击常驻 FF（7 处最小补丁）</td>
+<td>✅ <strong>已交付</strong></td>
+<td>zengfr 2020 框架自有暴击系统全程钉 $FF，watchpoint 抓 PC
+定案（§15）</td>
 </tr>
 <tr>
 <td>静态表替换（133-137 处）</td>
@@ -2031,6 +2091,172 @@ v11（$90）均在美版实机确认：徒手连段伤害明显上一个台阶�
 管血实验（<code>$18D88</code> 死亡钩子）同期失败作废，教训见 §8.1
 构建教训。</p>
 <hr />
+<h2 id="大杂烩框架的暴击系统逆向与常驻-ffv4v92026-09-26">15. 2020
+大杂烩框架的暴击系统逆向与常驻 FF（v4→v9，2026-09-26）</h2>
+<h3 id="背景与死代码陷阱">15.1 背景与”死代码”陷阱</h3>
+<p>zengfr 2020 大杂烩多模式加强版（世界版壳）自带 8 倍血、多层血条、MODE
+选单等系统。第一次把 §14 的 <code>$629F0→stub</code>
+钩子原样移植过去，游戏照常跑但<strong>毫无效果</strong>——反汇编发现 2020
+里 <code>$629F0</code> 的调用者被 zengfr
+整体拆除了（零调用，纯死代码），且 <code>$18D88</code> 死亡判定处挂着
+zengfr 自己的 <code>jmp $1049A0</code>（8
+倍血系统入口，动不得）。原版暴击机制在 2020
+里被<strong>换成了每击实时读玩家 <code>$c6</code>
+字节</strong>的新系统，出生 <code>$40</code>、随战斗波动，HUD
+直接显示该字节。</p>
+<h3 id="静态普查位移字节全库扫描">15.2 静态普查：位移字节全库扫描</h3>
+<p>对 <code>cde_23a.8f</code>/<code>cde_21a.6f</code> 反汇编全库扫
+<code>00C6</code> 位移，得到 A/B/C/D 四个 <code>$c6</code> 读取点 +
+全部写入点。写”钉 $FF 到 A/C
+读取点”的钩子版（v2）实测：枪伤上去了，<strong>拳脚依旧波动</strong>——四读点归零诊断（diagA/B/C
+逐个把 <code>mulu $c6</code> 变 0 看哪路伤害变 1）证明：<strong>2020
+拳脚伤害根本不走原版的 A/B/C/D 读点</strong>，只认玩家对象
+<code>$c6</code> 字节本身。</p>
+<h3 id="watchpoint-抓-pc真凶定案">15.3 watchpoint 抓 PC：真凶定案</h3>
+<p>静态锁定 <code>$105506</code>（出生写
+<code>$40</code>）/<code>$105960</code>（-4
+衰减）/<code>$10596C/$10598C</code>（$28/$48
+钳位）后，改动仍被”看不见的手”抹掉。最终上 MAME 0.289 调试器
+<code>wpset FFB33A,1,w</code>
+对<strong>纯净原版</strong>做动态取证，出生/挨打/扫射全程的 PC
+流水一次性闭环：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>PC</th>
+<th>行为</th>
+<th>定案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$105506</code></td>
+<td><code>move.b #$40,$c6(a6)</code></td>
+<td>出生写值</td>
+</tr>
+<tr>
+<td><code>$105960</code></td>
+<td><code>subq.b #$4,$c6(a3)</code></td>
+<td>战斗衰减（不止挨打）</td>
+</tr>
+<tr>
+<td><code>$105964/6A/6C</code></td>
+<td><code>cmpi #$28 / bgt / move #$28</code></td>
+<td>下限钳位</td>
+</tr>
+<tr>
+<td><code>$105980</code></td>
+<td><code>addq.b #$8,$c6(a0)</code></td>
+<td>上探加成——<strong>$FF 时 +8 回绕成 $07</strong></td>
+</tr>
+<tr>
+<td><code>$503F0/$505F0</code>（23a）</td>
+<td><code>move.w #$3C/$50,$c6(a6)</code></td>
+<td>字写入（高字节变 $00）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="三大踩坑v4v7-血泪">15.4 三大踩坑（v4→v7 血泪）</h3>
+<ol type="1">
+<li><strong>v4/v5 编码事故</strong>：把
+<code>move.b #$40,$c6(a6)</code>（<code>1d7c</code>，寄存器+位移）替换成
+<code>move.w #$FFFF,$c6(a6)</code> 时手写成
+<code>31fc ffff 00c6</code>——这是<strong>绝对地址</strong>
+<code>move.w #$FFFF,($00C6)</code>，写进了 ROM
+区被静默忽略，症状是”补丁点从未执行”。教训：<strong>改立即数不改指令</strong>，原版是字节写就保持
+<code>1d7c/177c/117c</code> 形态只换立即数字节。</li>
+<li><strong>v7 分支改反</strong>：<code>bgt→bra</code>
+意图”总执行回填”，实际 <code>bra</code>
+无条件跳过回填变成”永不恢复”，数值无限下漂。正确做法：<strong>NOP
+掉分支本身</strong>（<code>6e06→4e71</code>），让顺序执行必然落到
+<code>move.b #$FF</code>。</li>
+<li><strong>有符号钳位失效</strong>：<code>cmpi.b #$FF</code> 配
+<code>bgt</code> 在 8 位有符号域里 $00~$7F 全部”大于
+$FF(-1)“，把钳位比较改成 $FF
+反而放行所有低值。放弃”改比较”思路，改为”必执行无条件恢复”。</li>
+</ol>
+<h3 id="最终补丁v97-处">15.5 最终补丁（v9，7 处）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>芯片</th>
+<th>地址</th>
+<th>原字节</th>
+<th>新字节</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>21a</td>
+<td><code>$105506+2</code></td>
+<td><code>0040</code></td>
+<td><code>00ff</code></td>
+<td>出生即 FF</td>
+</tr>
+<tr>
+<td>2</td>
+<td>21a</td>
+<td><code>$105964+2</code></td>
+<td><code>0028</code></td>
+<td><code>00ff</code></td>
+<td>钳位比较（配合 #4 兜底）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>21a</td>
+<td><code>$10596A</code></td>
+<td><code>6e06</code></td>
+<td><code>4e71</code></td>
+<td>NOP 分支→回填必执行</td>
+</tr>
+<tr>
+<td>4</td>
+<td>21a</td>
+<td><code>$10596C+2</code></td>
+<td><code>0028</code></td>
+<td><code>00ff</code></td>
+<td>回填值
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>28</mn><mo>→</mo></mrow><annotation encoding="application/x-tex">28→</annotation></semantics></math>FF</td>
+</tr>
+<tr>
+<td>5</td>
+<td>21a</td>
+<td><code>$105980</code></td>
+<td><code>502800c6</code></td>
+<td><code>4e714e71</code></td>
+<td>杀掉 +8 回绕</td>
+</tr>
+<tr>
+<td>6</td>
+<td>23a</td>
+<td><code>$503F2</code></td>
+<td><code>003c</code></td>
+<td><code>ffff</code></td>
+<td>字写→FFFF</td>
+</tr>
+<tr>
+<td>7</td>
+<td>23a</td>
+<td><code>$505F2</code></td>
+<td><code>0050</code></td>
+<td><code>ffff</code></td>
+<td>字写→FFFF</td>
+</tr>
+</tbody>
+</table>
+<p>衰减 ±4/±8 原逻辑全部保留（被无条件恢复兜住），zengfr 的 8
+倍血、多层血条、MODE 系统零改动。实测：HUD 常驻 FF
+不再跳变；拳/枪/雷全部满伤害；敌兵对我伤害如常；选
+MODE、续关、死亡复活均正常。</p>
+<hr />
 <h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
 <h3 id="a.1-暴击值相关">A.1 暴击值相关</h3>
 <table>
@@ -2707,6 +2933,79 @@ HP（zengfr 内存图交叉验证）</td>
 </tbody>
 </table>
 <hr />
+<h3 id="a.6-2020-大杂烩框架暴击系统相关第-15-章世界版-cde_-芯片">A.6
+2020 大杂烩框架暴击系统相关（第 15 章，世界版 cde_* 芯片）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x105506</code></td>
+<td>出生初始化 <code>move.b #$40,$c6(a6)</code>，补丁点
+1（立即数→$FF）</td>
+</tr>
+<tr>
+<td><code>0x105960</code></td>
+<td>战斗衰减 <code>subq.b #$4,$c6(a3)</code>（保留）</td>
+</tr>
+<tr>
+<td><code>0x105964</code></td>
+<td>衰减后钳位比较 <code>cmpi.b #$28,$c6(a3)</code>，补丁点
+2（立即数→$FF）</td>
+</tr>
+<tr>
+<td><code>0x10596A</code></td>
+<td>钳位分支 <code>bgt</code>，补丁点 3（→nop，回填必执行）</td>
+</tr>
+<tr>
+<td><code>0x10596C</code></td>
+<td>钳位回填 <code>move.b #$28,$c6(a3)</code>，补丁点
+4（立即数→$FF）</td>
+</tr>
+<tr>
+<td><code>0x105980</code></td>
+<td>上探加成 <code>addq.b #$8,$c6(a0)</code>，补丁点 5（NOP，杀
+$FF+8→$07 回绕）</td>
+</tr>
+<tr>
+<td><code>0x0503F0</code> / <code>0x0505F0</code></td>
+<td>状态机字写 <code>move.w #$3C/$50,$c6(a6)</code>，补丁点
+6/7（立即数→$FFFF）</td>
+</tr>
+<tr>
+<td><code>0x0629F0</code></td>
+<td>原版衰减例程在 2020
+中的残留——<strong>零调用死代码</strong>（移植钩子无效的根因）</td>
+</tr>
+<tr>
+<td><code>0x018D88</code></td>
+<td>死亡判定入口，2020 被改为 <code>jmp $1049A0</code>（zengfr 8
+倍血系统，不可占用）</td>
+</tr>
+<tr>
+<td><code>0x1049A0</code></td>
+<td>zengfr 每帧玩家例程（血条/多层血/状态刷新）</td>
+</tr>
+<tr>
+<td><code>0xFFB33A</code></td>
+<td>P1 暴击字节（<code>wpset ,1,w</code> 抓写入 PC 的动态取证目标；P2/P3
+为 <code>FFB4BA/FFB63A</code>）</td>
+</tr>
+<tr>
+<td><code>0xFFB2E0/FFB274</code></td>
+<td>P1 血量字 / 玩家对象基址（8 倍血制下出生
+<code>$320</code>=800）</td>
+</tr>
+</tbody>
+</table>
 
     </div>
 
