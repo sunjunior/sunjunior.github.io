@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-27T01:12:40.432Z">
+<meta property="article:modified_time" content="2026-09-27T01:42:36.710Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -182,9 +182,9 @@ flag）被中间指令污染</span></a></li><li class="nav-item nav-level-3"><a 
 DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">12.7 备份与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-text">12.8 效果演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">12.9 参考资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E8%BF%90%E8%A1%8C%E6%97%B6%E9%9A%8F%E6%9C%BA%E5%BC%BA%E5%8C%962026-09-24"><span class="nav-text">13.
 敌兵运行时随机强化（2026-09-24）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">13.1 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">13.2 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E7%82%B9"><span class="nav-text">13.3 补丁点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91"><span class="nav-text">13.4 子程序逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E8%A1%A8"><span class="nav-text">13.5 映射表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%B8%A9%E5%9D%91"><span class="nav-text">13.6 构建与踩坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E9%AA%8C%E8%AF%81"><span class="nav-text">13.7 实机验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E5%B8%B8%E9%A9%BB%E5%8C%96v10v112026-09-24"><span class="nav-text">14.
 暴击值常驻化（v10→v11，2026-09-24）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A7%E6%96%B9%E6%A1%88%E7%9A%84%E7%BC%BA%E9%99%B7%E6%9A%B4%E5%87%BB%E6%A7%BD%E4%BC%9A%E8%A1%B0%E5%87%8F"><span class="nav-text">14.1 旧方案的缺陷：暴击槽会衰减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E9%A9%BB%E5%8C%96%E9%92%A9%E5%AD%90v10%E9%92%89-ffv11%E5%9B%9E%E8%B0%83%E4%B8%BA-90"><span class="nav-text">14.2 常驻化钩子（v10：钉
-$FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">14.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E9%80%86%E5%90%91%E4%B8%8E%E5%B8%B8%E9%A9%BB-ffv4v132026-09-27"><span class="nav-text">15. 2020
-大杂烩框架的暴击系统逆向与常驻 FF（v4→v13，2026-09-27）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E6%AD%BB%E4%BB%A3%E7%A0%81%E9%99%B7%E9%98%B1"><span class="nav-text">15.1 背景与”死代码”陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%99%AE%E6%9F%A5%E4%BD%8D%E7%A7%BB%E5%AD%97%E8%8A%82%E5%85%A8%E5%BA%93%E6%89%AB%E6%8F%8F"><span class="nav-text">15.2 静态普查：位移字节全库扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watchpoint-%E6%8A%93-pc%E7%9C%9F%E5%87%B6%E5%AE%9A%E6%A1%88"><span class="nav-text">15.3 watchpoint 抓 PC：真凶定案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v4v7%E7%BC%96%E7%A0%81%E4%B8%8E%E6%A0%87%E5%BF%97%E4%BD%8D"><span class="nav-text">15.4 踩坑（v4→v7）：编码与标志位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v9v12%E5%85%B1%E4%BA%AB%E4%BE%8B%E7%A8%8B%E4%B8%8E%E5%AE%88%E5%8D%AB"><span class="nav-text">15.5
-踩坑（v9→v12）：共享例程与守卫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%A1%A5%E4%B8%81v133-%E4%B8%AA%E6%8C%82%E7%82%B9-%E5%AE%88%E5%8D%AB-stub%E4%BB%85%E5%8A%A8-21a"><span class="nav-text">15.6 最终补丁（v13：3
+$FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">14.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E9%80%86%E5%90%91%E4%B8%8E%E5%B8%B8%E9%A9%BB-ffv4v182026-09-27"><span class="nav-text">15. 2020
+大杂烩框架的暴击系统逆向与常驻 FF（v4→v18，2026-09-27）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E6%AD%BB%E4%BB%A3%E7%A0%81%E9%99%B7%E9%98%B1"><span class="nav-text">15.1 背景与”死代码”陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%99%AE%E6%9F%A5%E4%BD%8D%E7%A7%BB%E5%AD%97%E8%8A%82%E5%85%A8%E5%BA%93%E6%89%AB%E6%8F%8F"><span class="nav-text">15.2 静态普查：位移字节全库扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watchpoint-%E6%8A%93-pc%E7%9C%9F%E5%87%B6%E5%AE%9A%E6%A1%88"><span class="nav-text">15.3 watchpoint 抓 PC：真凶定案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v4v7%E7%BC%96%E7%A0%81%E4%B8%8E%E6%A0%87%E5%BF%97%E4%BD%8D"><span class="nav-text">15.4 踩坑（v4→v7）：编码与标志位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v9v12%E5%85%B1%E4%BA%AB%E4%BE%8B%E7%A8%8B%E4%B8%8E%E5%AE%88%E5%8D%AB"><span class="nav-text">15.5
+踩坑（v9→v12）：共享例程与守卫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%A1%A5%E4%B8%81v183-%E4%B8%AA%E6%8C%82%E7%82%B9-%E5%AE%88%E5%8D%AB-stub%E4%BB%85%E5%8A%A8-21a"><span class="nav-text">15.6 最终补丁（v18：3
 个挂点 + 守卫 stub，仅动 21a）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%B2%E5%90%8D%E6%9B%BF%E6%8D%A2v15v16"><span class="nav-text">15.7 署名替换（v15→v16）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E6%95%8C%E5%85%B5%E7%B1%BB%E5%9E%8B-id-%E6%98%A0%E5%B0%84%E8%A1%A8mame-%E8%B0%83%E8%AF%95%E5%99%A8%E5%AE%9E%E6%B5%8B"><span class="nav-text">A.4 敌兵类型 ID
 映射表（MAME 调试器实测）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E5%AE%8C%E5%85%A8%E7%A1%AE%E8%AE%A4%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%85%A8-8-%E5%85%B3%E5%AE%9E%E6%9C%BA%E5%AF%B9%E7%85%A7%E9%AA%8C%E8%AF%81"><span class="nav-text">已完全确认的类型（全 8
 关实机对照验证）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E7%A1%AE%E8%AE%A4%E7%9A%84-boss-%E5%9C%B0%E5%9D%80%E5%BF%85%E9%A1%BB%E6%8E%92%E9%99%A4%E4%B8%8D%E5%8F%AF%E4%BF%AE%E6%94%B9"><span class="nav-text">已确认的 Boss
@@ -294,7 +294,7 @@ v13）</span></a></li></ol></li></ol></div>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-27 09:12:40" itemprop="dateModified" datetime="2026-09-27T09:12:40+08:00">2026-09-27</time>
+      <time title="修改时间：2026-09-27 09:42:36" itemprop="dateModified" datetime="2026-09-27T09:42:36+08:00">2026-09-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1179,7 +1179,7 @@ Boss、第三关开车/霍戈全部正常，过关血量维持原版行为。另
 <tbody>
 <tr>
 <td>cde_21a.6f</td>
-<td><code>13a9001458231e3037c5baec6f8221e79dfae2d6</code></td>
+<td><code>ef62573c3bc52b283fb330910e8095b38bc7b8e9</code></td>
 </tr>
 <tr>
 <td>cde_22a.7f</td>
@@ -2099,8 +2099,8 @@ v11（$90）均在美版实机确认：徒手连段伤害明显上一个台阶�
 管血实验（<code>$18D88</code> 死亡钩子）同期失败作废，教训见 §8.1
 构建教训。</p>
 <hr />
-<h2 id="大杂烩框架的暴击系统逆向与常驻-ffv4v132026-09-27">15. 2020
-大杂烩框架的暴击系统逆向与常驻 FF（v4→v13，2026-09-27）</h2>
+<h2 id="大杂烩框架的暴击系统逆向与常驻-ffv4v182026-09-27">15. 2020
+大杂烩框架的暴击系统逆向与常驻 FF（v4→v18，2026-09-27）</h2>
 <h3 id="背景与死代码陷阱">15.1 背景与”死代码”陷阱</h3>
 <p>zengfr 2020 大杂烩多模式加强版（世界版壳）自带 8 倍血、多层血条、MODE
 选单等系统。第一次把 §14 的 <code>$629F0→stub</code>
@@ -2217,7 +2217,7 @@ Boss、车辆、小兵头上 → Boss 卡死不出场。</li>
 <code>$105992</code>（跳过回填路径），非玩家分支自己复刻
 <code>addq+cmpi</code> 后跳 blt——条件码由自己产生。</li>
 </ol>
-<h3 id="最终补丁v133-个挂点-守卫-stub仅动-21a">15.6 最终补丁（v13：3
+<h3 id="最终补丁v183-个挂点-守卫-stub仅动-21a">15.6 最终补丁（v18：3
 个挂点 + 守卫 stub，仅动 21a）</h3>
 <table>
 <colgroup>
@@ -2253,18 +2253,43 @@ Boss、车辆、小兵头上 → Boss 卡死不出场。</li>
 <tr>
 <td>3</td>
 <td>21a <code>$105980</code></td>
-<td>6 字节 → <code>jmp.l $104598</code></td>
-<td>上探例程头劫持：S2 stub——玩家直接跳 <code>$105992</code>（跳过 +8
+<td>6 字节 → <code>jmp.l $10459E</code></td>
+<td>上探例程头劫持：S2 stub——玩家跳 <code>$105992</code>（跳过 +8
 与回填）；其它对象复刻 <code>addq.b #8 + cmpi.b #48</code> 后跳回
 <code>$10598A</code></td>
 </tr>
 </tbody>
 </table>
-<p>stub 共 106 字节，放在 21a 零洞 <code>$104560-$1045C9</code>；23a/22a
-与 2020 原版<strong>逐字节一致</strong>。实测：HUD 全程稳定
+<p>stub 共 118 字节，放在 21a 零洞 <code>$104560-$1045D5</code>；23a/22a
+与 2020 原版<strong>逐字节一致</strong>（22a 差异仅署名文本，见
+15.7）。实测：HUD 全程稳定
 FF；拳/脚/摔/武器/枪械/手雷每击满暴击；敌兵伤害、二关
 Boss、第三关开车/霍戈、过关流程均与原版一致（过关不回血亦为原版 2020
 自带行为，经用户确认保留）。</p>
+<p><strong>v13→v18 追加两坑（崩溃修复史）</strong>：</p>
+<ol start="5" type="1">
+<li><strong>stub 压坏调用方的 d0</strong>（v13 潜伏、v16
+引爆：第二关中段
+<code>ADDRESS ERROR 0006FF29 @00014186</code>）：原版衰减/上探例程全程不使用
+d0（连入口的 <code>ori.b #$0,d0</code> 都是空操作），调用方有权假设 d0
+跨调用存活；守卫用 <code>move.l a3,d0</code>
+做基址比较等于<strong>偷了调用方的寄存器</strong>——某对象流程里 d0
+携带指针分量，被污染后 <code>$14180</code> 的
+<code>movea $30(a0),a3 + adda.w d0,a3</code>
+链算出奇地址。教训：<strong>劫持共享例程的 stub
+必须保存/恢复所有自用寄存器</strong>（本例 <code>move.l d0,-(a7)</code>
+进、<code>move.l (a7)+,d0</code> 出，push/pop
+在所有出口分支上严格配对）。</li>
+<li><strong>stub 入口定位错 2 字节</strong>（v17 引入：第一关
+<code>1111 EXCEPTION</code>）：v17 脚本按 <code>move.l a0,d0</code>
+指令搜索 S2
+入口，找到的是<strong>压栈之后的</strong>地址（<code>$1045A0</code>，正解
+<code>$10459E</code>）——跳过了 push 却照常
+pop，栈失衡，返回地址跑飞。定稿改用<strong>单一构建脚本</strong>
+<code>build_2020.py</code>：从纯基座出发、每个补丁点先断言期望原字节、完成后全芯片
+diff 审计（本表 #1-#3 + §15.7 署名 = 全部差异，23a
+必须零差异）。增量缝合多个在测版本是万恶之源。</li>
+</ol>
 <h3 id="署名替换v15v16">15.7 署名替换（v15→v16）</h3>
 <p>全库扫描 <code>Zengfr</code>/<code>Hacked</code> 直存 ASCII（芯片
 TORRENTZIPPED 交换还原后即明文可见），共 7 处、分两类文本编码：</p>
@@ -2288,9 +2313,12 @@ TORRENTZIPPED 交换还原后即明文可见），共 7 处、分两类文本编
 <strong><code>/</code>（0x2F）是条目终止符</strong>、<code>@</code>（0x40）是尾标记，替换正文绝不能引入
 <code>/</code>，URL 沿用 zengfr
 的反斜杠风格；所有替换严格等长，不碰任何终止/属性字节，替换后全库
-<code>Zengfr</code> 零残留。此版命名为
-<strong>v16（<code>dino_2020_critFF_v16_signed.zip</code>，SHA1
-<code>8056f85c…</code>），即当前最终交付版</strong>。</p>
+<code>Zengfr</code> 零残留。第二关 Boss
+画面底部的小字水印行使用子集字库，个别细笔画字形（如
+<code>i</code>）渲染有缺——经与原字节比对确认属原版自带的显示细节，非数据错误，维持原样。<strong>当前最终交付版为
+v18</strong>（<code>dino_2020_critFF_v18_rebuilt.zip</code>，SHA1
+<code>06599f8d…</code> = 暴击 v13 架构 + d0 保护修复 + 全部署名，由
+<code>build_2020.py</code> 从纯基座全量重建）。</p>
 <hr />
 <h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
 <h3 id="a.1-暴击值相关">A.1 暴击值相关</h3>
@@ -2994,19 +3022,21 @@ v13）</h3>
 <td>共享衰减例程头 <code>subq.b #$4,$c6(a3)</code>，补丁点 2：6
 字节→<code>jmp.l $104560</code>（S1 守卫 stub：玩家三基址钉 FF 跳
 <code>$105972</code>；其它对象复刻 <code>subq+cmpi #$28</code> 跳回
-<code>$10596A</code>）</td>
+<code>$10596A</code>；进出口成对
+<code>move.l d0,-(a7)</code>/<code>move.l (a7)+,d0</code>）</td>
 </tr>
 <tr>
 <td><code>0x105980</code></td>
 <td>共享上探例程 <code>addq.b #$8,$c6(a0)</code>，补丁点 3：6
-字节→<code>jmp.l $104598</code>（S2 stub：玩家跳 <code>$105992</code>
-避开 FF+8 回绕与标志位泄漏；其它对象复刻 <code>addq+cmpi #$48</code>
-跳回 <code>$10598A</code>）</td>
+字节→<code>jmp.l $10459E</code>（S2 stub 入口必须含压栈指令，v17
+曾错定位 <code>$1045A0</code> 致栈失衡；玩家跳 <code>$105992</code> 避开
+FF+8 回绕；其它对象复刻 <code>addq+cmpi #$48</code> 跳回
+<code>$10598A</code>）</td>
 </tr>
 <tr>
-<td><code>0x104560</code></td>
-<td>106 字节 stub 区（21a 零洞 <code>$4560-$45C9</code>，勿与
-<code>$4600</code> 起数据区混淆）</td>
+<td><code>0x104560-$1045D5</code></td>
+<td>118 字节 stub 区（21a 零洞，勿与 <code>$4600</code>
+起数据区混淆；<code>$4560-$4700</code> 均为零可安全占用）</td>
 </tr>
 <tr>
 <td><code>0x105964/6A/6C</code></td>
