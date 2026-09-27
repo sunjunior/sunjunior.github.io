@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
 <meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-27T00:51:12.477Z">
+<meta property="article:modified_time" content="2026-09-27T01:12:40.432Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
 <meta name="twitter:card" content="summary">
@@ -185,7 +185,7 @@ DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="n
 $FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">14.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E9%80%86%E5%90%91%E4%B8%8E%E5%B8%B8%E9%A9%BB-ffv4v132026-09-27"><span class="nav-text">15. 2020
 大杂烩框架的暴击系统逆向与常驻 FF（v4→v13，2026-09-27）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E6%AD%BB%E4%BB%A3%E7%A0%81%E9%99%B7%E9%98%B1"><span class="nav-text">15.1 背景与”死代码”陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%99%AE%E6%9F%A5%E4%BD%8D%E7%A7%BB%E5%AD%97%E8%8A%82%E5%85%A8%E5%BA%93%E6%89%AB%E6%8F%8F"><span class="nav-text">15.2 静态普查：位移字节全库扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watchpoint-%E6%8A%93-pc%E7%9C%9F%E5%87%B6%E5%AE%9A%E6%A1%88"><span class="nav-text">15.3 watchpoint 抓 PC：真凶定案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v4v7%E7%BC%96%E7%A0%81%E4%B8%8E%E6%A0%87%E5%BF%97%E4%BD%8D"><span class="nav-text">15.4 踩坑（v4→v7）：编码与标志位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v9v12%E5%85%B1%E4%BA%AB%E4%BE%8B%E7%A8%8B%E4%B8%8E%E5%AE%88%E5%8D%AB"><span class="nav-text">15.5
 踩坑（v9→v12）：共享例程与守卫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%A1%A5%E4%B8%81v133-%E4%B8%AA%E6%8C%82%E7%82%B9-%E5%AE%88%E5%8D%AB-stub%E4%BB%85%E5%8A%A8-21a"><span class="nav-text">15.6 最终补丁（v13：3
-个挂点 + 守卫 stub，仅动 21a）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E6%95%8C%E5%85%B5%E7%B1%BB%E5%9E%8B-id-%E6%98%A0%E5%B0%84%E8%A1%A8mame-%E8%B0%83%E8%AF%95%E5%99%A8%E5%AE%9E%E6%B5%8B"><span class="nav-text">A.4 敌兵类型 ID
+个挂点 + 守卫 stub，仅动 21a）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%B2%E5%90%8D%E6%9B%BF%E6%8D%A2v15v16"><span class="nav-text">15.7 署名替换（v15→v16）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E6%95%8C%E5%85%B5%E7%B1%BB%E5%9E%8B-id-%E6%98%A0%E5%B0%84%E8%A1%A8mame-%E8%B0%83%E8%AF%95%E5%99%A8%E5%AE%9E%E6%B5%8B"><span class="nav-text">A.4 敌兵类型 ID
 映射表（MAME 调试器实测）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E5%AE%8C%E5%85%A8%E7%A1%AE%E8%AE%A4%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%85%A8-8-%E5%85%B3%E5%AE%9E%E6%9C%BA%E5%AF%B9%E7%85%A7%E9%AA%8C%E8%AF%81"><span class="nav-text">已完全确认的类型（全 8
 关实机对照验证）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E7%A1%AE%E8%AE%A4%E7%9A%84-boss-%E5%9C%B0%E5%9D%80%E5%BF%85%E9%A1%BB%E6%8E%92%E9%99%A4%E4%B8%8D%E5%8F%AF%E4%BF%AE%E6%94%B9"><span class="nav-text">已确认的 Boss
 地址（必须排除，不可修改）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.5-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%8C%E5%85%B5%E9%9A%8F%E6%9C%BA%E5%BC%BA%E5%8C%96%E7%9B%B8%E5%85%B3%E7%AC%AC-13-%E7%AB%A0"><span class="nav-text">A.5
@@ -294,7 +294,7 @@ v13）</span></a></li></ol></li></ol></div>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-27 08:51:12" itemprop="dateModified" datetime="2026-09-27T08:51:12+08:00">2026-09-27</time>
+      <time title="修改时间：2026-09-27 09:12:40" itemprop="dateModified" datetime="2026-09-27T09:12:40+08:00">2026-09-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1161,7 +1161,9 @@ Boss/混兵规则、个位定同屏敌兵数）、部分模式无限弹药。在
 <code>$FF</code>：拳/脚/摔/武器/枪械/手雷每击满暴击，HUD 常驻 FF
 不跳变；衰减/上探例程为全体对象共享，其它对象（Boss、车辆、小兵）在 stub
 中逐条复刻原指令、行为与原版一致——敌兵伤害、二关
-Boss、第三关开车/霍戈全部正常，过关血量维持原版行为。完整逆向与七坑血泪见
+Boss、第三关开车/霍戈全部正常，过关血量维持原版行为。另做 3
+处<strong>等长署名替换</strong>（§15.7）：标题画面 “Rom Hacked By Zengfr
+2020.05” 与 URL 行、滚动职员表均改为 sunjunior。完整逆向与七坑血泪见
 §15。</p>
 <table>
 <colgroup>
@@ -1177,12 +1179,11 @@ Boss、第三关开车/霍戈全部正常，过关血量维持原版行为。完
 <tbody>
 <tr>
 <td>cde_21a.6f</td>
-<td><code>e4395fc0fe3ca8742e2999e660a95697e2d78940</code></td>
+<td><code>13a9001458231e3037c5baec6f8221e79dfae2d6</code></td>
 </tr>
 <tr>
 <td>cde_22a.7f</td>
-<td><code>98c970eb242558d1360285b10b173d77608bf1b5</code>（2020
-框架原版，未动）</td>
+<td><code>69d18e60ba884092a6d8a904045bcb2c5ba2fd9b</code>（仅署名字符串）</td>
 </tr>
 <tr>
 <td>cde_23a.8f</td>
@@ -1417,10 +1418,10 @@ cdu_23a.8f=<code>f988e6021c6b3178193930b3d89e827888af5756</code></td>
 过猛），敌兵逻辑原样回放（§14）</td>
 </tr>
 <tr>
-<td>2020 大杂烩暴击常驻 FF（3 挂点+守卫 stub）</td>
+<td>2020 大杂烩暴击常驻 FF（3 挂点+守卫 stub）+ sunjunior 署名</td>
 <td>✅ <strong>已交付</strong></td>
 <td>zengfr 2020 自有暴击系统玩家侧钉 $FF；共享例程经 32
-位基址守卫，Boss/车辆/小兵原版回放（§15）</td>
+位基址守卫，Boss/车辆/小兵原版回放；7 处署名等长替换（§15）</td>
 </tr>
 <tr>
 <td>静态表替换（133-137 处）</td>
@@ -2264,6 +2265,32 @@ Boss、车辆、小兵头上 → Boss 卡死不出场。</li>
 FF；拳/脚/摔/武器/枪械/手雷每击满暴击；敌兵伤害、二关
 Boss、第三关开车/霍戈、过关流程均与原版一致（过关不回血亦为原版 2020
 自带行为，经用户确认保留）。</p>
+<h3 id="署名替换v15v16">15.7 署名替换（v15→v16）</h3>
+<p>全库扫描 <code>Zengfr</code>/<code>Hacked</code> 直存 ASCII（芯片
+TORRENTZIPPED 交换还原后即明文可见），共 7 处、分两类文本编码：</p>
+<ul>
+<li><strong>21a
+<code>$102013</code></strong>（标题画面内嵌串）：<code>Hacked By Zengfr 2020</code>
++ <code>@</code> 尾标记（21 字节，等长改
+<code>Hacked By sunjunior</code>）</li>
+<li><strong>21a
+<code>$147985</code></strong>（标题第二屏）：<code>Rom Hacked By Zengfr 2020.05</code>（29
+字节）→ <code>Rom Hacked By sunjunior</code>+空格；同行组
+<code>$1479A3</code> URL
+<code>Https:\\github.com\zengfr\romhack</code>（33 字节）→
+<code>Https:\\sunjunior.github.io</code>+空格</li>
+<li><strong>22a
+<code>$97F67/$97FA1/$97FB8/$9806B</code></strong>（滚动职员表，<code>/</code>=条目终止、<code>@</code>=尾标记、逗号分隔多条目）：三处含
+<code>Zengfr 2020(.05)</code> 的等长空格补齐；16
+字节位点的短条目改为等长的 <code>Hacked sunjunior</code></li>
+</ul>
+<p>要点：该文本引擎里
+<strong><code>/</code>（0x2F）是条目终止符</strong>、<code>@</code>（0x40）是尾标记，替换正文绝不能引入
+<code>/</code>，URL 沿用 zengfr
+的反斜杠风格；所有替换严格等长，不碰任何终止/属性字节，替换后全库
+<code>Zengfr</code> 零残留。此版命名为
+<strong>v16（<code>dino_2020_critFF_v16_signed.zip</code>，SHA1
+<code>8056f85c…</code>），即当前最终交付版</strong>。</p>
 <hr />
 <h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
 <h3 id="a.1-暴击值相关">A.1 暴击值相关</h3>
@@ -3021,6 +3048,18 @@ v13）</h3>
 <td><code>0xFFB2E0/FFB274</code></td>
 <td>P1 血量字 / 玩家对象基址（8 倍血制出生
 <code>$320</code>=800；过关不回血为原版 2020 自带行为）</td>
+</tr>
+<tr>
+<td><code>0x102013</code> / <code>0x147985</code> /
+<code>0x1479A3</code>（21a）</td>
+<td>署名串：标题画面行 / 标题第二屏 “Rom Hacked By…” 行 / URL
+行；<code>@</code>(0x40) 为尾标记</td>
+</tr>
+<tr>
+<td><code>0x097F67</code> / <code>0x097FA1</code> /
+<code>0x097FB8</code> / <code>0x09806B</code>（22a）</td>
+<td>滚动职员表署名条目（<code>/</code>=条目终止符、<code>,</code>=同位串分隔；正文严禁引入
+0x2F）</td>
 </tr>
 </tbody>
 </table>
