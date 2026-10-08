@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #e847c3;
+    background: #0d636c;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3077,7 +3077,7 @@ header.header {
   left: unset !important;
   right: 24px !important;
   bottom: -100px !important;
-  background: radial-gradient(circle at center, #0c1a30 58%, transparent 59%) padding-box, conic-gradient(#2f80ed var(--progress, 0%), #1d3a63 0) border-box;
+  background: radial-gradient(circle at center, #0c1a30 58%, transparent 59%) padding-box, conic-gradient(#4da3ff var(--progress, 0%), #1d3a63 0) border-box;
   border: 2px solid transparent !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
   justify-content: center !important;
@@ -3113,7 +3113,7 @@ header.header {
 .back-to-top:hover {
   opacity: 1 !important;
   transform: scale(1.1) !important;
-  box-shadow: 0 6px 18px rgba(47,128,237,0.45) !important;
+  box-shadow: 0 6px 18px rgba(77,163,255,0.45) !important;
 }
 .back-to-top.back-to-top-on {
   bottom: 24px !important;
