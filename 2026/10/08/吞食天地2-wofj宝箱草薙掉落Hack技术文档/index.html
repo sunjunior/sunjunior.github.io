@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，将宝箱掉落按类别细化：食物&#x2F;物品类宝箱保留原样，其余宝箱掉落统一替换成草薙剑（0x1A）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫">
+<meta property="og:type" content="article">
+<meta property="og:title" content="吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，将宝箱掉落按类别细化：食物&#x2F;物品类宝箱保留原样，其余宝箱掉落统一替换成草薙剑（0x1A）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/wofj.gif">
+<meta property="article:published_time" content="2026-10-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-08T01:03:26.146Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, MAME, 街机, 吞食天地2, wof, wofj">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/wofj.gif">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/10/08/吞食天地2-wofj宝箱草薙掉落Hack技术文档/","title":"吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%BF%A1%E6%81%AF%E4%B8%8E%E4%B8%BB%E7%A8%8B%E5%BA%8F"><span class="nav-text">2. ROM 信息与主程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E8%B5%84%E6%96%99"><span class="nav-text">3. 分析环境与资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E5%AE%9D%E7%AE%B1%E7%89%A9%E5%93%81%E7%BB%9F%E4%B8%80%E6%94%B9%E4%B8%BA%E8%8D%89%E8%96%99"><span class="nav-text">4.
+第一部分：宝箱物品统一改为草薙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E5%AF%B9%E6%A0%BC%E5%BC%8F"><span class="nav-text">4.1 掉落对格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%9A%84%E5%81%8F%E7%A7%BB"><span class="nav-text">4.2 修改的偏移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%BA%E5%90%8E%E7%9A%84-rom-%E6%A0%A1%E9%AA%8C"><span class="nav-text">5. 修改为后的 ROM 校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%90%AF%E5%8A%A8"><span class="nav-text">6. 如何启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E8%BE%B9%E7%95%8C"><span class="nav-text">7. 重要边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">8. 修改总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-text">下载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">9. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：关键路径汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E5%9C%A8%E7%BA%BF%E6%94%B6%E9%9B%86-cheat-%E6%96%B9%E6%B3%95%E5%A4%87%E7%94%A8%E8%AE%B0%E5%BD%95"><span class="nav-text">附录 B：在线收集 cheat
+方法备用记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#b.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E4%BD%9C%E5%BA%9F%E6%96%B9%E6%B3%95"><span class="nav-text">B.1 运行时作废方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b.2-%E5%B8%B8%E7%94%A8-cheat-%E5%86%85%E5%AE%B9"><span class="nav-text">B.2 常用 cheat 内容</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，将宝箱掉落按类别细化：食物&#x2F;物品类宝箱保留原样，其余宝箱掉落统一替换成草薙剑（0x1A）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫 ...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-08 00:00:00 / 修改时间：09:03:26" itemprop="dateCreated datePublished" datetime="2026-10-08T00:00:00+08:00">2026-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，将宝箱掉落按类别细化：食物/物品类宝箱保留原样，其余宝箱掉落统一替换成草薙剑（0x1A）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫 ...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>三国志 吞食天地II 赤壁之战（<code>wofj</code>,
+Japan 921031, CPS1, 1992 Capcom）</strong></p>
+<p>目标：修改日本版
+<code>wofj</code>，将宝箱掉落按类别细化：<strong>食物/物品类宝箱保留原样，其余宝箱掉落统一替换成草薙剑（<code>0x1A</code>）</strong>。</p>
+<p>核心结论：<code>WOFdata.txt</code>
+已直接给出箱子掉落项的固定偏移，每项两字节：<code>物品代码, 物品种类</code>。</p>
+</blockquote>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《三国志 吞食天地II 赤壁之战》又叫 <code>Warriors of Fate II</code> /
+<code>Tenchi wo Kurau II</code>。MAME 驱动中常见版本有：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>MAME 驱动名</th>
+<th>版本</th>
+<th>特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wof</code></td>
+<td>World 921031</td>
+<td>官方英文世界版，无法直接用同套日本版偏移</td>
+</tr>
+<tr>
+<td><code>wofj</code></td>
+<td>Japan 921031</td>
+<td>日本原版，qiu.yq 的《吞食天地II赤壁之战HACK心得》主要基于这个</td>
+</tr>
+<tr>
+<td><code>wofr1</code></td>
+<td>World 921002</td>
+<td>早期世界版，偏移无法直接等同</td>
+</tr>
+</tbody>
+</table>
+<p>本次交付文采用的基础是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/media/娱乐/game/RetroArch-Win64/roms/FBA/wofj.zip</span><br></pre></td></tr></table></figure>
+<p>已复制到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/roms/wofj.zip</span><br></pre></td></tr></table></figure>
+<p>备份：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/roms/wofj.zip.orig</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="rom-信息与主程序">2. ROM 信息与主程序</h2>
+<p><code>wofj</code> 的主板仍是 Capcom CPS1（<code>cps1</code>
+驱动），主 CPU 为 Motorola MC68000。</p>
+<p>主程序 ROM：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tk2j_23c.8f   0x000000</span><br><span class="line">tk2j_22c.7f   0x080000</span><br></pre></td></tr></table></figure>
+<p>在 <code>mame/src/mame/capcom/cps1.cpp</code> 的
+<code>ROM_START( wofj )</code> 中，两者都按：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ROM_LOAD16_WORD_SWAP(<span class="string">&quot;tk2j_23c.8f&quot;</span>, <span class="number">0x000000</span>, <span class="number">0x80000</span>, ...)</span><br><span class="line">ROM_LOAD16_WORD_SWAP(<span class="string">&quot;tk2j_22c.7f&quot;</span>, <span class="number">0x080000</span>, <span class="number">0x80000</span>, ...)</span><br></pre></td></tr></table></figure>
+<p>加载。这里我们直接对 <code>tk2j_23c.8f</code>
+的文件偏移打了补丁；WOFdata 给的箱子/攻击数偏移实际上匹配这个原始 8f
+文件偏移。</p>
+<hr />
+<h2 id="分析环境与资料">3. 分析环境与资料</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM 包</td>
+<td><code>~/.mame/roms/wofj.zip</code></td>
+</tr>
+<tr>
+<td>修改基准资料</td>
+<td><code>WOFdata.txt</code>（来自 zengfr/romhack），中文编码 GBK</td>
+</tr>
+<tr>
+<td>补丁工具</td>
+<td>Python <code>zipfile</code> 读出 ROM，改 <code>tk2j_23c.8f</code>
+后再按 ZIP_DEFLATE 写回</td>
+</tr>
+<tr>
+<td>模拟器验证</td>
+<td><code>mame wofj -video none -sound none -seconds_to_run 2</code></td>
+</tr>
+<tr>
+<td>cheat 开关验证</td>
+<td><code>mame wofj -cheat -video none ...</code></td>
+</tr>
+</tbody>
+</table>
+<p>资料文件中的核心信息是：</p>
+<ol type="1">
+<li>所有箱子修改的入口在
+<code>tk2j_23c.8f</code>，例如第一关第一个箱：</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0006AB62: 0A</span><br><span class="line">0006AB63: 01</span><br></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>对应含义：</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0A = 物品代码（战斧/0A)</span><br><span class="line">01 = 物品种类（01 = 物品，00 = 武器）</span><br></pre></td></tr></table></figure>
+<ol start="3" type="1">
+<li>物品代码表：</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">类 = 00 时是武器</span><br><span class="line">...</span><br><span class="line">19=聖劍</span><br><span class="line">1A=草薙</span><br><span class="line">1B=青红</span><br><span class="line">1E=火</span><br></pre></td></tr></table></figure>
+<ol start="4" type="1">
+<li>类 = 01
+时是消耗品/宝物：<code>00=烤猪</code>、<code>01=烤鸭</code>、<code>09=卷轴</code>
+等。</li>
+</ol>
+<hr />
+<h2 id="第一部分宝箱物品统一改为草薙">4.
+第一部分：宝箱物品统一改为草薙</h2>
+<h3 id="掉落对格式">4.1 掉落对格式</h3>
+<p>以 WOFdata 的说明为准，每个箱子掉落是一对连续字节：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+0x00: 物品代码</span><br><span class="line">+0x01: 物品种类</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><code>物品种类 = 0x00</code>：武器类</li>
+<li><code>物品种类 = 0x01</code>：物品/消耗品类</li>
+<li>草薙剑代码是 <code>0x1A</code></li>
+</ul>
+<p>所以每个箱子项都可以被强制写为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+0x00 = 0x1A</span><br><span class="line">+0x01 = 0x00</span><br></pre></td></tr></table></figure>
+<p>这等价于：“箱子中掉落一把 <code>0x00</code> 种类下的
+<code>0x1A</code> 武器，也就是草薙。”</p>
+<h3 id="修改的偏移">4.2 修改的偏移</h3>
+<p>以下是从 <code>WOFdata.txt</code> 中解析出的 ROUND 1~9
+掉落项地址。脚本对每一对相邻偏移做判断：凡原掉落的是物品类（<code>0x01</code>，食物/宝物）都保留原内容；其余宝箱项统一改为
+<code>1A 00</code>。</p>
+<p>示例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ROUND 1</span><br><span class="line">0006AB62: 0A 0006AB63: 01  ; 战斧/物品</span><br><span class="line">0006ABAA: 00 0006ABAB: 01</span><br><span class="line">0006ABBA: 01 0006ABBB: 01</span><br><span class="line">0006ABCA: 01 0006ABCB: 01</span><br><span class="line">0006ACD4: 04 0006ACD5: 01</span><br><span class="line">0006ACE4: 00 0006ACE5: 01</span><br><span class="line">0006ACF8: 0B 0006ACF9: 01</span><br></pre></td></tr></table></figure>
+<p>经脚本枚举，对 <code>WOFdata.txt</code> 中关于 ROUND 1~9
+的箱子掉落对共做了 64 处项替换，地址范围大致：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x6AB62 ~ 0x6D924</span><br></pre></td></tr></table></figure>
+<p>修改结果分两类：</p>
+<ul>
+<li>原本 <code>0x01</code> 物品类（如食物/宝物）保留原值，不改。</li>
+<li>原本非 <code>0x01</code> 的其它类宝箱项按统一逻辑改成：</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1A 00</span><br></pre></td></tr></table></figure>
+<p><img src="/img/wofj.gif" width="75%" alt="wofj 宝箱掉落草薙验证截图"></p>
+<hr />
+<h2 id="修改为后的-rom-校验">5. 修改为后的 ROM 校验</h2>
+<p>修改后直接验证 <code>wofj.zip</code> 中的关键分类数据：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0006AB62 = 0A 01    # 物品类保留</span><br><span class="line">0006ABAA = 00 01    # 物品类保留</span><br><span class="line">0006ABBA = 01 01    # 物品类保留</span><br><span class="line"></span><br><span class="line">非物品类宝箱项（示例） = 1A 00  # 统一改为草薙/武器</span><br></pre></td></tr></table></figure>
+<p>如果要看某一项是不是保留，用原 <code>.orig</code> 中判断：曾为
+<code>0x01</code> 物品类的偏移，当前仍等于原值；否则等于
+<code>1A 00</code>。</p>
+<p>运行输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mame wofj -video none -sound none -seconds_to_run 2</span><br><span class="line">Average speed: 100.01%  ← 启动正常</span><br></pre></td></tr></table></figure>
+<p>原版备份：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/roms/wofj.zip.orig</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="如何启动">6. 如何启动</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mame wofj</span><br></pre></td></tr></table></figure>
+<p>GUI 中现在应能看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wofj  &quot;Tenchi wo Kurau II: Sekiheki no Tatakai (Japan 921031)&quot;</span><br></pre></td></tr></table></figure>
+<p>注意：这次只是直接打进 <code>wofj.zip</code> 的宝箱掉落修改，不是额外
+cheat。如果想在游戏里再叠加“无限生命/无敌”等 cheat，需要另行准备针对该
+ROM 的 cheat 配置。</p>
+<hr />
+<h2 id="重要边界">7. 重要边界</h2>
+<ol type="1">
+<li><strong>这些偏移主要适用于 <code>wofj</code>（日本版
+921031）</strong>
+<ul>
+<li><code>wof</code> World 和 <code>wofu</code> English
+不保证偏移一致。</li>
+<li>World 版打算改，需要重新拿到对应 Japan 以外的 ROM 做 diff
+或另查文档。</li>
+</ul></li>
+<li><strong>宝箱改掉落表 ≠ 所有属性都受影响</strong>
+<ul>
+<li>修改点只处理 WOFdata 中列出的箱子掉落对；</li>
+<li>原本 <code>0x01</code>
+物品类（食物/宝物）保留不动，其余宝箱项统一变成
+<code>1A 00</code>（草薙/武器）。</li>
+</ul></li>
+<li><strong>不要直接用同样的偏移去改 <code>wof</code> World</strong>
+<ul>
+<li>本机 <code>wof</code> 对应的 <code>tk2e_23c.8f</code> 在
+<code>0x6AB62</code> 不是 <code>0A 01</code>，直接改会错位。</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="修改总结">8. 修改总结</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>实现状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>食物类保留、非食物类宝箱=草薙</td>
+<td>✅ 已实现</td>
+<td>原 <code>0x01</code> 物品类保留，其余补条换为
+<code>1A 00</code></td>
+</tr>
+<tr>
+<td><code>wofj.zip</code> 可启动验证</td>
+<td>✅ 已通过</td>
+<td><code>mame wofj</code> 运行正常</td>
+</tr>
+<tr>
+<td>World <code>wof</code>同点移植</td>
+<td>ℹ️ 需要单独校准</td>
+<td>不可直接等同</td>
+</tr>
+</tbody>
+</table>
+<h3 id="下载">下载</h3>
+<p>已修补后的 <code>wofj</code> ROM 包：</p>
+<p><a
+href="/files/wofj_宝箱草薙掉落版.zip"><code>/files/wofj_宝箱草薙掉落版.zip</code></a></p>
+<hr />
+<h2 id="踩坑与经验总结">9. 踩坑与经验总结</h2>
+<ol type="1">
+<li><strong>WOFdata 的两字节项不要理解成单字节</strong>：箱子掉落项是
+<code>item_code, item_type</code> 一对相邻字节，混看必崩。</li>
+<li><strong>地址要对到正确的 raw ROM
+文件</strong>：<code>WOFdata</code>里写的是 <code>Tk2j23c</code>
+风格文件偏移，实际落在 <code>tk2j_23c.8f</code> 中；不要误改到
+<code>tk2j_22c.7f</code> 或 GFX/QSound ROM。</li>
+<li><strong>英文版/世界版不能一比一通用</strong>：本文档的
+<code>0x6AB62</code> 是基于 <code>wofj / tk2j_23c.8f</code>
+实测；<code>wof</code> World 结构相近但位置不同。</li>
+<li><strong>先备份再打</strong>：<code>wofj.zip</code> 已保留
+<code>.orig</code>，任何回滚都可以再复制回来。</li>
+<li><strong>补丁后的 ROM 应直接在 MAME
+启动中验证</strong>：先确保能跑起来，再进游戏观察宝箱掉落，避免盲目大范围改字。</li>
+</ol>
+<hr />
+<h2 id="附录-a关键路径汇总">附录 A：关键路径汇总</h2>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>补丁后 ROM</td>
+<td><code>/home/sunjunior/.mame/roms/wofj.zip</code></td>
+</tr>
+<tr>
+<td>原始备份</td>
+<td><code>/home/sunjunior/.mame/roms/wofj.zip.orig</code></td>
+</tr>
+<tr>
+<td>资料文</td>
+<td><code>WOFdata.txt</code>（GitHub zengfr/romhack）</td>
+</tr>
+<tr>
+<td>MAME 主程序源</td>
+<td><code>~/mame/src/mame/capcom/cps1.cpp</code></td>
+</tr>
+<tr>
+<td>日本版主程序</td>
+<td><code>tk2j_23c.8f</code></td>
+</tr>
+<tr>
+<td>World 主程序对应</td>
+<td><code>tk2e_23c.8f</code>（刀法不同）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="附录-b在线收集-cheat-方法备用记录">附录 B：在线收集 cheat
+方法备用记录</h2>
+<p>下面记录的是网上找到的常用 <code>wof/wofj</code> cheat 内容，主要来自
+zengfr/romhack 与 Pugsy / mamecheat.co.uk
+系列。它们都是运行时打内存，不会和我们当前“固定草薙掉落 ROMP
+re写入”冲突，但只用于后备资料，默认不启用。</p>
+<h3 id="b.1-运行时作废方法">B.1 运行时作废方法</h3>
+<p>如果要启用，建议把文件放到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/cheat/wofj.json</span><br></pre></td></tr></table></figure>
+<p>使用 MAME Cheats 菜单逐项打开；不建议全部默认开。</p>
+<h3 id="b.2-常用-cheat-内容">B.2 常用 cheat 内容</h3>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mamecheat</span> <span class="attr">version</span>=<span class="string">&quot;1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Infinite Time&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF81B</span>2=3B&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Infinite Boss Time&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF81DE</span>=<span class="number">63</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Hit Anywhere (Both Players)&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Excludes throws. Disables boss ability to block player attacks. Bonus levels excepted. --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">rw</span>@007F72=605E, maincpu.<span class="property">rw</span>@0086F8=600C, maincpu.<span class="property">rw</span>@0088C2=<span class="number">4E71</span>, maincpu.<span class="property">rw</span>@0088C8=<span class="number">4E71</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.rw@0088DC=4E71, maincpu.rw@0088FE=4E71, maincpu.rw@00891A=6002, maincpu.rw@008940=6002<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.rw@008948=6002, maincpu.rw@008960=6002, maincpu.rw@009176=600C, maincpu.rw@0093D6=6002<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.rw@0093E8=6002, maincpu.rw@00940C=6002, maincpu.rw@00942A=6002, maincpu.rw@0097C2=4E71<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.rw@00981C=6002, maincpu.rw@009840=6002, maincpu.rw@009856=6002, maincpu.rw@00999A=6006<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.rw@009AC0=6002, maincpu.rw@009AD2=6002, maincpu.rw@009AF6=6002, maincpu.rw@009B14=6002<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;One Hit Kills&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;on&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;temp0 =maincpu.<span class="property">mb</span>@007FD6&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">mb</span>@007FD6=<span class="number">44</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;off&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">mb</span>@007FD6=temp0 &lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Kill all Enemies on this Level Now!&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;on&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF8199</span>=<span class="variable constant_">FF</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Kill all On-Screen Enemies Now!&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;on&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFD1DE</span>=<span class="variable constant_">FF</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFD0FE=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFD01E=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFCF3E=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFCE5E=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFCD7E=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFCC9E=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFCBBE=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFCADE=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Infinite Enemy Count&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF81AD</span>=<span class="number">00</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Weapons don&#x27;t disappear&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;on&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;temp0 =maincpu.<span class="property">mb</span>@021FBA&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">mb</span>@021FBA=<span class="number">02</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;off&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">mb</span>@021FBA=temp0 &lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Infinite Credits&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF62F</span>7=<span class="number">09</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Infinite Lives&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF7F</span>9B=<span class="number">03</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Infinite Energy&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBE9F</span>=<span class="number">68</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Invincibility&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBED5</span>=<span class="number">02</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Always have Horse&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBE7F</span>=<span class="number">01</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Always have Horse with Invincibility&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBE45</span>=<span class="number">00</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFBE7E=0001<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Always Have Kusanagi Sword&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pw</span>@<span class="title class_">FFAF1C</span>=<span class="number">0081</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAF20=01<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAF3D=14<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAF3F=00<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pd@FFAF64=00000004<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAF68=00<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFAFA8=0000<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFBEA8=0000<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Punch Only Combo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="variable constant_">FFBECA</span>=<span class="number">02</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Finish Only&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="variable constant_">FFBECA</span>=<span class="number">01</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFBEC9=FF<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Always Command ON&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="variable constant_">FFBEDD</span>=<span class="variable constant_">FF</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P1 Quick Bow Motion&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="variable constant_">FFBECF</span>=<span class="number">00</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Infinite Credits&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF6307</span>=<span class="number">09</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Infinite Lives&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF7F</span>9C=<span class="number">03</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Infinite Energy&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBF7F</span>=<span class="number">68</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Invincibility&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBFB5</span>=<span class="number">02</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Always have Horse&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBF5F</span>=<span class="number">01</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Always have Horse with Invincibility&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFBF25</span>=<span class="number">00</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFBF5E=0001<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P2 Always Have Kusanagi Sword&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pw</span>@<span class="variable constant_">FFAFDC</span>=<span class="number">8101</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAFE0=14<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAFFD=00<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFAFFF=04<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pd@FFB024=00000000<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFB028=00<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFB068=BEFC<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFBF88=AFDC<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Infinite Credits&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF6317</span>=<span class="number">09</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Infinite Lives&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FF7F</span>9D=<span class="number">03</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Infinite Energy&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFC05F</span>=<span class="number">68</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Invincibility&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFC095</span>=<span class="number">02</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Always have Horse&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFC03F</span>=<span class="number">01</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Always have Horse with Invincibility&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pb</span>@<span class="title class_">FFC005</span>=<span class="number">00</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFC03E=0001<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;P3 Always Have Kusanagi Sword&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      &lt;action&gt;maincpu.<span class="property">pw</span>@<span class="title class_">FFB09C</span>=<span class="number">8101</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFB0A0=14<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFB0BD=00<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFB0BF=04<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pd@FFB0E4=00000000<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pb@FFB0E8=00<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFB128=BFDC<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">      <span class="language-xml"><span class="tag">&lt;<span class="name">action</span>&gt;</span>maincpu.pw@FFC068=B09C<span class="tag">&lt;/<span class="name">action</span>&gt;</span></span></span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mamecheat</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：<code>Hit Anywhere</code> / <code>Kill all Enemey Now</code> /
+<code>One Hit Kills</code>
+等是杀敌效果，不保证与其他攻击伤害修改叠加时的稳定性；建议一次只开一条功能做测试。</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>说明：本技术文档只解释了本次记录的可复现偏移和脚本思路；若要批量产出公开可分享的
+<code>.ips</code>/<code>.bps</code>，还需要在 <code>wofj.zip.orig</code>
+基础上生成统一 diff。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档">https://sunjunior.github.io/2026/10/08/吞食天地2-wofj宝箱草薙掉落Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-MAME-%E8%A1%97%E6%9C%BA-%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wof-wofj/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, MAME, 街机, 吞食天地2, wof, wofj</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/21/NotepadNext%E6%B1%89%E5%8C%96%E3%80%81%E7%BC%96%E7%A0%81%E5%8A%9F%E8%83%BD%E4%B8%8EAppImage%E6%89%93%E5%8C%85%E5%AE%9E%E6%88%98/" rel="prev" title="NotepadNext 中文汉化、编码功能增强与 AppImage 打包实战">
+                  <i class="fa fa-angle-left"></i> NotepadNext 中文汉化、编码功能增强与 AppImage 打包实战
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
