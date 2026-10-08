@@ -776,15 +776,13 @@ ROM <strong>66 处指针引用</strong>（数据表空项）</td>
 <tr>
 <td>6</td>
 <td><strong>致命假设错误（A=$03 不是
-$00）</strong>：第一版补丁假设进块时 A=0，实际 A=<span
-class="math inline">$03 | 补丁后重跑模拟器/反汇编逐指令追寄存器 |
-| 7 | **子程序入口破坏（关键）**：旧版 25 字节重排块把
-`$</span>B7E4/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mn>7</mn><mi>E</mi><mn>7</mn><mi>/</mi></mrow><annotation encoding="application/x-tex">B7E7/</annotation></semantics></math>B7EB<code>三个子程序入口的指令边界改掉了（菜单 bank 会调用它们重置哪吒属性） | 引用扫描发现 6+ 处</code>JSR
+$00）</strong>：第一版补丁假设进块时 A=0，实际
+A=<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>03</mn><mo stretchy="false" form="prefix">|</mo><mi>补</mi><mi>丁</mi><mi>后</mi><mi>重</mi><mi>跑</mi><mi>模</mi><mi>拟</mi><mi>器</mi><mi>/</mi><mi>反</mi><mi>汇</mi><mi>编</mi><mi>逐</mi><mi>指</mi><mi>令</mi><mi>追</mi><mi>寄</mi><mi>存</mi><mi>器</mi><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mn>7</mn><mo stretchy="false" form="prefix">|</mo><mi>*</mi><mo>*</mo><mi>子</mi><mi>程</mi><mi>序</mi><mi>入</mi><mi>口</mi><mi>破</mi><mi>坏</mi><mi>（</mi><mi>关</mi><mi>键</mi><mi>）</mi><mo>*</mo><mi>*</mi><mi>：</mi><mi>旧</mi><mi>版</mi><mn>25</mn><mi>字</mi><mi>节</mi><mi>重</mi><mi>排</mi><mi>块</mi><mi>把</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">03 | 补丁后重跑模拟器/反汇编逐指令追寄存器 |
+| 7 | **子程序入口破坏（关键）**：旧版 25 字节重排块把 `</annotation></semantics></math>B7E4/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mn>7</mn><mi>E</mi><mn>7</mn><mi>/</mi></mrow><annotation encoding="application/x-tex">B7E7/</annotation></semantics></math>B7EB<code>三个子程序入口的指令边界改掉了（菜单 bank 会调用它们重置哪吒属性） | 引用扫描发现 6+ 处</code>JSR
 $B7xx<code>，改用"10 字节主流程区重写"，保持子程序入口完好（见 §6.1） | | 8 | **跨 bank 假阳性**：</code>JSR
-<span class="math inline">$B801` 等引用看似指向 u01，实为其它 bank 在
-`$</span>A000<code>窗口的同地址代码 | 用"该地址在原版是否是指令起点"判定真伪（</code>0x3801<code>是</code>LDA
-#<span class="math inline">$04` 的操作数字节，非指令起点） |
-| 9 | **敏捷/精神设不了 888/666**：单字节字段溢出钳 `$</span>FF`</td>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mn>801</mn><mtext mathvariant="normal">‘</mtext><mi>等</mi><mi>引</mi><mi>用</mi><mi>看</mi><mi>似</mi><mi>指</mi><mi>向</mi><mi>u</mi><mn>01</mn><mi>，</mi><mi>实</mi><mi>为</mi><mi>其</mi><mi>它</mi><mi>b</mi><mi>a</mi><mi>n</mi><mi>k</mi><mi>在</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">B801` 等引用看似指向 u01，实为其它 bank 在 `</annotation></semantics></math>A000<code>窗口的同地址代码 | 用"该地址在原版是否是指令起点"判定真伪（</code>0x3801<code>是</code>LDA
+#<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>04</mn><mtext mathvariant="normal">‘</mtext><mi>的</mi><mi>操</mi><mi>作</mi><mi>数</mi><mi>字</mi><mi>节</mi><mi>，</mi><mi>非</mi><mi>指</mi><mi>令</mi><mi>起</mi><mi>点</mi><mi>）</mi><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mn>9</mn><mo stretchy="false" form="prefix">|</mo><mi>*</mi><mo>*</mo><mi>敏</mi><mi>捷</mi><mi>/</mi><mi>精</mi><mi>神</mi><mi>设</mi><mi>不</mi><mi>了</mi><mn>888</mn><mi>/</mi><mn>666</mn><mo>*</mo><mi>*</mi><mi>：</mi><mi>单</mi><mi>字</mi><mi>节</mi><mi>字</mi><mi>段</mi><mi>溢</mi><mi>出</mi><mi>钳</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">04` 的操作数字节，非指令起点） |
+| 9 | **敏捷/精神设不了 888/666**：单字节字段溢出钳 `</annotation></semantics></math>FF`</td>
 <td>真实上限 255，这是游戏机制硬限制，改 ROM
 也突破不了（除非重构成长/显示逻辑）</td>
 </tr>

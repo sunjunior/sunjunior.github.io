@@ -985,7 +985,7 @@ ignore。芯片 SHA1 以 TORRENTZIPPED 存盘形式计，<code>cdu_22a.7f</code>
 在所有版本均为原版
 <code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code>。</p>
 </blockquote>
-<table style="width:100%;">
+<table style="width:99%;">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 14%" />
@@ -2050,10 +2050,8 @@ prologue（<code>48E7 FFFE</code> = 保存除 A7 外全部）验证后才放心<
 是伤害倍率分子；</li>
 <li><strong>衰减例程</strong> <code>$629F0</code>（玩家状态机 8 处
 <code>bsr.w</code>
-调用）：<code>move.w $c6(a6),d0 / subq.w #1 / 回写</code>——**<span
-class="math inline">$c6 实为 16 位槽**，扣的是低位字节；而伤害只读
-`$</span>c6<code>**高字节**（</code>move.b $c6(a2),d0`，68K
-大端）。</li>
+调用）：<code>move.w $c6(a6),d0 / subq.w #1 / 回写</code>——**<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mn>6</mn><mi>实</mi><mi>为</mi><mn>16</mn><mi>位</mi><mi>槽</mi><mo>*</mo><mi>*</mi><mi>，</mi><mi>扣</mi><mi>的</mi><mi>是</mi><mi>低</mi><mi>位</mi><mi>字</mi><mi>节</mi><mi>；</mi><mi>而</mi><mi>伤</mi><mi>害</mi><mi>只</mi><mi>读</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">c6 实为 16 位槽**，扣的是低位字节；而伤害只读 `</annotation></semantics></math>c6<code>**高字节**（</code>move.b
+$c6(a2),d0`，68K 大端）。</li>
 <li>结论：槽要从 0 涨到”高字节可见”需要 <strong>256
 次命中积累</strong>，徒手出手慢+每次挨打/时间衰减 →
 永远不满；枪械射速高（M16 每秒 10
@@ -2092,8 +2090,8 @@ $FF；v11：回调为 $90）</h3>
 倍率）。所有攻击类型（拳/脚/投技/武器/枪械）从第一次命中起恒定同一倍率。</p>
 <blockquote>
 <p>大端陷阱：stub 里最初写 <code>move.w #$ff,$c6(a6)</code>
-会把高字节钉成 <code>$00</code>（<span class="math inline">$FF 落在低位
-`$</span>c7<code>）——必须是 **</code>move.b`**。</p>
+会把高字节钉成
+<code>$00</code>（<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mi>F</mi><mi>落</mi><mi>在</mi><mi>低</mi><mi>位</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">FF 落在低位 `</annotation></semantics></math>c7<code>）——必须是 **</code>move.b`**。</p>
 </blockquote>
 <h3 id="验证-1">14.3 验证</h3>
 <p>v10（$FF）与
