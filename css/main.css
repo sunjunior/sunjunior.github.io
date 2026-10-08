@@ -1395,7 +1395,7 @@ pre code {
     transition: all 0.2s ease-in-out;
   }
   .links-of-author a::before {
-    background: #ab7167;
+    background: #8ec391;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3090,28 +3090,25 @@ header.header {
 .back-to-top span {
   display: none !important;
 }
-.back-to-top::before {
-  content: '';
+.back-to-top .rocket {
   position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 13px solid transparent;
-  border-right: 13px solid transparent;
-  border-bottom: 18px solid #ff8c33;
-  top: 11px;
+  top: 52%;
   left: 50%;
-  transform: translateX(-50%);
+  width: 26px;
+  height: 32.5px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease-in-out;
+  overflow: visible;
 }
-.back-to-top::after {
-  content: '';
-  position: absolute;
-  width: 7px;
-  height: 16px;
-  background: #ff8c33;
-  top: 25px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 0 0 2px 2px;
+.back-to-top .rocket .rocket-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+}
+.back-to-top:hover .rocket {
+  transform: translate(-50%, -62%);
+}
+.back-to-top:hover .rocket .rocket-flame {
+  animation: rocket-flame-jump 0.25s ease-in-out infinite alternate;
 }
 .back-to-top:hover {
   opacity: 1 !important;
@@ -3187,5 +3184,13 @@ header.header {
   }
   .post-body .hljs-doctag {
     color: #ff7b72 !important;
+  }
+}
+@keyframes rocket-flame-jump {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(1.35);
   }
 }
