@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/wofj.gif">
 <meta property="article:published_time" content="2026-10-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-08T14:09:19.768Z">
+<meta property="article:modified_time" content="2026-10-08T14:18:36.232Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 吞食天地2, wof, wofj">
 <meta name="twitter:card" content="summary">
@@ -261,7 +261,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-10-08 00:00:00 / 修改时间：22:09:19" itemprop="dateCreated datePublished" datetime="2026-10-08T00:00:00+08:00">2026-10-08</time>
+      <time title="创建时间：2026-10-08 00:00:00 / 修改时间：22:18:36" itemprop="dateCreated datePublished" datetime="2026-10-08T00:00:00+08:00">2026-10-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -428,15 +428,17 @@ Japan 921031, CPS1, 1992 Capcom）</strong></p>
 —— 每个箱子非此即彼：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">要么 = 00 01（烤猪，确认能补血的食品）</span><br><span class="line">要么 = 1A 00（草薙剑）</span><br></pre></td></tr></table></figure>
 <ul>
-<li>用地址哈希做伪随机（可复现），食物占比目标约
-30%，保证草薙占多数；</li>
-<li>每一关（ROUND）都强制至少 1~2
-个食物箱，确保掉血后一定能找到回血道具；</li>
+<li>用地址哈希做伪随机（可复现），目标 <strong>约 70% 草薙 / 30%
+食物</strong>，让草薙明显占多数；</li>
+<li>每一关（ROUND）强制<strong>至少 1 个</strong>食物、且<strong>不超过
+40%</strong>
+食物，既保证掉血后一定找得到回血道具，又不至于食物太多；</li>
 <li>食物箱一律固定成”烤猪”这种确定回血的食品，避免保留到不回血的杂项。</li>
 </ul>
 <p>判定逻辑：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FOOD  = (<span class="number">0x00</span>, <span class="number">0x01</span>)   <span class="comment"># 烤猪：确定回血</span></span><br><span class="line">SWORD = (<span class="number">0x1A</span>, <span class="number">0x00</span>)   <span class="comment"># 草薙</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> each ROUND 的每对箱子 (addr, code, typ):</span><br><span class="line">    k = <span class="built_in">hash</span>(addr) % <span class="number">100</span></span><br><span class="line">    该关食物名额 food_count = <span class="built_in">max</span>(<span class="number">1</span>, <span class="built_in">min</span>(n//<span class="number">2</span>, <span class="built_in">round</span>(n*<span class="number">0.30</span>)))</span><br><span class="line">    取本关 k 最小的 food_count 个箱子 -&gt; 写 FOOD</span><br><span class="line">    其余箱子 -&gt; 写 SWORD</span><br></pre></td></tr></table></figure>
-<p>这样<strong>再也不会出现”既不是食物也不是草薙”的第三种掉落</strong>，每个箱子打开必定是回血食物或草薙剑之一。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FOOD  = (<span class="number">0x00</span>, <span class="number">0x01</span>)   <span class="comment"># 烤猪：确定回血</span></span><br><span class="line">SWORD = (<span class="number">0x1A</span>, <span class="number">0x00</span>)   <span class="comment"># 草薙</span></span><br><span class="line">SWORD_PCT = <span class="number">70</span>         <span class="comment"># 70% 草薙 / 30% 食物</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> each ROUND 的每对箱子 (addr, code, typ):</span><br><span class="line">    v = <span class="built_in">hash</span>(addr) % <span class="number">100</span></span><br><span class="line">    choice = SWORD <span class="keyword">if</span> v &lt; SWORD_PCT <span class="keyword">else</span> FOOD        <span class="comment"># 逐箱按概率</span></span><br><span class="line">    食物数 = clamp(cap=ceil(n*<span class="number">0.40</span>))                  <span class="comment"># 本关食物不超过 40%</span></span><br><span class="line">    <span class="keyword">if</span> 本关食物数 == <span class="number">0</span>: 强制把<span class="string">&quot;最该出食物&quot;</span>的那箱改成 FOOD   <span class="comment"># 每关至少 1 个回血</span></span><br></pre></td></tr></table></figure>
+<p>这样<strong>再也不会出现”既不是食物也不是草薙”的第三种掉落</strong>，每个箱子打开必定是回血食物或草薙剑之一，且整体约
+7 成草薙、3 成食物。</p>
 <h3 id="修改的偏移">4.2 修改的偏移</h3>
 <p>以下是从 <code>WOFdata.txt</code> 中解析出的 ROUND 1~9
 掉落项地址。脚本按上面的”随机二选一”逻辑，把每一对相邻偏移写成
@@ -446,16 +448,16 @@ Japan 921031, CPS1, 1992 Capcom）</strong></p>
 <p>经脚本枚举，<code>WOFdata.txt</code> 中 ROUND 1~9 的箱子掉落对共 62
 组，地址范围大致：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x6AB62 ~ 0x6D924</span><br></pre></td></tr></table></figure>
-<p>分流结果（每关保证至少 1~2 个食物、草薙占多数）：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ROUND 1 :  7 箱 -&gt; 2 食物 / 5 草薙</span><br><span class="line">ROUND 2 :  5 箱 -&gt; 2 食物 / 3 草薙</span><br><span class="line">ROUND 3 : 10 箱 -&gt; 3 食物 / 7 草薙</span><br><span class="line">ROUND 4 :  8 箱 -&gt; 2 食物 / 6 草薙</span><br><span class="line">ROUND 5 :  4 箱 -&gt; 1 食物 / 3 草薙</span><br><span class="line">ROUND 6 :  5 箱 -&gt; 2 食物 / 3 草薙</span><br><span class="line">ROUND 7 : 12 箱 -&gt; 4 食物 / 8 草薙</span><br><span class="line">ROUND 8 :  8 箱 -&gt; 2 食物 / 6 草薙</span><br><span class="line">ROUND 9 :  3 箱 -&gt; 1 食物 / 2 草薙</span><br><span class="line">-------------------------------------</span><br><span class="line">合计         62 箱 -&gt; 19 食物(烤猪) / 43 草薙</span><br></pre></td></tr></table></figure>
+<p>分流结果（约 7 成草薙，每关至少 1 个食物、食物不超过 40%）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ROUND 1 :  7 箱 -&gt; 1 食物 / 6 草薙</span><br><span class="line">ROUND 2 :  5 箱 -&gt; 2 食物 / 3 草薙</span><br><span class="line">ROUND 3 : 10 箱 -&gt; 2 食物 / 8 草薙</span><br><span class="line">ROUND 4 :  8 箱 -&gt; 1 食物 / 7 草薙</span><br><span class="line">ROUND 5 :  4 箱 -&gt; 2 食物 / 2 草薙</span><br><span class="line">ROUND 6 :  5 箱 -&gt; 1 食物 / 4 草薙</span><br><span class="line">ROUND 7 : 12 箱 -&gt; 1 食物 / 11 草薙</span><br><span class="line">ROUND 8 :  8 箱 -&gt; 3 食物 / 5 草薙</span><br><span class="line">ROUND 9 :  3 箱 -&gt; 1 食物 / 2 草薙</span><br><span class="line">-------------------------------------</span><br><span class="line">合计         62 箱 -&gt; 14 食物(烤猪) / 48 草薙   （草薙约 77%）</span><br></pre></td></tr></table></figure>
 <p><img src="/img/wofj.gif" width="75%" alt="wofj 宝箱掉落草薙验证截图"></p>
 <hr />
 <h2 id="修改为后的-rom-校验">5. 修改为后的 ROM 校验</h2>
 <p>修改后直接验证 <code>wofj.zip</code>
 中第一关箱子的分类结果（每箱非食即草）：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0006AB62 = 1A 00   # 草薙（原 0A 01）</span><br><span class="line">0006ABAA = 1A 00   # 草薙（原 00 01 烤猪，本关被随机判给草薙）</span><br><span class="line">0006ABBA = 1A 00   # 草薙（原 01 01）</span><br><span class="line">0006ABCA = 1A 00   # 草薙（原 01 01）</span><br><span class="line">0006ACD4 = 00 01   # 烤猪（食物）</span><br><span class="line">0006ACE4 = 00 01   # 烤猪（食物）</span><br><span class="line">0006ACF8 = 1A 00   # 草薙（原 0B 01）</span><br></pre></td></tr></table></figure>
-<p>判定口径：与 <code>.orig</code> 对比，本关 7 个箱子中恰好 2 个为
-<code>00 01</code>（烤猪），其余 5 个为
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0006AB62 = 1A 00   # 草薙（原 0A 01）</span><br><span class="line">0006ABAA = 1A 00   # 草薙（原 00 01 烤猪，被随机判给草薙）</span><br><span class="line">0006ABBA = 00 01   # 烤猪（食物，本关唯一回血箱）</span><br><span class="line">0006ABCA = 1A 00   # 草薙（原 01 01）</span><br><span class="line">0006ACD4 = 1A 00   # 草薙（原 04 01）</span><br><span class="line">0006ACE4 = 1A 00   # 草薙（原 00 01）</span><br><span class="line">0006ACF8 = 1A 00   # 草薙（原 0B 01）</span><br></pre></td></tr></table></figure>
+<p>判定口径：与 <code>.orig</code> 对比，第一关 7 个箱子中恰好 1 个为
+<code>00 01</code>（烤猪），其余 6 个为
 <code>1A 00</code>（草薙）；不存在第三种值。</p>
 <p>全部改动只落在箱子掉落表 <code>0x6AB62 ~ 0x6D924</code>，攻击属性表
 <code>0x6DB44~</code> 保持原版（逐字节与 <code>.orig</code> 一致）。</p>
@@ -514,7 +516,14 @@ ROM 的 cheat 配置。</p>
 <tr>
 <td>随机”食物 or 草薙”</td>
 <td>✅ 已实现</td>
-<td>62 箱 -&gt; 19 烤猪(回血) / 43 草薙；每关≥1食物，无第三种掉落</td>
+<td>62 箱 -&gt; 14 烤猪(回血) / 48 草薙；约 7
+成草薙，每关≥1食物，无第三种掉落</td>
+</tr>
+<tr>
+<td>概率可调</td>
+<td>✅ 支持</td>
+<td><code>SWORD_PCT=70</code> 调大→草薙更多；设 <code>100</code>
+即全部草薙（无回血）；改 <code>SEED</code> 换一组分布</td>
 </tr>
 <tr>
 <td><code>wofj.zip</code> 可启动验证</td>
