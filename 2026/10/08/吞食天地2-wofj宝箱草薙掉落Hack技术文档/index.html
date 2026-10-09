@@ -20,16 +20,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A）（攻击属性表保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫 Wa">
+    <meta name="description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A），并把我方（5 名可选角色）攻击力在原版基础上 +30%（敌方&#x2F;其它属性保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档">
 <meta property="og:url" content="https://sunjunior.github.io/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A）（攻击属性表保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫 Wa">
+<meta property="og:description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A），并把我方（5 名可选角色）攻击力在原版基础上 +30%（敌方&#x2F;其它属性保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/wofj.gif">
 <meta property="article:published_time" content="2026-10-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-08T14:38:30.113Z">
+<meta property="article:modified_time" content="2026-10-09T14:50:22.340Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, MAME, 街机, 吞食天地2, wof, wofj">
 <meta name="twitter:card" content="summary">
@@ -245,7 +245,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A）（攻击属性表保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫 Wa...">
+      <meta itemprop="description" content="目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A），并把我方（5 名可选角色）攻击力在原版基础上 +30%（敌方&#x2F;其它属性保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -259,9 +259,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-10-08 00:00:00 / 修改时间：22:38:30" itemprop="dateCreated datePublished" datetime="2026-10-08T00:00:00+08:00">2026-10-08</time>
+      <time title="创建时间：2026-10-08 00:00:00" itemprop="dateCreated datePublished" datetime="2026-10-08T00:00:00+08:00">2026-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-09 22:50:22" itemprop="dateModified" datetime="2026-10-09T22:50:22+08:00">2026-10-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,7 +289,7 @@
     </span>
 </div>
 
-            <div class="post-description">目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A）（攻击属性表保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1. 背景与目标 《三国志 吞食天地II 赤壁之战》又叫 Wa...</div>
+            <div class="post-description">目标游戏：三国志 吞食天地II 赤壁之战（wofj, Japan 921031, CPS1, 1992 Capcom） 目标：修改日本版 wofj，把所有能打开的箱子掉落统一 100% 替换为草薙剑（0x1A），并把我方（5 名可选角色）攻击力在原版基础上 +30%（敌方/其它属性保持原版）。 核心结论：WOFdata.txt 已直接给出箱子掉落项的固定偏移，每项两字节：物品代码, 物品种类。 1...</div>
         </div>
       </header>
 
@@ -295,7 +301,9 @@
 Japan 921031, CPS1, 1992 Capcom）</strong></p>
 <p>目标：修改日本版
 <code>wofj</code>，把所有能打开的箱子掉落<strong>统一 100%
-替换为草薙剑（<code>0x1A</code>）</strong>（攻击属性表保持原版）。</p>
+替换为草薙剑（<code>0x1A</code>）</strong>，并把<strong>我方（5
+名可选角色）攻击力在原版基础上
++30%</strong>（敌方/其它属性保持原版）。</p>
 <p>核心结论：<code>WOFdata.txt</code>
 已直接给出箱子掉落项的固定偏移，每项两字节：<code>物品代码, 物品种类</code>。</p>
 </blockquote>
@@ -438,14 +446,21 @@ cheat 撑；如需保留回血，可用下面这套”随机 food/sword”版本
 <h3 id="修改的偏移">4.2 修改的偏移</h3>
 <p>以下是从 <code>WOFdata.txt</code> 中解析出的 ROUND 1~9
 掉落项地址。脚本按当前 <code>SWORD_PCT=100</code>
-的逻辑，把每一对相邻偏移全部写成 <code>1A 00</code>（草薙）。</p>
-<p>示例：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ROUND 1</span><br><span class="line">0006AB62: 0A 0006AB63: 01  ; 战斧/物品</span><br><span class="line">0006ABAA: 00 0006ABAB: 01</span><br><span class="line">0006ABBA: 01 0006ABBB: 01</span><br><span class="line">0006ABCA: 01 0006ABCB: 01</span><br><span class="line">0006ACD4: 04 0006ACD5: 01</span><br><span class="line">0006ACE4: 00 0006ACE5: 01</span><br><span class="line">0006ACF8: 0B 0006ACF9: 01</span><br></pre></td></tr></table></figure>
-<p>经脚本枚举，<code>WOFdata.txt</code> 中 ROUND 1~9 的箱子掉落对共 62
-组，地址范围大致：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x6AB62 ~ 0x6D924</span><br></pre></td></tr></table></figure>
-<p>当前发布为 <strong>100% 草薙</strong>，各关箱子全部改草薙：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ROUND 1 :  7 箱 -&gt; 0 食物 / 7 草薙</span><br><span class="line">ROUND 2 :  5 箱 -&gt; 0 食物 / 5 草薙</span><br><span class="line">ROUND 3 : 10 箱 -&gt; 0 食物 / 10 草薙</span><br><span class="line">ROUND 4 :  8 箱 -&gt; 0 食物 / 8 草薙</span><br><span class="line">ROUND 5 :  4 箱 -&gt; 0 食物 / 4 草薙</span><br><span class="line">ROUND 6 :  5 箱 -&gt; 0 食物 / 5 草薙</span><br><span class="line">ROUND 7 : 12 箱 -&gt; 0 食物 / 12 草薙</span><br><span class="line">ROUND 8 :  8 箱 -&gt; 0 食物 / 8 草薙</span><br><span class="line">ROUND 9 :  3 箱 -&gt; 0 食物 / 3 草薙</span><br><span class="line">-------------------------------------</span><br><span class="line">合计         62 箱 -&gt; 0 食物 / 62 草薙   （全部草薙）</span><br></pre></td></tr></table></figure>
+的逻辑，把每一个箱子的掉落对写成 <code>1A 00</code>（草薙）。</p>
+<blockquote>
+<p>重要修正：这些箱子地址是 <strong>WOFdata
+里逐条列出的分散地址</strong>，不是从 <code>0x6AB62</code> 起每 2
+字节连续的。ROUND 3 与 ROUND 7 各有 1 处
+<code>FF 00</code>（<code>0x6B01C</code>、<code>0x6D248</code>）是关卡内的<strong>终止/分隔标记</strong>，不能当箱子改写（早前按连续
+stride 覆盖会破坏这些标记、导致掉落错乱），本版本已排除。</p>
+</blockquote>
+<p>示例（ROUND 1）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0006AB62: 0A -&gt; 1A, 01 -&gt; 00   ; 战斧/物品 -&gt; 草薙</span><br><span class="line">0006ABAA: 00 -&gt; 1A, 01 -&gt; 00</span><br><span class="line">0006ABBA: 01 -&gt; 1A, 01 -&gt; 00</span><br><span class="line">0006ABCA: 01 -&gt; 1A, 01 -&gt; 00</span><br><span class="line">0006ACD4: 04 -&gt; 1A, 01 -&gt; 00</span><br><span class="line">0006ACE4: 00 -&gt; 1A, 01 -&gt; 00</span><br><span class="line">0006ACF8: 0B -&gt; 1A, 01 -&gt; 00</span><br></pre></td></tr></table></figure>
+<p>实际发布固化的是 <strong>60 个箱子掉落对</strong>（排除 2 处
+<code>FF 00</code> 分隔符），地址范围大致：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x6AB62 ~ 0x6D924（分散地址，非连续）</span><br></pre></td></tr></table></figure>
+<p>各关箱子全部改草薙：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ROUND 1 :  7 箱 -&gt; 7 草薙</span><br><span class="line">ROUND 2 :  5 箱 -&gt; 5 草薙</span><br><span class="line">ROUND 3 :  9 箱 -&gt; 9 草薙   (排除 0x6B01C 的 FF 00)</span><br><span class="line">ROUND 4 :  8 箱 -&gt; 8 草薙</span><br><span class="line">ROUND 5 :  4 箱 -&gt; 4 草薙</span><br><span class="line">ROUND 6 :  5 箱 -&gt; 5 草薙</span><br><span class="line">ROUND 7 : 11 箱 -&gt; 11 草薙  (排除 0x6D248 的 FF 00)</span><br><span class="line">ROUND 8 :  8 箱 -&gt; 8 草薙</span><br><span class="line">ROUND 9 :  3 箱 -&gt; 3 草薙</span><br><span class="line">-------------------------------------</span><br><span class="line">合计         60 箱 -&gt; 60 草薙   （全部草薙，无回血食物）</span><br></pre></td></tr></table></figure>
 <p><img src="/img/wofj.gif" width="75%" alt="wofj 宝箱掉落草薙验证截图"></p>
 <hr />
 <h2 id="修改为后的-rom-校验">5. 修改为后的 ROM 校验</h2>
@@ -454,8 +469,21 @@ cheat 撑；如需保留回血，可用下面这套”随机 food/sword”版本
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0006AB62 = 1A 00   # 草薙（原 0A 01）</span><br><span class="line">0006ABAA = 1A 00   # 草薙（原 00 01）</span><br><span class="line">0006ABBA = 1A 00   # 草薙（原 01 01）</span><br><span class="line">0006ABCA = 1A 00   # 草薙（原 01 01）</span><br><span class="line">0006ACD4 = 1A 00   # 草薙（原 04 01）</span><br><span class="line">0006ACE4 = 1A 00   # 草薙（原 00 01）</span><br><span class="line">0006ACF8 = 1A 00   # 草薙（原 0B 01）</span><br></pre></td></tr></table></figure>
 <p>判定口径：与 <code>.orig</code> 对比，第一关 7 个箱子全部为
 <code>1A 00</code>（草薙）；不存在食物或其他第三种值。</p>
-<p>全部改动只落在箱子掉落表 <code>0x6AB62 ~ 0x6D924</code>，攻击属性表
-<code>0x6DB44~</code> 保持原版（逐字节与 <code>.orig</code> 一致）。</p>
+<p>改动落在两处，互不干扰：</p>
+<ol type="1">
+<li><strong>箱子掉落表</strong> <code>0x6AB62 ~ 0x6D924</code>：仅
+WOFdata 列出的 60 个箱子地址写成
+<code>1A 00</code>，<code>0x6B01C</code>/<code>0x6D248</code> 的
+<code>FF 00</code> 分隔符原样保留。</li>
+<li><strong>我方攻击表</strong> <code>0x6DB44 ~ 0x6EE83</code>（WOFdata
+注明”只限我方人物及其武器攻击，不含敌方攻击”）：每条招式记录的
+<code>AT</code>（<code>+4/+5</code> 小端）在原版基础上
+×1.3（四舍五入，上限 32767），共 308 条中 307 条数值改变（1 条原值为 0
+不变）。该表之后的 <code>0x6EE84</code>
+起为另一套等级查表，未改动，敌方数值不受影响。</li>
+</ol>
+<p>我方攻击表前 5 条抽检（原版 → 现值）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">entry 0: 11 -&gt; 14</span><br><span class="line">entry 1: 12 -&gt; 16</span><br><span class="line">entry 2: 13 -&gt; 17</span><br><span class="line">entry 3: 12 -&gt; 16</span><br><span class="line">entry 4: 11 -&gt; 14</span><br></pre></td></tr></table></figure>
 <p>运行输出：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mame wofj -video none -sound none -seconds_to_run 2</span><br><span class="line">Average speed: 100.01%  ← 启动正常</span><br></pre></td></tr></table></figure>
 <p>原版备份：</p>
@@ -465,7 +493,8 @@ cheat 撑；如需保留回血，可用下面这套”随机 food/sword”版本
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mame wofj</span><br></pre></td></tr></table></figure>
 <p>GUI 中现在应能看到：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wofj  &quot;Tenchi wo Kurau II: Sekiheki no Tatakai (Japan 921031)&quot;</span><br></pre></td></tr></table></figure>
-<p>注意：这次只是直接打进 <code>wofj.zip</code> 的宝箱掉落修改，不是额外
+<p>注意：这次是直接打进 <code>wofj.zip</code> 的两处修改——宝箱 100%
+草薙掉落 + 我方攻击 +30%，不是额外
 cheat。如果想在游戏里再叠加“无限生命/无敌”等 cheat，需要另行准备针对该
 ROM 的 cheat 配置。</p>
 <hr />
@@ -479,10 +508,14 @@ ROM 的 cheat 配置。</p>
 <li>World 版打算改，需要重新拿到对应 Japan 以外的 ROM 做 diff
 或另查文档。</li>
 </ul></li>
-<li><strong>当前版本：所有箱子 100% 草薙</strong>
+<li><strong>当前版本：所有箱子 100% 草薙 + 我方攻击 +30%</strong>
 <ul>
-<li>修改点只处理 WOFdata 中列出的箱子掉落对，全部写成
-<code>1A 00</code>（草薙）；</li>
+<li>修改点只处理 WOFdata 中列出的箱子掉落对（60 个分散地址），写成
+<code>1A 00</code>（草薙），排除
+<code>0x6B01C</code>/<code>0x6D248</code> 的 <code>FF 00</code>
+分隔符；</li>
+<li>我方攻击表 <code>0x6DB44~0x6EE83</code> 全部 ×1.3（不含敌方），5
+名角色及其武器攻击都更疼；</li>
 <li>因此<strong>没有可回血的食物</strong>，需要靠无敌/能量锁类 cheat
 或走位续航；若要保留回血，把生成脚本的 <code>SWORD_PCT</code> 调成 70
 左右重打即可（见 §4 说明）。</li>
@@ -512,7 +545,14 @@ ROM 的 cheat 配置。</p>
 <tr>
 <td>100% 草薙掉落（已固化）</td>
 <td>✅ 已实现</td>
-<td>62 箱全部 -&gt; <code>1A 00</code> 草薙；无回血食物</td>
+<td>60 箱全部 -&gt; <code>1A 00</code> 草薙（排除 2 处
+<code>FF 00</code> 分隔符）；无回血食物</td>
+</tr>
+<tr>
+<td>我方攻击 +30%（已固化）</td>
+<td>✅ 已实现</td>
+<td>我方攻击表 <code>0x6DB44~0x6EE83</code> 每条 <code>AT</code>
+×1.3，敌方/后续区域不变</td>
 </tr>
 <tr>
 <td>概率可调（备用方案）</td>
@@ -552,6 +592,15 @@ href="/files/wofj_宝箱草薙掉落版.zip">wofj_宝箱草薙掉落版.zip</a><
 <code>.orig</code>，任何回滚都可以再复制回来。</li>
 <li><strong>补丁后的 ROM 应直接在 MAME
 启动中验证</strong>：先确保能跑起来，再进游戏观察宝箱掉落，避免盲目大范围改字。</li>
+<li><strong>箱子地址是分散的、且含 <code>FF 00</code>
+分隔符</strong>：早前按 <code>0x6AB62 + i*2</code> 连续覆盖会把 ROUND
+3/7 的 <code>0x6B01C</code>、<code>0x6D248</code> 两个
+<code>FF 00</code> 关卡终止标记也改掉，导致掉落错乱——必须只改 WOFdata
+逐条列出的 60 个箱子地址。</li>
+<li><strong>攻击表 <code>0x6DB44</code> 只影响我方</strong>：WOFdata
+明确”我方人物及其武器攻击，不含敌方”；表长到 <code>0x6EE83</code>（约
+308 条 ×16 字节），其后 <code>0x6EE84</code>
+起是另一套等级查表，别越界改到。</li>
 </ol>
 <hr />
 <h2 id="附录-a关键路径汇总">附录 A：关键路径汇总</h2>
