@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：暴力风暴（viostorm, Violent Storm ver EAC, Konami 1993, Konami GX 主板） 目标：把我方三名可选角色（Wade &#x2F; Boris &#x2F; Kyle）的攻击力在原版基础上 +80%，让打小兵更快；敌方与其它数据保持原版。 核心结论：攻击值是一张按 角色 + 动作 索引的字节表，位于主程序 ROM 0x1E924。把表中 134 个有效字节全部">
+<meta property="og:type" content="article">
+<meta property="og:title" content="暴力风暴（viostorm）主角攻击力 +80% Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/10/10/%E6%9A%B4%E5%8A%9B%E9%A3%8E%E6%9A%B4-Viostorm%E6%94%BB%E5%87%BB%E5%8A%9B%E6%8F%90%E5%8D%87%E5%85%AB%E6%88%90Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：暴力风暴（viostorm, Violent Storm ver EAC, Konami 1993, Konami GX 主板） 目标：把我方三名可选角色（Wade &#x2F; Boris &#x2F; Kyle）的攻击力在原版基础上 +80%，让打小兵更快；敌方与其它数据保持原版。 核心结论：攻击值是一张按 角色 + 动作 索引的字节表，位于主程序 ROM 0x1E924。把表中 134 个有效字节全部">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-10T14:56:17.987Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, MAME, 街机, 暴力风暴, viostorm, Konami">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/10/10/%E6%9A%B4%E5%8A%9B%E9%A3%8E%E6%9A%B4-Viostorm%E6%94%BB%E5%87%BB%E5%8A%9B%E6%8F%90%E5%8D%87%E5%85%AB%E6%88%90Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/10/10/%E6%9A%B4%E5%8A%9B%E9%A3%8E%E6%9A%B4-Viostorm%E6%94%BB%E5%87%BB%E5%8A%9B%E6%8F%90%E5%8D%87%E5%85%AB%E6%88%90Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/10/10/暴力风暴-Viostorm攻击力提升八成Hack技术文档/","title":"暴力风暴（viostorm）主角攻击力 +80% Hack 技术文档"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>暴力风暴（viostorm）主角攻击力 +80% Hack 技术文档 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-text">1. 背景与目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E7%BD%91%E4%B8%8A%E8%AF%B4%E6%98%8E"><span class="nav-text">2. 参考资料（网上说明）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E5%80%BC%E6%98%AF%E6%80%8E%E4%B9%88%E7%94%A8%E7%9A%84"><span class="nav-text">3. 攻击值是怎么用的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E8%A1%A8"><span class="nav-text">3.1 攻击表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%85%E8%BD%BD%E4%BB%A3%E7%A0%81%E5%85%B3%E9%94%AE%E8%AF%81%E6%8D%AE"><span class="nav-text">3.2 装载代码（关键证据）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%81%E6%94%BB%E5%87%BB%E5%80%BC-1.8"><span class="nav-text">4. 打补丁：攻击值 ×1.8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E6%94%B9%E4%BA%86%E8%A1%A8%E6%B8%B8%E6%88%8F%E8%B5%B7%E4%B8%8D%E6%9D%A5"><span class="nav-text">5. 踩坑：改了表，游戏起不来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8-mame-lua-%E6%8F%92%E4%BB%B6%E8%A7%82%E5%AF%9F%E5%86%85%E5%AD%98%E7%A1%AE%E8%AE%A4%E6%98%AF%E6%B2%A1%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-text">5.1 用 MAME Lua
+插件观察内存，确认是”没跑起来”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%86%E5%90%91%E8%87%AA%E6%A3%80%E6%A0%A1%E9%AA%8C%E5%92%8C"><span class="nav-text">6. 逆向：自检校验和</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E8%87%AA%E6%A3%80%E4%BE%8B%E7%A8%8B"><span class="nav-text">6.1 定位自检例程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B0%E8%AF%81%E7%AE%97%E6%B3%95"><span class="nav-text">6.2 印证算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E9%A1%BA%E6%89%8B%E6%94%B9%E6%9C%9F%E6%9C%9B%E5%80%BC"><span class="nav-text">7. 为什么不能”顺手改期望值”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E4%BF%AE%E6%B3%95%E4%B8%80%E8%A1%8C%E5%88%86%E6%94%AF%E7%BB%95%E8%BF%87%E8%87%AA%E6%A3%80"><span class="nav-text">8. 最终修法：一行分支绕过自检</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%A1%A5%E4%B8%81%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="nav-text">9. 最终补丁与验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-text">10. 工具链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-text">11. 小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/10/10/%E6%9A%B4%E5%8A%9B%E9%A3%8E%E6%9A%B4-Viostorm%E6%94%BB%E5%87%BB%E5%8A%9B%E6%8F%90%E5%8D%87%E5%85%AB%E6%88%90Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="暴力风暴（viostorm）主角攻击力 +80% Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：暴力风暴（viostorm, Violent Storm ver EAC, Konami 1993, Konami GX 主板） 目标：把我方三名可选角色（Wade &#x2F; Boris &#x2F; Kyle）的攻击力在原版基础上 +80%，让打小兵更快；敌方与其它数据保持原版。 核心结论：攻击值是一张按 角色 + 动作 索引的字节表，位于主程序 ROM 0x1E924。把表中 134 个有效字节全部...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          暴力风暴（viostorm）主角攻击力 +80% Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-10 00:00:00 / 修改时间：22:56:17" itemprop="dateCreated datePublished" datetime="2026-10-10T00:00:00+08:00">2026-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标游戏：暴力风暴（viostorm, Violent Storm ver EAC, Konami 1993, Konami GX 主板） 目标：把我方三名可选角色（Wade / Boris / Kyle）的攻击力在原版基础上 +80%，让打小兵更快；敌方与其它数据保持原版。 核心结论：攻击值是一张按 角色 + 动作 索引的字节表，位于主程序 ROM 0x1E924。把表中 134 个有效字节全部...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>暴力风暴（<code>viostorm</code>, Violent Storm ver
+EAC, Konami 1993, Konami GX 主板）</strong></p>
+<p>目标：把<strong>我方三名可选角色（Wade / Boris /
+Kyle）的攻击力在原版基础上
++80%</strong>，让打小兵更快；敌方与其它数据保持原版。</p>
+<p>核心结论：攻击值是一张按 <code>角色 + 动作</code>
+索引的字节表，位于主程序 ROM <code>0x1E924</code>。把表中 134
+个有效字节全部 <code>round(原值 × 1.8)</code>
+即可。<strong>但只改表会让游戏卡死在开机自检</strong>——本作的 ROM
+校验和是<strong>致命</strong>的，必须同时绕过自检，这一步是本次真正的难点。</p>
+</blockquote>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《暴力风暴》（Violent Storm）是 Konami 1993
+年的横版清版动作游戏，使用 Konami GX 硬件（MAME 驱动
+<code>mystwarr.cpp</code>，与《变身忍者》《怪兽之王》同基板）。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>MAME 驱动名</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>viostorm</code></td>
+<td>ver EAC（Europe）</td>
+<td>本次目标</td>
+</tr>
+<tr>
+<td><code>viostormeb</code> / <code>viostormu</code> /
+<code>viostormj</code> / <code>viostorma</code></td>
+<td>EAB / UAC / JAC / AAC</td>
+<td>其它区域版</td>
+</tr>
+<tr>
+<td><code>viostormbl</code> / <code>viostormubbl</code> /
+<code>viostormabbl</code></td>
+<td>bootleg</td>
+<td>盗版转换</td>
+</tr>
+</tbody>
+</table>
+<p>本文所有偏移针对 <strong><code>viostorm</code>（ver
+EAC）</strong>。</p>
+<p>主程序区域（<code>ROM_START( viostorm )</code>）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ROM_REGION( <span class="number">0x200000</span>, <span class="string">&quot;maincpu&quot;</span>, <span class="number">0</span>)</span><br><span class="line">ROM_LOAD16_BYTE( <span class="string">&quot;168eac01.15h&quot;</span>, <span class="number">0x000001</span>, <span class="number">0x80000</span>, ... ) <span class="comment">// 奇地址：高字节</span></span><br><span class="line">ROM_LOAD16_BYTE( <span class="string">&quot;168eac02.15f&quot;</span>, <span class="number">0x000000</span>, <span class="number">0x80000</span>, ... ) <span class="comment">// 偶地址：低字节</span></span><br></pre></td></tr></table></figure>
+<p>两颗 512KB 的 ROM 交替拼成 <strong>1MB 主程序</strong>（CPU 视角
+<code>0x000000–0x0FFFFF</code>），主 CPU 为 Motorola <strong>MC68000 @
+16MHz</strong>。</p>
+<blockquote>
+<p>补丁地址换算：CPU 地址 <code>A</code> 若为偶数 → 在
+<code>168eac02.15f</code> 中偏移 <code>A/2</code>；若为奇数 → 在
+<code>168eac01.15h</code> 中偏移 <code>A/2</code>（取整）。</p>
+</blockquote>
+<hr />
+<h2 id="参考资料网上说明">2. 参考资料（网上说明）</h2>
+<p>这次确实参考了网络上的逆向资料，主要是
+<strong><code>zengfr/romhack</code></strong> 仓库的 viostorm 目录（中文
+IDB 笔记）：</p>
+<ul>
+<li><code>Violent Storm Memory Map.txt</code> — 内存映射</li>
+<li><code>viostorm ROM map.txt</code> — ROM 结构</li>
+<li><code>ID相关程序段（最新）.txt</code>、<code>VIO敌方程序查表说明.txt</code>
+— 动作/程序查表</li>
+<li><code>VIO我方动作ID表+wade.xls</code>、<code>VIO人物结构体200223+补充敌人英文名.xls</code>
+— 我方动作 ID 与人物结构体</li>
+<li>该仓库里 <strong>没有</strong> 现成的”攻击
++N%“数值教程；网上的成品是
+<code>Violent Storm暴力风暴-繁荣版hack</code>，属于<strong>代码注入式</strong>大改（往
+ROM 空白区 <code>0x76000+</code> 注入新代码、在三处打 <code>JSR</code>
+钩子），并非简单的数值表修改。</li>
+</ul>
+<p>所以本次的<strong>数值定位思路</strong>参考了上述资料，但<strong>攻击表装载公式的确认、按比例放大攻击值的可行性、尤其是自检校验和这一关</strong>，全部是自行反汇编
++ MAME 内存观察得到的。下面按实际动手顺序写。</p>
+<hr />
+<h2 id="攻击值是怎么用的">3. 攻击值是怎么用的</h2>
+<h3 id="攻击表">3.1 攻击表</h3>
+<p>攻击值存放在一张<strong>按角色和动作索引的字节表</strong>里，起始于
+ROM <code>0x1E924</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">条目地址 = 0x1E924 + roleId + 3 * (actionId - 0xC0)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>roleId</code>：<code>0 = Wade</code>，<code>1 = Boris</code>，<code>2 = Kyle</code>（选人代码
+<code>0x1E82C: cmpi.w #$2, $4c(a0)</code> 处可印证角色号在对象
+<code>+0x4C</code>）</li>
+<li><code>actionId</code>：动作号，有效攻击动作从 <code>0xC0</code>
+起</li>
+<li>每字节即该”角色 +
+动作”的攻击值；<code>0xFF = 该角色无此动作</code>（哨兵，不可改）</li>
+</ul>
+<h3 id="装载代码关键证据">3.2 装载代码（关键证据）</h3>
+<p>在 ROM <code>0x1E84E</code> 附近找到装载逻辑（capstone 反汇编）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">01E84A  subi.w    #$c0, d0          ; d0 = actionId - 0xC0</span><br><span class="line">01E84E  lea.l     $1e8e4(pc), a6    ; 有效动作位掩码表</span><br><span class="line">01E852  move.w    $4c(a0), d1       ; d1 = OBJ+0x4C = roleId</span><br><span class="line">01E856  btst.l    d1, (a6, d0.w)</span><br><span class="line">01E85A  bne.b     $1e8d6             ; 位为 1：该角色无此动作，跳过</span><br><span class="line">01E85C  bclr.b    #$5, $ac(a0)</span><br><span class="line">01E862  add.w     d0, d1</span><br><span class="line">01E864  add.w     d0, d0</span><br><span class="line">01E866  add.w     d0, d1             ; d1 = roleId + 3*(action-0xC0)</span><br><span class="line">01E868  lea.l     $1e924(pc), a6     ; 攻击表基址</span><br><span class="line">01E86C  adda.w    d1, a6</span><br><span class="line">01E86E  move.b    (a6), $a0(a0)      ; ★ OBJ+0xA0 = 该角色该动作的攻击值</span><br><span class="line">01E872  move.b    $c0(a6), $a7(a0)</span><br><span class="line">01E878  move.b    $180(a6), d7</span><br></pre></td></tr></table></figure>
+<p>即：<strong>对象 <code>+0xA0</code> 就是攻击值</strong>，直接从
+<code>0x1E924</code>
+表按公式取出。只要改这张表，所有角色、所有攻击动作的伤害同步变化——这正是”打小兵更快”最省事、最干净的改点。</p>
+<hr />
+<h2 id="打补丁攻击值-1.8">4. 打补丁：攻击值 ×1.8</h2>
+<p>把 <code>0x1E924</code> 表中<strong>所有非 <code>0x00</code>、非
+<code>0xFF</code> 的字节</strong>改为
+<code>round(v * 1.8)</code>（本作攻击值都很小，×1.8 后最大
+76，不会溢出字节上限 255）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> zipfile</span><br><span class="line">z = zipfile.ZipFile(<span class="string">&#x27;~/.mame/roms/viostorm.zip&#x27;</span>)</span><br><span class="line">h = <span class="built_in">bytearray</span>(z.read(<span class="string">&#x27;168eac01.15h&#x27;</span>))   <span class="comment"># 奇地址（高字节）</span></span><br><span class="line">l = <span class="built_in">bytearray</span>(z.read(<span class="string">&#x27;168eac02.15f&#x27;</span>))   <span class="comment"># 偶地址（低字节）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">patch_image</span>(<span class="params">image, base=<span class="number">0x1E924</span>, span=<span class="number">0x100</span>*<span class="number">3</span>+<span class="number">3</span></span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(base, base + span):</span><br><span class="line">        v = image[i]</span><br><span class="line">        <span class="keyword">if</span> v <span class="keyword">not</span> <span class="keyword">in</span> (<span class="number">0x00</span>, <span class="number">0xFF</span>):</span><br><span class="line">            image[i] = <span class="built_in">round</span>(v * <span class="number">1.8</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>共修改 <strong>134 字节</strong>，全部落在
+<code>0x1E933–0x1EA73</code>（表头几项本来就是
+<code>0x00/0xFF</code>，不动）。</li>
+<li>换算回两颗 ROM 文件后重打包：偶数地址的改动落到
+<code>15f</code>，奇数地址落到 <code>15h</code>。</li>
+</ul>
+<p>例（Wade 基本连招区）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原值:  0E 10 0F 14 0E 10 0F 14 ...</span><br><span class="line">新值:  19 1D 1B 24 19 1D 1B 24 ...   (round(v*1.8))</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="踩坑改了表游戏起不来">5. 踩坑：改了表，游戏起不来</h2>
+<p>打完补丁后 <code>mame viostorm</code>
+能开到自检，然后<strong>卡死</strong>：</p>
+<ul>
+<li>右上出现 <code>PROGRAM 15H BAD C01A</code> /
+<code>PROGRAM 15F BAD 6D02</code></li>
+<li>之后无论怎么投币、按键都不进游戏</li>
+</ul>
+<h3 id="用-mame-lua-插件观察内存确认是没跑起来">5.1 用 MAME Lua
+插件观察内存，确认是”没跑起来”</h3>
+<p>MAME 0.289 自带 Lua，写个小插件挂
+<code>emu.register_periodic</code>，每帧读主 CPU 地址空间：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> sp = manager.machine.devices[<span class="string">&quot;:maincpu&quot;</span>].spaces[<span class="string">&quot;program&quot;</span>]</span><br><span class="line"><span class="comment">-- 注意 API：read_range(first,last,shift) 第二参是&quot;结束地址&quot;不是长度</span></span><br><span class="line"><span class="comment">-- 稳妥用逐字节 read_u8</span></span><br><span class="line"><span class="keyword">local</span> v = sp:read_u8(<span class="number">0x200000</span>)</span><br></pre></td></tr></table></figure>
+<p>结果对比（同样操作流程）：</p>
+<table>
+<thead>
+<tr>
+<th>ROM</th>
+<th>workram <code>0x200000–0x20FFFF</code> 非零字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>官方原版</td>
+<td>很快升到 ~7000+（正常进游戏）</td>
+</tr>
+<tr>
+<td>只打攻击补丁</td>
+<td>全程只有 1–5 个（卡死）</td>
+</tr>
+<tr>
+<td>繁荣版（成品 hack）</td>
+<td>正常升到 ~7000+</td>
+</tr>
+</tbody>
+</table>
+<p>同时发现 <code>-skip_gameinfo</code> 跳过的是 MAME
+自己的”已知问题”提示；本作<strong>游戏自身的自检屏</strong>需要按键才会继续。但<strong>光按键过不了
+BAD 屏</strong>——补丁版一直卡着。所以问题确实出在 ROM 内容。</p>
+<blockquote>
+<p>小技巧：<code>read_u8</code> 读 ROM 是准的（<code>0x1E924</code> 读回
+<code>0xFF</code>、<code>0x1E800</code> 读回
+<code>0x11</code>，与文件一致），但读 RAM 一开始总读成 0，是因为
+<strong>MAME 还停在启动信息框、CPU 根本没执行</strong>（PC=0）。排除
+MAME 陈情框/自检屏干扰后 RAM 才会动。</p>
+</blockquote>
+<hr />
+<h2 id="逆向自检校验和">6. 逆向：自检校验和</h2>
+<h3 id="定位自检例程">6.1 定位自检例程</h3>
+<p>屏幕显示的 <code>C01A / 6D02</code>（+80%
+补丁后算出的值）是突破口。搜索 ROM 里对期望值表 <code>0x77000</code>
+的引用，命中 <code>0x16ABE</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">; —— 求和循环 ——</span><br><span class="line">016A6E  lea.l     $78bd4.l, a0      ; 描述符表</span><br><span class="line">016A74  lea.l     $20dec0.l, a2     ; 结果缓冲区</span><br><span class="line">016A7A  move.l    (a0)+, d6</span><br><span class="line">016A7C  bmi.w     $16abe            ; 高位为 1 的描述符 = 结束标记</span><br><span class="line">016A80  move.l    (a0)+, d0         ; d0 = 该片字节数(按字节走，步长2)</span><br><span class="line">016A82  movea.l   d6, a1            ; a1 = 该片基址</span><br><span class="line">016A86  move.w    #$1000, d2        ; 每 0x1000 次喂一次看门狗</span><br><span class="line">016A8A  moveq     #$0, d5</span><br><span class="line">016A8C  move.b    (a1), d5</span><br><span class="line">016A8E  add.w     d5, d6            ; 累加一个字节</span><br><span class="line">016A90  lea.l     $2(a1), a1        ; ★ 步长 2：只取奇地址 = 15H，或偶地址 = 15F</span><br><span class="line">016A96  bne.w     $16ab6</span><br><span class="line">016AB6  subq.l    #$1, d0</span><br><span class="line">016AB8  bne.b     $16a8a</span><br><span class="line">016ABA  move.w    d6, (a2)+         ; 存该片校验和</span><br><span class="line">016ABC  bra.b     $16a7a</span><br><span class="line"></span><br><span class="line">; —— 比对 ——</span><br><span class="line">016ABE  lea.l     $20dec0.l, a2     ; 计算值</span><br><span class="line">016AC4  lea.l     $77000.l, a3      ; 期望值表</span><br><span class="line">016ACA  move.w    #$1, d0</span><br><span class="line">016ACE  lsl.l     #$1, d7</span><br><span class="line">016AD0  move.w    (a2)+, d6</span><br><span class="line">016AD2  cmp.w     (a3)+, d6</span><br><span class="line">016AD4  beq.w     $16adc            ; ★ 相等 -&gt; 跳过</span><br><span class="line">016AD8  ori.b     #$1, d7           ; ★ 否则置错误位</span><br><span class="line">016ADC  dbra      d0, $16ace</span><br><span class="line">016AE0  lsl.l     #$2, d7</span><br><span class="line">016AE2  jmp       (a6)</span><br></pre></td></tr></table></figure>
+<p>描述符表 <code>0x78BD4</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">00000001  00080000   ; 基址 1(奇) 长度 0x80000  -&gt; 15H</span><br><span class="line">00000000  00080000   ; 基址 0(偶) 长度 0x80000  -&gt; 15F</span><br><span class="line">FFFFFFFF             ; 结束</span><br></pre></td></tr></table></figure>
+<p>所以算法就是：<strong>对两颗 512KB ROM 分别做 16
+位字节累加和</strong>，再逐片与期望值比较，不等就置错误位。</p>
+<h3 id="印证算法">6.2 印证算法</h3>
+<p>期望值表
+<code>0x77000</code>：<code>BE1B</code>（15H）、<code>6AEF</code>（15F）。而实际算出：</p>
+<table>
+<thead>
+<tr>
+<th>ROM</th>
+<th>算出 15H</th>
+<th>算出 15F</th>
+<th>与期望</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>官方原版</td>
+<td><code>BE1B</code></td>
+<td><code>6AEF</code></td>
+<td>✅ 通过</td>
+</tr>
+<tr>
+<td>只打攻击补丁（×1.8）</td>
+<td><code>C01A</code></td>
+<td><code>6D02</code></td>
+<td>❌ 严格不符</td>
+</tr>
+</tbody>
+</table>
+<p><code>C01A / 6D02</code> 正好就是屏幕上显示的 BAD 值 ——
+<strong>算法确认无误</strong>：屏幕打印的就是每片的字节和。</p>
+<hr />
+<h2 id="为什么不能顺手改期望值">7. 为什么不能”顺手改期望值”</h2>
+<p>最直觉的修法是：把 <code>0x77000/0x77002</code> 的期望值改成新算出的
+<code>C01A/6D02</code>。<strong>但做不到</strong>，原因是两颗 ROM
+的<strong>字节交错</strong>：</p>
+<ul>
+<li>期望字 <code>15H = 0xBE1B</code>：高字节 <code>0xBE</code> 落在
+<code>0x77000</code>（偶地址 → <code>15f</code>），低字节
+<code>0x1B</code> 落在 <code>0x77001</code>（奇地址 →
+<code>15h</code>）</li>
+<li>期望字 <code>15F = 0x6AEF</code>：高字节 <code>0x6A</code> 落在
+<code>0x77002</code>（→ <code>15f</code>），低字节 <code>0xEF</code>
+落在 <code>0x77003</code>（→ <code>15h</code>）</li>
+</ul>
+<p>也就是两个期望字的四个字节被拆到了两颗芯片里。设四字节未知，联立”改完后期望值必须等于芯片自身的新和”：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">15h: c*256 + a = base_h + a + b   =&gt;  c*256 = base_h + b      (1)</span><br><span class="line">15f: d*256 + b = base_f + c + d   =&gt;  d*255 = base_f + c - b  (2)</span><br></pre></td></tr></table></figure>
+<p>由 (1) 唯一定出 <code>b、c</code>，再代入 (2) 得到
+<code>d</code>——<code>(2)</code> 左边是 255
+的倍数、右边一般不是整数倍，<strong>方程组无解</strong>。即：<strong>期望值表和被校验数据在同一对（且交错的）芯片里，无法自洽</strong>。所以必须走”改代码绕过”。</p>
+<hr />
+<h2 id="最终修法一行分支绕过自检">8. 最终修法：一行分支绕过自检</h2>
+<p>把 <code>0x16AD4</code> 的 <code>BEQ</code>（校验相等才跳过）改成
+<code>BRA</code>（无条件跳过），错误位永远不会被置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">016AD2  cmp.w   (a3)+, d6</span><br><span class="line">016AD4  67 00 00 06   BEQ   -&gt;   60 00 00 06   BRA</span><br><span class="line">016AD8  ori.b   #$1, d7   ; 不再执行</span><br></pre></td></tr></table></figure>
+<p>文件落点：<code>168eac02.15f</code> 偏移
+<code>0xB56A</code>，<code>0x67 -&gt; 0x60</code>，<strong>仅 1
+字节</strong>。</p>
+<blockquote>
+<p>说明：这只是让游戏自带的自检不再报错、正常放行，不改变任何正常游戏逻辑。（这也解释了为什么网上的”繁荣版”能带着改过程序的
+ROM 启动——它用注入代码绕过了同类检查。）</p>
+</blockquote>
+<hr />
+<h2 id="最终补丁与验证">9. 最终补丁与验证</h2>
+<p><strong>相对官方原版，<code>viostorm.zip</code> 只差 135
+字节：</strong></p>
+<table>
+<thead>
+<tr>
+<th>改动</th>
+<th>位置</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>攻击值 ×1.8</td>
+<td>主程序 <code>0x1E933–0x1EA73</code>（表在
+<code>0x1E924</code>）</td>
+<td>134 字节</td>
+</tr>
+<tr>
+<td>自检校验绕过</td>
+<td>主程序 <code>0x16AD4</code>（<code>15f</code> 偏移
+<code>0xB56A</code>）</td>
+<td>1 字节</td>
+</tr>
+</tbody>
+</table>
+<p><strong>验证：</strong></p>
+<ul>
+<li>静态：134 个攻击字节全部满足
+<code>round(原值 × 1.8)</code>；<code>0x00/0xFF</code>
+哨兵保持不变。</li>
+<li><code>mame -verifyroms viostorm</code> →
+<code>viostorm is good</code>。</li>
+<li>动态：<code>mame viostorm -skip_gameinfo</code>，按键过自检屏后正常进选人/游戏；<strong>实测三名角色打小兵明显更快</strong>（本次请求的验证者已确认
+P1 攻击值比原版更大）。</li>
+</ul>
+<p><strong>产物与备份：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/.mame/roms/viostorm.zip                         # 成品：攻击 +80% + 自检绕过</span><br><span class="line">~/.mame/roms/viostorm.zip.orig_backup             # 官方原版（回滚用）</span><br><span class="line">~/.mame/roms/viostorm.zip.attack50.bak            # 旧版：攻击 +50% + 自检绕过</span><br><span class="line">~/.mame/roms/viostorm.zip.attack50_nobypass.bak   # 仅攻击 +50%（会卡自检，留档对比）</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="工具链">10. 工具链</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>反汇编</td>
+<td>Python + <code>capstone</code>（<code>CS_ARCH_M68K</code> /
+<code>CS_MODE_BIG_ENDIAN</code>）</td>
+</tr>
+<tr>
+<td>ROM 读写/重打包</td>
+<td>Python <code>zipfile</code>（读文件 → 改字节 → 回写 ZIP）</td>
+</tr>
+<tr>
+<td>运行时内存观察</td>
+<td>MAME 0.289 自带 Lua 插件（<code>emu.register_periodic</code> +
+<code>address_space:read_u8</code>）</td>
+</tr>
+<tr>
+<td>输入注入</td>
+<td><code>xdotool</code>（<code>windowactivate</code> /
+<code>key --clearmodifiers --window</code>）</td>
+</tr>
+<tr>
+<td>模拟器</td>
+<td><code>/usr/bin/mame</code> (0.289)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="小结">11. 小结</h2>
+<ol type="1">
+<li><strong>攻击值</strong>是一张 <code>角色 + 动作</code>
+索引的字节表（ROM <code>0x1E924</code>），装载进对象
+<code>+0xA0</code>；把有效字节 <code>×1.8</code>
+即可，改动小、覆盖全角色全招式。</li>
+<li><strong>真正的坑是自检</strong>：本作对两颗主程序 ROM 做 16
+位字节和并与 <code>0x77000</code> 表比较，不符即置错误位并卡死。</li>
+<li>因为期望值表和被校验数据交错在同一对芯片里，<strong>改期望值无解</strong>，只能<strong>改代码绕过</strong>（<code>0x16AD4: BEQ→BRA</code>）。</li>
+<li>最终补丁仅 135 字节：数值表 +80%（134）+
+自检绕过（1），实测生效。</li>
+</ol>
+<blockquote>
+<p>与其说是”改数值”，不如说是”改数值之后，得先把游戏自己设的门锁拆掉”——这也是这类
+Konami 老游戏做数值 hack 时最容易忽略的一步。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/10/10/%E6%9A%B4%E5%8A%9B%E9%A3%8E%E6%9A%B4-Viostorm%E6%94%BB%E5%87%BB%E5%8A%9B%E6%8F%90%E5%8D%87%E5%85%AB%E6%88%90Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="暴力风暴（viostorm）主角攻击力 +80% Hack 技术文档">https://sunjunior.github.io/2026/10/10/暴力风暴-Viostorm攻击力提升八成Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-MAME-%E8%A1%97%E6%9C%BA-%E6%9A%B4%E5%8A%9B%E9%A3%8E%E6%9A%B4-viostorm-Konami/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, MAME, 街机, 暴力风暴, viostorm, Konami</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/08/%E5%90%9E%E9%A3%9F%E5%A4%A9%E5%9C%B02-wofj%E5%AE%9D%E7%AE%B1%E8%8D%89%E8%96%99%E6%8E%89%E8%90%BDHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 吞食天地2（wofj）宝箱草薙掉落 Hack 技术文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
