@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标固件：AC1_S1902_V1.37_20210106（ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM&#x3D;shinco，平台 AC8227&#x2F;AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX&#x2F;REA 反编译），未实机运行 原始固件：~&#x2F;Downloads&#x2F;V1.37&#x2F;（ATC8317.b">
+    <meta name="description" content="目标固件：AC1_S1902_V1.37_20210106（ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM&#x3D;shinco，平台 AC8227&#x2F;AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX&#x2F;REA 反编译） ＋ 实机调测（WiFi ADB&#x2F;root、桌面替换、应用替换与自启治理、启动时">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AC8317（ONSTAR_LITE_K215）车机系统分析总文档">
 <meta property="og:url" content="https://sunjunior.github.io/2026/10/18/AC8317%E8%BD%A6%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E6%80%BB%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标固件：AC1_S1902_V1.37_20210106（ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM&#x3D;shinco，平台 AC8227&#x2F;AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX&#x2F;REA 反编译），未实机运行 原始固件：~&#x2F;Downloads&#x2F;V1.37&#x2F;（ATC8317.b">
+<meta property="og:description" content="目标固件：AC1_S1902_V1.37_20210106（ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM&#x3D;shinco，平台 AC8227&#x2F;AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX&#x2F;REA 反编译） ＋ 实机调测（WiFi ADB&#x2F;root、桌面替换、应用替换与自启治理、启动时">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-18T13:51:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T13:52:02.146Z">
+<meta property="article:modified_time" content="2026-10-22T11:54:00.507Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, 车机, AC8317, Actions, Android, 固件分析">
 <meta name="twitter:card" content="summary">
@@ -162,8 +162,24 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0%E4%B8%8E%E8%AE%BE%E5%A4%87%E5%9F%BA%E7%BA%BF"><span class="nav-text">1. 平台与设备基线</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0%E6%A6%82%E5%86%B5"><span class="nav-text">1.1 平台概况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B3%E5%AE%9A%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84%E5%85%B3%E9%94%AE%E5%89%8D%E6%8F%90"><span class="nav-text">1.2 决定“能做什么”的关键前提</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E4%B8%8E%E8%BF%9E%E6%8E%A5adb-root-wifi"><span class="nav-text">2. 调试与连接（ADB &#x2F; root &#x2F; WiFi）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%BD%E5%8A%9B%E7%9F%A9%E9%98%B5"><span class="nav-text">2.1 能力矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-usb-%E8%B0%83%E8%AF%95%E9%BB%98%E8%AE%A4%E5%B0%B1%E6%98%AF%E5%BC%80%E7%9A%84%E8%AF%81%E6%8D%AE"><span class="nav-text">2.2 为什么 USB
 调试默认就是开的（证据）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#root%E8%83%BD%E6%8B%BF%E5%88%B0%E4%BD%86%E5%8F%AA%E5%AF%B9-adb-%E5%BC%80%E6%94%BE"><span class="nav-text">2.3 root（能拿到，但只对 adb
-开放）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E7%9C%8B%E9%97%A8%E7%8B%97%E8%84%9A%E6%9C%AC"><span class="nav-text">3.9.4 部署看门狗脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E5%B9%B6%E6%8C%81%E4%B9%85%E5%8C%96-adb-over-wifi%E7%AC%AC%E4%BA%8C%E9%80%83%E7%94%9F%E9%80%9A%E9%81%93"><span class="nav-text">0.3 开启并持久化
-ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E8%83%BD%E6%95%91%E8%BD%AF%E4%BB%B6%E5%B1%82"><span class="nav-text">0.4 备份（能救软件层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%8A%E6%81%A2%E5%A4%8D%E6%AD%A5%E9%AA%A4%E5%86%99%E5%9C%A8%E7%BA%B8%E4%B8%8A"><span class="nav-text">0.5 把”恢复步骤”写在纸上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-1-%E5%8A%A0%E5%9B%BA%E8%83%BD%E8%BF%9E%E4%B8%8A%E7%9A%84%E8%83%BD%E5%8A%9B%E4%BD%8E%E9%A3%8E%E9%99%A9%E5%85%88%E4%BA%8E%E4%B8%80%E5%88%87%E4%B8%9A%E5%8A%A1%E6%94%B9%E5%8A%A8"><span class="nav-text">6.3 阶段 1 ——
+开放）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E8%B0%83%E6%B5%8B%E4%B8%8E%E8%BD%AF%E4%BB%B6%E6%9B%BF%E6%8D%A2%E8%AE%B0%E5%BD%95tuning-debugging-record"><span class="nav-text">3.
+实机调测与软件替换记录（Tuning &amp; Debugging Record）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F%E4%B8%8E-root-%E8%83%BD%E5%8A%9B"><span class="nav-text">3.1 连接方式与 root 能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E6%9B%BF%E6%8D%A2%E5%98%9F%E5%98%9F-mini-elite-%E5%9B%9E%E6%BB%9A"><span class="nav-text">3.2 桌面替换：嘟嘟 MINI + eLite
+回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#es-%E6%96%87%E4%BB%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E7%89%88%E6%9C%AC%E7%AD%BE%E5%90%8D%E9%97%AE%E9%A2%98%E4%B8%8E%E5%9B%9E%E9%80%80"><span class="nav-text">3.3 ES
+文件浏览器：版本签名问题与回退</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85%E6%B8%85%E5%8D%95%E6%97%A0%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88"><span class="nav-text">3.4 应用安装清单（无重启生效）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A6%81%E7%94%A8"><span class="nav-text">3.5 高德地图开机自启禁用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%B8%8E-cpu-%E7%8E%B0%E7%8A%B6"><span class="nav-text">3.6 内存与 CPU 现状</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%97%B6%E9%95%BF%E5%88%86%E6%9E%90%E4%B8%8E%E5%8F%AF%E4%BC%98%E5%8C%96%E9%A1%B9"><span class="nav-text">3.7 启动时长分析与可优化项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E6%8F%90%E9%80%9F%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5%E5%8E%9F%E7%AC%AC-3-%E7%AB%A0"><span class="nav-text">3.8 开机提速优化策略（原第 3
+章）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9F%E8%A7%88%E6%94%B6%E7%9B%8A-%E9%A3%8E%E9%99%A9"><span class="nav-text">3.8.1 速览（收益 &#x2F; 风险）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E9%87%8F%E5%90%8E%E8%B0%83%E6%97%B6%E9%97%B4%E5%88%B0%E5%BA%95%E8%8A%B1%E5%9C%A8%E5%93%AA"><span class="nav-text">3.8.2 先量后调：时间到底花在哪</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E6%9B%BF%E6%8D%A2%E9%83%A8%E7%BD%B2%E6%AD%A5%E9%AA%A4%E8%AF%A6%E7%BB%86%E7%89%88%E5%8E%9F%E7%AC%AC-4-%E7%AB%A0"><span class="nav-text">3.9
+桌面替换部署步骤（详细版，原第 4 章）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%E8%A7%88"><span class="nav-text">3.9.1 方案一览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E4%B8%BA%E4%BB%80%E4%B9%88%E8%83%BD%E5%81%9A"><span class="nav-text">3.9.2 原理（为什么能做）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E7%A1%AE%E8%AE%A4%E5%98%9F%E5%98%9F%E5%A3%B0%E6%98%8E%E4%BA%86-home%E5%85%B3%E9%94%AE%E5%89%8D%E6%8F%90"><span class="nav-text">3.9.3 准备：确认嘟嘟声明了
+HOME（关键前提）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E7%9C%8B%E9%97%A8%E7%8B%97%E8%84%9A%E6%9C%AC"><span class="nav-text">3.9.4 部署看门狗脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%BC%80%E5%85%B3%E4%B8%8E%E5%B1%9E%E6%80%A7%E9%80%9F%E6%9F%A5%E5%8E%9F%E7%AC%AC-7-%E7%AB%A0"><span class="nav-text">3.10 配置开关与属性速查（原第 7
+章）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E6%88%90%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7%E5%BC%80%E5%85%B3%E6%94%B9-vendorapp.prop-%E6%88%96-build.prop-%E7%94%9F%E6%95%88"><span class="nav-text">3.10.1
+现成的系统属性开关（改 &#x2F;vendor&#x2F;app.prop 或
+build.prop 生效）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD%E5%BC%80%E5%85%B3%E9%80%9F%E6%9F%A5"><span class="nav-text">3.10.2 常用“功能开关”速查</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E8%BD%AF%E4%BB%B6%E6%B5%81%E7%A8%8B"><span class="nav-text">4. 启动软件流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-0-%E5%9B%BA%E4%BB%B6%E5%8C%85gami-%E5%AE%B9%E5%99%A8%E5%85%B1-28-%E6%9D%A1%E7%9B%AE"><span class="nav-text">4.1 阶段 0 — 固件包（GAMI
+容器，共 28 条目）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-1-soc-%E5%9B%BA%E4%BB%B6%E5%90%AF%E5%8A%A8"><span class="nav-text">4.2 阶段 1 — SoC 固件启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-2-linux-init-%E9%98%B6%E6%AE%B5"><span class="nav-text">4.3 阶段 2 — Linux init 阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-3-android-%E6%A1%86%E6%9E%B6%E5%90%AF%E5%8A%A8"><span class="nav-text">4.4 阶段 3 — Android 框架启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-4-%E8%BD%A6%E6%9C%BA%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E7%BC%96%E6%8E%92%E6%9C%AC%E6%9C%BA%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91"><span class="nav-text">4.5 阶段 4 —
+车机应用启动编排（本机核心逻辑）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-5-%E6%A1%8C%E9%9D%A2home"><span class="nav-text">4.6 阶段 5 — 桌面（HOME）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E6%B8%85%E5%8D%95%E5%BA%94%E7%94%A8%E5%B1%82"><span class="nav-text">4.7 开机自启清单（应用层）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.-persistent-%E5%BA%94%E7%94%A8system_server-%E7%9B%B4%E6%8E%A5%E5%B8%B8%E9%A9%BB%E5%90%AF%E5%8A%A8%E6%9C%80%E6%97%A9"><span class="nav-text">A. Persistent
+应用（system_server 直接常驻启动，最早）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b.-boot_completed-%E6%8E%A5%E6%94%B6%E8%80%85%E6%A1%86%E6%9E%B6%E5%B9%BF%E6%92%AD%E5%90%8E%E5%90%AF%E5%8A%A8"><span class="nav-text">B.
+BOOT_COMPLETED 接收者（框架广播后启动）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c.-%E6%A1%8C%E9%9D%A2home"><span class="nav-text">C. 桌面&#x2F;HOME</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%A7%88%E4%BB%8E%E6%8C%89%E4%B8%8B%E7%94%B5%E6%BA%90%E5%88%B0%E6%A1%8C%E9%9D%A2"><span class="nav-text">4.8 一览：从按下电源到桌面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E6%8D%AE%E4%B8%8E%E5%B1%80%E9%99%90"><span class="nav-text">4.9 证据与局限</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8D%87%E7%BA%A7%E4%B8%8E%E7%89%88%E6%9C%AC%E5%88%A4%E6%96%AD"><span class="nav-text">5. 系统升级与版本判断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E5%8D%87%E7%BA%A7%E8%B7%AF%E5%BE%84%E7%9A%84%E7%89%88%E6%9C%AC%E5%88%A4%E6%96%AD"><span class="nav-text">5.1 各升级路径的版本判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E6%8D%AE%E8%A6%81%E7%82%B9"><span class="nav-text">5.2 证据要点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E8%B0%83%E6%B5%8B%E9%A1%BA%E5%BA%8F%E4%B8%8E%E9%80%83%E7%94%9F%E6%96%B9%E6%A1%88%E9%98%B2%E5%8F%98%E7%A0%96"><span class="nav-text">6.
+安全调测顺序与逃生方案（防变砖）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99%E5%8A%A1%E5%BF%85%E9%81%B5%E5%AE%88"><span class="nav-text">6.1 核心原则（务必遵守）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-0-%E5%85%88%E5%BB%BA%E9%80%83%E7%94%9F%E9%80%9A%E9%81%93%E6%9C%80%E9%AB%98%E4%BC%98%E5%85%88%E7%BA%A7%E5%9C%A8%E5%81%9A%E4%BB%BB%E4%BD%95%E4%BF%AE%E6%94%B9%E4%B9%8B%E5%89%8D"><span class="nav-text">6.2 阶段 0 ——
+先建“逃生通道”（最高优先级，在做任何修改之前）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4%E5%B9%B6%E6%BC%94%E7%BB%83-u%E7%9B%98%E6%9C%AC%E5%9C%B0%E5%88%B7%E6%9C%BA%E6%9C%80%E5%BC%BA%E9%80%83%E7%94%9F%E6%89%8B%E6%AE%B5"><span class="nav-text">6.2.1 确认并演练
+U盘本地刷机（最强逃生手段）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4-adbusb-%E5%8F%AF%E7%94%A8"><span class="nav-text">6.2.2 确认 ADB(USB) 可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E5%B9%B6%E6%8C%81%E4%B9%85%E5%8C%96-adb-over-wifi%E7%AC%AC%E4%BA%8C%E9%80%83%E7%94%9F%E9%80%9A%E9%81%93"><span class="nav-text">6.2.3 开启并持久化
+ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E8%83%BD%E6%95%91%E8%BD%AF%E4%BB%B6%E5%B1%82"><span class="nav-text">6.2.4 备份（能救软件层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%8A%E6%81%A2%E5%A4%8D%E6%AD%A5%E9%AA%A4%E5%86%99%E5%9C%A8%E7%BA%B8%E4%B8%8A"><span class="nav-text">6.2.5 把”恢复步骤”写在纸上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-1-%E5%8A%A0%E5%9B%BA%E8%83%BD%E8%BF%9E%E4%B8%8A%E7%9A%84%E8%83%BD%E5%8A%9B%E4%BD%8E%E9%A3%8E%E9%99%A9%E5%85%88%E4%BA%8E%E4%B8%80%E5%88%87%E4%B8%9A%E5%8A%A1%E6%94%B9%E5%8A%A8"><span class="nav-text">6.3 阶段 1 ——
 加固”能连上”的能力（低风险，先于一切业务改动）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-2-%E5%8F%AF%E9%80%86%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%A1%8C%E4%B8%BA%E5%8F%98%E6%9B%B4%E4%B8%AD%E4%BD%8E%E9%A3%8E%E9%99%A9"><span class="nav-text">6.4 阶段 2 ——
 可逆的系统行为变更（中低风险）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-3-%E6%A1%8C%E9%9D%A2%E6%9B%BF%E6%8D%A2%E4%B8%AD%E9%A3%8E%E9%99%A9%E4%BD%86%E8%87%AA%E5%B8%A6%E5%9B%9E%E6%BB%9A%E4%BF%9D%E9%99%A9"><span class="nav-text">6.5 阶段 3 ——
 桌面替换（中风险，但自带回滚保险）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-4-%E6%94%B9%E9%95%9C%E5%83%8F%E8%BE%83%E9%AB%98%E9%A3%8E%E9%99%A9%E5%8F%AA%E6%9C%89%E5%88%B7%E6%9C%BA%E8%83%BD%E5%85%9C%E5%BA%95"><span class="nav-text">6.6 阶段 4 ——
@@ -175,7 +191,8 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
 系统属性层（决定默认行为的开关）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apk-%E5%B1%82%E6%A1%8C%E9%9D%A2%E6%9C%8D%E5%8A%A1%E5%8D%87%E7%BA%A7"><span class="nav-text">7.7 APK 层（桌面&#x2F;服务&#x2F;升级）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E5%81%9A%E5%85%A8%E5%B1%80%E7%B1%BB%E5%88%AB%E6%89%AB%E6%8F%8F%E4%B8%8D%E7%9C%8B%E4%BB%A3%E7%A0%81%E5%B0%B1%E8%83%BD%E5%AE%9A%E4%BD%8D"><span class="nav-text">7.7.1
 先做”全局类别扫描”（不看代码就能定位）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rea-%E8%A7%A3%E7%A0%81-manifest-%E5%8F%8D%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81"><span class="nav-text">7.7.2 REA 解码 manifest +
 反编译代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E5%8F%8D%E7%BC%96%E8%AF%91-jardexrea-%E4%B8%8D%E5%90%83%E7%9A%84%E7%9B%AE%E6%A0%87"><span class="nav-text">7.7.3 批量反编译 jar&#x2F;dex（REA
-不吃的目标）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AF%BC%E5%B1%82%E5%88%B7%E6%9C%BA%E5%8D%87%E7%BA%A7%E5%9B%9E%E6%BB%9A%E9%80%BB%E8%BE%91"><span class="nav-text">7.8 引导层（刷机&#x2F;升级&#x2F;回滚逻辑）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%90%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%9C%AC%E6%AC%A1%E5%AE%9E%E9%99%85%E8%B5%B0%E6%B3%95"><span class="nav-text">7.9 逐问题定位（本次实际走法）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%88%86%E6%9E%90%E5%A5%97%E8%B7%AF%E5%8F%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">7.10 通用分析套路（可复用）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E8%BE%B9%E7%95%8C%E7%BB%93%E8%AE%BA%E7%9A%84%E5%B1%80%E9%99%90"><span class="nav-text">7.11 已知边界（结论的局限）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a.-%E8%84%9A%E6%9C%AC%E4%B8%8E%E4%BA%A7%E7%89%A9%E6%B8%85%E5%8D%95"><span class="nav-text">附录 A. 脚本与产物清单</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b.-%E9%A3%8E%E9%99%A9%E7%BA%A2%E7%BA%BF%E6%B1%87%E6%80%BB"><span class="nav-text">附录 B. 风险红线汇总</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-c.-%E7%BB%B4%E6%8A%A4%E4%B8%8E%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="nav-text">附录 C. 维护与变更记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-d.-%E5%AE%9E%E6%9C%BA%E8%B0%83%E6%B5%8B%E9%80%9F%E6%9F%A5"><span class="nav-text">附录 D. 实机调测速查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#d.1-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">D.1 常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d.2-%E5%9B%9E%E6%BB%9A%E6%9D%90%E6%96%99%E6%B8%85%E5%8D%95"><span class="nav-text">D.2 回滚材料清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d.3-%E7%BB%B4%E6%8A%A4%E7%BA%A6%E5%AE%9A%E8%BF%BD%E5%8A%A0"><span class="nav-text">D.3 维护约定（追加）</span></a></li></ol></li></ol></div>
+不吃的目标）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AF%BC%E5%B1%82%E5%88%B7%E6%9C%BA%E5%8D%87%E7%BA%A7%E5%9B%9E%E6%BB%9A%E9%80%BB%E8%BE%91"><span class="nav-text">7.8 引导层（刷机&#x2F;升级&#x2F;回滚逻辑）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%90%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%9C%AC%E6%AC%A1%E5%AE%9E%E9%99%85%E8%B5%B0%E6%B3%95"><span class="nav-text">7.9 逐问题定位（本次实际走法）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%88%86%E6%9E%90%E5%A5%97%E8%B7%AF%E5%8F%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">7.10 通用分析套路（可复用）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E8%BE%B9%E7%95%8C%E7%BB%93%E8%AE%BA%E7%9A%84%E5%B1%80%E9%99%90"><span class="nav-text">7.11 已知边界（结论的局限）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%B1%8Fmiracast-dlna-vnc"><span class="nav-text">8. 手机屏幕投屏（Miracast &#x2F; DLNA
+&#x2F; VNC）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E9%9C%80%E6%B1%82%E6%BE%84%E6%B8%85"><span class="nav-text">8.1 背景与需求澄清</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E8%AF%84%E4%BC%B0%E7%9F%A9%E9%98%B5"><span class="nav-text">8.2 方案评估矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E6%96%AD%E7%82%B9%E5%AE%9A%E4%BD%8D-%E6%8E%88%E6%9D%83%E5%B1%82%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%B1%82"><span class="nav-text">8.3 阻断点定位 授权层与硬件层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E4%BE%A7%E6%8E%A5%E6%94%B6%E7%AB%AF%E6%8E%92%E6%9F%A5%E5%85%AD%E8%B7%AF"><span class="nav-text">8.4 车机侧接收端排查（六路）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vnc-%E6%96%B9%E6%A1%88%E8%90%BD%E5%9C%B0%E4%B8%8E%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE"><span class="nav-text">8.5 VNC 方案落地与实测数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E5%9D%91%E4%BD%8D%E4%B8%8E%E5%A4%84%E7%BD%AE"><span class="nav-text">8.6 已知坑位与处置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E5%BD%B1%E5%93%8D%E4%B8%8E%E5%9B%9E%E9%80%80"><span class="nav-text">8.7 资源影响与回退</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E5%BC%95%E7%94%A8"><span class="nav-text">8.8 交叉引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a.-%E8%84%9A%E6%9C%AC%E4%B8%8E%E4%BA%A7%E7%89%A9%E6%B8%85%E5%8D%95"><span class="nav-text">附录 A. 脚本与产物清单</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b.-%E9%A3%8E%E9%99%A9%E7%BA%A2%E7%BA%BF%E6%B1%87%E6%80%BB"><span class="nav-text">附录 B. 风险红线汇总</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-c.-%E7%BB%B4%E6%8A%A4%E4%B8%8E%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="nav-text">附录 C. 维护与变更记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-d.-%E5%AE%9E%E6%9C%BA%E8%B0%83%E6%B5%8B%E9%80%9F%E6%9F%A5"><span class="nav-text">附录 D. 实机调测速查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#d.1-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">D.1 常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d.2-%E5%9B%9E%E6%BB%9A%E6%9D%90%E6%96%99%E6%B8%85%E5%8D%95"><span class="nav-text">D.2 回滚材料清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d.3-%E7%BB%B4%E6%8A%A4%E7%BA%A6%E5%AE%9A%E8%BF%BD%E5%8A%A0"><span class="nav-text">D.3 维护约定（追加）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d.4-%E6%8A%95%E5%B1%8F%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="nav-text">D.4 投屏相关命令速查</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-e.-%E6%8A%95%E5%B1%8F%E4%B8%8E%E5%A4%96%E8%AE%BE%E9%80%9F%E6%9F%A5"><span class="nav-text">附录 E. 投屏与外设速查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#e.1-%E6%8A%95%E5%B1%8F%E9%93%BE%E8%B7%AF%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="nav-text">E.1 投屏链路关键参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#e.2-%E4%B8%8E%E6%8A%95%E5%B1%8F%E5%BC%BA%E7%9B%B8%E5%85%B3%E7%9A%84%E7%A1%AC%E4%BB%B6%E4%BA%8B%E5%AE%9E"><span class="nav-text">E.2 与投屏强相关的硬件事实</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#e.3-%E6%8A%95%E5%B1%8F%E7%9B%B8%E5%85%B3%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="nav-text">E.3 投屏相关系统属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#e.4-%E7%BB%84%E4%BB%B6%E4%B8%8E%E5%B1%9E%E6%80%A7%E9%80%9F%E6%9F%A5%E6%8A%95%E5%B1%8F%E7%9B%B8%E5%85%B3"><span class="nav-text">E.4 组件与属性速查（投屏相关）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#e.5-%E7%9B%B8%E5%85%B3%E5%8D%9A%E6%96%87"><span class="nav-text">E.5 相关博文</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -190,7 +207,7 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -201,7 +218,7 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -256,7 +273,7 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="AC8317（ONSTAR_LITE_K215）车机系统分析总文档 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标固件：AC1_S1902_V1.37_20210106（ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM&#x3D;shinco，平台 AC8227&#x2F;AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX&#x2F;REA 反编译），未实机运行 原始固件：~&#x2F;Downloads&#x2F;V1.37&#x2F;（ATC8317.b...">
+      <meta itemprop="description" content="目标固件：AC1_S1902_V1.37_20210106（ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM&#x3D;shinco，平台 AC8227&#x2F;AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX&#x2F;REA 反编译） ＋ 实机调测（WiFi ADB&#x2F;root、桌面替换、应用替换与自启治理、启动时...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -270,9 +287,15 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-10-18 21:51:00 / 修改时间：21:52:02" itemprop="dateCreated datePublished" datetime="2026-10-18T21:51:00+08:00">2026-10-18</time>
+      <time title="创建时间：2026-10-18 21:51:00" itemprop="dateCreated datePublished" datetime="2026-10-18T21:51:00+08:00">2026-10-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-22 19:54:00" itemprop="dateModified" datetime="2026-10-22T19:54:00+08:00">2026-10-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,7 +317,7 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
     </span>
 </div>
 
-            <div class="post-description">目标固件：AC1_S1902_V1.37_20210106（ro.fota.device=ONSTAR_LITE_K215，OEM=shinco，平台 AC8227/AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX/REA 反编译），未实机运行 原始固件：~/Downloads/V1.37/（ATC8317.b...</div>
+            <div class="post-description">目标固件：AC1_S1902_V1.37_20210106（ro.fota.device=ONSTAR_LITE_K215，OEM=shinco，平台 AC8227/AC8317） 分析方式：固件静态分析（GAMI 容器解析 + init 脚本 + 系统属性 + APK Manifest + JADX/REA 反编译） ＋ 实机调测（WiFi ADB/root、桌面替换、应用替换与自启治理、启动时...</div>
         </div>
       </header>
 
@@ -304,16 +327,19 @@ ADB over WiFi（第二逃生通道）</span></a></li><li class="nav-item nav-lev
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p><strong>目标固件</strong>：<code>AC1_S1902_V1.37_20210106</code>（<code>ro.fota.device=ONSTAR_LITE_K215</code>，OEM=shinco，平台
 AC8227/AC8317）<br />
-<strong>分析方式</strong>：固件静态分析（GAMI 容器解析 + init 脚本 +
-系统属性 + APK Manifest + JADX/REA
-反编译），<strong>未实机运行</strong><br />
+<strong>分析方式</strong>：<strong>固件静态分析</strong>（GAMI 容器解析
++ init 脚本 + 系统属性 + APK Manifest + JADX/REA 反编译）<br />
+＋ <strong>实机调测</strong>（WiFi
+ADB/root、桌面替换、应用替换与自启治理、启动时长与内存实测、手机投屏落地，见第
+3、8 章）<br />
 <strong>原始固件</strong>：<code>~/Downloads/V1.37/</code>（<code>ATC8317.bin</code>
 / <code>hkApp.bin</code> / <code>ATC8317.ini</code> /
 <code>haoketest.bin</code>）<br />
 <strong>解包产物</strong>：<code>~/Downloads/firmware_work/</code>、<code>~/Downloads/AC8317_APKs/</code>、<code>/tmp/boot/</code>、<code>/tmp/jadxdec/</code></p>
 <p><strong>维护说明</strong>：本文件由原先分散的多篇车机分析文档合并而成，按主题分章，每章独立可维护。<br />
 新增结论请写入对应章节，避免多处重复；原始分册文档仍保留（见附录
-A）。</p>
+A）。<br />
+<strong>未实机验证的部分已逐条标注</strong>（固件静态分析章节的运行时行为尤其注意）。</p>
 </blockquote>
 <hr />
 <h2 id="目录">目录</h2>
@@ -337,12 +363,24 @@ A）。</p>
 <li>系统升级与版本判断</li>
 <li>安全调测顺序与逃生方案（防变砖）</li>
 <li>固件分析步骤与方法（可复现）</li>
+<li>手机屏幕投屏（Miracast / DLNA / VNC）
+<ul>
+<li>8.1 背景与需求澄清</li>
+<li>8.2 方案评估矩阵</li>
+<li>8.3 阻断点定位 授权层与硬件层</li>
+<li>8.4 车机侧接收端排查（六路）</li>
+<li>8.5 VNC 方案落地与实测数据</li>
+<li>8.6 已知坑位与处置</li>
+<li>8.7 资源影响与回退</li>
+<li>8.8 交叉引用</li>
+</ul></li>
 </ol>
 <ul>
 <li>附录 A. 脚本与产物清单</li>
 <li>附录 B. 风险红线汇总</li>
 <li>附录 C. 维护与变更记录</li>
 <li>附录 D. 实机调测速查</li>
+<li>附录 E. 投屏与外设速查</li>
 </ul>
 <hr />
 <h1 id="平台与设备基线">1. 平台与设备基线</h1>
@@ -453,6 +491,22 @@ A）。</p>
 <code>root:shell 04750</code> setuid）</td>
 <td>可改系统；<strong>App 无法提权</strong></td>
 </tr>
+<tr>
+<td>Wi-Fi 射频</td>
+<td><strong>单射频 2.4G</strong>（<code>CONSYS_MT6735</code> /
+<code>MT6630</code>，无 5GHz）</td>
+<td>STA+AP 互斥 → 必须手机开热点；无线 CarPlay 物理不可能（§8.3）</td>
+</tr>
+<tr>
+<td>投屏接收端</td>
+<td><strong>无 Miracast Sink、无 DLNA Renderer</strong></td>
+<td>手机系统自带「投屏」不可用，只能自建（§8.4）</td>
+</tr>
+<tr>
+<td>内存 / Swap</td>
+<td>1.76 GiB / <strong>0</strong></td>
+<td>最硬的约束；常驻应用与投屏客户端不可无限叠加</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -502,8 +556,9 @@ setuid</td>
 <tr>
 <td><strong>ADB over WiFi</strong></td>
 <td>✅ adbd 带
-<code>service.adb.tcp.port</code>/<code>persist.adb.tcp.port</code>，<strong>默认未开</strong></td>
-<td>见 §5.4</td>
+<code>service.adb.tcp.port</code>/<code>persist.adb.tcp.port</code>，固件默认未开；<strong>实机已固化
+5555</strong>（<code>/data/property/persist.adb.tcp.port</code>）</td>
+<td>见 §5.4、§3.1</td>
 </tr>
 <tr>
 <td>开机自保</td>
@@ -574,7 +629,517 @@ setuid</td>
 </tr>
 </tbody>
 </table>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line">adb root                 <span class="comment"># &quot;restarting adbd as root&quot; -&gt; adbd 以 root 运行</span></span><br><span class="line">adb shell                <span class="comment"># 直接是 root shell</span></span><br><span class="line"><span class="comment"># 3. 实机调测与软件替换记录（Tuning &amp; Debugging Record）</span></span><br><span class="line"></span><br><span class="line">&gt; 本章记录在 AC8317 / ONSTAR_LITE_K215（固件 V1.36）实机上进行的全部调测动作，与前 9 章的静态分析互为补充。所有改动均在**不重启**前提下完成，且严格保持 `~/Downloads/V1.37/` 原始固件只读。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.1 连接方式与 root 能力</span></span><br><span class="line"></span><br><span class="line">- **WiFi ADB**：`adb connect 10.208.253.186:5555`（Mac 10.208.253.171 为荣耀 Magic7 热点），`adb root` 后 `uid=0`；SELinux 已禁用；USB ADB 在 Mac 端从未枚举，已放弃 USB 路线。</span><br><span class="line">- **写保护**：`/system`、`/vendor` 每次重启重新挂只读；需 `adb remount`；每次重启后必须重新 remount。</span><br><span class="line">- **传输速率**：WiFi ADB ≈ 0.3 MB/s，60 MB push ≈ 218 s，长 adb 命令需 590 s 超时。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.2 桌面替换：嘟嘟 MINI + eLite 回滚</span></span><br><span class="line"></span><br><span class="line">| 项 | 值 |</span><br><span class="line">|---|---|</span><br><span class="line">| 嘟嘟包名 | `com.wow.carlauncher.mini`（MINI1.012024） |</span><br><span class="line">| 官方下载 API | `https://app.dudu-lucky.com/api/app/common/getNewest/3` |</span><br><span class="line">| MD5 | `520658356d1a5bcc1909223298395a9c` |</span><br><span class="line">| 设置为默认 HOME | `package-restrictions.xml` 中 `always=<span class="string">&quot;true&quot;</span>`；HOME intent 直达嘟嘟无 chooser |</span><br><span class="line">| eLite 保留 | `com.sgm.onstarcarlink` 作为回滚目标，进程常驻 |</span><br><span class="line"></span><br><span class="line">- 看门狗脚本 `~/Downloads/launcher_guard.sh` 已就绪（`DUDU_PKG=com.wow.carlauncher.mini`），挂到 `/system/bin/hk_oem_init.sh` 末尾，开机失败自动回退 eLite。</span><br><span class="line">- 两桌面同时在线，仅嘟嘟优先；无 watchdog 时仍可手动切换。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.3 ES 文件浏览器：版本签名问题与回退</span></span><br><span class="line"></span><br><span class="line">**关键坑**：ES 所有版本包名都是 `com.estrongs.android.pop`，但不同版本签名者不同：</span><br><span class="line"></span><br><span class="line">| 版本 | 签名者 | 说明 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| 原厂 v4.2.4.6.1 | `ESTRONGS.RSA` | 回滚源（`/tmp/car_esFileBrowse.apk`） |</span><br><span class="line">| v3.2.4.1（最终选用） | `ESTRONGS.RSA` | 轻量，单进程 ~20 MB |</span><br><span class="line">| mod v4.4.3.7 | `BALA.RSA` | 已移除 |</span><br><span class="line">| VIP v4.2.3.3 | `LXAPK.RSA` | 已装后放弃 |</span><br><span class="line"></span><br><span class="line">**签名不匹配的根因**：`/data` 与 `/vendor/third-app/esFileBrowse/esFileBrowse.apk` 底包签名不一致时，PMS 扫描 `/vendor` 会报 `Failed to parse ... signatures <span class="keyword">do</span> not match; ignoring!`。**解法**：`pm uninstall com.estrongs.android.pop` 清 `/data`，并同步 `/vendor` 底包，保持两边签名一致。</span><br><span class="line"></span><br><span class="line">**最终状态**：v3.2.4.1 固化到 `/vendor/third-app/esFileBrowse/esFileBrowse.apk`（md5 `f13cc110c4d1ff4b2d0660741db20125`，755 root:root），`/data` 与 `/vendor` md5 一致，重启扫描无冲突；车机内存从 VIP 版的 ~185 MB 降回 ~20 MB。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.4 应用安装清单（无重启生效）</span></span><br><span class="line"></span><br><span class="line">| App | 包名 | 版本 | 签名 | 备注 |</span><br><span class="line">|---|---|---|---|---|</span><br><span class="line">| 网易云音乐车机版 | `com.netease.cloudmusic.iot` | v3.1.0 (vc30100) | `NETEASE.RSA` | 替换原厂 v1.0.01；v6.1.70 已转存网盘 |</span><br><span class="line">| 高德地图车机版 | `com.autonavi.amapauto` | 7.5.0.600064 | — | 用户确认可用 |</span><br><span class="line">| X 浏览器 | `com.mmbox.xbrowser` | — | — | — |</span><br><span class="line">| 腾讯视频小提取版 | `com.tencent.qqlive.audiobox` | — | — | — |</span><br><span class="line">| 安卓原生设置插件 | `cn.vmatrices.settings` | — | — | 7.8 MB |</span><br><span class="line">| 喜马拉雅车机版 | `com.ximalaya.ting.android.car` | v2.0.0 (minSdk 11) | `CERT.RSA` | 2.9 MB，双进程 `主+player` |</span><br><span class="line">| ES 文件浏览器 | `com.estrongs.android.pop` | v3.2.4.1 | `ESTRONGS.RSA` | 固化为预置 app |</span><br><span class="line"></span><br><span class="line">- 安装目录 `/data/app/...`，`adb install` 推送后自动清掉 `/data/local/tmp` APK。</span><br><span class="line">- 全程未重启，通过 `am start` 启动测试验证。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.5 高德地图开机自启禁用</span></span><br><span class="line"></span><br><span class="line">- 组件：`com.autonavi.amapauto/.controller.AutoStartupReceiver`（监听 `BOOT_COMPLETED`），每次开机 42.7s 起 3 进程、常驻 ~200 MB。</span><br><span class="line">- 操作：`pm <span class="built_in">disable</span> com.autonavi.amapauto/.controller.AutoStartupReceiver`，组件级禁用，不动 APK 本体。</span><br><span class="line">- 持久化：`/data/system/users/0/package-restrictions.xml` 已写入 `disabled-components`，断电不丢。</span><br><span class="line">- 效果：开机不再自启；手动打开/嘟嘟桌面调起高德 intent 不受影响；恢复 `pm <span class="built_in">enable</span> ...`。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.6 内存与 CPU 现状</span></span><br><span class="line"></span><br><span class="line">**SoC**：杰发 AC8317，4× Cortex-A7 @ max 1.188 GHz（governor=performance 锁频），ABI `armeabi-v7a`（32 位，arm64-only app 无法安装）。</span><br><span class="line"></span><br><span class="line">**内存（全部活跃时）**：总 1800 MB，已用 PSS ~1057 MB，空闲 566 MB，status `moderate`。</span><br><span class="line"></span><br><span class="line">| App | PSS |</span><br><span class="line">|---|---|</span><br><span class="line">| 高德 | 160 MB |</span><br><span class="line">| 网易云 | 104 MB |</span><br><span class="line">| eLite（常驻） | 84 MB |</span><br><span class="line">| 同行者 ×2 | 79+57 MB |</span><br><span class="line">| 嘟嘟 | 75 MB |</span><br><span class="line">| ES v3.2.4.1 | 54 MB |</span><br><span class="line">| 喜马拉雅 主进程 | 29 MB |</span><br><span class="line">| system_server | 66 MB |</span><br><span class="line"></span><br><span class="line">- `loadavg` 23 为内核日志线程假象（runqueue 仅 1，CPU 空闲 88%），非真瓶颈。</span><br><span class="line">- 1.8G 是最紧资源：`moderate` 档；日常导航+音乐+有声书可长期用，不建议再装大型 app。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.7 启动时长分析与可优化项</span></span><br><span class="line"></span><br><span class="line">| 里程碑 | 时刻 |</span><br><span class="line">|---|---|</span><br><span class="line">| LK/内核/init | 0 → 4.5s |</span><br><span class="line">| zygote + preload | 6.7 → 9.4s |</span><br><span class="line">| system_server | 9.7s |</span><br><span class="line">| PMS 扫描 61 包 | 11.4 → 16.5s（5.1s） |</span><br><span class="line">| AMS 就绪 | 18.8s |</span><br><span class="line">| 嘟嘟进程拉起 | 19.0s |</span><br><span class="line">| 常驻应用进场 | 16.6 → 28s（11.4s） |</span><br><span class="line">| **enable_screen（可触摸）** | **28.0s** |</span><br><span class="line">| 高德自启 | 42.7s |</span><br><span class="line"></span><br><span class="line">- 嘟嘟 19s 绑定 HOME，亮屏即可进桌面——换桌面本身未拖慢启动。</span><br><span class="line">- 安全可优化项极少：11.4s 窗口全是厂商车控/语音套件（倒车影像必须快）；PMS 5.1s 来自 61 包扫描。已落地的唯一无风险优化：高德开机自启禁用。</span><br><span class="line">- LK/ramdisk/init 阶段（0~9.4s）动之风险高，已明确不做。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.8 开机提速优化策略（原第 3 章）</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; 依据：`ramdisk.img` 的 `init.rc`/`init.ac83xx.rc`/`default.prop`、`system`/`vendor` 镜像属性、各 APK Manifest 与 CarManager 反编译。</span><br><span class="line">&gt; 结论分三类：**免刷机可调**、**需改镜像（可 adb remount 试）**、**需重编 APK**。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.8.1 速览（收益 / 风险）</span></span><br><span class="line"></span><br><span class="line">| 优化项 | 预期收益 | 风险 | 落地方式 |</span><br><span class="line">|---|---|---|---|</span><br><span class="line">| **IPO 快速唤醒** | **最大（数量级）** | 低 | 整车/系统设置确认开关 |</span><br><span class="line">| **关自启/常驻应用** | 2–6s + 省内存 | 低(可逆) | `pm <span class="built_in">disable</span> &lt;包名&gt;` |</span><br><span class="line">| **init 服务延后** | 1–4s | 中 | 改 ramdisk `init.ac83xx.rc` |</span><br><span class="line">| **精简 insmod** | 0.3–1s | 中 | 改 ramdisk |</span><br><span class="line">| **dex/oat 预编译** | 首启显著 | 高 | 重打包（ROM 级） |</span><br><span class="line">| **CarManager.init 异步化** | 应用层最大 | **高** | 改 APK（慎） |</span><br><span class="line">| 其它（fstab/governor） | 小 | 低 | fstab / init.rc |</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.8.2 先量后调：时间到底花在哪</span></span><br><span class="line"></span><br><span class="line">设备是 `userdebug` + `ro.debuggable=1`，adb 可用，**先定位再动手**：</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.9 桌面替换部署步骤（详细版，原第 4 章）</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; **目标**：**嘟嘟车机桌面 = 第一优先级（开机默认进它）**；一旦它启动异常/黑屏/起不来（含开机循环），</span><br><span class="line">&gt; **自动回滚到原生「安吉星 eLite」桌面**，保证永远有桌面可用。</span><br><span class="line">&gt; 设备：ACL AC8317 / Android 6.0（userdebug，无 verity，**SELinux 已关闭**）</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.9.1 方案一览</span></span><br><span class="line"></span><br><span class="line">| 目标 | 做法 | 风险 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| 用**第三方桌面**当首选 | 装嘟嘟 → 设首选（HOME 选择框“始终”）**或** `pm <span class="built_in">disable</span> com.sgm.onstarcarlink` 让其成唯一桌面 | 低(可逆) |</span><br><span class="line">| **异常自动回滚**到 eLite | `launcher_guard.sh`：开机计数+健康检查，连续失败→禁用第三方、启用 eLite | 低 |</span><br><span class="line">| 只想留**原厂** | 不动，eLite 继续当桌面 | — |</span><br><span class="line">| 让 **HKLauncher** 当桌面 | 需改它 manifest 加 `CATEGORY_HOME`+重签（sharedUid=system，需平台签名） | 高 |</span><br><span class="line">| 用**原生 Launcher3** | 生效版在 `/vendor` 且 HOME 被删；`/system/back_app` 是备份不生效 → 同样要改包重签 | 高 |</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.9.2 原理（为什么能做）</span></span><br><span class="line"></span><br><span class="line">| 事实 | 证据 | 意义 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| 全机**只有 eLite 一个真桌面** | eLite `MainActivity` 声明 `category.HOME`(+厂商 `DEFAULTHOME`，无消费者) | 谁声明 `HOME` 谁就是桌面候选 |</span><br><span class="line">| HKLauncher 不是桌面 | 只有 `com.hk.LAUNCHER`，无 `HOME` | 不能当系统桌面 |</span><br><span class="line">| **SELinux 已关闭** | 启动参数 `androidboot.selinux=disabled`；`ro.boot.selinux=<span class="built_in">disable</span>` | root 开机脚本可任意调用 `am`/`pm`，方案可行 |</span><br><span class="line">| 已有 root 开机脚本 | `hk_oem_init.sh` (`class main, user root, oneshot`) | 直接挂载看门狗，无需刷 ramdisk |</span><br><span class="line">| 无 dm-verity | build.prop/fstab 中无 verity 项 | `adb root; adb remount` 可写 /system |</span><br><span class="line"></span><br><span class="line">**“第一优先级”的实现**：把 eLite 禁用（`pm <span class="built_in">disable</span>`），嘟嘟成为**唯一** HOME → 开机必进它。</span><br><span class="line">eLite 仍保留安装，作为回滚目标，看门狗会在异常时重新启用它。</span><br><span class="line"></span><br><span class="line">&gt; Android 6 **没有** `pm set-home-activity` / `cmd package set-home-activity`；设首选只有两条路：</span><br><span class="line">&gt; `pm <span class="built_in">disable</span>` 掉竞争者，或用 Home 键“始终”选择框。</span><br><span class="line">&gt; 查询当前解析到的桌面：`pm resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME`</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.9.3 准备：确认嘟嘟声明了 HOME（关键前提）</span></span><br><span class="line"></span><br><span class="line">先把嘟嘟装到车机上，然后：</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">adb shell pm list packages | grep -i dudu          <span class="comment"># 得到真实包名</span></span><br><span class="line">adb shell dumpsys package com.dudu.xxx | grep -i -B3 -A3 <span class="string">&#x27;category.HOME&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb root                 <span class="comment"># &quot;restarting adbd as root&quot; -&gt; adbd 以 root 运行</span></span><br><span class="line">adb shell                <span class="comment"># 直接是 root shell</span></span><br></pre></td></tr></table></figure>
+<h1 id="实机调测与软件替换记录tuning-debugging-record">3.
+实机调测与软件替换记录（Tuning &amp; Debugging Record）</h1>
+<blockquote>
+<p>本章记录在 AC8317 / ONSTAR_LITE_K215（固件
+V1.36）实机上进行的全部调测动作，与前 9
+章的静态分析互为补充。所有改动均在<strong>不重启</strong>前提下完成，且严格保持
+<code>~/Downloads/V1.37/</code> 原始固件只读。</p>
+</blockquote>
+<h2 id="连接方式与-root-能力">3.1 连接方式与 root 能力</h2>
+<ul>
+<li><strong>WiFi
+ADB</strong>：<code>adb connect 10.208.253.186:5555</code>（Mac
+10.208.253.171 为荣耀 Magic7 热点），<code>adb root</code> 后
+<code>uid=0</code>；SELinux 已禁用；USB ADB 在 Mac 端从未枚举，已放弃
+USB 路线。</li>
+<li><strong>写保护</strong>：<code>/system</code>、<code>/vendor</code>
+每次重启重新挂只读；需 <code>adb remount</code>；每次重启后必须重新
+remount。</li>
+<li><strong>传输速率</strong>：WiFi ADB ≈ 0.3 MB/s，60 MB push ≈ 218
+s，长 adb 命令需 590 s 超时。</li>
+</ul>
+<h2 id="桌面替换嘟嘟-mini-elite-回滚">3.2 桌面替换：嘟嘟 MINI + eLite
+回滚</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>嘟嘟包名</td>
+<td><code>com.wow.carlauncher.mini</code>（MINI1.012024）</td>
+</tr>
+<tr>
+<td>官方下载 API</td>
+<td><code>https://app.dudu-lucky.com/api/app/common/getNewest/3</code></td>
+</tr>
+<tr>
+<td>MD5</td>
+<td><code>520658356d1a5bcc1909223298395a9c</code></td>
+</tr>
+<tr>
+<td>设置为默认 HOME</td>
+<td><code>package-restrictions.xml</code> 中
+<code>always="true"</code>；HOME intent 直达嘟嘟无 chooser</td>
+</tr>
+<tr>
+<td>eLite 保留</td>
+<td><code>com.sgm.onstarcarlink</code> 作为回滚目标，进程常驻</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>看门狗脚本 <code>~/Downloads/launcher_guard.sh</code>
+已就绪（<code>DUDU_PKG=com.wow.carlauncher.mini</code>），挂到
+<code>/system/bin/hk_oem_init.sh</code> 末尾，开机失败自动回退
+eLite。</li>
+<li>两桌面同时在线，仅嘟嘟优先；无 watchdog 时仍可手动切换。</li>
+</ul>
+<h2 id="es-文件浏览器版本签名问题与回退">3.3 ES
+文件浏览器：版本签名问题与回退</h2>
+<p><strong>关键坑</strong>：ES 所有版本包名都是
+<code>com.estrongs.android.pop</code>，但不同版本签名者不同：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>签名者</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原厂 v4.2.4.6.1</td>
+<td><code>ESTRONGS.RSA</code></td>
+<td>回滚源（<code>/tmp/car_esFileBrowse.apk</code>）</td>
+</tr>
+<tr>
+<td>v3.2.4.1（最终选用）</td>
+<td><code>ESTRONGS.RSA</code></td>
+<td>轻量，单进程 ~20 MB</td>
+</tr>
+<tr>
+<td>mod v4.4.3.7</td>
+<td><code>BALA.RSA</code></td>
+<td>已移除</td>
+</tr>
+<tr>
+<td>VIP v4.2.3.3</td>
+<td><code>LXAPK.RSA</code></td>
+<td>已装后放弃</td>
+</tr>
+</tbody>
+</table>
+<p><strong>签名不匹配的根因</strong>：<code>/data</code> 与
+<code>/vendor/third-app/esFileBrowse/esFileBrowse.apk</code>
+底包签名不一致时，PMS 扫描 <code>/vendor</code> 会报
+<code>Failed to parse ... signatures do not match; ignoring!</code>。<strong>解法</strong>：<code>pm uninstall com.estrongs.android.pop</code>
+清 <code>/data</code>，并同步 <code>/vendor</code>
+底包，保持两边签名一致。</p>
+<p><strong>最终状态</strong>：v3.2.4.1 固化到
+<code>/vendor/third-app/esFileBrowse/esFileBrowse.apk</code>（md5
+<code>f13cc110c4d1ff4b2d0660741db20125</code>，755
+root:root），<code>/data</code> 与 <code>/vendor</code> md5
+一致，重启扫描无冲突；车机内存从 VIP 版的 ~185 MB 降回 ~20 MB。</p>
+<h2 id="应用安装清单无重启生效">3.4 应用安装清单（无重启生效）</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>App</th>
+<th>包名</th>
+<th>版本</th>
+<th>签名</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网易云音乐车机版</td>
+<td><code>com.netease.cloudmusic.iot</code></td>
+<td>v3.1.0 (vc30100)</td>
+<td><code>NETEASE.RSA</code></td>
+<td>替换原厂 v1.0.01；v6.1.70 已转存网盘</td>
+</tr>
+<tr>
+<td>高德地图车机版</td>
+<td><code>com.autonavi.amapauto</code></td>
+<td>7.5.0.600064</td>
+<td>—</td>
+<td>用户确认可用</td>
+</tr>
+<tr>
+<td>X 浏览器</td>
+<td><code>com.mmbox.xbrowser</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>腾讯视频小提取版</td>
+<td><code>com.tencent.qqlive.audiobox</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>安卓原生设置插件</td>
+<td><code>cn.vmatrices.settings</code></td>
+<td>—</td>
+<td>—</td>
+<td>7.8 MB</td>
+</tr>
+<tr>
+<td>喜马拉雅车机版</td>
+<td><code>com.ximalaya.ting.android.car</code></td>
+<td>v2.0.0 (minSdk 11)</td>
+<td><code>CERT.RSA</code></td>
+<td>2.9 MB，双进程 <code>主+player</code></td>
+</tr>
+<tr>
+<td>ES 文件浏览器</td>
+<td><code>com.estrongs.android.pop</code></td>
+<td>v3.2.4.1</td>
+<td><code>ESTRONGS.RSA</code></td>
+<td>固化为预置 app</td>
+</tr>
+<tr>
+<td><strong>AVNC（投屏客户端）</strong></td>
+<td><code>com.gaurav.avnc</code></td>
+<td><strong>3.3.1</strong>（minSdk 21）</td>
+<td>F-Droid 官方</td>
+<td>7.3 MB，手机投屏用，见第 8 章</td>
+</tr>
+<tr>
+<td>喜马拉雅车机版（复装）</td>
+<td><code>com.ximalaya.ting.android.car</code></td>
+<td><strong>1.7.1</strong></td>
+<td><code>CERT.RSA</code></td>
+<td>投屏调试期间一并安装</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>安装目录 <code>/data/app/...</code>，<code>adb install</code>
+推送后自动清掉 <code>/data/local/tmp</code> APK。</li>
+<li>全程未重启，通过 <code>am start</code> 启动测试验证。</li>
+</ul>
+<h2 id="高德地图开机自启禁用">3.5 高德地图开机自启禁用</h2>
+<ul>
+<li>组件：<code>com.autonavi.amapauto/.controller.AutoStartupReceiver</code>（监听
+<code>BOOT_COMPLETED</code>），每次开机 42.7s 起 3 进程、常驻 ~200
+MB。</li>
+<li>操作：<code>pm disable com.autonavi.amapauto/.controller.AutoStartupReceiver</code>，组件级禁用，不动
+APK 本体。</li>
+<li>持久化：<code>/data/system/users/0/package-restrictions.xml</code>
+已写入 <code>disabled-components</code>，断电不丢。</li>
+<li>效果：开机不再自启；手动打开/嘟嘟桌面调起高德 intent 不受影响；恢复
+<code>pm enable ...</code>。</li>
+</ul>
+<h2 id="内存与-cpu-现状">3.6 内存与 CPU 现状</h2>
+<p><strong>SoC</strong>：杰发 AC8317，4× Cortex-A7 @ max 1.188
+GHz（governor=performance 锁频），ABI <code>armeabi-v7a</code>（32
+位，arm64-only app 无法安装）。</p>
+<p><strong>内存（全部活跃时）</strong>：总 1800 MB，已用 PSS ~1057
+MB，空闲 566 MB，status <code>moderate</code>。</p>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>PSS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高德</td>
+<td>160 MB</td>
+</tr>
+<tr>
+<td>网易云</td>
+<td>104 MB</td>
+</tr>
+<tr>
+<td>eLite（常驻）</td>
+<td>84 MB</td>
+</tr>
+<tr>
+<td>同行者 ×2</td>
+<td>79+57 MB</td>
+</tr>
+<tr>
+<td>嘟嘟</td>
+<td>75 MB</td>
+</tr>
+<tr>
+<td>ES v3.2.4.1</td>
+<td>54 MB</td>
+</tr>
+<tr>
+<td>喜马拉雅 主进程</td>
+<td>29 MB</td>
+</tr>
+<tr>
+<td>system_server</td>
+<td>66 MB</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>loadavg</code> 23 为内核日志线程假象（runqueue 仅 1，CPU 空闲
+88%），非真瓶颈。</li>
+<li>1.8G 是最紧资源：<code>moderate</code>
+档；日常导航+音乐+有声书可长期用，不建议再装大型 app。</li>
+</ul>
+<h2 id="启动时长分析与可优化项">3.7 启动时长分析与可优化项</h2>
+<table>
+<thead>
+<tr>
+<th>里程碑</th>
+<th>时刻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LK/内核/init</td>
+<td>0 → 4.5s</td>
+</tr>
+<tr>
+<td>zygote + preload</td>
+<td>6.7 → 9.4s</td>
+</tr>
+<tr>
+<td>system_server</td>
+<td>9.7s</td>
+</tr>
+<tr>
+<td>PMS 扫描 61 包</td>
+<td>11.4 → 16.5s（5.1s）</td>
+</tr>
+<tr>
+<td>AMS 就绪</td>
+<td>18.8s</td>
+</tr>
+<tr>
+<td>嘟嘟进程拉起</td>
+<td>19.0s</td>
+</tr>
+<tr>
+<td>常驻应用进场</td>
+<td>16.6 → 28s（11.4s）</td>
+</tr>
+<tr>
+<td><strong>enable_screen（可触摸）</strong></td>
+<td><strong>28.0s</strong></td>
+</tr>
+<tr>
+<td>高德自启</td>
+<td>42.7s</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>嘟嘟 19s 绑定 HOME，亮屏即可进桌面——换桌面本身未拖慢启动。</li>
+<li>安全可优化项极少：11.4s
+窗口全是厂商车控/语音套件（倒车影像必须快）；PMS 5.1s 来自 61
+包扫描。已落地的唯一无风险优化：高德开机自启禁用。</li>
+<li>LK/ramdisk/init 阶段（0~9.4s）动之风险高，已明确不做。</li>
+</ul>
+<h2 id="开机提速优化策略原第-3-章">3.8 开机提速优化策略（原第 3
+章）</h2>
+<blockquote>
+<p>依据：<code>ramdisk.img</code> 的
+<code>init.rc</code>/<code>init.ac83xx.rc</code>/<code>default.prop</code>、<code>system</code>/<code>vendor</code>
+镜像属性、各 APK Manifest 与 CarManager 反编译。<br />
+结论分三类：<strong>免刷机可调</strong>、<strong>需改镜像（可 adb
+remount 试）</strong>、<strong>需重编 APK</strong>。</p>
+</blockquote>
+<h3 id="速览收益-风险">3.8.1 速览（收益 / 风险）</h3>
+<table>
+<thead>
+<tr>
+<th>优化项</th>
+<th>预期收益</th>
+<th>风险</th>
+<th>落地方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IPO 快速唤醒</strong></td>
+<td><strong>最大（数量级）</strong></td>
+<td>低</td>
+<td>整车/系统设置确认开关</td>
+</tr>
+<tr>
+<td><strong>关自启/常驻应用</strong></td>
+<td>2–6s + 省内存</td>
+<td>低(可逆)</td>
+<td><code>pm disable &lt;包名&gt;</code></td>
+</tr>
+<tr>
+<td><strong>init 服务延后</strong></td>
+<td>1–4s</td>
+<td>中</td>
+<td>改 ramdisk <code>init.ac83xx.rc</code></td>
+</tr>
+<tr>
+<td><strong>精简 insmod</strong></td>
+<td>0.3–1s</td>
+<td>中</td>
+<td>改 ramdisk</td>
+</tr>
+<tr>
+<td><strong>dex/oat 预编译</strong></td>
+<td>首启显著</td>
+<td>高</td>
+<td>重打包（ROM 级）</td>
+</tr>
+<tr>
+<td><strong>CarManager.init 异步化</strong></td>
+<td>应用层最大</td>
+<td><strong>高</strong></td>
+<td>改 APK（慎）</td>
+</tr>
+<tr>
+<td>其它（fstab/governor）</td>
+<td>小</td>
+<td>低</td>
+<td>fstab / init.rc</td>
+</tr>
+</tbody>
+</table>
+<h3 id="先量后调时间到底花在哪">3.8.2 先量后调：时间到底花在哪</h3>
+<p>设备是 <code>userdebug</code> + <code>ro.debuggable=1</code>，adb
+可用，<strong>先定位再动手</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ① 开机各里程碑的时间戳（对应 §3.7 的里程碑表）</span></span><br><span class="line">adb logcat -b all -d -v <span class="keyword">time</span> | grep -E <span class="string">&quot;PackageManager|ActivityManager|AMS|BootReceiver&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ② AMS / PMS 是否就绪</span></span><br><span class="line">adb shell dumpsys activity processes | grep -E <span class="string">&quot;mBooting|mBootingComplete|mSystemReady&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ③ 亮屏与首帧（enable_screen）</span></span><br><span class="line">adb shell dumpsys window | grep -E <span class="string">&quot;mCurrentFocus|mScreenOnFully&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ④ 开机自启应用的拉起时刻</span></span><br><span class="line">adb logcat -b all -d -v <span class="keyword">time</span> | grep -E <span class="string">&quot;Start proc|am_proc_start&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ⑤ 冷启动总时长参考</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/uptime</span><br></pre></td></tr></table></figure>
+<h2 id="桌面替换部署步骤详细版原第-4-章">3.9
+桌面替换部署步骤（详细版，原第 4 章）</h2>
+<blockquote>
+<p><strong>目标</strong>：<strong>嘟嘟车机桌面 =
+第一优先级（开机默认进它）</strong>；一旦它启动异常/黑屏/起不来（含开机循环），<br />
+<strong>自动回滚到原生「安吉星
+eLite」桌面</strong>，保证永远有桌面可用。<br />
+设备：ACL AC8317 / Android 6.0（userdebug，无 verity，<strong>SELinux
+已关闭</strong>）</p>
+</blockquote>
+<h3 id="方案一览">3.9.1 方案一览</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>目标</th>
+<th>做法</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用<strong>第三方桌面</strong>当首选</td>
+<td>装嘟嘟 → 设首选（HOME 选择框“始终”）<strong>或</strong>
+<code>pm disable com.sgm.onstarcarlink</code> 让其成唯一桌面</td>
+<td>低(可逆)</td>
+</tr>
+<tr>
+<td><strong>异常自动回滚</strong>到 eLite</td>
+<td><code>launcher_guard.sh</code>：开机计数+健康检查，连续失败→禁用第三方、启用
+eLite</td>
+<td>低</td>
+</tr>
+<tr>
+<td>只想留<strong>原厂</strong></td>
+<td>不动，eLite 继续当桌面</td>
+<td>—</td>
+</tr>
+<tr>
+<td>让 <strong>HKLauncher</strong> 当桌面</td>
+<td>需改它 manifest 加
+<code>CATEGORY_HOME</code>+重签（sharedUid=system，需平台签名）</td>
+<td>高</td>
+</tr>
+<tr>
+<td>用<strong>原生 Launcher3</strong></td>
+<td>生效版在 <code>/vendor</code> 且 HOME
+被删；<code>/system/back_app</code> 是备份不生效 → 同样要改包重签</td>
+<td>高</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原理为什么能做">3.9.2 原理（为什么能做）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>事实</th>
+<th>证据</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全机<strong>只有 eLite 一个真桌面</strong></td>
+<td>eLite <code>MainActivity</code> 声明
+<code>category.HOME</code>(+厂商
+<code>DEFAULTHOME</code>，无消费者)</td>
+<td>谁声明 <code>HOME</code> 谁就是桌面候选</td>
+</tr>
+<tr>
+<td>HKLauncher 不是桌面</td>
+<td>只有 <code>com.hk.LAUNCHER</code>，无 <code>HOME</code></td>
+<td>不能当系统桌面</td>
+</tr>
+<tr>
+<td><strong>SELinux 已关闭</strong></td>
+<td>启动参数
+<code>androidboot.selinux=disabled</code>；<code>ro.boot.selinux=disable</code></td>
+<td>root 开机脚本可任意调用
+<code>am</code>/<code>pm</code>，方案可行</td>
+</tr>
+<tr>
+<td>已有 root 开机脚本</td>
+<td><code>hk_oem_init.sh</code>
+(<code>class main, user root, oneshot</code>)</td>
+<td>直接挂载看门狗，无需刷 ramdisk</td>
+</tr>
+<tr>
+<td>无 dm-verity</td>
+<td>build.prop/fstab 中无 verity 项</td>
+<td><code>adb root; adb remount</code> 可写 /system</td>
+</tr>
+</tbody>
+</table>
+<p><strong>“第一优先级”的实现</strong>：把 eLite
+禁用（<code>pm disable</code>），嘟嘟成为<strong>唯一</strong> HOME →
+开机必进它。<br />
+eLite 仍保留安装，作为回滚目标，看门狗会在异常时重新启用它。</p>
+<blockquote>
+<p>Android 6 <strong>没有</strong> <code>pm set-home-activity</code> /
+<code>cmd package set-home-activity</code>；设首选只有两条路：<br />
+<code>pm disable</code> 掉竞争者，或用 Home 键“始终”选择框。<br />
+查询当前解析到的桌面：<code>pm resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME</code></p>
+</blockquote>
+<h3 id="准备确认嘟嘟声明了-home关键前提">3.9.3 准备：确认嘟嘟声明了
+HOME（关键前提）</h3>
+<p>先把嘟嘟装到车机上，然后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages | grep -i dudu          <span class="comment"># 得到真实包名</span></span><br><span class="line">adb shell dumpsys package com.dudu.xxx | grep -i -B3 -A3 <span class="string">&#x27;category.HOME&#x27;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>若能看到 <code>android.intent.category.HOME</code> → ✅
 可以当桌面。</li>
@@ -583,72 +1148,649 @@ setuid</td>
 <li>拿到真实包名后，改 <code>launcher_guard.sh</code> 里的
 <code>DUDU_PKG=...</code>。</li>
 </ul>
-<h2 id="部署看门狗脚本">3.9.4 部署看门狗脚本</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 3.10 配置开关与属性速查（原第 7 章）</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.10.1 现成的系统属性开关（改 `/vendor/app.prop` 或 `build.prop` 生效）</span></span><br><span class="line"></span><br><span class="line">| 属性 | 现值 | 作用/可调 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| `persist.sys.usb.config` | `adb` | USB 功能（改 `mtp,adb` 等） |</span><br><span class="line">| `persist.sys.usb.activation` | `<span class="built_in">yes</span>` | 置 `no` 会**关闭 USB**（勿动） |</span><br><span class="line">| `ro.adb.secure` | `0` | 0=免授权 |</span><br><span class="line">| `persist.hk.log_enable` | `<span class="literal">true</span>` | **日志总开关**（置 <span class="literal">false</span> 减 IO） |</span><br><span class="line">| `persist.hk.tbox_switch` | `<span class="literal">true</span>` | T-Box 开关 |</span><br><span class="line">| `ro.hk.notWindowAnimation` | `<span class="literal">true</span>` | 关窗口动画 |</span><br><span class="line">| `persist.sys.timezone` | `Asia/Shanghai` | 时区 |</span><br><span class="line">| `sys.ipo.pwrdncap` | `2` | IPO 电源 |</span><br><span class="line">| `security.perf_harden` | `1` | 性能工具用时可置 0 |</span><br><span class="line">| `camera.disable_zsl_mode` | `1` | 相机 ZSL |</span><br><span class="line">| `ro.fota.*` | V1.37 | OTA 身份/版本 |</span><br><span class="line"></span><br><span class="line"><span class="comment">## 3.10.2 常用“功能开关”速查</span></span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line"><span class="comment"># 4. 启动软件流程</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 4.1 阶段 0 — 固件包（GAMI 容器，共 28 条目）</span></span><br><span class="line"></span><br><span class="line">`ATC8317.bin` 是自定义 `GAMI` 容器（magic `GAMI`，条目表 `[checksum][size][offset][name(32)]`，步长 44）。关键条目：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>[ 0] 3363_Preloader_realchip_sd.bin Preloader<br />
-[ 2] lk.bin LK 引导<br />
-[ 3][4] trustzone.bin TEE<br />
-[ 5] arm2.bin 协处理器/MCU 固件<br />
-[ 6] backcar.mrf 倒车影像资源<br />
-[ 7] target.bin 平台固件<br />
-[ 8] Image Linux 内核<br />
-[ 9] ac83xx_m.dtb 设备树<br />
-[10] ramdisk.img 根文件系统(ramdisk) ← 内含 init 脚本<br />
-[11] system.img Android system<br />
-[23] vendor.img.ext4 厂商分区<br />
-[13][14] hk_syscfg.bin / hk_usrcfg.bin haoke 系统/用户配置<br />
-[19][20] adas.img.ext4 ADAS 分区<br />
-[24] hk_log.img.ext4 / [25] map.img.ext4 / [26] intsd.img.ext4
-日志/地图/内置存储<br />
-[27] scatter.mmcboot.ext4.xml 分区表<br />
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 4.2 阶段 1 — SoC 固件启动</span><br><span class="line"></span><br><span class="line">1. **Preloader**：芯片上电，初始化 DDR/时钟，校验并加载 `lk.bin`。</span><br><span class="line">2. **LK（lk.bin）**：引导装载程序，加载内核 `Image` + 设备树 `ac83xx_m.dtb` + `ramdisk.img` 到内存，跳转内核。</span><br><span class="line">3. **Kernel**：挂载 gzip+cpio 的 ramdisk，执行 `/init`。</span><br><span class="line"></span><br><span class="line">## 4.3 阶段 2 — Linux init 阶段</span><br><span class="line"></span><br><span class="line">init 解析：`init.rc` + `init.$&#123;ro.hardware&#125;.rc`（=`init.ac83xx.rc`）+ `init.$&#123;ro.zygote&#125;.rc`（=`init.zygote32.rc`）+ `init.aee.rc`。</span><br><span class="line"></span><br><span class="line">- **on early-init**：挂 `debugfs`。</span><br><span class="line">- **on init**：cgroup 内存/swappiness 调优；软链 `/sdcard`、`/mnt/map`、`/mnt/hk_log`。</span><br><span class="line">- **on fs**：`mount_all fstab.ac83xx` → 挂载 `system / vendor / data / cache / adas / intsd / hk_log / map`（`/system`、`/vendor` 只读）。</span><br><span class="line">- **on post-fs**：**`insmod` 约 50 个内核驱动模块 `.ko`**（显示 `gfx/atcfb/pwm/atc_bl`，视频 `vdec/gdec/jdec/pdec/mhldrv`，音频 `adec`，触摸 `gt9xx`，**倒车 `backcar.ko`**、`haoke_init.ko`、`hk_syscfg.ko` 等），并 `chmod/chown` 设备节点。</span><br><span class="line">- **on post-fs-data**：GPS 目录/权限、`/adas`、音频白名单、字幕目录。</span><br><span class="line">- **on boot**：启动 AOSP 基础服务（servicemanager / vold / netd / surfaceflinger 等）→ **`service zygote`**（`init.zygote32.rc`，32 位 zygote）。</span><br><span class="line"></span><br><span class="line">**平台原生服务（`init.ac83xx.rc` 中的 `service`）**</span><br><span class="line"></span><br><span class="line">| class | 服务 | 作用 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| core | `hk_init`, `z-link`（`/system/bin/z-link.sh`） | haoke 初始化；**CarPlay/CarLife 互联** |</span><br><span class="line">| main | `bootByChip` | 芯片启动 |</span><br><span class="line">| main | `wmt_loader`, `6620_launcher`（条件：`ro.dynamic.chipID=CHIP_ID_MT6630`） | MT66xx WiFi/BT 固件加载 |</span><br><span class="line">| main | `mnld`/`mnld_3332`/`mnld_3336`（条件：`ro.dynamic.gpsID`） | GPS 守护 |</span><br><span class="line">| main | `wpa_supplicant`, `p2p_supplicant`, `dhcpcd_*` | WiFi/P2P/DHCP |</span><br><span class="line">| main | `mobile_log_d`, `netdiag`, `metalogoserver` | 日志/诊断 |</span><br><span class="line">| main | `hk_oem_init.sh`, `savelog`, `mculog` | 厂商 OEM 初始化、日志、**MCU 日志** |</span><br><span class="line">| main | `mdnsd`, `tbox_service`, `update4g_meige`(install.sh), `clean_data` | 组播、**T-Box 车联网**、4G 升级、数据清理 |</span><br><span class="line">| late_start | `hdmihdcp` | HDMI HDCP |</span><br><span class="line">| （条件） | `btdrv.ko`（`ro.dynamic.btID=BT_ID_6622`） | 蓝牙驱动 |</span><br><span class="line"></span><br><span class="line">&gt; AEE（MTK 异常恢复）：`init.aee.rc` 配置 core dump 转发到 `/system/bin/aee_core_forwarder`。</span><br><span class="line"></span><br><span class="line">## 4.4 阶段 3 — Android 框架启动</span><br><span class="line"></span><br><span class="line">- **zygote**：`app_process -Xzygote /system/bin --zygote --start-system-server`，`class core`，socket `zygote`；onrestart 会重启 media/netd/vold。</span><br><span class="line">- **system_server** 起来后：</span><br><span class="line">  - PackageManager 扫描 `/system/app`、`/system/priv-app`、`/system/back_app`、`/vendor/app`、`/vendor/third-app`、`/vendor/operator`。</span><br><span class="line">  - 启动所有 **`android:persistent=&quot;true&quot;`** 应用进程。</span><br><span class="line">  - 广播 **`BOOT_COMPLETED`**。</span><br><span class="line"></span><br><span class="line">## 4.5 阶段 4 — 车机应用启动编排（本机核心逻辑）</span><br><span class="line"></span><br><span class="line">**关键证据（CarManager 反编译，JADX 0.7.1）**</span><br><span class="line"></span><br></pre></td></tr></table></figure><br />
-CarApplication.onCreate() → Service_IF.startCarService() //
-应用进程创建即拉起 CarService<br />
-RebootReceiver.onReceive(BOOT_COMPLETED) → Service_IF.startCarService()
-// 开机广播再次确保<br />
-CarService.onCreate():<br />
-mInitHandler.post { Service_IF.startDaemonService() } // 拉起看门狗
-Daemon<br />
-Configs.init()<br />
-new CarManager(this).init() // 初始化全部车辆子系统<br />
-registerReceiver() + 注册 Binder 到
-ServiceManager(CARMANAGER_SERVICE/CAR_SERVICE_NAME)<br />
-sendBroadcast(action.adayo.carservice.REBOOT)<br />
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">`CarManager.init()` 初始化的子系统（顺序）：</span><br><span class="line">`Camera, AudioIO, ScreenStrategy, McuUart, **Mcu**, Radio, System, **Reverse(倒车)**, EQ, BT, Device, DR(行车记录), Phone, **Carplay**, AndAuto, Navi, **TBox**, **OnStar**, Cms`，最后 `mMcu.appFinished()`。</span><br><span class="line"></span><br><span class="line">**跨应用“服务总线”**（每个模块一个 Service + 显式 action，`startService(action + setPackage(pkg))`）：</span><br><span class="line"></span><br><span class="line">| action | 目标包名 | 模块 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| `action.adayo.CARSERVICE` | com.adayo.carmanager | 车辆总控 |</span><br><span class="line">| `action.adayo.SYSTEMSERVICE` | com.adayo.system | 系统设置 |</span><br><span class="line">| `action.adayo.DAEMONSERVICE` | com.adayo.daemon | **看门狗守护** |</span><br><span class="line">| `action.adayo.MEDIASERVICE` | com.adayo.media | 媒体/收音 |</span><br><span class="line">| `action.adayo.BTSERVICE` / `BTMUSICSERVICE` | com.adayo.bt | 蓝牙/蓝牙音乐 |</span><br><span class="line">| `action.adayo.REVERSESERVICE` | com.adayo.reverse | **倒车影像** |</span><br><span class="line">| `action.adayo.RADIOSERVICE` / `AVINSERVICE` | （收音/AVIN） | 收音、视频输入 |</span><br><span class="line">| `action.adayo.AMAPSERVICE` | 高德 | 导航插件 |</span><br><span class="line">| `action.adayo.IFLYSERVICE` / `IFLYSUITESERVICE` | 讯飞 | 语音插件 |</span><br><span class="line">| `action.adayo.TXZSERVICE` | com.txznet.txz | **同行者语音** |</span><br><span class="line">| `action.adayo.AUTOTEST_SERVICE` | — | 工厂自检 |</span><br><span class="line">| 兼容组 | `action.haoke.*`（AVIN/BT/BTMUSIC/MEDIA/RADIO/REVERSE/SYSTEM） | 老版兼容 |</span><br><span class="line"></span><br><span class="line">启动后由各 sub-service 的 `onCreate` 再继续初始化自身 UI/硬件（如倒车由 `action.adayo.reverse`+`action.haoke.REVERSESERVICE` 驱动）。</span><br><span class="line"></span><br><span class="line">## 4.6 阶段 5 — 桌面（HOME）</span><br><span class="line"></span><br><span class="line">固件里同时存在多套桌面组件，最终由 **SystemUI** 的 `defaultHomeActivity` 逻辑决定：</span><br><span class="line"></span><br><span class="line">| 组件 | 包名 | Manifest 声明 | 说明 |</span><br><span class="line">|---|---|---|---|</span><br><span class="line">| **eLite（标准 HOME）** | `com.sgm.onstarcarlink` | MAIN + `category.HOME` + **`category.DEFAULTHOME`**(厂商自定义) + DEFAULT + MONKEY + LAUNCHER | 上汽通用 OnStar 车联主界面，`MainActivity` 为默认桌面 |</span><br><span class="line">| **HKLauncher（车机桌面）** | `com.haoke.ui.launcher` | MAIN + LAUNCHER；另有 `&lt;action com.hk.LAUNCHER&gt;` + DEFAULT | 无 HOME 分类；由其它应用通过 **`com.hk.LAUNCHER`** 拉起 |</span><br><span class="line">| Launcher3（AOSP） | `com.android.launcher3` | `/system/back_app` 版含 `category.HOME`；**`/vendor` 覆盖版已移除 HOME** | 被厂商刻意禁用为桌面 |</span><br><span class="line"></span><br><span class="line">- `com.hk.LAUNCHER` 的调用方（DEX 证据）：`MediaService / BTService / Reverse / System / Daemon / SystemUI` 均引用该 action → 即“回桌面/切桌面”。</span><br><span class="line">- SystemUI（`com.android.systemui`，persistent）内含字符串 `com.haoke.ui.launcher`、`com.hk.LAUNCHER`、`com.sgm.onstarcarlink`、`defaultHomeActivity`、`elite activate status` → **桌面选择/激活判断在 SystemUI 内**。</span><br><span class="line">- HKLauncher 还注册了 `com.hk.ACTION_OPEN_CARPLAY_SIRI`、`com.hk.ACTION_OPEN_CARLIFE_XIAODU`、`com.zjinnova.zlink`（Zlink 互联）、`com.hk.ACTION_RESET_DESKTOP_DATA`。</span><br><span class="line"></span><br><span class="line">&gt; **HOME 归属补充结论（全 APK 扫描）**：真正可用的 HOME 只有 eLite；其余 HOME 字符串均非有效桌面——</span><br><span class="line">&gt; `CryptKeeper`（`/vendor/app/Settings`，priority=10，解密屏）、`Provision`（priority=1，初始设置）、</span><br><span class="line">&gt; `ManagedProvisioning`（priority=2，`enabled=false`）、ZDSIPPhone（HOME 挂在 `&lt;receiver&gt;` 上，无效）。</span><br><span class="line">&gt; `android.intent.category.DEFAULTHOME` 全系统无消费者 → 桌面选择走标准 `CATEGORY_HOME`。</span><br><span class="line"></span><br><span class="line">## 4.7 开机自启清单（应用层）</span><br><span class="line"></span><br><span class="line">### A. Persistent 应用（system_server 直接常驻启动，最早）</span><br><span class="line"></span><br><span class="line">| 应用 | 包名 | 说明 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| CarManager | `com.adayo.carmanager` | 车辆总控（uid=system） |</span><br><span class="line">| Daemon | `com.adayo.daemon` | 看门狗（`DaemonService`/`DaemonThread`） |</span><br><span class="line">| SystemUI | `com.android.systemui` | 车机系统 UI（桌面决策） |</span><br><span class="line">| TXZCore | `com.txznet.txz` | 同行者语音（21 个 service） |</span><br><span class="line">| ZDSIPPhone | `com.zdfl.sipphone` | 车载 SIP 电话 |</span><br><span class="line">| TXZAdapter | `com.txznet.adapter` | 语音适配 |</span><br><span class="line"></span><br><span class="line">### B. `BOOT_COMPLETED` 接收者（框架广播后启动）</span><br><span class="line"></span><br><span class="line">| 应用 | 接收者 |</span><br><span class="line">|---|---|</span><br><span class="line">| CarManager | `RebootReceiver` → 启动 CarService |</span><br><span class="line">| SystemUI | `BootReceiver` |</span><br><span class="line">| Launcher3（system） | `StartupReceiver` |</span><br><span class="line">| Settings | `BootCompletedReceiver` + `RestoreRotationReceiver` + `ManagedProfileSetup` |</span><br><span class="line">| MTKLogger | `LogReceiver` |</span><br><span class="line">| TeleService | `OtaStartupReceiver` + `LteDataOnlySwitchReceiver` |</span><br><span class="line">| TXZAdapter | `BroadcastProcessMgr` |</span><br><span class="line">| 高德（Auto） | `com.amap.api.service.BootEventReceiver` |</span><br><span class="line">| eLite | `BootBroadcastReceiver` + abupdate `UpgradeReceiver` |</span><br><span class="line">| FotaUpgrader | `UpgradeReceiver`（OTA 升级） |</span><br><span class="line"></span><br><span class="line">### C. 桌面/HOME</span><br><span class="line"></span><br><span class="line">- 默认 HOME：**eLite**（`com.sgm.onstarcarlink`，含 `DEFAULTHOME`）。</span><br><span class="line">- 车机桌面：**HKLauncher**（`com.haoke.ui.launcher`），经 `com.hk.LAUNCHER` 拉起。</span><br><span class="line"></span><br><span class="line">## 4.8 一览：从按下电源到桌面</span><br><span class="line"></span><br></pre></td></tr></table></figure><br />
-电源<br />
-└─ Preloader (3363_Preloader_realchip_sd.bin)<br />
-└─ LK (lk.bin) + trustzone + arm2(Mcu)<br />
-└─ Kernel (Image + ac83xx_m.dtb) + ramdisk.img<br />
-└─ /init (init.rc + init.ac83xx.rc + init.zygote32.rc +
-init.aee.rc)<br />
-├─ mount_all fstab.ac83xx (system/vendor/data/cache/adas/…)<br />
-├─ insmod ~50 驱动 (gfx/atcfb/vdec/adec/backcar/haoke_init…)<br />
-└─ 原生服务: hk_init / z-link(CarPlay) / wmt_loader / mnld(GPS)<br />
-/ wpa_supplicant / mculog / tbox_service …<br />
-└─ zygote (32位)<br />
-└─ system_server<br />
-├─ PackageManager 扫描 /system + /vendor 应用<br />
-├─ 启动 persistent: CarManager / Daemon / SystemUI / TXZCore /
-ZDSIPPhone / TXZAdapter<br />
-│ └─ CarApplication.onCreate → startCarService<br />
-│ └─ CarService.onCreate → startDaemonService(看门狗)<br />
-│ + CarManager.init(整个车辆子系统栈)<br />
-│ + 广播 action.adayo.carservice.REBOOT<br />
-├─ 广播 BOOT_COMPLETED → CarManager/SystemUI/Launcher3/Settings/<br />
-│ MTKLogger/TeleService/TXZAdapter/高德/eLite/FotaUpgrader<br />
-└─ SystemUI 决策 defaultHomeActivity<br />
-├─ eLite (category.HOME + DEFAULTHOME) ← 标准桌面<br />
-└─ HKLauncher (com.hk.LAUNCHER 拉起) ← 车机桌面<br />
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 4.9 证据与局限</span><br><span class="line"></span><br><span class="line">- 结论均来自**固件静态证据**：GAMI 条目表、`init*.rc`、`fstab.ac83xx`、APK `AndroidManifest.xml`（JADX 解码）、DEX 字符串、CarManager 反编译。</span><br><span class="line">- HKLauncher/SystemUI/MediaService/BTService/Reverse/System/Daemon 对 `com.hk.LAUNCHER`、`DEFAULTHOME` 的引用来自 DEX 字符串表。</span><br><span class="line">- **未实机运行**：桌面最终归属（eLite vs HKLauncher）与各 service 的实际启停时序由运行时 `defaultHomeActivity` 与 CarManager 运行时逻辑决定；本章给出的是固件所确定的静态启动路径。</span><br><span class="line">- REA/JADX 为纯静态分析：不做签名校验、不执行 APK；`/data` 运行时持久状态未包含在固件中。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"># 5. 系统升级与版本判断</span><br><span class="line"></span><br><span class="line">## 5.1 各升级路径的版本判断</span><br><span class="line"></span><br><span class="line">| 路径 | 版本判断 | 同版本重复升级 |</span><br><span class="line">|---|---|---|</span><br><span class="line">| **LK 本地刷卡**（U盘/SD，读 `ATC8317.ini`+`ATC8317.bin`） | **无版本比较**；只校验分区布局+签名/SECRO | ✅ 无限次 |</span><br><span class="line">| **App 本地升级**（`/storage/udisk0/update_ap.zip`/`update_os.zip`） | **只判文件是否存在** | ✅ 无限次 |</span><br><span class="line">| **强制升级**（连点版本号 8 次 → `/mnt/sdcard/ota/update.zip`） | **只判文件是否存在** | ✅ 无限次 |</span><br><span class="line">| **在线 OTA**（`FotaUpgrader`/ABUP → `iothttp.shanghaionstar.com:36601/partner/ota`） | **由云端策略决定**（客户端只上报 `ro.fota.version`） | 取决于云端（镜像不可见） |</span><br><span class="line">| MCU 升级（`HKMcuUpgrade`） | 走 MCU AIDL，与安卓版本无关 | — |</span><br><span class="line"></span><br><span class="line">**真正会拦你的**：镜像签名/安全启动、分区布局匹配、分区名存在、eMMC 写保护/解锁、容量。**都不是“版本号”。**</span><br><span class="line">`ATC8317.ini` 是分区写入选表（`[FORMAT] Enable=0` 不清数据）。</span><br><span class="line"></span><br><span class="line">## 5.2 证据要点</span><br><span class="line"></span><br><span class="line">- LK：`do_extsdcard_or_udisk_upgrade` 读 `/udisk0/ATC8317.ini`+`ATC8317.bin`；只报 `XML Partition Layout not match GPT`、</span><br><span class="line">  `Partition[%s] not fount, Upgrade is not allowed`、`Image sign format is v3/v4`、`SECRO - SB configuration`、</span><br><span class="line">  `AN6V_UPGRADE_FLAG.CONFIG`；**无** downgrade/once/only-higher 之类字样。</span><br><span class="line">- `FotaUpgrader`：`UpgradeActivity.localUpgrade()` 仅测 `update_ap.zip`/`update_os.zip` 是否存在；</span><br><span class="line">  `forceUpgrade()`（版本 TextView 连点 8 次）仅测 `update.zip`；`updateAppByUSB/updateOsByUSB` 广播 `com.fota.update`。</span><br><span class="line">- 云端身份（`/vendor/app.prop`）：`ro.fota.oem=shinco`、`ro.fota.device/type=ONSTAR_LITE_K215`、</span><br><span class="line">  `ro.fota.platform=AC8227`、`ro.fota.product_id=1573179943`、`ro.fota.product_secret=6f42a47379d94a00bb87982263cd8b18`。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"># 6. 安全调测顺序与逃生方案（防变砖）</span><br><span class="line"></span><br><span class="line">&gt; 原则：**先建后路，再做改动；一次只改一项；改完立刻重启验证；失败立即回滚。**</span><br><span class="line">&gt; 排序依据不是“收益”，而是**“出错后能不能救回来”**——越靠前的步骤，越是你的生命线。</span><br><span class="line"></span><br><span class="line">## 6.1 核心原则（务必遵守）</span><br><span class="line"></span><br><span class="line">1. **任何修改之前，先确认三条逃生通道都存在且演练过**：U盘/PC 刷机、ADB(USB)、ADB(WiFi)。</span><br><span class="line">2. **能刷机 &gt; 能 adb**：分区级改动(init.rc/APK/内核)只有刷机能救；能 adb 只能救软件层。</span><br><span class="line">3. **改分区文件前先 `adb pull` 备份原文件**；`pm disable` 是唯一“一键可逆”的改动，优先用它。</span><br><span class="line">4. **一次只改一项**，改完测 3 遍冷启并记录。</span><br><span class="line">5. **不碰**：CarManager / Daemon / SystemUI / MCU·CAN·T-Box·倒车；**不要**把 adb/桌面一起禁掉。</span><br><span class="line"></span><br><span class="line">## 6.2 阶段 0 —— 先建“逃生通道”（最高优先级，**在做任何修改之前**）</span><br><span class="line"></span><br><span class="line">&gt; 本阶段全部是“准备与只读验证”，不影响系统行为。</span><br><span class="line"></span><br><span class="line">### 0.1 确认并演练 **U盘本地刷机**（最强逃生手段）</span><br><span class="line">- 准备一个 **U盘(FAT32)**，放入**原封不动**的 V1.37 包：</span><br><span class="line">  `ATC8317.bin`、`ATC8317.ini`、`hkApp.bin`、`haoketest.bin`（放在根目录）。</span><br><span class="line">- LK 引导里有本地升级逻辑（`do_extsdcard_or_udisk_upgrade`，读 `/udisk0/ATC8317.ini`+`ATC8317.bin`）。</span><br><span class="line">- **必须搞清楚“如何进入升级模式”**（按键组合/上电时机/是否需要 `haoketest.bin` 触发/PC 工具），</span><br><span class="line">  并向 ODM/产线说明确认。**在还没搞清进升级模式之前，不要做任何改分区的操作。**</span><br><span class="line">- 有条件的话，**实际刷一次回到 V1.37**，确认整条链能走通。</span><br><span class="line">- 备选：准备 **PC 刷机工具 + scatter**（`scatter.mmcboot.ext4.xml`），能读回/写回全部分区。</span><br><span class="line"></span><br><span class="line">### 0.2 确认 **ADB(USB)** 可用</span><br><span class="line">```bash</span><br><span class="line">adb devices</span><br><span class="line">adb shell getprop ro.debuggable          # 期望 1</span><br><span class="line">adb shell getprop persist.sys.usb.config # 期望 adb</span><br><span class="line">adb root &amp;&amp; adb shell id                 # 期望 uid=0</span><br><span class="line">adb shell su -c id                       # 期望 uid=0(root)</span><br></pre></td></tr></table></figure></p>
-<h3 id="开启并持久化-adb-over-wifi第二逃生通道">0.3 开启并持久化
+<h3 id="部署看门狗脚本">3.9.4 部署看门狗脚本</h3>
+<p>看门狗脚本放在本地 <code>~/Downloads/launcher_guard.sh</code>（内含
+<code>DUDU_PKG=com.wow.carlauncher.mini</code>），<br />
+部署到
+<code>/system/bin/launcher_guard.sh</code>，并<strong>幂等地</strong>挂到
+root 开机脚本 <code>hk_oem_init.sh</code> 末尾：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ① 先备份（改 /system 前必做）</span></span><br><span class="line">adb pull /system/bin/hk_oem_init.sh ./backup/hk_oem_init.sh.bak</span><br><span class="line"></span><br><span class="line"><span class="comment"># ② 推送看门狗脚本</span></span><br><span class="line">adb push ~/Downloads/launcher_guard.sh /system/bin/launcher_guard.sh</span><br><span class="line">adb shell <span class="built_in">chmod</span> 755 /system/bin/launcher_guard.sh</span><br><span class="line">adb shell <span class="built_in">chown</span> root:root /system/bin/launcher_guard.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># ③ 幂等挂载：已存在则不重复追加</span></span><br><span class="line">adb shell <span class="string">&quot;grep -q launcher_guard.sh /system/bin/hk_oem_init.sh || \</span></span><br><span class="line"><span class="string">           echo &#x27;/system/bin/launcher_guard.sh &amp;&#x27; &gt;&gt; /system/bin/hk_oem_init.sh&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ④ 验证挂载</span></span><br><span class="line">adb shell <span class="built_in">tail</span> -3 /system/bin/hk_oem_init.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># ⑤ 重启验证：嘟嘟起不来时应自动回退 eLite</span></span><br><span class="line">adb reboot</span><br><span class="line">adb shell su -c <span class="string">&quot;ps -A | grep -E &#x27;carlauncher.mini|onstarcarlink&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>脚本逻辑：开机计数 + 健康检查，<strong>连续失败才禁用第三方桌面、启用
+eLite</strong>；<br />
+正常情况下嘟嘟与 eLite 可同时在线，只是嘟嘟优先。</p>
+</blockquote>
+<h2 id="配置开关与属性速查原第-7-章">3.10 配置开关与属性速查（原第 7
+章）</h2>
+<h3 id="现成的系统属性开关改-vendorapp.prop-或-build.prop-生效">3.10.1
+现成的系统属性开关（改 <code>/vendor/app.prop</code> 或
+<code>build.prop</code> 生效）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>现值</th>
+<th>作用/可调</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>persist.sys.usb.config</code></td>
+<td><code>adb</code></td>
+<td>USB 功能（改 <code>mtp,adb</code> 等）</td>
+</tr>
+<tr>
+<td><code>persist.sys.usb.activation</code></td>
+<td><code>yes</code></td>
+<td>置 <code>no</code> 会<strong>关闭 USB</strong>（勿动）</td>
+</tr>
+<tr>
+<td><code>ro.adb.secure</code></td>
+<td><code>0</code></td>
+<td>0=免授权</td>
+</tr>
+<tr>
+<td><code>persist.hk.log_enable</code></td>
+<td><code>true</code></td>
+<td><strong>日志总开关</strong>（置 false 减 IO）</td>
+</tr>
+<tr>
+<td><code>persist.hk.tbox_switch</code></td>
+<td><code>true</code></td>
+<td>T-Box 开关</td>
+</tr>
+<tr>
+<td><code>ro.hk.notWindowAnimation</code></td>
+<td><code>true</code></td>
+<td>关窗口动画</td>
+</tr>
+<tr>
+<td><code>persist.sys.timezone</code></td>
+<td><code>Asia/Shanghai</code></td>
+<td>时区</td>
+</tr>
+<tr>
+<td><code>sys.ipo.pwrdncap</code></td>
+<td><code>2</code></td>
+<td>IPO 电源</td>
+</tr>
+<tr>
+<td><code>security.perf_harden</code></td>
+<td><code>1</code></td>
+<td>性能工具用时可置 0</td>
+</tr>
+<tr>
+<td><code>camera.disable_zsl_mode</code></td>
+<td><code>1</code></td>
+<td>相机 ZSL</td>
+</tr>
+<tr>
+<td><code>ro.fota.*</code></td>
+<td>V1.37</td>
+<td>OTA 身份/版本</td>
+</tr>
+</tbody>
+</table>
+<h3 id="常用功能开关速查">3.10.2 常用“功能开关”速查</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ① 查看本机可用的属性开关</span></span><br><span class="line">adb shell getprop | grep -E <span class="string">&quot;persist.sys.usb|ro.adb|persist.hk|sys.ipo|ro.hk&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ② 厂商日志总开关（关掉可减少 IO 开销；改 vendor 需 remount）</span></span><br><span class="line">adb shell setprop persist.hk.log_enable <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ③ 窗口动画（ro.hk.notWindowAnimation=true 时系统级已关）</span></span><br><span class="line">adb shell settings put global window_animation_scale 0</span><br><span class="line">adb shell settings put global animator_duration_scale 0</span><br><span class="line">adb shell settings put global transition_animation_scale 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># ④ 关掉某个应用的开机自启（唯一“一键可逆”的改动）</span></span><br><span class="line">adb shell pm <span class="built_in">disable</span> com.autonavi.amapauto/.controller.AutoStartupReceiver</span><br><span class="line"></span><br><span class="line"><span class="comment"># ⑤ 查询当前 HOME 解析结果</span></span><br><span class="line">adb shell pm resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME</span><br><span class="line"></span><br><span class="line"><span class="comment"># ⑥ 改属性后必须重启才生效；重启前记得先 remount（/system、/vendor 会被重新挂只读）</span></span><br><span class="line">adb root &amp;&amp; adb remount</span><br><span class="line">adb reboot</span><br></pre></td></tr></table></figure>
+<h1 id="启动软件流程">4. 启动软件流程</h1>
+<h2 id="阶段-0-固件包gami-容器共-28-条目">4.1 阶段 0 — 固件包（GAMI
+容器，共 28 条目）</h2>
+<p><code>ATC8317.bin</code> 是自定义 <code>GAMI</code> 容器（magic
+<code>GAMI</code>，条目表
+<code>[checksum][size][offset][name(32)]</code>，步长
+44）。关键条目：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[ 0] 3363_Preloader_realchip_sd.bin   Preloader</span><br><span class="line">[ 2] lk.bin                           LK 引导</span><br><span class="line">[ 3][4] trustzone.bin                 TEE</span><br><span class="line">[ 5] arm2.bin                         协处理器/MCU 固件</span><br><span class="line">[ 6] backcar.mrf                      倒车影像资源</span><br><span class="line">[ 7] target.bin                       平台固件</span><br><span class="line">[ 8] Image                            Linux 内核</span><br><span class="line">[ 9] ac83xx_m.dtb                     设备树</span><br><span class="line">[10] ramdisk.img                      根文件系统(ramdisk)  ← 内含 init 脚本</span><br><span class="line">[11] system.img                       Android system</span><br><span class="line">[23] vendor.img.ext4                  厂商分区</span><br><span class="line">[13][14] hk_syscfg.bin / hk_usrcfg.bin  haoke 系统/用户配置</span><br><span class="line">[19][20] adas.img.ext4                ADAS 分区</span><br><span class="line">[24] hk_log.img.ext4 / [25] map.img.ext4 / [26] intsd.img.ext4  日志/地图/内置存储</span><br><span class="line">[27] scatter.mmcboot.ext4.xml         分区表</span><br></pre></td></tr></table></figure>
+<h2 id="阶段-1-soc-固件启动">4.2 阶段 1 — SoC 固件启动</h2>
+<ol type="1">
+<li><strong>Preloader</strong>：芯片上电，初始化 DDR/时钟，校验并加载
+<code>lk.bin</code>。</li>
+<li><strong>LK（lk.bin）</strong>：引导装载程序，加载内核
+<code>Image</code> + 设备树 <code>ac83xx_m.dtb</code> +
+<code>ramdisk.img</code> 到内存，跳转内核。</li>
+<li><strong>Kernel</strong>：挂载 gzip+cpio 的 ramdisk，执行
+<code>/init</code>。</li>
+</ol>
+<h2 id="阶段-2-linux-init-阶段">4.3 阶段 2 — Linux init 阶段</h2>
+<p>init 解析：<code>init.rc</code> +
+<code>init.${ro.hardware}.rc</code>（=<code>init.ac83xx.rc</code>）+
+<code>init.${ro.zygote}.rc</code>（=<code>init.zygote32.rc</code>）+
+<code>init.aee.rc</code>。</p>
+<ul>
+<li><strong>on early-init</strong>：挂 <code>debugfs</code>。</li>
+<li><strong>on init</strong>：cgroup 内存/swappiness 调优；软链
+<code>/sdcard</code>、<code>/mnt/map</code>、<code>/mnt/hk_log</code>。</li>
+<li><strong>on fs</strong>：<code>mount_all fstab.ac83xx</code> → 挂载
+<code>system / vendor / data / cache / adas / intsd / hk_log / map</code>（<code>/system</code>、<code>/vendor</code>
+只读）。</li>
+<li><strong>on post-fs</strong>：<strong><code>insmod</code> 约 50
+个内核驱动模块 <code>.ko</code></strong>（显示
+<code>gfx/atcfb/pwm/atc_bl</code>，视频
+<code>vdec/gdec/jdec/pdec/mhldrv</code>，音频 <code>adec</code>，触摸
+<code>gt9xx</code>，<strong>倒车
+<code>backcar.ko</code></strong>、<code>haoke_init.ko</code>、<code>hk_syscfg.ko</code>
+等），并 <code>chmod/chown</code> 设备节点。</li>
+<li><strong>on post-fs-data</strong>：GPS
+目录/权限、<code>/adas</code>、音频白名单、字幕目录。</li>
+<li><strong>on boot</strong>：启动 AOSP 基础服务（servicemanager / vold
+/ netd / surfaceflinger 等）→
+<strong><code>service zygote</code></strong>（<code>init.zygote32.rc</code>，32
+位 zygote）。</li>
+</ul>
+<p><strong>平台原生服务（<code>init.ac83xx.rc</code> 中的
+<code>service</code>）</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>class</th>
+<th>服务</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>core</td>
+<td><code>hk_init</code>,
+<code>z-link</code>（<code>/system/bin/z-link.sh</code>）</td>
+<td>haoke 初始化；<strong>CarPlay/CarLife 互联</strong></td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>bootByChip</code></td>
+<td>芯片启动</td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>wmt_loader</code>,
+<code>6620_launcher</code>（条件：<code>ro.dynamic.chipID=CHIP_ID_MT6630</code>）</td>
+<td>MT66xx WiFi/BT 固件加载</td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>mnld</code>/<code>mnld_3332</code>/<code>mnld_3336</code>（条件：<code>ro.dynamic.gpsID</code>）</td>
+<td>GPS 守护</td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>wpa_supplicant</code>, <code>p2p_supplicant</code>,
+<code>dhcpcd_*</code></td>
+<td>WiFi/P2P/DHCP</td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>mobile_log_d</code>, <code>netdiag</code>,
+<code>metalogoserver</code></td>
+<td>日志/诊断</td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>hk_oem_init.sh</code>, <code>savelog</code>,
+<code>mculog</code></td>
+<td>厂商 OEM 初始化、日志、<strong>MCU 日志</strong></td>
+</tr>
+<tr>
+<td>main</td>
+<td><code>mdnsd</code>, <code>tbox_service</code>,
+<code>update4g_meige</code>(install.sh), <code>clean_data</code></td>
+<td>组播、<strong>T-Box 车联网</strong>、4G 升级、数据清理</td>
+</tr>
+<tr>
+<td>late_start</td>
+<td><code>hdmihdcp</code></td>
+<td>HDMI HDCP</td>
+</tr>
+<tr>
+<td>（条件）</td>
+<td><code>btdrv.ko</code>（<code>ro.dynamic.btID=BT_ID_6622</code>）</td>
+<td>蓝牙驱动</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>AEE（MTK 异常恢复）：<code>init.aee.rc</code> 配置 core dump 转发到
+<code>/system/bin/aee_core_forwarder</code>。</p>
+</blockquote>
+<h2 id="阶段-3-android-框架启动">4.4 阶段 3 — Android 框架启动</h2>
+<ul>
+<li><strong>zygote</strong>：<code>app_process -Xzygote /system/bin --zygote --start-system-server</code>，<code>class core</code>，socket
+<code>zygote</code>；onrestart 会重启 media/netd/vold。</li>
+<li><strong>system_server</strong> 起来后：
+<ul>
+<li>PackageManager 扫描
+<code>/system/app</code>、<code>/system/priv-app</code>、<code>/system/back_app</code>、<code>/vendor/app</code>、<code>/vendor/third-app</code>、<code>/vendor/operator</code>。</li>
+<li>启动所有 <strong><code>android:persistent="true"</code></strong>
+应用进程。</li>
+<li>广播 <strong><code>BOOT_COMPLETED</code></strong>。</li>
+</ul></li>
+</ul>
+<h2 id="阶段-4-车机应用启动编排本机核心逻辑">4.5 阶段 4 —
+车机应用启动编排（本机核心逻辑）</h2>
+<p><strong>关键证据（CarManager 反编译，JADX 0.7.1）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CarApplication.onCreate()            → Service_IF.startCarService()          // 应用进程创建即拉起 CarService</span><br><span class="line">RebootReceiver.onReceive(BOOT_COMPLETED) → Service_IF.startCarService()      // 开机广播再次确保</span><br><span class="line">CarService.onCreate():</span><br><span class="line">    mInitHandler.post &#123; Service_IF.startDaemonService() &#125;   // 拉起看门狗 Daemon</span><br><span class="line">    Configs.init()</span><br><span class="line">    new CarManager(this).init()                             // 初始化全部车辆子系统</span><br><span class="line">    registerReceiver() + 注册 Binder 到 ServiceManager(CARMANAGER_SERVICE/CAR_SERVICE_NAME)</span><br><span class="line">    sendBroadcast(action.adayo.carservice.REBOOT)</span><br></pre></td></tr></table></figure>
+<p><code>CarManager.init()</code> 初始化的子系统（顺序）：<br />
+<code>Camera, AudioIO, ScreenStrategy, McuUart, **Mcu**, Radio, System, **Reverse(倒车)**, EQ, BT, Device, DR(行车记录), Phone, **Carplay**, AndAuto, Navi, **TBox**, **OnStar**, Cms</code>，最后
+<code>mMcu.appFinished()</code>。</p>
+<p><strong>跨应用“服务总线”</strong>（每个模块一个 Service + 显式
+action，<code>startService(action + setPackage(pkg))</code>）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>action</th>
+<th>目标包名</th>
+<th>模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action.adayo.CARSERVICE</code></td>
+<td>com.adayo.carmanager</td>
+<td>车辆总控</td>
+</tr>
+<tr>
+<td><code>action.adayo.SYSTEMSERVICE</code></td>
+<td>com.adayo.system</td>
+<td>系统设置</td>
+</tr>
+<tr>
+<td><code>action.adayo.DAEMONSERVICE</code></td>
+<td>com.adayo.daemon</td>
+<td><strong>看门狗守护</strong></td>
+</tr>
+<tr>
+<td><code>action.adayo.MEDIASERVICE</code></td>
+<td>com.adayo.media</td>
+<td>媒体/收音</td>
+</tr>
+<tr>
+<td><code>action.adayo.BTSERVICE</code> /
+<code>BTMUSICSERVICE</code></td>
+<td>com.adayo.bt</td>
+<td>蓝牙/蓝牙音乐</td>
+</tr>
+<tr>
+<td><code>action.adayo.REVERSESERVICE</code></td>
+<td>com.adayo.reverse</td>
+<td><strong>倒车影像</strong></td>
+</tr>
+<tr>
+<td><code>action.adayo.RADIOSERVICE</code> /
+<code>AVINSERVICE</code></td>
+<td>（收音/AVIN）</td>
+<td>收音、视频输入</td>
+</tr>
+<tr>
+<td><code>action.adayo.AMAPSERVICE</code></td>
+<td>高德</td>
+<td>导航插件</td>
+</tr>
+<tr>
+<td><code>action.adayo.IFLYSERVICE</code> /
+<code>IFLYSUITESERVICE</code></td>
+<td>讯飞</td>
+<td>语音插件</td>
+</tr>
+<tr>
+<td><code>action.adayo.TXZSERVICE</code></td>
+<td>com.txznet.txz</td>
+<td><strong>同行者语音</strong></td>
+</tr>
+<tr>
+<td><code>action.adayo.AUTOTEST_SERVICE</code></td>
+<td>—</td>
+<td>工厂自检</td>
+</tr>
+<tr>
+<td>兼容组</td>
+<td><code>action.haoke.*</code>（AVIN/BT/BTMUSIC/MEDIA/RADIO/REVERSE/SYSTEM）</td>
+<td>老版兼容</td>
+</tr>
+</tbody>
+</table>
+<p>启动后由各 sub-service 的 <code>onCreate</code> 再继续初始化自身
+UI/硬件（如倒车由
+<code>action.adayo.reverse</code>+<code>action.haoke.REVERSESERVICE</code>
+驱动）。</p>
+<h2 id="阶段-5-桌面home">4.6 阶段 5 — 桌面（HOME）</h2>
+<p>固件里同时存在多套桌面组件，最终由 <strong>SystemUI</strong> 的
+<code>defaultHomeActivity</code> 逻辑决定：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>组件</th>
+<th>包名</th>
+<th>Manifest 声明</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>eLite（标准 HOME）</strong></td>
+<td><code>com.sgm.onstarcarlink</code></td>
+<td>MAIN + <code>category.HOME</code> +
+<strong><code>category.DEFAULTHOME</code></strong>(厂商自定义) + DEFAULT
++ MONKEY + LAUNCHER</td>
+<td>上汽通用 OnStar 车联主界面，<code>MainActivity</code>
+为默认桌面</td>
+</tr>
+<tr>
+<td><strong>HKLauncher（车机桌面）</strong></td>
+<td><code>com.haoke.ui.launcher</code></td>
+<td>MAIN + LAUNCHER；另有 <code>&lt;action com.hk.LAUNCHER&gt;</code> +
+DEFAULT</td>
+<td>无 HOME 分类；由其它应用通过
+<strong><code>com.hk.LAUNCHER</code></strong> 拉起</td>
+</tr>
+<tr>
+<td>Launcher3（AOSP）</td>
+<td><code>com.android.launcher3</code></td>
+<td><code>/system/back_app</code> 版含
+<code>category.HOME</code>；<strong><code>/vendor</code> 覆盖版已移除
+HOME</strong></td>
+<td>被厂商刻意禁用为桌面</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>com.hk.LAUNCHER</code> 的调用方（DEX
+证据）：<code>MediaService / BTService / Reverse / System / Daemon / SystemUI</code>
+均引用该 action → 即“回桌面/切桌面”。</li>
+<li>SystemUI（<code>com.android.systemui</code>，persistent）内含字符串
+<code>com.haoke.ui.launcher</code>、<code>com.hk.LAUNCHER</code>、<code>com.sgm.onstarcarlink</code>、<code>defaultHomeActivity</code>、<code>elite activate status</code>
+→ <strong>桌面选择/激活判断在 SystemUI 内</strong>。</li>
+<li>HKLauncher 还注册了
+<code>com.hk.ACTION_OPEN_CARPLAY_SIRI</code>、<code>com.hk.ACTION_OPEN_CARLIFE_XIAODU</code>、<code>com.zjinnova.zlink</code>（Zlink
+互联）、<code>com.hk.ACTION_RESET_DESKTOP_DATA</code>。</li>
+</ul>
+<blockquote>
+<p><strong>HOME 归属补充结论（全 APK 扫描）</strong>：真正可用的 HOME
+只有 eLite；其余 HOME 字符串均非有效桌面——<br />
+<code>CryptKeeper</code>（<code>/vendor/app/Settings</code>，priority=10，解密屏）、<code>Provision</code>（priority=1，初始设置）、<br />
+<code>ManagedProvisioning</code>（priority=2，<code>enabled=false</code>）、ZDSIPPhone（HOME
+挂在 <code>&lt;receiver&gt;</code> 上，无效）。<br />
+<code>android.intent.category.DEFAULTHOME</code> 全系统无消费者 →
+桌面选择走标准 <code>CATEGORY_HOME</code>。</p>
+</blockquote>
+<h2 id="开机自启清单应用层">4.7 开机自启清单（应用层）</h2>
+<h3 id="a.-persistent-应用system_server-直接常驻启动最早">A. Persistent
+应用（system_server 直接常驻启动，最早）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>应用</th>
+<th>包名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CarManager</td>
+<td><code>com.adayo.carmanager</code></td>
+<td>车辆总控（uid=system）</td>
+</tr>
+<tr>
+<td>Daemon</td>
+<td><code>com.adayo.daemon</code></td>
+<td>看门狗（<code>DaemonService</code>/<code>DaemonThread</code>）</td>
+</tr>
+<tr>
+<td>SystemUI</td>
+<td><code>com.android.systemui</code></td>
+<td>车机系统 UI（桌面决策）</td>
+</tr>
+<tr>
+<td>TXZCore</td>
+<td><code>com.txznet.txz</code></td>
+<td>同行者语音（21 个 service）</td>
+</tr>
+<tr>
+<td>ZDSIPPhone</td>
+<td><code>com.zdfl.sipphone</code></td>
+<td>车载 SIP 电话</td>
+</tr>
+<tr>
+<td>TXZAdapter</td>
+<td><code>com.txznet.adapter</code></td>
+<td>语音适配</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b.-boot_completed-接收者框架广播后启动">B.
+<code>BOOT_COMPLETED</code> 接收者（框架广播后启动）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>应用</th>
+<th>接收者</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CarManager</td>
+<td><code>RebootReceiver</code> → 启动 CarService</td>
+</tr>
+<tr>
+<td>SystemUI</td>
+<td><code>BootReceiver</code></td>
+</tr>
+<tr>
+<td>Launcher3（system）</td>
+<td><code>StartupReceiver</code></td>
+</tr>
+<tr>
+<td>Settings</td>
+<td><code>BootCompletedReceiver</code> +
+<code>RestoreRotationReceiver</code> +
+<code>ManagedProfileSetup</code></td>
+</tr>
+<tr>
+<td>MTKLogger</td>
+<td><code>LogReceiver</code></td>
+</tr>
+<tr>
+<td>TeleService</td>
+<td><code>OtaStartupReceiver</code> +
+<code>LteDataOnlySwitchReceiver</code></td>
+</tr>
+<tr>
+<td>TXZAdapter</td>
+<td><code>BroadcastProcessMgr</code></td>
+</tr>
+<tr>
+<td>高德（Auto）</td>
+<td><code>com.amap.api.service.BootEventReceiver</code></td>
+</tr>
+<tr>
+<td>eLite</td>
+<td><code>BootBroadcastReceiver</code> + abupdate
+<code>UpgradeReceiver</code></td>
+</tr>
+<tr>
+<td>FotaUpgrader</td>
+<td><code>UpgradeReceiver</code>（OTA 升级）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c.-桌面home">C. 桌面/HOME</h3>
+<ul>
+<li>默认
+HOME：<strong>eLite</strong>（<code>com.sgm.onstarcarlink</code>，含
+<code>DEFAULTHOME</code>）。</li>
+<li>车机桌面：<strong>HKLauncher</strong>（<code>com.haoke.ui.launcher</code>），经
+<code>com.hk.LAUNCHER</code> 拉起。</li>
+</ul>
+<h2 id="一览从按下电源到桌面">4.8 一览：从按下电源到桌面</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">电源</span><br><span class="line"> └─ Preloader (3363_Preloader_realchip_sd.bin)</span><br><span class="line">     └─ LK (lk.bin) + trustzone + arm2(Mcu)</span><br><span class="line">         └─ Kernel (Image + ac83xx_m.dtb) + ramdisk.img</span><br><span class="line">             └─ /init  (init.rc + init.ac83xx.rc + init.zygote32.rc + init.aee.rc)</span><br><span class="line">                 ├─ mount_all fstab.ac83xx (system/vendor/data/cache/adas/…)</span><br><span class="line">                 ├─ insmod ~50 驱动 (gfx/atcfb/vdec/adec/backcar/haoke_init…)</span><br><span class="line">                 └─ 原生服务: hk_init / z-link(CarPlay) / wmt_loader / mnld(GPS)</span><br><span class="line">                              / wpa_supplicant / mculog / tbox_service …</span><br><span class="line">                     └─ zygote (32位)</span><br><span class="line">                         └─ system_server</span><br><span class="line">                             ├─ PackageManager 扫描 /system + /vendor 应用</span><br><span class="line">                             ├─ 启动 persistent: CarManager / Daemon / SystemUI / TXZCore / ZDSIPPhone / TXZAdapter</span><br><span class="line">                             │     └─ CarApplication.onCreate → startCarService</span><br><span class="line">                             │         └─ CarService.onCreate → startDaemonService(看门狗)</span><br><span class="line">                             │                             + CarManager.init(整个车辆子系统栈)</span><br><span class="line">                             │                             + 广播 action.adayo.carservice.REBOOT</span><br><span class="line">                             ├─ 广播 BOOT_COMPLETED → CarManager/SystemUI/Launcher3/Settings/</span><br><span class="line">                             │                        MTKLogger/TeleService/TXZAdapter/高德/eLite/FotaUpgrader</span><br><span class="line">                             └─ SystemUI 决策 defaultHomeActivity</span><br><span class="line">                                 ├─ eLite (category.HOME + DEFAULTHOME)  ← 标准桌面</span><br><span class="line">                                 └─ HKLauncher (com.hk.LAUNCHER 拉起)     ← 车机桌面</span><br></pre></td></tr></table></figure>
+<h2 id="证据与局限">4.9 证据与局限</h2>
+<ul>
+<li>结论均来自<strong>固件静态证据</strong>：GAMI
+条目表、<code>init*.rc</code>、<code>fstab.ac83xx</code>、APK
+<code>AndroidManifest.xml</code>（JADX 解码）、DEX 字符串、CarManager
+反编译。</li>
+<li>HKLauncher/SystemUI/MediaService/BTService/Reverse/System/Daemon 对
+<code>com.hk.LAUNCHER</code>、<code>DEFAULTHOME</code> 的引用来自 DEX
+字符串表。</li>
+<li><strong>未实机运行</strong>：桌面最终归属（eLite vs HKLauncher）与各
+service 的实际启停时序由运行时 <code>defaultHomeActivity</code> 与
+CarManager 运行时逻辑决定；本章给出的是固件所确定的静态启动路径。</li>
+<li>REA/JADX 为纯静态分析：不做签名校验、不执行 APK；<code>/data</code>
+运行时持久状态未包含在固件中。</li>
+</ul>
+<hr />
+<h1 id="系统升级与版本判断">5. 系统升级与版本判断</h1>
+<h2 id="各升级路径的版本判断">5.1 各升级路径的版本判断</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>路径</th>
+<th>版本判断</th>
+<th>同版本重复升级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LK 本地刷卡</strong>（U盘/SD，读
+<code>ATC8317.ini</code>+<code>ATC8317.bin</code>）</td>
+<td><strong>无版本比较</strong>；只校验分区布局+签名/SECRO</td>
+<td>✅ 无限次</td>
+</tr>
+<tr>
+<td><strong>App
+本地升级</strong>（<code>/storage/udisk0/update_ap.zip</code>/<code>update_os.zip</code>）</td>
+<td><strong>只判文件是否存在</strong></td>
+<td>✅ 无限次</td>
+</tr>
+<tr>
+<td><strong>强制升级</strong>（连点版本号 8 次 →
+<code>/mnt/sdcard/ota/update.zip</code>）</td>
+<td><strong>只判文件是否存在</strong></td>
+<td>✅ 无限次</td>
+</tr>
+<tr>
+<td><strong>在线 OTA</strong>（<code>FotaUpgrader</code>/ABUP →
+<code>iothttp.shanghaionstar.com:36601/partner/ota</code>）</td>
+<td><strong>由云端策略决定</strong>（客户端只上报
+<code>ro.fota.version</code>）</td>
+<td>取决于云端（镜像不可见）</td>
+</tr>
+<tr>
+<td>MCU 升级（<code>HKMcuUpgrade</code>）</td>
+<td>走 MCU AIDL，与安卓版本无关</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>真正会拦你的</strong>：镜像签名/安全启动、分区布局匹配、分区名存在、eMMC
+写保护/解锁、容量。<strong>都不是“版本号”。</strong><br />
+<code>ATC8317.ini</code> 是分区写入选表（<code>[FORMAT] Enable=0</code>
+不清数据）。</p>
+<h2 id="证据要点">5.2 证据要点</h2>
+<ul>
+<li>LK：<code>do_extsdcard_or_udisk_upgrade</code> 读
+<code>/udisk0/ATC8317.ini</code>+<code>ATC8317.bin</code>；只报
+<code>XML Partition Layout not match GPT</code>、<br />
+<code>Partition[%s] not fount, Upgrade is not allowed</code>、<code>Image sign format is v3/v4</code>、<code>SECRO - SB configuration</code>、<br />
+<code>AN6V_UPGRADE_FLAG.CONFIG</code>；<strong>无</strong>
+downgrade/once/only-higher 之类字样。</li>
+<li><code>FotaUpgrader</code>：<code>UpgradeActivity.localUpgrade()</code>
+仅测 <code>update_ap.zip</code>/<code>update_os.zip</code>
+是否存在；<br />
+<code>forceUpgrade()</code>（版本 TextView 连点 8 次）仅测
+<code>update.zip</code>；<code>updateAppByUSB/updateOsByUSB</code> 广播
+<code>com.fota.update</code>。</li>
+<li>云端身份（<code>/vendor/app.prop</code>）：<code>ro.fota.oem=shinco</code>、<code>ro.fota.device/type=ONSTAR_LITE_K215</code>、<br />
+<code>ro.fota.platform=AC8227</code>、<code>ro.fota.product_id=1573179943</code>、<code>ro.fota.product_secret=6f42a47379d94a00bb87982263cd8b18</code>。</li>
+</ul>
+<hr />
+<h1 id="安全调测顺序与逃生方案防变砖">6.
+安全调测顺序与逃生方案（防变砖）</h1>
+<blockquote>
+<p>原则：<strong>先建后路，再做改动；一次只改一项；改完立刻重启验证；失败立即回滚。</strong><br />
+排序依据不是“收益”，而是<strong>“出错后能不能救回来”</strong>——越靠前的步骤，越是你的生命线。</p>
+</blockquote>
+<h2 id="核心原则务必遵守">6.1 核心原则（务必遵守）</h2>
+<ol type="1">
+<li><strong>任何修改之前，先确认三条逃生通道都存在且演练过</strong>：U盘/PC
+刷机、ADB(USB)、ADB(WiFi)。</li>
+<li><strong>能刷机 &gt; 能
+adb</strong>：分区级改动(init.rc/APK/内核)只有刷机能救；能 adb
+只能救软件层。</li>
+<li><strong>改分区文件前先 <code>adb pull</code>
+备份原文件</strong>；<code>pm disable</code>
+是唯一“一键可逆”的改动，优先用它。</li>
+<li><strong>一次只改一项</strong>，改完测 3 遍冷启并记录。</li>
+<li><strong>不碰</strong>：CarManager / Daemon / SystemUI /
+MCU·CAN·T-Box·倒车；<strong>不要</strong>把 adb/桌面一起禁掉。</li>
+</ol>
+<h2 id="阶段-0-先建逃生通道最高优先级在做任何修改之前">6.2 阶段 0 ——
+先建“逃生通道”（最高优先级，<strong>在做任何修改之前</strong>）</h2>
+<blockquote>
+<p>本阶段全部是“准备与只读验证”，不影响系统行为。</p>
+</blockquote>
+<h3 id="确认并演练-u盘本地刷机最强逃生手段">6.2.1 确认并演练
+<strong>U盘本地刷机</strong>（最强逃生手段）</h3>
+<ul>
+<li>准备一个
+<strong>U盘(FAT32)</strong>，放入<strong>原封不动</strong>的 V1.37
+包：<br />
+<code>ATC8317.bin</code>、<code>ATC8317.ini</code>、<code>hkApp.bin</code>、<code>haoketest.bin</code>（放在根目录）。</li>
+<li>LK
+引导里有本地升级逻辑（<code>do_extsdcard_or_udisk_upgrade</code>，读
+<code>/udisk0/ATC8317.ini</code>+<code>ATC8317.bin</code>）。</li>
+<li><strong>必须搞清楚“如何进入升级模式”</strong>（按键组合/上电时机/是否需要
+<code>haoketest.bin</code> 触发/PC 工具），<br />
+并向
+ODM/产线说明确认。<strong>在还没搞清进升级模式之前，不要做任何改分区的操作。</strong></li>
+<li>有条件的话，<strong>实际刷一次回到
+V1.37</strong>，确认整条链能走通。</li>
+<li>备选：准备 <strong>PC 刷机工具 +
+scatter</strong>（<code>scatter.mmcboot.ext4.xml</code>），能读回/写回全部分区。</li>
+</ul>
+<h3 id="确认-adbusb-可用">6.2.2 确认 <strong>ADB(USB)</strong> 可用</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb devices</span><br><span class="line">adb shell getprop ro.debuggable          <span class="comment"># 期望 1</span></span><br><span class="line">adb shell getprop persist.sys.usb.config <span class="comment"># 期望 adb</span></span><br><span class="line">adb root &amp;&amp; adb shell <span class="built_in">id</span>                 <span class="comment"># 期望 uid=0</span></span><br><span class="line">adb shell su -c <span class="built_in">id</span>                       <span class="comment"># 期望 uid=0(root)</span></span><br></pre></td></tr></table></figure>
+<h3 id="开启并持久化-adb-over-wifi第二逃生通道">6.2.3 开启并持久化
 <strong>ADB over WiFi</strong>（第二逃生通道）</h3>
 <p>见 §5.4。要点：<code>setprop service.adb.tcp.port 5555</code> +
 <code>stop/start adbd</code> → <code>adb connect IP:5555</code>；<br />
 持久化写 <code>persist.adb.tcp.port=5555</code> + 开机脚本重启 adbd（用
 <code>adb_ensure.sh</code>）。</p>
-<h3 id="备份能救软件层">0.4 <strong>备份</strong>（能救软件层）</h3>
+<h3 id="备份能救软件层">6.2.4 <strong>备份</strong>（能救软件层）</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关键可改文件</span></span><br><span class="line">adb pull /system/bin/hk_oem_init.sh ./backup/</span><br><span class="line">adb pull /system/build.prop ./backup/</span><br><span class="line">adb pull /vendor/app.prop ./backup/</span><br><span class="line"><span class="comment"># 状态快照</span></span><br><span class="line">adb shell <span class="string">&quot;getprop &gt; /sdcard/props.txt&quot;</span>; adb pull /sdcard/props.txt</span><br><span class="line">adb shell <span class="string">&quot;pm list packages -f &gt; /sdcard/pkg.txt&quot;</span>; adb pull /sdcard/pkg.txt</span><br><span class="line"><span class="comment"># 重要数据(自行确认范围)</span></span><br><span class="line">adb pull /data/system/users/0/package-restrictions.xml</span><br></pre></td></tr></table></figure>
-<h3 id="把恢复步骤写在纸上">0.5 把”恢复步骤”写在纸上</h3>
+<h3 id="把恢复步骤写在纸上">6.2.5 把”恢复步骤”写在纸上</h3>
 <ul>
 <li>记下：U盘刷机进入方式、PC刷机工具路径、WiFi ADB IP/端口、root
 密码。</li>
@@ -900,6 +2042,470 @@ JADX，避免全量反编译的噪音。</li>
 <li>LK 引导层二进制分析有限，升级模式进入方式需向 ODM 确认。</li>
 <li>固件版本 V1.37 vs 实机 V1.36，部分路径可能有差异。</li>
 </ul>
+<h1 id="手机屏幕投屏miracast-dlna-vnc">8. 手机屏幕投屏（Miracast / DLNA
+/ VNC）</h1>
+<blockquote>
+<p>本章记录「把手机屏幕投到车机大屏」这一具体需求在本机的排查与落地过程，与第
+4 章（启动流程）、<br />
+第 6
+章（安全调测顺序）互为补充。<strong>展开版见独立博文</strong>《把手机屏幕投到安卓车机大屏》，<br />
+本文只保留总文档需要的结论与可复现参数。</p>
+</blockquote>
+<h2 id="背景与需求澄清">8.1 背景与需求澄清</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>目标</strong></td>
+<td>把荣耀 Magic7 的画面显示到车机 1024×600
+大屏，<strong>操作仍在手机上做</strong>（单向画面，不需触摸回传）</td>
+</tr>
+<tr>
+<td><strong>手机</strong></td>
+<td>荣耀 Magic7（MagicOS 9 / Android 15），原生分辨率 2800×1264</td>
+</tr>
+<tr>
+<td><strong>车机</strong></td>
+<td>AC8317 / Android 6.0 / 1024×600 / userdebug 可 root</td>
+</tr>
+<tr>
+<td><strong>拓扑</strong></td>
+<td><strong>手机开热点、车机做 STA</strong>（车机 Wi-Fi 是单射频
+2.4G，STA+AP 硬件互斥，不能反过来）</td>
+</tr>
+</tbody>
+</table>
+<p>两个关键澄清（决定了整条技术路线）：</p>
+<ol type="1">
+<li><strong>不需要触摸回传</strong> → Miracast
+被否的原因不是”缺输入通道”，而是”缺接收端”。</li>
+<li><strong>车机侧没有任何投屏接收端</strong> →
+手机系统自带的「投屏」（Miracast 发送端）永远发现不了它，<br />
+⇒ <strong>手机端必须装发送端 App</strong>，或走”外挂无线盒子”路线。</li>
+</ol>
+<h2 id="方案评估矩阵">8.2 方案评估矩阵</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>方案</th>
+<th>依赖条件</th>
+<th>本机结论</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZLink 无线 CarPlay</td>
+<td>5GHz 射频 + MFi 认证 + <code>regMode</code> 含 <code>W</code></td>
+<td>三项全不满足</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>ZLink 无线 CarLife</td>
+<td>同上门控</td>
+<td>同上</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>厂商 mLink 免费投屏</td>
+<td>车机版 <code>minSdk=26</code>；内部依赖 Wi-Fi P2P</td>
+<td>Android 6.0 装不上；单射频 2.4G P2P 也不成立</td>
+<td>❌ 版本代差</td>
+</tr>
+<tr>
+<td>Miracast / Wi-Fi Display</td>
+<td>对端广播 <code>_miracast._tcp</code></td>
+<td>无任何组件广播，无 WFD Sink</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>DLNA / UPnP</td>
+<td>SSDP 1900 + MediaRenderer</td>
+<td>无 1900 端口、零 SSDP 回应</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>AirPlay</td>
+<td>iPhone + 蓝牙握手 + 认证芯片</td>
+<td>安卓手机无系统级发送端</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>厂商私有 <code>_zj_mirror._tcp</code></td>
+<td>ZLink ≥ 5.3.8</td>
+<td>本机是 3.5.59，且未注册 Activity</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>HiCar</td>
+<td>荣耀原生 + 车机侧组件</td>
+<td>车机未预装</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>外挂无线 CarPlay 盒</td>
+<td>自带 5G 射频与自己的认证身份</td>
+<td>唯一能绕开全部阻断的硬件解</td>
+<td>⚠️ 需外购</td>
+</tr>
+<tr>
+<td><strong>VNC（RFB）over TCP</strong></td>
+<td><strong>纯 TCP，双方均可自行安装</strong></td>
+<td><strong>实测跑通</strong></td>
+<td>✅ <strong>选定</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="阻断点定位-授权层与硬件层">8.3 阻断点定位 授权层与硬件层</h2>
+<p>ZLink 3.5.59 反编译出的核心判定：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">n</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">regMode</span> <span class="operator">=</span> b.a.a.d.c.j();       <span class="comment">// 读授权档位</span></span><br><span class="line">    <span class="keyword">if</span> (!TextUtils.isEmpty(regMode)) <span class="keyword">return</span> regMode.contains(<span class="string">&quot;W&quot;</span>);   <span class="comment">// 含 &quot;W&quot; 才算支持无线</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实机授权文件 <code>/storage/emulated/legacy/zlink/.d</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;regMode&quot;</span><span class="punctuation">:</span><span class="string">&quot;LA&quot;</span><span class="punctuation">,</span><span class="attr">&quot;t&quot;</span><span class="punctuation">:</span><span class="string">&quot;XLABD3A54&quot;</span><span class="punctuation">,</span><span class="attr">&quot;cp&quot;</span><span class="punctuation">:</span><span class="string">&quot;9F371ACC381C85C2C9CD150060619001&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><code>regMode="LA"</code> 不含 <code>"W"</code> →
+<strong>无线被锁</strong>。</p>
+<p>四个<strong>彼此独立</strong>的阻断（务必区分”能花钱解”与”物理不可能”）：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>阻断</th>
+<th>性质</th>
+<th>花钱能解决吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>无 MFi 芯片证据（<code>ls /system/bin/mfi_test</code> 不存在、无
+<code>mfi_id</code> 属性）</td>
+<td>认证层</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Wi-Fi 芯片只支持
+2.4GHz</strong>（<code>mediatek.wlan.chip=CONSYS_MT6735</code>、<code>WIFI_ID_MT6630</code>，实测
+2462MHz）</td>
+<td><strong>硬件层</strong></td>
+<td>❌ 物理不可能</td>
+</tr>
+<tr>
+<td>3</td>
+<td>授权档位 <code>regMode="LA"</code> 不含 <code>W</code></td>
+<td>授权层</td>
+<td>✅ 可解锁，但解锁后仍被 #2 挡住</td>
+</tr>
+<tr>
+<td>4</td>
+<td>厂商 mLink 车机版 <code>minSdk=26</code></td>
+<td>版本代差</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>结论：不建议购买 ZLink 无线激活码</strong>（花钱只解开
+#3）。<br />
+另外 <code>zj.wirelesscarplay.state=1</code>
+证明<strong>系统并没有主动关掉无线
+CarPlay</strong>，是被授权与硬件挡住的。</p>
+</blockquote>
+<h2 id="车机侧接收端排查六路">8.4 车机侧接收端排查（六路）</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>手段</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ZLink Manifest 组件清点</td>
+<td>只有 <code>CarPlayActivity</code> /
+<code>CarLifeActivity</code>；<strong>无 <code>MirrorActivity</code>、无
+<code>DlnaActivity</code></strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>ZLink native 库 mDNS 服务类型清点</td>
+<td>有 <code>_airplay._tcp</code> <code>_mirror._tcp</code>
+等，<strong>无 <code>_miracast._tcp</code></strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>实机 mDNS 广播监听（<code>dns-sd -B</code>）</td>
+<td>车机不广播任何投屏服务</td>
+</tr>
+<tr>
+<td>4</td>
+<td>实机 SSDP <code>M-SEARCH</code>（MediaRenderer / MediaServer /
+ssdp:all）</td>
+<td><strong>零回应</strong> → 非 DLNA Renderer</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>/proc/net/udp</code> 端口表</td>
+<td>有 68(DHCP)、5353(mDNS)，<strong>无 1900(SSDP)</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>eLite 静态检查</td>
+<td>DEX/native 中无任何 <code>ssdp</code> / <code>upnp</code> /
+<code>cling</code> / <code>airplay</code> / <code>miracast</code>
+实现</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>通用判据三件套</strong>（比翻 APK 快得多）：<br />
+<code>dns-sd -B _miracast._tcp</code>（有没有广播服务）+ SSDP
+<code>M-SEARCH</code>（有没有 Renderer）+ <code>/proc/net/udp</code> 看
+1900。</p>
+</blockquote>
+<h2 id="vnc-方案落地与实测数据">8.5 VNC 方案落地与实测数据</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>端</th>
+<th>软件</th>
+<th>许可</th>
+<th>体积</th>
+<th>minSdk</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手机</td>
+<td><strong>droidVNC-NG 2.22.0</strong></td>
+<td>GPL-2.0</td>
+<td>6.5 MB</td>
+<td>24</td>
+<td>VNC 服务端（MediaProjection 录屏）</td>
+</tr>
+<tr>
+<td>车机</td>
+<td><strong>AVNC 3.3.1</strong></td>
+<td>GPL-3.0</td>
+<td>7.3 MB</td>
+<td><strong>21</strong></td>
+<td>VNC 客户端</td>
+</tr>
+</tbody>
+</table>
+<p>两者均取自 <strong>F-Droid 官方仓库</strong>，SHA256
+与官方索引逐字节一致；AVNC <code>minSdk=21</code> → <strong>Android 6.0
+实测运行正常</strong>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 车机侧</span></span><br><span class="line">adb -s 10.208.253.186:5555 install -r com.gaurav.avnc_53.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手机侧：装服务端 + 权限三连（pm clear 后必做）</span></span><br><span class="line">adb -s &lt;手机&gt; install -r net.christianbeier.droidvnc_ng_65.apk</span><br><span class="line">adb -s &lt;手机&gt; shell pm grant net.christianbeier.droidvnc_ng android.permission.POST_NOTIFICATIONS</span><br><span class="line">adb -s &lt;手机&gt; shell cmd appops <span class="built_in">set</span> net.christianbeier.droidvnc_ng PROJECT_MEDIA allow</span><br><span class="line">adb -s &lt;手机&gt; shell settings put secure enabled_accessibility_services net.christianbeier.droidvnc_ng/.InputService</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">adb -s &lt;手机&gt; shell am start-foreground-service -n net.christianbeier.droidvnc_ng/.MainService \</span><br><span class="line">  -a net.christianbeier.droidvnc_ng.ACTION_START \</span><br><span class="line">  --es net.christianbeier.droidvnc_ng.EXTRA_ACCESS_KEY carproj \</span><br><span class="line">  --ei net.christianbeier.droidvnc_ng.EXTRA_PORT 5900 \</span><br><span class="line">  --es net.christianbeier.droidvnc_ng.EXTRA_PASSWORD 12345678 \</span><br><span class="line">  --ez net.christianbeier.droidvnc_ng.EXTRA_VIEW_ONLY <span class="literal">false</span> \</span><br><span class="line">  --ez net.christianbeier.droidvnc_ng.EXTRA_FALLBACK_SCREEN_CAPTURE <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>实测数据：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>实测值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFB 协议</td>
+<td><code>RFB 003.008</code></td>
+</tr>
+<tr>
+<td>安全类型</td>
+<td><code>[2, 16]</code> → <strong>VNC 密码认证（type 2）</strong>，DES
+challenge-response 校验通过</td>
+</tr>
+<tr>
+<td>监听地址</td>
+<td><code>00000000:170C</code> = 全网卡 5900</td>
+</tr>
+<tr>
+<td>虚拟屏</td>
+<td><code>840x379</code>（= 2800×1264 × 0.30，横屏）</td>
+</tr>
+<tr>
+<td>车机连接</td>
+<td><code>10.208.253.186 → 10.208.253.57:5900  ESTABLISHED</code></td>
+</tr>
+<tr>
+<td>车机画面</td>
+<td>1024×600 上等比 <strong>1024×462</strong>，文字清晰可读</td>
+</tr>
+<tr>
+<td>图层验证</td>
+<td>SurfaceFlinger 中 AVNC 图层
+<code>1024x600 RGBA_8888</code>，全屏铺满</td>
+</tr>
+<tr>
+<td>车机 PSS</td>
+<td>≈ 44 MB</td>
+</tr>
+</tbody>
+</table>
+<p>预置配置（手机侧
+<code>/sdcard/Android/data/net.christianbeier.droidvnc_ng/files/defaults.json</code>）：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;interfaceName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">5900</span><span class="punctuation">,</span> <span class="attr">&quot;scaling&quot;</span><span class="punctuation">:</span> <span class="number">0.3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;viewOnly&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;showPointers&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;fileTransfer&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;12345678&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;accessKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;carproj&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;startOnBoot&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;startOnBootDelay&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="已知坑位与处置">8.6 已知坑位与处置</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>坑</th>
+<th>现象</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>「缩放」是<strong>服务端降采样</strong></td>
+<td>拉小 = 先降采样再放大 → 越拉越糊</td>
+<td>往右拉大（1.0 = 原生 2800×1264）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>手机屏幕方向</td>
+<td>MagicOS 桌面跟随系统 → 竖握时画面被压成窄条</td>
+<td><code>accelerometer_rotation 0</code> + <code>user_rotation 1</code>
+锁横屏；本 ROM 不支持 <code>wm set-user-rotation</code>，需
+<code>am force-stop</code> 重建 Activity</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>pm clear</code> 清空一切授权</td>
+<td>服务一起来就退（截屏权限丢失）</td>
+<td>权限三连 + <strong>打开 App 点「开始」</strong>（Android 10+
+录屏授权必须前台点一次）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>预置配置只在”清数据后首启”生效</td>
+<td>改了 <code>defaults.json</code> 没生效</td>
+<td>改完必须 <code>pm clear</code> + 重做权限三连</td>
+</tr>
+<tr>
+<td>5</td>
+<td>用户名必须留空</td>
+<td>droidVNC-NG 只认密码，填用户名握手失败</td>
+<td>AVNC 服务器条目用户名清空</td>
+</tr>
+</tbody>
+</table>
+<p>补充：手机端开机自启除 <code>RECEIVE_BOOT_COMPLETED</code>
+外，还需在<strong>荣耀/华为”应用启动管理”</strong>里手动放行。</p>
+<h2 id="资源影响与回退">8.7 资源影响与回退</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>影响</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内存</td>
+<td>AVNC 常驻 PSS ≈ 44 MB</td>
+<td>本机 1.8 GB 无
+Swap，导航+音乐+投屏同开已属紧张区，勿再叠加更多常驻进程</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>AVNC 7.3 MB 落在 <code>/data</code>（空闲 860 MB）</td>
+<td>可接受</td>
+</tr>
+<tr>
+<td>分区</td>
+<td><strong>全部在 <code>/data</code>，未触碰
+<code>/system</code>、<code>/vendor</code></strong></td>
+<td>删包即回退，不影响 CarManager / 倒车 / 语音</td>
+</tr>
+<tr>
+<td>回退命令</td>
+<td><code>adb -s 10.208.253.186:5555 uninstall com.gaurav.avnc</code>；手机侧停服务即可</td>
+<td>一键</td>
+</tr>
+</tbody>
+</table>
+<h2 id="交叉引用">8.8 交叉引用</h2>
+<table>
+<thead>
+<tr>
+<th>本文内容</th>
+<th>对应章节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车机基线 / 内存 CPU</td>
+<td>§1 平台与设备基线、§3.6 内存与 CPU 现状</td>
+</tr>
+<tr>
+<td>WiFi ADB 与 root 能力</td>
+<td>§2 调试与连接、§3.1 连接方式与 root 能力</td>
+</tr>
+<tr>
+<td>风险红线与回退顺序</td>
+<td>§6 安全调测顺序与逃生方案、附录 B 风险红线</td>
+</tr>
+<tr>
+<td>投屏命令速查</td>
+<td>附录 E 投屏与外设速查</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h1 id="附录-a.-脚本与产物清单">附录 A. 脚本与产物清单</h1>
 <table>
 <colgroup>
@@ -945,6 +2551,23 @@ JADX，避免全量反编译的噪音。</li>
 <td><code>~/Downloads/adb_ensure.sh</code></td>
 <td>每次开机确保 USB 调试可用（可选开 WiFi 调试）</td>
 </tr>
+<tr>
+<td><code>com.gaurav.avnc_53.apk</code></td>
+<td>车机端 VNC 客户端（GPL-3.0，F-Droid，SHA256 已核对）</td>
+</tr>
+<tr>
+<td><code>net.christianbeier.droidvnc_ng_65.apk</code></td>
+<td>手机端 VNC 服务端（GPL-2.0，F-Droid，SHA256 已核对）</td>
+</tr>
+<tr>
+<td><code>/data/local/bin/curl</code></td>
+<td>单文件静态 curl（armhf，3.65 MB），放在 <code>/data</code>
+不污染系统分区</td>
+</tr>
+<tr>
+<td><code>/storage/emulated/legacy/zlink/.d</code></td>
+<td>ZLink 授权档位明文文件（<code>regMode</code> 取值来源）</td>
+</tr>
 </tbody>
 </table>
 <p><strong>原始分册文档（内容已并入本文件，保留作历史）</strong>：<br />
@@ -966,6 +2589,16 @@ HOME</strong>，否则开机无桌面。</li>
 <li><strong>一次一项</strong>：每次只改一项，测三遍冷启，记录数据再继续。</li>
 <li><strong>原始固件</strong>：一切“改镜像”的项目都要先备份原
 <code>V1.37</code>（已保留）。</li>
+<li><strong>投屏别碰授权层</strong>：不要花钱买 ZLink
+无线激活码——<code>regMode</code> 只是授权层，<br />
+解锁后仍被”<strong>MT6630 只支持 2.4GHz</strong>”这一硬件层阻断（无线
+CarPlay 必须 5GHz）。</li>
+<li><strong>投屏别开 P2P</strong>：车机 Wi-Fi 单射频 2.4G，STA 与
+P2P/热点互斥；测任何 P2P 方案前先断开 WiFi ADB。</li>
+<li><strong>投屏不要常驻叠加</strong>：AVNC 约 44 MB PSS，本机 1.8 GB 无
+Swap，投屏 + 导航 + 音乐同开已是上限。</li>
+<li><strong>VNC 密码当明文看</strong>：RFB 是 DES 挑战应答、非
+TLS，只在自有热点/局域网内用。</li>
 </ul>
 <hr />
 <h1 id="附录-c.-维护与变更记录">附录 C. 维护与变更记录</h1>
@@ -995,6 +2628,14 @@ HOME</strong>，否则开机无桌面。</li>
 签名问题与版本回退（VIP v4.2.3.3→v3.2.4.1）、喜马拉雅/网易云/X
 浏览器/腾讯视频/原生设置安装、高德开机自启禁用、内存/CPU/启动时长分析；新增第
 10 章与附录 D</td>
+</tr>
+<tr>
+<td>2026-10-22</td>
+<td>新增<strong>第 8 章「手机屏幕投屏」</strong>与<strong>附录
+E</strong>：ZLink 无线四重阻断判定（授权层 <code>regMode="LA"</code> vs
+硬件层 MT6630 单射频 2.4G）、车机侧投屏接收端六路排查（无 Miracast Sink
+/ 无 DLNA Renderer）、VNC 方案（droidVNC-NG 2.22.0 + AVNC
+3.3.1）落地与实测数据、五个坑位与回退；同时新增独立博文《把手机屏幕投到安卓车机大屏》</td>
 </tr>
 </tbody>
 </table>
@@ -1068,6 +2709,161 @@ HOME</strong>，否则开机无桌面。</li>
 证据，注明“实机已验证”。</li>
 <li>改动记录按时间追加到附录 C，不另开碎片文档。</li>
 </ul>
+<h2 id="d.4-投屏相关命令速查">D.4 投屏相关命令速查</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 车机侧：装 VNC 客户端</span></span><br><span class="line">adb -s 10.208.253.186:5555 install -r com.gaurav.avnc_53.apk</span><br><span class="line"><span class="comment"># 回退</span></span><br><span class="line">adb -s 10.208.253.186:5555 uninstall com.gaurav.avnc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手机侧：权限三连（pm clear 后必做）</span></span><br><span class="line">adb -s &lt;手机&gt; shell pm grant net.christianbeier.droidvnc_ng android.permission.POST_NOTIFICATIONS</span><br><span class="line">adb -s &lt;手机&gt; shell cmd appops <span class="built_in">set</span> net.christianbeier.droidvnc_ng PROJECT_MEDIA allow</span><br><span class="line">adb -s &lt;手机&gt; shell settings put secure enabled_accessibility_services net.christianbeier.droidvnc_ng/.InputService</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手机侧：锁横屏（避免车机画面被压成窄条）</span></span><br><span class="line">adb -s &lt;手机&gt; shell settings put system accelerometer_rotation 0</span><br><span class="line">adb -s &lt;手机&gt; shell settings put system user_rotation 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 判定车机是否具备 DLNA Renderer / Miracast Sink</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/net/udp | grep -i 1900     <span class="comment"># 无输出 = 无 SSDP</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="附录-e.-投屏与外设速查">附录 E. 投屏与外设速查</h1>
+<h2 id="e.1-投屏链路关键参数">E.1 投屏链路关键参数</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车机 IP（WiFi ADB）</td>
+<td><code>10.208.253.186:5555</code></td>
+</tr>
+<tr>
+<td>手机热点网关 / VNC 服务端</td>
+<td><code>10.208.253.57:5900</code></td>
+</tr>
+<tr>
+<td>VNC 密码 / accessKey</td>
+<td><code>12345678</code> / <code>carproj</code></td>
+</tr>
+<tr>
+<td>RFB 版本 / 安全类型</td>
+<td><code>003.008</code> / <code>[2, 16]</code>（type 2 = VNC
+Password，DES challenge-response）</td>
+</tr>
+<tr>
+<td>虚拟屏 / 车机实际显示</td>
+<td><code>840x379</code>（2800×1264 × 0.30）/ <code>1024×462</code></td>
+</tr>
+<tr>
+<td>车机端包名 / 手机端包名</td>
+<td><code>com.gaurav.avnc</code> /
+<code>net.christianbeier.droidvnc_ng</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="e.2-与投屏强相关的硬件事实">E.2 与投屏强相关的硬件事实</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>实测值</th>
+<th>对方案的影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wi-Fi 芯片</td>
+<td><code>CONSYS_MT6735</code> / <code>WIFI_ID_MT6630</code></td>
+<td><strong>纯 2.4GHz</strong> → 无线 CarPlay 物理不可能</td>
+</tr>
+<tr>
+<td>Wi-Fi 射频</td>
+<td>单射频（STA+AP 互斥）</td>
+<td>必须手机开热点；P2P 类方案受限</td>
+</tr>
+<tr>
+<td>内存 / Swap</td>
+<td>1.76 GiB / 0</td>
+<td>AVNC 44 MB 已是可接受上限附近</td>
+</tr>
+<tr>
+<td><code>/data</code> 空闲</td>
+<td>859.6 MB</td>
+<td>投屏相关组件全放 <code>/data</code>，可删包回退</td>
+</tr>
+<tr>
+<td>图形</td>
+<td>Mali-400 MP，GLES 2.0</td>
+<td>VNC 走 CPU 解码 + RGBA_8888 全屏图层</td>
+</tr>
+<tr>
+<td>显示</td>
+<td>1024×600，density 240</td>
+<td>决定了等比缩放后的有效画面为 1024×462</td>
+</tr>
+</tbody>
+</table>
+<h2 id="e.3-投屏相关系统属性">E.3 投屏相关系统属性</h2>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mediatek.wlan.chip]</span>: <span class="string">[CONSYS_MT6735]      # 纯 2.4GHz 芯片</span></span><br><span class="line"><span class="attr">[ro.mediatek.wlan.p2p]</span>: <span class="string">[1]                # 支持 Wi-Fi Direct（受单射频限制）</span></span><br><span class="line"><span class="attr">[wlan.wfd.security.image]</span>: <span class="string">[1]             # 存在 WFD 配置，但无 Sink 组件</span></span><br><span class="line"><span class="attr">[zj.wirelesscarplay.state]</span>: <span class="string">[1]            # 系统侧无线 CarPlay 开关是开的</span></span><br><span class="line"><span class="attr">[persist.sys.zlink.mode.registed]</span>: <span class="string">[lc]    # ZLink 授权模式（小写）</span></span><br><span class="line"><span class="attr">[rw.zlink.channel]</span>: <span class="string">[xinke]                # 对应 APK 名 zlink-la-xinke-release</span></span><br><span class="line"><span class="attr">[persist.adb.tcp.port]</span>: <span class="string">[5555]             # ADB over WiFi 已固化</span></span><br></pre></td></tr></table></figure>
+<h2 id="e.4-组件与属性速查投屏相关">E.4 组件与属性速查（投屏相关）</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>组件 / 文件</th>
+<th>值</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>com.zjinnova.zlink</code></td>
+<td>3.5.59</td>
+<td>厂商 CarPlay/CarLife（<code>/vendor/third-app</code>）</td>
+</tr>
+<tr>
+<td><code>/storage/emulated/legacy/zlink/.d</code></td>
+<td><code>{"regMode":"LA",...}</code></td>
+<td>授权档位明文；不含 <code>"W"</code> → 无线被锁</td>
+</tr>
+<tr>
+<td><code>com.gaurav.avnc</code></td>
+<td>3.3.1</td>
+<td>车机端 VNC 客户端（GPL-3.0）</td>
+</tr>
+<tr>
+<td><code>net.christianbeier.droidvnc_ng</code></td>
+<td>2.22.0</td>
+<td>手机端 VNC 服务端（GPL-2.0）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="e.5-相关博文">E.5 相关博文</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>文档</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>《<a
+href="https://sunjunior.github.io/2026/10/22/把手机屏幕投到安卓车机大屏/">把手机屏幕投到安卓车机大屏</a>》</td>
+<td>本章第 8 节的展开版：完整排查过程、实测数据、坑位与附录</td>
+</tr>
+<tr>
+<td>《AC8317（ONSTAR_LITE_K215）车机系统分析总文档》</td>
+<td>本文，设备基线 / 启动流程 / 刷机与回退的母文档</td>
+</tr>
+</tbody>
+</table>
 
     </div>
 
@@ -1106,6 +2902,9 @@ HOME</strong>，否则开机无桌面。</li>
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/" rel="next" title="把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录">
+                  把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>

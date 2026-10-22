@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一句话结论：这台 Android 6.0 车机没有 Miracast 接收端、也没有 DLNA Renderer， 厂商自带的 ZLink 无线功能被授权档位 + 射频硬件 + 认证芯片三重独立阻断。 最终用一套全开源的 VNC 栈（手机 droidVNC-NG + 车机 AVNC）跑通，纯 TCP， 绕开上述所有不确定性；实测 1024×600 车机上画面等比 1024×462、文字清晰可读。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录">
+<meta property="og:url" content="https://sunjunior.github.io/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="一句话结论：这台 Android 6.0 车机没有 Miracast 接收端、也没有 DLNA Renderer， 厂商自带的 ZLink 无线功能被授权档位 + 射频硬件 + 认证芯片三重独立阻断。 最终用一套全开源的 VNC 栈（手机 droidVNC-NG + 车机 AVNC）跑通，纯 TCP， 绕开上述所有不确定性；实测 1024×600 车机上画面等比 1024×462、文字清晰可读。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-22T00:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T11:49:01.259Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, 车机, AC8317, 投屏, VNC, Android, 折腾记录">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/","path":"2026/10/22/把手机屏幕投到安卓车机大屏/","title":"把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-text">1. 背景与目标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-text">1.1 起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E6%BE%84%E6%B8%85%E4%B8%8E%E4%B8%A4%E4%B8%AA%E5%85%B3%E9%94%AE%E4%BF%AE%E6%AD%A3"><span class="nav-text">1.2 需求澄清与两个关键修正</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E9%9D%9E%E7%9B%AE%E6%A0%87"><span class="nav-text">1.3 目标与非目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E7%9A%84%E5%86%B3%E5%AE%9A"><span class="nav-text">1.4 网络拓扑的决定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E9%80%9F%E8%A7%88"><span class="nav-text">1.5 结果速览</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E7%A1%AC%E4%BB%B6%E7%8E%AF%E5%A2%83"><span class="nav-text">2. 软硬件环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E4%B8%8E%E8%AE%BE%E5%A4%87%E4%B8%80%E8%A7%88"><span class="nav-text">2.1 参与设备一览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%BA%BF"><span class="nav-text">2.2 车机系统基线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%88%86%E5%8C%BA%E6%98%8E%E7%BB%86"><span class="nav-text">存储分区明细</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%84%E9%A2%91%E4%B8%8E%E5%A4%96%E8%AE%BE%E5%AE%9E%E6%B5%8B"><span class="nav-text">2.3 射频与外设实测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%BA%A6%E6%9D%9F"><span class="nav-text">2.4 资源约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%AD%98%E5%9C%A8%E6%80%A7%E5%88%A4%E6%8D%AE"><span class="nav-text">2.5 端口占用与服务存在性判据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E9%80%9A%E9%81%93"><span class="nav-text">2.6 调试通道</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80-%E5%8E%82%E5%95%86%E6%96%B9%E6%A1%88-zlink-%E6%97%A0%E7%BA%BF%E4%BA%92%E8%81%94%E8%B5%B0%E4%B8%8D%E9%80%9A"><span class="nav-text">3. 问题一 厂商方案 ZLink
+无线互联走不通</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E4%B8%8A%E5%88%B0%E5%BA%95%E6%9C%89%E4%BB%80%E4%B9%88"><span class="nav-text">3.1 车机上到底有什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90-%E6%97%A0%E7%BA%BF%E8%A2%AB%E6%8E%88%E6%9D%83%E6%A1%A3%E4%BD%8D%E9%94%81%E4%BD%8F"><span class="nav-text">3.2 静态分析
+无线被授权档位锁住</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E9%AA%8C%E8%AF%81-%E4%B8%89%E9%A1%B9%E5%85%A8%E9%83%A8%E5%88%A4%E8%B4%9F"><span class="nav-text">3.3 实机验证 三项全部判负</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%A8%BF-%E5%9B%9B%E4%B8%AA%E5%BD%BC%E6%AD%A4%E7%8B%AC%E7%AB%8B%E7%9A%84%E9%98%BB%E6%96%AD"><span class="nav-text">3.4 定稿 四个彼此独立的阻断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%A3%E5%88%B0%E5%BA%95%E4%BB%80%E4%B9%88%E8%83%BD%E7%94%A8"><span class="nav-text">3.5 那到底什么能用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C-%E8%BD%A6%E6%9C%BA%E6%B2%A1%E6%9C%89%E5%8E%9F%E7%94%9F%E6%8A%95%E5%B1%8F%E6%8E%A5%E6%94%B6%E7%AB%AF"><span class="nav-text">4. 问题二
+车机没有原生投屏接收端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E8%B7%AF%E6%8E%92%E6%9F%A5"><span class="nav-text">4.1 六路排查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E6%94%AF%E6%8C%81%E7%9F%A9%E9%98%B5"><span class="nav-text">4.2 协议支持矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-text">4.3 结论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89-%E5%BC%80%E6%BA%90-vnc-%E6%A0%88%E8%90%BD%E5%9C%B0"><span class="nav-text">5. 问题三 开源 VNC 栈落地</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E5%9E%8B%E4%B8%8E%E7%90%86%E7%94%B1"><span class="nav-text">5.1 选型与理由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%93%E6%89%91"><span class="nav-text">5.2 拓扑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E6%AD%A5%E9%AA%A4"><span class="nav-text">5.3 实施步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE"><span class="nav-text">5.4 实测数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E4%B8%AA%E5%BF%85%E9%A1%BB%E8%AE%B0%E4%BD%8F%E7%9A%84%E5%9D%91"><span class="nav-text">5.5 五个必须记住的坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E7%BD%AE%E9%85%8D%E7%BD%AE"><span class="nav-text">5.6 预置配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-text">5.7 开机自启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8"><span class="nav-text">5.8 日常使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E9%80%80"><span class="nav-text">5.9 回退</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%B8%A6%E6%88%90%E6%9E%9C-%E8%BD%A6%E6%9C%BA%E7%AB%AF%E5%B7%A5%E5%85%B7%E9%93%BE%E8%A1%A5%E9%BD%90"><span class="nav-text">6. 附带成果 车机端工具链补齐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#busybox-%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%B8%A6%E7%89%88%E6%9C%AC%E6%9B%B4%E5%85%A8%E4%B8%8D%E5%BF%85%E6%8D%A2"><span class="nav-text">6.1 busybox
+系统自带版本更全不必换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E6%96%87%E4%BB%B6%E9%9D%99%E6%80%81-curl-%E5%8F%AF%E8%A1%8C"><span class="nav-text">6.2 单文件静态 curl 可行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%E4%B8%8E%E5%9B%9E%E9%80%80%E6%B8%85%E5%8D%95"><span class="nav-text">7. 车机当前状态与回退清单</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%94%E7%94%A8"><span class="nav-text">7.1 已装第三方应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E6%9C%BA%E6%94%B9%E5%8A%A8%E6%B8%85%E5%8D%95%E4%B8%8E%E5%9B%9E%E9%80%80"><span class="nav-text">7.2 本机改动清单与回退</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E6%AC%A1%E6%80%A7%E5%9B%9E%E9%80%80%E8%84%9A%E6%9C%AC"><span class="nav-text">7.3 一次性回退脚本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%AE%BA-%E8%BF%99%E6%AC%A1%E8%83%BD%E6%94%B6%E6%95%9B%E9%9D%A0%E7%9A%84%E6%98%AF%E8%BF%99%E4%B8%83%E6%9D%A1"><span class="nav-text">8. 方法论
+这次能收敛靠的是这七条</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a-%E5%91%BD%E4%BB%A4%E4%B8%8E%E5%8F%82%E6%95%B0%E9%80%9F%E6%9F%A5"><span class="nav-text">附录 A 命令与参数速查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#a.1-%E5%9C%B0%E5%9D%80%E4%B8%8E%E8%B4%A6%E5%8F%B7"><span class="nav-text">A.1 地址与账号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a.2-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">A.2 常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a.3-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="nav-text">A.3 关键参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b-%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-text">附录 B 故障排查对照表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-c-%E7%BB%84%E4%BB%B6%E4%B8%8E%E5%B1%9E%E6%80%A7%E9%80%9F%E6%9F%A5"><span class="nav-text">附录 C 组件与属性速查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-d-%E5%85%B3%E8%81%94%E6%96%87%E6%A1%A3%E4%B8%8E%E4%BA%A4%E5%8F%89%E5%BC%95%E7%94%A8"><span class="nav-text">附录 D 关联文档与交叉引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95-e-%E5%AE%89%E5%85%A8%E4%B8%8E%E5%90%88%E8%A7%84%E6%8F%90%E7%A4%BA"><span class="nav-text">附录 E 安全与合规提示</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="一句话结论：这台 Android 6.0 车机没有 Miracast 接收端、也没有 DLNA Renderer， 厂商自带的 ZLink 无线功能被授权档位 + 射频硬件 + 认证芯片三重独立阻断。 最终用一套全开源的 VNC 栈（手机 droidVNC-NG + 车机 AVNC）跑通，纯 TCP， 绕开上述所有不确定性；实测 1024×600 车机上画面等比 1024×462、文字清晰可读。 ...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-22 08:30:00 / 修改时间：19:49:01" itemprop="dateCreated datePublished" datetime="2026-10-22T08:30:00+08:00">2026-10-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">一句话结论：这台 Android 6.0 车机没有 Miracast 接收端、也没有 DLNA Renderer， 厂商自带的 ZLink 无线功能被授权档位 + 射频硬件 + 认证芯片三重独立阻断。 最终用一套全开源的 VNC 栈（手机 droidVNC-NG + 车机 AVNC）跑通，纯 TCP， 绕开上述所有不确定性；实测 1024×600 车机上画面等比 1024×462、文字清晰可读。 ...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p><strong>一句话结论</strong>：这台 Android 6.0 车机<strong>没有
+Miracast 接收端、也没有 DLNA Renderer</strong>，<br />
+厂商自带的 ZLink 无线功能被<strong>授权档位 + 射频硬件 +
+认证芯片</strong>三重独立阻断。<br />
+最终用一套<strong>全开源的 VNC 栈</strong>（手机 droidVNC-NG + 车机
+AVNC）跑通，<strong>纯 TCP</strong>，<br />
+绕开上述所有不确定性；实测 1024×600 车机上画面等比
+1024×462、文字清晰可读。</p>
+<p><strong>本文定位</strong>：本文是《<a
+href="https://sunjunior.github.io/2026/10/18/AC8317车机系统分析总文档/">AC8317（ONSTAR_LITE_K215）车机系统分析总文档</a>》第
+8 章的展开版，<br />
+完整记录「把手机屏幕投到车机大屏」这一具体需求的排查与落地全过程；<br />
+设备基线、启动流程、刷机与回退等通用内容请见总文档。</p>
+</blockquote>
+<hr />
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#背景与目标">1. 背景与目标</a>
+<ul>
+<li><a href="#起因">1.1 起因</a></li>
+<li><a href="#需求澄清与两个关键修正">1.2
+需求澄清与两个关键修正</a></li>
+<li><a href="#目标与非目标">1.3 目标与非目标</a></li>
+<li><a href="#网络拓扑的决定">1.4 网络拓扑的决定</a></li>
+<li><a href="#结果速览">1.5 结果速览</a></li>
+</ul></li>
+<li><a href="#软硬件环境">2. 软硬件环境</a>
+<ul>
+<li><a href="#参与设备一览">2.1 参与设备一览</a></li>
+<li><a href="#车机系统基线">2.2 车机系统基线</a></li>
+<li><a href="#射频与外设实测">2.3 射频与外设实测</a></li>
+<li><a href="#资源约束">2.4 资源约束</a></li>
+<li><a href="#端口占用与服务存在性判据">2.5
+端口占用与服务存在性判据</a></li>
+<li><a href="#调试通道">2.6 调试通道</a></li>
+</ul></li>
+<li><a href="#问题一-厂商方案-zlink-无线互联走不通">3. 问题一 厂商方案
+ZLink 无线互联走不通</a>
+<ul>
+<li><a href="#车机上到底有什么">3.1 车机上到底有什么</a></li>
+<li><a href="#静态分析-无线被授权档位锁住">3.2 静态分析
+无线被授权档位锁住</a></li>
+<li><a href="#实机验证-三项全部判负">3.3 实机验证 三项全部判负</a></li>
+<li><a href="#定稿-四个彼此独立的阻断">3.4 定稿
+四个彼此独立的阻断</a></li>
+<li><a href="#那到底什么能用">3.5 那到底什么能用</a></li>
+</ul></li>
+<li><a href="#问题二-车机没有原生投屏接收端">4. 问题二
+车机没有原生投屏接收端</a>
+<ul>
+<li><a href="#六路排查">4.1 六路排查</a></li>
+<li><a href="#协议支持矩阵">4.2 协议支持矩阵</a></li>
+<li><a href="#结论">4.3 结论</a></li>
+</ul></li>
+<li><a href="#问题三-开源-vnc-栈落地">5. 问题三 开源 VNC 栈落地</a>
+<ul>
+<li><a href="#选型与理由">5.1 选型与理由</a></li>
+<li><a href="#拓扑">5.2 拓扑</a></li>
+<li><a href="#实施步骤">5.3 实施步骤</a></li>
+<li><a href="#实测数据">5.4 实测数据</a></li>
+<li><a href="#五个必须记住的坑">5.5 五个必须记住的坑</a></li>
+<li><a href="#预置配置">5.6 预置配置</a></li>
+<li><a href="#开机自启">5.7 开机自启</a></li>
+<li><a href="#日常使用">5.8 日常使用</a></li>
+<li><a href="#回退">5.9 回退</a></li>
+</ul></li>
+<li><a href="#附带成果-车机端工具链补齐">6. 附带成果
+车机端工具链补齐</a>
+<ul>
+<li><a href="#busybox-系统自带版本更全不必换">6.1 busybox
+系统自带版本更全不必换</a></li>
+<li><a href="#单文件静态-curl-可行">6.2 单文件静态 curl 可行</a></li>
+</ul></li>
+<li><a href="#车机当前状态与回退清单">7. 车机当前状态与回退清单</a>
+<ul>
+<li><a href="#已装第三方应用">7.1 已装第三方应用</a></li>
+<li><a href="#本机改动清单与回退">7.2 本机改动清单与回退</a></li>
+<li><a href="#一次性回退脚本">7.3 一次性回退脚本</a></li>
+</ul></li>
+<li><a href="#方法论-这次能收敛靠的是这七条">8. 方法论
+这次能收敛靠的是这七条</a></li>
+<li><a href="#附录-a-命令与参数速查">附录 A 命令与参数速查</a></li>
+<li><a href="#附录-b-故障排查对照表">附录 B 故障排查对照表</a></li>
+<li><a href="#附录-c-组件与属性速查">附录 C 组件与属性速查</a></li>
+<li><a href="#附录-d-关联文档与交叉引用">附录 D
+关联文档与交叉引用</a></li>
+<li><a href="#附录-e-安全与合规提示">附录 E 安全与合规提示</a></li>
+</ul>
+<hr />
+<h1 id="背景与目标">1. 背景与目标</h1>
+<h2 id="起因">1.1 起因</h2>
+<p>手里是一台<strong>安卓 6.0 的国产车机主机</strong>（杰发
+AC8317，1024×600），原装预装了
+<strong>ZLink</strong>（<code>com.zjinnova.zlink</code>
+v3.5.59），<br />
+车机自己的桌面是 eLite（安吉星车联）。</p>
+<p>最初的需求很朴素：<strong>把手机屏幕投到车机大屏上</strong>。</p>
+<p>原因也很现实：车机是 2020 年的老机器、1024×600
+的低分屏、导航与音乐应用都是”车机版”；<br />
+而手机是荣耀 Magic7（MagicOS 9 / Android 15），分辨率 2800×1264。<br />
+想在车上用手机的导航、聊天、听书内容，<strong>就必须把手机画面送到这台大屏上</strong>。</p>
+<h2 id="需求澄清与两个关键修正">1.2 需求澄清与两个关键修正</h2>
+<p>需求澄清过程中有两个关键修正，它们直接决定了技术路线：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>最初的想象</th>
+<th>澄清后的事实</th>
+<th>影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“在车机上点 = 操作手机”（需要触摸回传）</td>
+<td><strong>不需要</strong> ——
+用户在<strong>手机上</strong>操作，车机只是块大屏</td>
+<td>Miracast 不再被否（它没有输入通道，但我们不需要）</td>
+</tr>
+<tr>
+<td>“手机端别装客户端，用系统自带的”</td>
+<td>车机侧<strong>根本没有接收端</strong></td>
+<td>结论反转：手机端<strong>必须</strong>装发送端</td>
+</tr>
+</tbody>
+</table>
+<p>第一点修正排除了”必须支持触摸回传”这个会把方案空间砍掉一大半的约束；<br />
+第二点修正则把整个问题从”选哪个投屏协议”翻转成了”<strong>接收端不存在，怎么自己造一个接收端</strong>”。</p>
+<h2 id="目标与非目标">1.3 目标与非目标</h2>
+<p><strong>目标</strong></p>
+<ol type="1">
+<li>把荣耀 Magic7 的屏幕显示到车机 1024×600
+大屏，<strong>操作仍在手机上做</strong>（单向画面）。</li>
+<li>日常可用：车机开机后手动点两下即可连上，手机端尽量自动化（开机自启）。</li>
+<li>不破坏车机既有能力：不动 CarManager / 倒车影像 / 语音套件 /
+原厂桌面回滚链路。</li>
+<li><strong>可一键回退</strong>：所有新增内容落在
+<code>/data</code>，删包即恢复出厂状态。</li>
+</ol>
+<p><strong>非目标</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>非目标</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触摸回传（车机触摸控制手机）</td>
+<td>需求澄清后不需要；VNC 的输入通道在 Android 6.0
+车机上没有成熟方案</td>
+</tr>
+<tr>
+<td>音频转发</td>
+<td>本次只做画面；车机本身有独立的蓝牙音频链路</td>
+</tr>
+<tr>
+<td>破解厂商授权 / 买激活码</td>
+<td>不做授权绕过，只做自建方案</td>
+</tr>
+<tr>
+<td>深度定制导航与娱乐 App</td>
+<td>与投屏需求正交，另有文档记录</td>
+</tr>
+</tbody>
+</table>
+<h2 id="网络拓扑的决定">1.4 网络拓扑的决定</h2>
+<p>车机有自己的 eSIM 和 4G（T-Box 已
+<code>connected</code>），但<strong>最终选择由手机开热点、车机连手机</strong>，而不是反过来。</p>
+<p>原因有二：</p>
+<ol type="1">
+<li><strong>硬件约束</strong>：车机 Wi-Fi 是单射频 2.4G
+芯片（MT6630），<strong>STA + AP
+硬件互斥</strong>——车机开热点时无法同时作为客户端连别的 AP。</li>
+<li><strong>链路复用</strong>：这样电脑也在同一网段，<strong>adb
+与投屏共用一条链路</strong>，调试与投屏可以同时进行，不用来回切。</li>
+</ol>
+<h2 id="结果速览">1.5 结果速览</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>目标</strong></td>
+<td>荣耀 Magic 7 的屏幕显示到车机 1024×600
+大屏，<strong>操作仍在手机上做</strong>（单向画面，不需触摸回传）</td>
+</tr>
+<tr>
+<td><strong>车机</strong></td>
+<td>杰发 AC8317（Autochips ac83xx）/ Android 6.0 / 1024×600 /
+<strong>userdebug 可 root</strong></td>
+</tr>
+<tr>
+<td><strong>手机</strong></td>
+<td>荣耀 Magic 7（MagicOS 9 / Android 15）</td>
+</tr>
+<tr>
+<td><strong>网络</strong></td>
+<td>车机连<strong>手机热点</strong>，三方同网段（手机
+<code>10.208.253.57</code>、车机 <code>10.208.253.186</code>、电脑
+<code>10.208.253.171</code>）</td>
+</tr>
+<tr>
+<td><strong>最终方案</strong></td>
+<td>手机 <code>droidVNC-NG 2.22.0</code>（GPL-2.0，6.5 MB）+ 车机
+<code>AVNC 3.3.1</code>（GPL-3.0，7.3 MB）</td>
+</tr>
+<tr>
+<td><strong>实测数据</strong></td>
+<td>RFB 003.008 / 安全类型 <code>[2,16]</code>（VNC 密码认证）/
+密码校验通过 / 虚拟屏 <code>840x379</code> / 连接
+<code>ESTABLISHED</code></td>
+</tr>
+<tr>
+<td><strong>额外完成</strong></td>
+<td>车机版喜马拉雅 v1.7.1 安装；车机 root；车机端单文件静态 curl</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三个最值钱的结论</strong>（后面都有完整证据）：</p>
+<ol type="1">
+<li><strong>车机没有 Miracast 接收端</strong> ——
+手机系统自带「投屏」永远发现不了它，“手机零安装”这条路不存在。</li>
+<li><strong>ZLink 无线被三重独立阻断</strong> —— 无 MFi 芯片证据 +
+<strong>Wi-Fi 芯片只支持 2.4GHz</strong> + 授权档位不含
+<code>W</code>。<br />
+即使花钱买激活码解锁，<strong>依然连不上</strong>。</li>
+<li><strong>选纯 TCP 方案（VNC）是唯一稳妥解</strong> —— 它不碰
+P2P、不碰蓝牙、不看厂商脸色，车机端还能自己装。</li>
+</ol>
+<hr />
+<h1 id="软硬件环境">2. 软硬件环境</h1>
+<p>在动手之前先把车机底裤摸清楚。以下全部为<strong>实机采集</strong>（<code>getprop</code>
+/ <code>/proc</code> / <code>dumpsys</code> / <code>sysfs</code>）。</p>
+<h2 id="参与设备一览">2.1 参与设备一览</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>角色</th>
+<th>设备</th>
+<th>系统 / 参数</th>
+<th>在本方案中的角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车机主机</td>
+<td>杰发 AC8317（ONSTAR_LITE_K215）</td>
+<td>Android 6.0 / 1024×600 / userdebug</td>
+<td><strong>VNC 客户端</strong>（AVNC），显示端</td>
+</tr>
+<tr>
+<td>手机</td>
+<td>荣耀 Magic 7</td>
+<td>MagicOS 9 / Android 15 / 2800×1264</td>
+<td><strong>VNC 服务端</strong>（droidVNC-NG），录屏 + 发送</td>
+</tr>
+<tr>
+<td>电脑</td>
+<td>Mac / Linux</td>
+<td>—</td>
+<td>调试终端（adb + 协议嗅探）</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>手机热点 <code>荣耀Magic7</code></td>
+<td>2.4GHz 20MHz，72 Mbps，RSSI −22 dBm</td>
+<td>三方同网段的公共传输层</td>
+</tr>
+<tr>
+<td>电源</td>
+<td>车机</td>
+<td>常电供电，无电池、无 thermal_zone</td>
+<td>不受电源管理干扰，可长时间投屏</td>
+</tr>
+</tbody>
+</table>
+<h2 id="车机系统基线">2.2 车机系统基线</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>实测值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SoC</td>
+<td>杰发
+<strong>AC8317</strong>（<code>ro.hardware=ac83xx</code>，<code>ro.board.platform=mt6735</code>，厂商称
+Autochips）</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>4 × ARMv7 rev 3
+(Cortex-A7)，<code>CPU part 0xc07</code>，NEON/VFPv4/idiva/idivt/lpae/evtstrm，<strong>32
+位</strong></td>
+</tr>
+<tr>
+<td>CPU 频率</td>
+<td>max <strong>1,188,000 kHz</strong> / min 198,000
+kHz，<strong>governor = performance（锁频）</strong>，实测
+<code>scaling_cur_freq</code> = 1,188,000（4 核全速）</td>
+</tr>
+<tr>
+<td>CPU 标识</td>
+<td><code>Hardware: Autochips ac83xx</code>，<code>Revision 0000</code>，<code>Serial: 408849cb9e8f016c</code>，BogoMIPS
+13.50</td>
+</tr>
+<tr>
+<td>内存</td>
+<td><strong>1,843,044 kB</strong>（≈1.76 GiB），<strong>无
+Swap</strong>（SwapTotal = 0）</td>
+</tr>
+<tr>
+<td>eMMC</td>
+<td><code>mmcblk0</code> 15,388,672 KB（≈14.7 GB）+ <code>mmcblk1</code>
+10,048,768 KB；器件
+<code>name=016GB0</code>，<code>cid=11010030313647423000e01f62956713</code>，<code>manfid=0x000011</code>，<code>oemid=0x0100</code>，出厂
+<strong>06/2020</strong>，<code>serial=0xe01f6295</code></td>
+</tr>
+<tr>
+<td>系统</td>
+<td>Android <strong>6.0</strong>（MRA58K, SDK
+23），<code>userdebug</code> + <code>test-keys</code>，<strong>SELinux
+disabled</strong>，<strong>无 dm-verity</strong></td>
+</tr>
+<tr>
+<td>编译标识</td>
+<td><code>ro.build.fingerprint = autochips/full_ac83xx_evb/ac83xx_evb:6.0/MRA58K/1607671737:userdebug/test-keys</code></td>
+</tr>
+<tr>
+<td>构建元信息</td>
+<td><code>ro.build.user=pengruguo</code>，<code>ro.build.host=user-virtual-machine</code>，<code>ro.build.date=2020-12-11 15:32:48 CST</code>，<code>ro.build.incremental=1607671737</code>，<code>ro.build.flavor=full_ac83xx_evb-userdebug</code>，<code>ro.build.characteristics=default</code></td>
+</tr>
+<tr>
+<td>安全补丁</td>
+<td><code>ro.build.version.security_patch = 2017-05-05</code>（该基线是
+6.0 时代）</td>
+</tr>
+<tr>
+<td>固件版本</td>
+<td><code>ro.fota.version = AC1_S1902_V1.36_20201202</code>；<code>ro.hk.version = AC83MOS002_V1.26_20201211</code></td>
+</tr>
+<tr>
+<td>内核</td>
+<td><code>3.18.49+ #1 SMP PREEMPT Fri Dec 11 15:49:39 CST 2020 armv7l</code></td>
+</tr>
+<tr>
+<td>显示</td>
+<td><strong>1024×600</strong>，density 240，刷新 60 Hz（16666666
+ns），<code>ro.sf.hwrotation=0</code></td>
+</tr>
+<tr>
+<td>背光</td>
+<td><code>/sys/class/backlight/soc:bkl</code>，0–100，采集时
+<strong>64</strong></td>
+</tr>
+<tr>
+<td>调试通道</td>
+<td><code>persist.adb.tcp.port=5555</code> 固化 → <strong>重启后 adbd
+自动监听
+5555</strong>；<code>ro.adb.secure=0</code>、<code>ro.debuggable=1</code>
+→ <code>adb root</code> 直接 uid=0</td>
+</tr>
+<tr>
+<td>地区</td>
+<td><code>ro.product.locale=zh-CN</code>，<code>Asia/Shanghai</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="存储分区明细">存储分区明细</h3>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>挂载点</th>
+<th>设备</th>
+<th>容量</th>
+<th>已用</th>
+<th>空闲</th>
+<th>读写</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/system</code></td>
+<td><code>/dev/block/system</code></td>
+<td>726.5 M</td>
+<td>360.4 M</td>
+<td>366.1 M</td>
+<td><strong>ro</strong>（ext4）</td>
+</tr>
+<tr>
+<td><code>/vendor</code></td>
+<td><code>/dev/block/vendor</code></td>
+<td>581.2 M</td>
+<td>438.4 M</td>
+<td>142.8 M</td>
+<td><strong>ro</strong>（ext4）</td>
+</tr>
+<tr>
+<td><code>/data</code></td>
+<td><code>/dev/block/userdata</code></td>
+<td>1.9 G</td>
+<td>1.1 G</td>
+<td><strong>859.6 M</strong></td>
+<td>rw</td>
+</tr>
+<tr>
+<td><code>/cache</code></td>
+<td><code>/dev/block/cache</code></td>
+<td>387.4 M</td>
+<td>528 K</td>
+<td>386.9 M</td>
+<td>rw</td>
+</tr>
+<tr>
+<td><code>/sdcard</code></td>
+<td><code>/dev/block/intsd</code></td>
+<td><strong>9.4 G</strong></td>
+<td>5.0 G</td>
+<td>4.4 G</td>
+<td>rw（内部存储）</td>
+</tr>
+<tr>
+<td><code>/adas</code></td>
+<td><code>/dev/block/adas</code></td>
+<td>64.9 M</td>
+<td>1.0 M</td>
+<td>63.8 M</td>
+<td>rw（ADAS 分区）</td>
+</tr>
+<tr>
+<td><code>/mnt/media_rw/map</code></td>
+<td><code>/dev/block/map</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>rw（地图）</td>
+</tr>
+<tr>
+<td><code>/mnt/media_rw/hk_log</code></td>
+<td><code>/dev/block/hk_log</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>rw（厂商日志）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>分区表：eMMC 上共 34 个逻辑分区（<code>mmcblk0p1..p15</code> +
+<code>mmcblk1p16..p34</code>）。<br />
+<strong><code>/data</code> 空闲 860 MB</strong>
+是本机最紧的资源（只够装得下小型 APK，不适合再塞大型应用）。</p>
+</blockquote>
+<h2 id="射频与外设实测">2.3 射频与外设实测</h2>
+<p><strong>这节是全文最关键的</strong>——投屏方案的死活基本由这一节决定。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>实测值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Wi-Fi 芯片</strong></td>
+<td><strong><code>mediatek.wlan.chip=CONSYS_MT6735</code></strong>、<code>WIFI_ID_MT6630</code></td>
+<td>⚠️ <strong>MT6630 是纯 2.4GHz 芯片，不支持 5GHz</strong></td>
+</tr>
+<tr>
+<td>Wi-Fi 实测</td>
+<td>SSID <code>荣耀Magic7</code>，<strong>2462
+MHz</strong>（2.4G/20MHz），72 Mbps，RSSI −22
+dBm，<code>ro.wifi.channels=[]</code></td>
+<td>无 5GHz 频点声明</td>
+</tr>
+<tr>
+<td>Wi-Fi P2P</td>
+<td><code>ro.mediatek.wlan.p2p=1</code>、<code>wifi.direct.interface=p2p0</code>、<code>wlan.wfd.security.image=1</code></td>
+<td>✅ <strong>支持 Wi-Fi Direct</strong></td>
+</tr>
+<tr>
+<td>蓝牙</td>
+<td><code>BT_ID_MT6630</code>，<code>ro.mtk_bt_support=1</code>，名称
+<code>MyBuick562</code>，MAC <code>00:30:13:67:95:62</code></td>
+<td>已与 <code>荣耀Magic7</code> 配对</td>
+</tr>
+<tr>
+<td>GNSS</td>
+<td><code>/system/xbin/mnld</code>
+守护在跑，<code>GPS_ID_MT6630</code></td>
+<td>NMEA 由 <strong>TCP 7000</strong> 对外提供</td>
+</tr>
+<tr>
+<td>MCU 串口</td>
+<td><code>/dev/ttyMT4</code> →
+<code>com.adayo.carmanager</code>；<code>dev/ttyMT5</code> →
+<code>mculog</code></td>
+<td>实体按键/车控走这里，<strong>不走 Android 输入系统</strong></td>
+</tr>
+<tr>
+<td>4G 模组</td>
+<td><code>mtk-ril-slm750.so</code>（SIMCom
+SLM750），<code>-d /dev/ttyC0</code>，<code>ro.radio.ic=TEF6657_V102</code></td>
+<td>eSIM：屏幕 ICCID <code>8986112028708749475</code>，IMEI
+<code>860534043663308</code>（固件默认
+<code>ro.fota.iccid=89861120287087349475</code>
+差一位，<strong>以屏幕实际值为准</strong>）</td>
+</tr>
+<tr>
+<td>T-Box</td>
+<td><code>init.svc.tbox_service=running</code>、<code>sys.hk.tbox.connect=connected</code></td>
+<td>4G 通道已接通</td>
+</tr>
+<tr>
+<td>CAN 总线</td>
+<td><strong>无 <code>/dev/can*</code></strong></td>
+<td>车控走 MCU 串口</td>
+</tr>
+<tr>
+<td>输入设备</td>
+<td>全机仅 1
+个：<code>/dev/input/event0 "ac83xx_tsadcc"</code>（触摸屏）</td>
+<td>无实体键</td>
+</tr>
+<tr>
+<td>音频</td>
+<td>ALSA codec <strong><code>ac_83xx "Solo-1"</code></strong>，5 路
+playback + 3 路 capture PCM，ADSP 通路</td>
+<td><code>audio.primary.mt6735.so</code></td>
+</tr>
+<tr>
+<td>摄像头/视频输入</td>
+<td><strong>13 个 v4l2
+节点</strong>：<code>video10..17</code>、<code>video30..34</code></td>
+<td>倒车影像 / AVIN 输入</td>
+</tr>
+<tr>
+<td>图形</td>
+<td><strong>Mali-400 MP</strong>，OpenGL ES
+2.0（<code>ro.opengles.version=131072</code>），EGL 1.4
+Linux-r6p1-01rel0</td>
+<td><code>libGLES_mali.so</code>；<code>hwcomposer.mt6735.so</code>、<code>gralloc.default.so</code></td>
+</tr>
+<tr>
+<td>厂商 HAL</td>
+<td><code>camera.mt6735.so</code> <code>gps.mt6735.so</code>
+<code>sensors.mt6735.so</code> <code>memtrack.mt6735.so</code>
+<code>audio.primary.mt6735.so</code> <code>audio.adsp.mt6735.so</code>
+<code>bluetooth.default.so</code> <code>power.default.so</code>
+<code>lights.default.so</code> <code>vibrator.default.so</code>
+<code>keystore.default.so</code></td>
+<td>全部是 MT6735 平台件</td>
+</tr>
+<tr>
+<td>电源/电池</td>
+<td><code>/sys/class/power_supply</code>
+<strong>为空</strong>，<code>/sys/class/thermal</code> <strong>无
+thermal_zone</strong></td>
+<td><strong>常电供电的车机</strong>，不读电量/温度</td>
+</tr>
+<tr>
+<td>其他 sys class</td>
+<td><code>stpbt</code> <code>stpgps</code> <code>stpwmt</code>
+<code>wmtWifi</code> <code>gpsdrv</code> <code>hidraw</code>
+<code>gpio</code> <code>i2c-adapter</code> <code>ieee80211</code>
+<code>mdio_bus</code> <code>trusty_ipc</code> <code>xc_idletimer</code>
+<code>bdi</code> <code>bsg</code></td>
+<td>MTK/平台私有节点</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>两个立刻生效的判断</strong>：<br />
+1. <strong>Wi-Fi 单射频 2.4G</strong> → 车机开热点时无法同时做 Wi-Fi
+客户端（STA+AP 硬件互斥）→ <strong>必须由手机当热点</strong>。<br />
+2. <strong>没有 5GHz</strong> → 任何要求 5GHz 的无线方案（无线
+CarPlay）在本机<strong>硬件层面就不成立</strong>。</p>
+</blockquote>
+<h2 id="资源约束">2.4 资源约束</h2>
+<p><code>dumpsys meminfo</code> 进程 PSS 排名（采集时快照，含本次新装的
+AVNC）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>PSS</th>
+<th>进程</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>215,725 kB</td>
+<td><code>com.autonavi.amapauto</code></td>
+<td>高德（自启已禁用，此处为手工运行态）</td>
+</tr>
+<tr>
+<td>82,512 kB</td>
+<td><code>com.txznet.txz</code></td>
+<td>同行者语音主进程</td>
+</tr>
+<tr>
+<td>80,269 kB</td>
+<td><code>system</code></td>
+<td>system_server</td>
+</tr>
+<tr>
+<td>64,605 kB</td>
+<td><code>com.netease.cloudmusic.iot</code></td>
+<td>网易云音乐车机版</td>
+</tr>
+<tr>
+<td>58,160 kB</td>
+<td><code>com.txznet.txz:svr1</code></td>
+<td>同行者语音服务</td>
+</tr>
+<tr>
+<td>54,313 kB</td>
+<td><code>com.wow.carlauncher.mini</code></td>
+<td>嘟嘟桌面（当前默认 HOME）</td>
+</tr>
+<tr>
+<td><strong>43,885 kB</strong></td>
+<td><strong><code>com.gaurav.avnc</code></strong></td>
+<td><strong>本次新增的 VNC 客户端</strong></td>
+</tr>
+<tr>
+<td>42,568 kB</td>
+<td><code>com.tencent.qqmusiccar</code></td>
+<td>QQ 音乐车机版</td>
+</tr>
+<tr>
+<td>32,358 kB</td>
+<td><code>com.android.systemui</code></td>
+<td></td>
+</tr>
+<tr>
+<td>30,174 kB</td>
+<td><code>com.autonavi.amapauto:locationservice</code></td>
+<td></td>
+</tr>
+<tr>
+<td>29,190 kB</td>
+<td><code>com.zjinnova.zlink</code></td>
+<td>ZLink</td>
+</tr>
+<tr>
+<td>23,317 kB</td>
+<td><code>com.android.settings</code></td>
+<td></td>
+</tr>
+<tr>
+<td>22,450 kB</td>
+<td><code>com.shinco.pinyinime</code></td>
+<td>搜狗/讯飞拼音（厂商）</td>
+</tr>
+<tr>
+<td>21,830 kB</td>
+<td><code>zygote</code></td>
+<td></td>
+</tr>
+<tr>
+<td>21,423 kB</td>
+<td><code>com.adayo.bt</code></td>
+<td>厂商蓝牙服务</td>
+</tr>
+<tr>
+<td>18,353 kB</td>
+<td><code>com.estrongs.android.pop</code></td>
+<td>ES 文件浏览器</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MemTotal 1843044 kB      MemFree 460964 kB       MemAvailable 907876 kB</span><br><span class="line">Buffers 4176 kB          Cached 499768 kB        Active 1057488 / Inactive 167996</span><br><span class="line">AnonPages 721492 kB      Mapped 492940 kB        Shmem 11692 kB</span><br><span class="line">Slab 35592 kB (SReclaimable 10792)                PageTables 0</span><br><span class="line">HighTotal 1619036 kB     HighFree 392812 kB      LowTotal 224008 / LowFree 68152</span><br><span class="line">SwapTotal 0 kB           （无 swap）</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>1.8 GB 内存 + 零 Swap 是这台机器最硬的约束</strong>：高德 +
+同行者 + 音乐三件套就吃掉近 500 MB。<br />
+<code>loadavg</code> 会显示 20+
+的高值，那是内核日志线程造成的假象（runqueue 实际只有 2
+个可运行任务）。</p>
+</blockquote>
+<p><strong>结论</strong>：投屏客户端（AVNC，约 44 MB PSS、7.3 MB
+安装包）属于<strong>可以接受但不能滥用</strong>的量级；<br />
+如果同时再开一路投屏 + 导航 + 音乐 + 有声书，内存就会进入紧张区。</p>
+<h2 id="端口占用与服务存在性判据">2.5 端口占用与服务存在性判据</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TCP  监听: 1234  5037(ADB server)  5354  5500  5555(ADB over WiFi)  7000(NMEA)</span><br><span class="line">            60001  + 9 个 127.0.0.1:51818~51898（厂商内部通道）</span><br><span class="line">TCP6 监听: 9000(hdmihdcp)  22342  61323</span><br><span class="line">UDP        : 68(DHCP)  5353(mDNS)  44884  52244  54790  56549</span><br><span class="line">            ★ 无 1900 (SSDP)  →  机器上不存在 UPnP/DLNA 服务</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>端口表是判断”某个服务到底有没有在跑”的硬证据，后面第 4 章的 DLNA
+结论就是靠它定的。</p>
+</blockquote>
+<p><strong>判据三件套</strong>（判定”接收端存不存在”最快的方法，比翻 APK
+快得多）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ① mDNS：对方有没有广播服务类型</span></span><br><span class="line">dns-sd -B _miracast._tcp        <span class="comment"># Mac 侧，与车机同网段</span></span><br><span class="line"><span class="comment"># ② SSDP：UPnP/DLNA Renderer 的标准回应</span></span><br><span class="line"><span class="comment">#    发 M-SEARCH → urn:schemas-upnp-org:device:MediaRenderer:1</span></span><br><span class="line"><span class="comment"># ③ 内核端口表：SSDP 固定用 UDP 1900</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/net/udp</span><br></pre></td></tr></table></figure>
+<h2 id="调试通道">2.6 调试通道</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>通道</th>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USB ADB</td>
+<td><strong>从未在 Mac 端枚举成功</strong></td>
+<td>已放弃 USB 路线</td>
+</tr>
+<tr>
+<td><strong>WiFi ADB</strong></td>
+<td>✅ <code>adb connect 10.208.253.186:5555</code></td>
+<td><code>persist.adb.tcp.port=5555</code> 已固化，重启自动监听</td>
+</tr>
+<tr>
+<td><strong>root</strong></td>
+<td>✅ <code>adb root</code> 后 <code>uid=0</code></td>
+<td><code>userdebug</code> + <code>ro.adb.secure=0</code> + SELinux
+disabled</td>
+</tr>
+<tr>
+<td>写保护</td>
+<td><code>/system</code>、<code>/vendor</code> 每次重启重新挂只读</td>
+<td>需
+<code>adb remount</code>，且<strong>每次重启后必须重挂</strong></td>
+</tr>
+<tr>
+<td>传输速率</td>
+<td>WiFi ADB ≈ 0.3 MB/s</td>
+<td>60 MB push ≈ 218 s，长命令需 590 s 超时</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>WiFi ADB 与投屏<strong>不冲突</strong>：两者都走”手机开热点、车机做
+STA”这一条链路，<br />
+车机并不需要开热点，所以不存在单射频互斥问题。</p>
+</blockquote>
+<hr />
+<h1 id="问题一-厂商方案-zlink-无线互联走不通">3. 问题一 厂商方案 ZLink
+无线互联走不通</h1>
+<p>车机预装的 ZLink 是主推方案，官方宣称”支持有线 +
+无线”。先看它到底怎么控制无线。</p>
+<h2 id="车机上到底有什么">3.1 车机上到底有什么</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages | grep zlink</span><br><span class="line"><span class="comment"># package:com.zjinnova.zlink</span></span><br><span class="line">adb shell pm path com.zjinnova.zlink</span><br><span class="line"><span class="comment"># package:/vendor/third-app/zlink-la-xinke-release-v3.5.59_jg.apk</span></span><br></pre></td></tr></table></figure>
+<p>APK 里 <strong>57 个 native 库</strong>，其中明确含本机平台库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">liball_ac8317.so      ← 本机（杰发 AC8317）</span><br><span class="line">liball_ac8227l.so     liball_ac8257.so     liball_8227.so</span><br><span class="line">libAirPlay.so  libAirPlaySupport.so  libzjAirPlay.so   ← AirPlay 协议栈</span><br><span class="line">libdns_sd.so   libzmdnsd.so                                  ← mDNS 发现</span><br><span class="line">libzj_dlna.so  libzjcarlife.so  libScreenStream.so  libAudioStream.so</span><br></pre></td></tr></table></figure>
+<h2 id="静态分析-无线被授权档位锁住">3.2 静态分析
+无线被授权档位锁住</h2>
+<p>反编译 ZLink 3.5.59 得到的核心判定函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">n</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">regMode</span> <span class="operator">=</span> b.a.a.d.c.j();          <span class="comment">// 读授权档位</span></span><br><span class="line">    Log.i(<span class="string">&quot;zj&quot;</span>, <span class="string">&quot;regMode:&quot;</span> + regMode);</span><br><span class="line">    <span class="keyword">if</span> (!TextUtils.isEmpty(regMode)) <span class="keyword">return</span> regMode.contains(<span class="string">&quot;W&quot;</span>);  <span class="comment">// 含 &quot;W&quot; 才算支持无线</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用处（蓝牙连上后、进入无线流程前）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!b.a.a.e.b.n()) &#123;</span><br><span class="line">    Log.i(TAG, <span class="string">&quot;onBtConnect, Wireless-cp NOT Support! regMode:&quot;</span> + regMode);</span><br><span class="line">    <span class="keyword">return</span>;              <span class="comment">// ← 直接中止，不进入无线连接流程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实机授权文件（明文，<code>/storage/emulated/legacy/zlink/.d</code>）：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;regMode&quot;</span><span class="punctuation">:</span><span class="string">&quot;LA&quot;</span><span class="punctuation">,</span><span class="attr">&quot;t&quot;</span><span class="punctuation">:</span><span class="string">&quot;XLABD3A54&quot;</span><span class="punctuation">,</span><span class="attr">&quot;cp&quot;</span><span class="punctuation">:</span><span class="string">&quot;9F371ACC381C85C2C9CD150060619001&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><strong><code>regMode="LA"</code> 不含 <code>"W"</code> →
+无线被锁。</strong><br />
+（注意日志里 “Wireless-cp NOT Support”
+是<strong>误导性措辞</strong>，它说的是授权档位，不是硬件探测结果。）</p>
+<h2 id="实机验证-三项全部判负">3.3 实机验证 三项全部判负</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>验证项</th>
+<th>命令</th>
+<th>实测</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>有没有 Apple MFi 芯片</td>
+<td><code>ls /system/bin/mfi_test</code></td>
+<td><strong>文件不存在</strong>（同平台 AC8227L 社区仓库里是有的）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>getprop \| grep -i mfi</code></td>
+<td><strong>无任何 <code>mfi_id</code> 属性</strong></td>
+<td>❌</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>ls /dev/i2c-*</code></td>
+<td>有 <code>i2c-0</code>/<code>i2c-1</code>（总线在，但无 MFi
+证据）</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>2</td>
+<td>支不支持 5GHz</td>
+<td><code>getprop \| grep -i wifi</code></td>
+<td><strong><code>mediatek.wlan.chip=CONSYS_MT6735</code> /
+<code>WIFI_ID_MT6630</code></strong></td>
+<td>❌</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>dumpsys wifi</code></td>
+<td>实连 <code>2462MHz</code>；<code>ro.wifi.channels=[]</code></td>
+<td>❌ <strong>MT6630 纯 2.4G</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>有没有分体无线模块</td>
+<td><code>ls /dev/socket/ \| grep -i goc</code></td>
+<td><strong>无 <code>goc_rfcom</code></strong></td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<p>顺带还查到这些系统属性（此前未被记录）：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[zj.wirelesscarplay.state]</span>: <span class="string">[1]          # 系统侧&quot;无线 CarPlay&quot;开关是开的</span></span><br><span class="line"><span class="attr">[zj.zlink.state]</span>: <span class="string">[1]                     # ZLink 运行态</span></span><br><span class="line"><span class="attr">[zj.net.state]</span>: <span class="string">[1]                       # 网络状态</span></span><br><span class="line"><span class="attr">[zj.phonelink.type]</span>: <span class="string">[none]               # 手机互联类型 = none</span></span><br><span class="line"><span class="attr">[persist.sys.zlink.mode.registed]</span>: <span class="string">[lc]    # 小写 lc</span></span><br><span class="line"><span class="attr">[rw.zlink.channel]</span>: <span class="string">[xinke]               # 对应 APK 名 zlink-la-xinke-release</span></span><br><span class="line"><span class="attr">[sys.zlink.cp.displayname]</span>: <span class="string">[INTELLILINK Carplay]</span></span><br><span class="line"><span class="attr">[sys.hk.tbox.connect]</span>: <span class="string">[connected]</span></span><br></pre></td></tr></table></figure>
+<p><code>zj.wirelesscarplay.state=1</code>
+说明<strong>系统并没有主动关掉无线
+CarPlay</strong>，它是被授权和硬件挡住的。</p>
+<h2 id="定稿-四个彼此独立的阻断">3.4 定稿 四个彼此独立的阻断</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>阻断</th>
+<th>性质</th>
+<th>花钱能解决吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>无 MFi 芯片证据</strong></td>
+<td>认证层。按厂商官方 FAQ：“提示无 MFi
+芯片意味着车机硬件不具备相关认证，<strong>无法使用 CarPlay
+功能</strong>”</td>
+<td>❌ 授权码也救不了</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Wi-Fi 芯片只支持 2.4GHz</strong></td>
+<td><strong>硬件层</strong>。无线 CarPlay 必须 5GHz</td>
+<td>❌ <strong>物理不可能</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>授权档位 <code>regMode="LA"</code> 不含 “W”</strong></td>
+<td>授权层</td>
+<td>✅ 可花钱解锁 —— 但解锁后仍被 #2 挡住</td>
+</tr>
+<tr>
+<td>（附）</td>
+<td>无分体无线模块 <code>goc_rfcom</code></td>
+<td>架构层：ZLink 无线流程依赖”车机↔︎独立无线模块”分体结构</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>厂商免费方案 mLink 车机版
+<code>minSdk=26</code></strong></td>
+<td><strong>版本代差</strong>：本机 Android 6.0 装不上</td>
+<td>❌ 只能换车机或向厂商要旧版</td>
+</tr>
+</tbody>
+</table>
+<p><strong>所以：不建议买 ¥100 的 ZLink 激活码。</strong> 花钱只解开第 3
+项，第 1、2 项依然在。<br />
+真正能绕开全部四坑的只有 <strong>外挂无线 CarPlay 盒</strong>（自带 5G
+射频与自己的认证身份）。</p>
+<blockquote>
+<p>厂商也提供<strong>免费</strong>的纯投屏方案
+<strong>mLink</strong>（车机版 + 手机版双端，官方直链可下），<br />
+但实测其<strong>车机版 <code>minSdk=26</code>（Android 8.0）→ 装不上本机
+Android 6.0</strong>，<br />
+且它内部同样依赖 <strong>Wi-Fi
+Direct</strong>（<code>WifiP2pManager</code> / <code>P2pGroup</code>）→
+单射频 2.4G 的老坑照踩。<br />
+这是第四道独立门槛，属<strong>纯版本代差</strong>：2020 年的车机配 2025+
+的投屏 App。</p>
+</blockquote>
+<blockquote>
+<p>另一条社区经验也在本机得到验证：<strong>Wi-Fi 客户端模式与无线
+CarPlay 互斥</strong> —— 根因就是 §2.3 的单射频 2.4G。<br />
+本机的 ADB 正是走 WiFi，所以<strong>测无线 CarPlay 前必须先断开 adb
+链路</strong>，天然冲突。</p>
+</blockquote>
+<h2 id="那到底什么能用">3.5 那到底什么能用</h2>
+<ul>
+<li><strong>有线 CarLife / 有线
+CarPlay</strong>：可以（<code>libzjcarlife.so</code> + ZLink 两个
+Activity 都在）。</li>
+<li><strong>CarLife 的无线</strong>：与 CarPlay 同门，同样受
+<code>regMode</code> 门控，且本机无 5GHz → 也不行。</li>
+<li><strong>安卓手机投屏</strong>：ZLink 3.5.59
+<strong>根本没有这个功能</strong>（见下一节的 Manifest 清点）。</li>
+</ul>
+<hr />
+<h1 id="问题二-车机没有原生投屏接收端">4. 问题二
+车机没有原生投屏接收端</h1>
+<p>一个很自然的想法：<strong>如果车机自带 DLNA 或 Miracast
+接收端，手机就能用系统自带「投屏」零安装推过去。</strong></p>
+<p>于是做了六路排查，结论是<strong>车机侧一个标准接收端都没有</strong>。</p>
+<h2 id="六路排查">4.1 六路排查</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>手段</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ZLink 3.5.59 <strong>Manifest 组件清点</strong></td>
+<td>只有 <code>CarPlayActivity</code> / <code>CarLifeActivity</code>（均
+LAUNCHER）。<strong>无 <code>MirrorActivity</code>、无
+<code>DlnaActivity</code></strong>（这两个是 5.3.8 才引入的；5.3.8
+官方包才有 <code>_zj_mirror._tcp</code>）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ZLink native 库 <strong>mDNS 服务类型清点</strong></td>
+<td>广播 <code>_airplay._tcp</code> <code>_raop._tcp</code>
+<code>_carplay-ctrl._tcp</code> <code>_http._tcp</code>
+<code>_airport._tcp</code> <code>_hap._tcp</code>
+<code>_mfi-config._tcp</code> <code>_mirror._tcp</code>
+<code>_servicetype1..5._tcp</code> —— ⚠️ <strong>无
+<code>_miracast._tcp</code></strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>实机 mDNS 广播监听</strong>（Mac 侧
+<code>dns-sd -B</code>，与车机同网段）</td>
+<td>车机<strong>不广播任何投屏服务</strong>；唯一应答的是 Mac 自己的
+<code>_airplay._tcp</code>（macOS 屏幕共享）</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>实机 SSDP 发现</strong>（<code>M-SEARCH</code> →
+<code>urn:schemas-upnp-org:device:MediaRenderer:1</code> /
+<code>MediaServer</code> / <code>ssdp:all</code>）</td>
+<td><strong>零回应</strong> → 不是 DLNA Renderer</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>车机 UDP 端口表</strong>（<code>/proc/net/udp</code>）</td>
+<td>有 <code>68</code>(DHCP)、<code>5353</code>(mDNS) 等，<strong>无
+<code>1900</code>(SSDP)</strong> → 佐证 #4</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>eLite（安吉星车联）静态检查</strong></td>
+<td>DEX/native 中<strong>无任何</strong> <code>ssdp</code> /
+<code>upnp</code> / <code>cling</code> / <code>airplay</code> /
+<code>miracast</code> / 服务发现实现，只有高德 SDK + WebView</td>
+</tr>
+</tbody>
+</table>
+<p>补充：ZLink 运行中（<code>CarLifeActivity</code> 前台）重复第 3、4
+步，<strong>依然零广播、零 SSDP 回应</strong> ——<br />
+说明这些服务是<strong>按需拉起</strong>的，而拉起它们的入口（蓝牙握手）在安卓手机这边根本走不通。</p>
+<h2 id="协议支持矩阵">4.2 协议支持矩阵</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>协议</th>
+<th>车机侧</th>
+<th>手机侧</th>
+<th>零安装投屏？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Miracast / Wi-Fi Display</strong></td>
+<td>❌ 无 Sink（无 <code>_miracast._tcp</code>、无 WFD 组件）</td>
+<td>✅ 系统自带</td>
+<td><strong>❌</strong>（没有接收端）</td>
+</tr>
+<tr>
+<td><strong>DLNA / UPnP</strong></td>
+<td>❌ 无 Renderer（无 SSDP 1900）</td>
+<td>✅ 系统「超级分享」</td>
+<td><strong>❌</strong>（且 DLNA 只能推媒体，不能全屏镜像）</td>
+</tr>
+<tr>
+<td><strong>AirPlay</strong></td>
+<td>⚠️ 代码里有，但需 iPhone + 蓝牙握手</td>
+<td>❌ 安卓无系统级 AirPlay 发送端</td>
+<td><strong>❌</strong></td>
+</tr>
+<tr>
+<td><strong>厂商私有 <code>_zj_mirror._tcp</code></strong></td>
+<td>⚠️ 仅 5.3.8 有；3.5.59 未注册 Activity</td>
+<td>❌ 需厂商 App</td>
+<td><strong>❌</strong></td>
+</tr>
+<tr>
+<td><strong>HiCar</strong></td>
+<td>❌ 未预装</td>
+<td>✅ 荣耀原生</td>
+<td><strong>❌</strong></td>
+</tr>
+<tr>
+<td><strong>CarPlay / CarLife</strong></td>
+<td>✅ 有</td>
+<td>⚠️ 无线三重阻断，有线 CarLife 可用</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td><strong>VNC（RFB）</strong></td>
+<td>✅ <strong>自己装 AVNC</strong></td>
+<td>✅ droidVNC-NG</td>
+<td>✅ <strong>已跑通</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="结论">4.3 结论</h2>
+<blockquote>
+<p><strong>不是”协议支持与否”的问题，而是”接收端根本不存在”。</strong><br />
+手机系统「投屏」本质是 Miracast 发送端，它需要对方广播
+<code>_miracast._tcp</code>；<br />
+本机没有任何一个组件广播它，系统层也没有 WFD Sink。<br />
+⇒ <strong>手机上必须装一个发送端
+App</strong>，或者走”外挂无线盒子”路线。</p>
+</blockquote>
+<hr />
+<h1 id="问题三-开源-vnc-栈落地">5. 问题三 开源 VNC 栈落地</h1>
+<h2 id="选型与理由">5.1 选型与理由</h2>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>端</th>
+<th>软件</th>
+<th>许可</th>
+<th>体积</th>
+<th>minSdk</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手机</td>
+<td><strong>droidVNC-NG 2.22.0</strong></td>
+<td>GPL-2.0</td>
+<td>6.5 MB</td>
+<td>24（Android 7.0）</td>
+<td>VNC 服务端（MediaProjection 录屏）</td>
+</tr>
+<tr>
+<td>车机</td>
+<td><strong>AVNC 3.3.1</strong></td>
+<td>GPL-3.0</td>
+<td>7.3 MB</td>
+<td><strong>21（Android 5.0）</strong></td>
+<td>VNC 客户端</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>两者均取自 <strong>F-Droid 官方仓库</strong>，SHA256
+与官方索引<strong>逐字节一致</strong>。</li>
+<li>AVNC <code>minSdk=21</code> → <strong>在 Android 6.0
+车机上实测运行正常</strong>（中文界面、1024×600 横屏适配良好，PSS 约 44
+MB）。</li>
+<li>为什么选 VNC：
+<ol type="1">
+<li><strong>纯 TCP</strong>，不依赖 P2P / 蓝牙 /
+厂商授权，一次绕开三重不确定；</li>
+<li>接收端<strong>可自行安装</strong>（车机 root +
+<code>pm install</code>），不靠厂商；</li>
+<li>需求是单向画面，<strong>不需要触摸回传</strong>，也就不用折腾 VNC
+的用户名等认证细节。</li>
+</ol></li>
+</ul>
+<h2 id="拓扑">5.2 拓扑</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">      [手机] 热点网关 10.208.253.57（荣耀 Magic 7 开热点）</span><br><span class="line">      /        |              \</span><br><span class="line">[Mac] .171   [车机] 10.208.253.186</span><br><span class="line">    │            │</span><br><span class="line"> adb:5555   AVNC 客户端 ──VNC──→ 手机 :5900</span><br></pre></td></tr></table></figure>
+<h2 id="实施步骤">5.3 实施步骤</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ① 车机侧：VNC 客户端 + 顺手装车机版喜马拉雅</span></span><br><span class="line">adb -s 10.208.253.186:5555 install -r com.gaurav.avnc_53.apk</span><br><span class="line">adb -s 10.208.253.186:5555 install -r 喜马拉雅FM车机版_v1.7.1.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># ② 手机侧：装服务端（USB 连一次，或用「无线调试」配对）</span></span><br><span class="line">adb -s &lt;手机&gt; install -r net.christianbeier.droidvnc_ng_65.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># ③ 手机侧：权限三连（pm clear 后必做）</span></span><br><span class="line">adb -s &lt;手机&gt; shell pm grant net.christianbeier.droidvnc_ng android.permission.POST_NOTIFICATIONS</span><br><span class="line">adb -s &lt;手机&gt; shell cmd appops <span class="built_in">set</span> net.christianbeier.droidvnc_ng PROJECT_MEDIA allow</span><br><span class="line">adb -s &lt;手机&gt; shell settings put secure enabled_accessibility_services net.christianbeier.droidvnc_ng/.InputService</span><br><span class="line"></span><br><span class="line"><span class="comment"># ④ 启动服务</span></span><br><span class="line">adb -s &lt;手机&gt; shell am start-foreground-service -n net.christianbeier.droidvnc_ng/.MainService \</span><br><span class="line">  -a net.christianbeier.droidvnc_ng.ACTION_START \</span><br><span class="line">  --es net.christianbeier.droidvnc_ng.EXTRA_ACCESS_KEY carproj \</span><br><span class="line">  --ei net.christianbeier.droidvnc_ng.EXTRA_PORT 5900 \</span><br><span class="line">  --es net.christianbeier.droidvnc_ng.EXTRA_PASSWORD 12345678 \</span><br><span class="line">  --ez net.christianbeier.droidvnc_ng.EXTRA_VIEW_ONLY <span class="literal">false</span> \</span><br><span class="line">  --ez net.christianbeier.droidvnc_ng.EXTRA_FALLBACK_SCREEN_CAPTURE <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ⑤ 车机 AVNC 里添加服务器：</span></span><br><span class="line"><span class="comment">#    主机 10.208.253.57 / 端口 5900 / 用户名留空 / 密码 12345678</span></span><br></pre></td></tr></table></figure>
+<h2 id="实测数据">5.4 实测数据</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>实测值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFB 协议</td>
+<td><code>RFB 003.008</code></td>
+</tr>
+<tr>
+<td>安全类型</td>
+<td><code>[2, 16]</code> → <strong>VNC 密码认证（type 2）</strong></td>
+</tr>
+<tr>
+<td>密码认证</td>
+<td>DES challenge-response，<strong><code>12345678</code>
+校验通过</strong></td>
+</tr>
+<tr>
+<td>监听地址</td>
+<td><code>00000000:170C</code> = <strong>全网卡</strong> 5900</td>
+</tr>
+<tr>
+<td>虚拟屏</td>
+<td><code>840x379</code>（= 2800×1264 × 0.30，横屏）</td>
+</tr>
+<tr>
+<td>车机连接</td>
+<td><code>10.208.253.186:xxxxx → 10.208.253.57:5900  ESTABLISHED</code></td>
+</tr>
+<tr>
+<td>车机画面</td>
+<td>1024×600 上等比
+<strong>1024×462</strong>，文字清晰可读（设置页、导航页均正常）</td>
+</tr>
+<tr>
+<td>图层验证</td>
+<td>SurfaceFlinger 中 AVNC 的图层为
+<code>1024x600 RGBA_8888</code>，<strong>全屏铺满</strong></td>
+</tr>
+<tr>
+<td>AVNC 兼容性</td>
+<td>Android 6.0 实测正常（<code>StartupActivity</code> →
+<code>VncActivity</code>）</td>
+</tr>
+<tr>
+<td>前台服务</td>
+<td><code>MainService</code> +
+<code>MediaProjectionService</code>（<code>types=0x20</code>）常驻</td>
+</tr>
+</tbody>
+</table>
+<h2 id="五个必须记住的坑">5.5 五个必须记住的坑</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>坑</th>
+<th>现象</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>「缩放」是服务端降采样</strong></td>
+<td>拉小 = 先降采样再由客户端放大 → <strong>越拉越糊</strong></td>
+<td>往右拉大（1.0 = 原生 2800×1264）；带宽/解码压力上升</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>屏幕方向</strong></td>
+<td>MagicOS 桌面 <code>screenOrientation=-1</code>（跟随系统）→
+手机被竖着握时桌面就竖屏，车机画面缩成窄条</td>
+<td><code>settings put system accelerometer_rotation 0</code> +
+<code>user_rotation 1</code>（<strong>锁横屏</strong>）。⚠️ 本 ROM
+<strong>不支持</strong> <code>wm set-user-rotation</code>；改完要
+<code>am force-stop</code> 应用重建 Activity 才生效</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong><code>pm clear</code> 清空一切授权</strong></td>
+<td>服务一起来就退（截屏权限丢失）</td>
+<td>权限三连 + <strong>打开 App 点「开始」</strong>（Android 10+
+录屏授权必须前台点一次）</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>预置配置只在”清数据后首启”生效</strong></td>
+<td>改了 <code>defaults.json</code> 却没生效</td>
+<td>改完必须 <code>pm clear</code> + 重做权限三连</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>用户名留空</strong></td>
+<td>droidVNC-NG <strong>只认密码</strong>，AVNC 填用户名会握手失败</td>
+<td>AVNC 服务器条目：用户名<strong>清空</strong>，只留密码</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>坑 1 和坑 2 是最容易让人误判”装好了却不好用”的两条：<br />
+一个是画质反向操作，一个是画面被压成窄条 ——
+两者都表现为”能连上但不对劲”。</p>
+</blockquote>
+<h2 id="预置配置">5.6 预置配置</h2>
+<p>路径：<code>/sdcard/Android/data/net.christianbeier.droidvnc_ng/files/defaults.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;interfaceName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">5900</span><span class="punctuation">,</span> <span class="attr">&quot;scaling&quot;</span><span class="punctuation">:</span> <span class="number">0.3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;viewOnly&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;showPointers&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;fileTransfer&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;12345678&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;accessKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;carproj&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;startOnBoot&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;startOnBootDelay&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="开机自启">5.7 开机自启</h2>
+<p>droidVNC-NG 声明了
+<code>RECEIVE_BOOT_COMPLETED</code>（安装期权限，<code>pm grant</code>
+会报<br />
+<code>not a changeable permission type</code>），但<strong>荣耀/华为的”自启动管理”是独立开关</strong>，要手动放行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">设置 → 应用管理 → 应用启动管理 → droidVNC-NG → 允许自启动 + 自动管理</span><br></pre></td></tr></table></figure>
+<h2 id="日常使用">5.8 日常使用</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">上车 → 手机开热点 → 车机连上（Wi-Fi 列表里选「荣耀Magic7」）</span><br><span class="line">     → 车机打开 AVNC → 点服务器条目 → 连接</span><br><span class="line">     → droidVNC-NG 随开机自启（配好自启动管理后）</span><br></pre></td></tr></table></figure>
+<p>车机上的操作：左上 ☰ 服务器列表 / 顶部放大镜 搜索 / 右上 ⚙
+设置；<br />
+<strong>底部虚拟键盘条左下 ✕
+建议关掉</strong>（操作在手机上做，用不到）。<br />
+车机端可双指缩放、双击放大。</p>
+<h2 id="回退">5.9 回退</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb -s 10.208.253.186:5555 uninstall com.gaurav.avnc   <span class="comment"># 移除车机 VNC 客户端</span></span><br><span class="line"><span class="comment"># 手机侧：停掉 droidVNC-NG 服务即可，不影响其他功能</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="附带成果-车机端工具链补齐">6. 附带成果 车机端工具链补齐</h1>
+<h2 id="busybox-系统自带版本更全不必换">6.1 busybox
+系统自带版本更全不必换</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>applet 数</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>系统 <code>/system/bin/busybox</code> v1.22.1
+(2014)</strong></td>
+<td><strong>354</strong></td>
+<td>厂商定制大包：<code>httpd</code> <code>ftpd</code>
+<code>telnetd</code> <code>tftpd</code> <code>inetd</code>
+<code>udhcpd</code> <code>dnsd</code> <code>xz</code>
+<code>mke2fs</code> <code>hdparm</code> <code>lspci</code>
+<code>mt</code> <code>rpm2cpio</code> <code>runsv</code>
+<code>powertop</code> <code>lpr</code> <code>man</code> <code>ed</code>
+…</td>
+</tr>
+<tr>
+<td>Alpine <code>busybox-static</code> 1.36.1 (armv7)</td>
+<td>305</td>
+<td>标准发行版包，<strong>反而更少</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>新版独有仅 12 个（<code>xxd</code> <code>paste</code>
+<code>nproc</code> <code>shred</code> <code>shuf</code>
+<code>tree</code> <code>bc</code> <code>truncate</code>
+<code>setpriv</code> <code>inotifyd</code> <code>unshare</code>
+<code>nsenter</code>），<br />
+且都能替代（<code>xxd</code>→<code>hexdump -C</code>，<code>nproc</code>→<code>grep -c ^processor /proc/cpuinfo</code>）。</li>
+<li><strong>两个版本都没有 <code>curl</code></strong>（Alpine 把 curl
+applet 拆成独立包，busybox 1.31+ 移除该 applet）。</li>
+<li>车机
+<code>PATH=/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin</code>，<strong>不含
+<code>/data/local/bin</code></strong> → 装了也不会覆盖系统命令。</li>
+<li><strong>结论：不装。</strong>（实测装过一次后已删除，系统 busybox
+保持原样。）</li>
+</ul>
+<blockquote>
+<p>顺带一提：Alpine minirootfs 里的 <code>busybox</code>
+是<strong>动态链接 musl</strong> 的<br />
+（<code>/lib/ld-musl-armhf.so.1</code>），在 Android 上根本跑不起来 ——
+静态链接是硬要求。</p>
+</blockquote>
+<h2 id="单文件静态-curl-可行">6.2 单文件静态 curl 可行</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>尝试</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alpine minirootfs 里的 <code>busybox</code></td>
+<td>❌ 动态链接 musl，Android 跑不了</td>
+</tr>
+<tr>
+<td>Alpine <code>curl-static-8.14.1-r2.apk</code></td>
+<td>❌ 只含
+<code>usr/lib/libcurl.a</code>（静态库，供链接），<strong>没有可执行文件</strong></td>
+</tr>
+<tr>
+<td><strong><code>moparisthebest/static-curl</code> 的
+<code>curl-armhf</code>（v8.21.0）</strong></td>
+<td>✅ <strong>可用</strong></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -L -o curl-armhf https://github.com/moparisthebest/static-curl/releases/download/v8.21.0/curl-armhf</span><br><span class="line"><span class="comment"># 官方 release 提供 sha256：</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;e34d59a37903cdfc1d7807ae3b8659f708d1f44eff68790f716d33e257b101b7  curl-armhf&quot;</span> | shasum -a 256 -c -</span><br><span class="line">file curl-armhf</span><br><span class="line"><span class="comment"># → ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), statically linked, stripped</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>armhf</code> = ARMv7 <strong>硬浮点</strong>，与车机
+<code>ro.product.cpu.abilist=armeabi-v7a</code> 精确匹配。</li>
+<li>落地 <code>/data/local/bin/curl</code>（3.65
+MB），不污染系统分区。</li>
+</ul>
+<hr />
+<h1 id="车机当前状态与回退清单">7. 车机当前状态与回退清单</h1>
+<h2 id="已装第三方应用">7.1 已装第三方应用</h2>
+<p><code>pm list packages -3</code> + <code>pm dump</code>
+实测版本：</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>应用</th>
+<th>包名</th>
+<th>版本</th>
+<th>位置</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>嘟嘟桌面 MINI</td>
+<td><code>com.wow.carlauncher.mini</code></td>
+<td>MINI1.012024</td>
+<td>/data</td>
+<td><strong>当前默认 HOME</strong>（首选 Activity
+<code>always="true"</code>）</td>
+</tr>
+<tr>
+<td>高德地图车机版</td>
+<td><code>com.autonavi.amapauto</code></td>
+<td>9.1.0.600087</td>
+<td>/data</td>
+<td>开机自启已被组件级禁用</td>
+</tr>
+<tr>
+<td>网易云音乐车机版</td>
+<td><code>com.netease.cloudmusic.iot</code></td>
+<td>3.1.0</td>
+<td>/data</td>
+<td></td>
+</tr>
+<tr>
+<td>QQ 音乐车机版</td>
+<td><code>com.tencent.qqmusiccar</code></td>
+<td>1.9.5.18</td>
+<td>/data</td>
+<td></td>
+</tr>
+<tr>
+<td>腾讯视频小提取版</td>
+<td><code>com.tencent.qqlive.audiobox</code></td>
+<td>1.0.0.366</td>
+<td>/data</td>
+<td></td>
+</tr>
+<tr>
+<td>喜马拉雅车机版</td>
+<td><code>com.ximalaya.ting.android.car</code></td>
+<td><strong>1.7.1</strong></td>
+<td>/data</td>
+<td>本次安装</td>
+</tr>
+<tr>
+<td>ES 文件浏览器</td>
+<td><code>com.estrongs.android.pop</code></td>
+<td>3.2.4.1</td>
+<td><strong>/vendor</strong>（固化）</td>
+<td>签名与 /data 一致</td>
+</tr>
+<tr>
+<td>X 浏览器</td>
+<td><code>com.mmbox.xbrowser</code></td>
+<td>3.7.5</td>
+<td>/data</td>
+<td>车机有浏览器，可作免安装方案</td>
+</tr>
+<tr>
+<td>地理定位服务</td>
+<td><code>com.gislocation.android.service</code></td>
+<td>—</td>
+<td>/data</td>
+<td>随高德安装</td>
+</tr>
+<tr>
+<td><strong>AVNC</strong></td>
+<td><code>com.gaurav.avnc</code></td>
+<td><strong>3.3.1</strong></td>
+<td>/data</td>
+<td><strong>本次新增</strong>，VNC 客户端</td>
+</tr>
+<tr>
+<td>eLite 安吉星车联</td>
+<td><code>com.sgm.onstarcarlink</code></td>
+<td>eLite_3.0.1(K215B)_1.1.3_200428</td>
+<td><strong>/vendor</strong></td>
+<td>开机自启已治理，保留手工打开</td>
+</tr>
+<tr>
+<td>ZLink</td>
+<td><code>com.zjinnova.zlink</code></td>
+<td>3.5.59</td>
+<td><strong>/vendor/third-app</strong></td>
+<td>原厂，无安卓同屏功能</td>
+</tr>
+</tbody>
+</table>
+<h2 id="本机改动清单与回退">7.2 本机改动清单与回退</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>改动</th>
+<th>层级</th>
+<th>持久化位置</th>
+<th>回退方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>重启工具 <code>com.hk.reboot</code></td>
+<td><strong>/system</strong>（privileged）</td>
+<td><code>/system/priv-app/RebootTool/</code></td>
+<td><code>rm -rf /system/priv-app/RebootTool</code> + reboot</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ES v3.2.4.1 固化</td>
+<td><strong>/vendor</strong></td>
+<td><code>/vendor/third-app/esFileBrowse/</code></td>
+<td>覆盖回原厂 v4.2.4.6.1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>高德开机自启禁用</td>
+<td>/data</td>
+<td><code>package-restrictions.xml</code></td>
+<td><code>pm enable …/controller.AutoStartupReceiver</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>eLite 开机自启禁用（7 项组件）</td>
+<td>/data</td>
+<td><code>package-restrictions.xml</code></td>
+<td>对应 <code>pm enable</code> 回去</td>
+</tr>
+<tr>
+<td>5</td>
+<td>嘟嘟设为默认桌面</td>
+<td>/data</td>
+<td><code>package-restrictions.xml</code></td>
+<td>Home 键”始终”选择框改回</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ADB 端口固化 5555</td>
+<td>/data</td>
+<td><code>/data/property/persist.adb.tcp.port</code></td>
+<td>删该文件 + reboot</td>
+</tr>
+<tr>
+<td>7</td>
+<td>第三方应用（含 AVNC、喜马拉雅 1.7.1）</td>
+<td>/data</td>
+<td><code>/data/app/...</code></td>
+<td><code>adb uninstall &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>静态 curl</td>
+<td>/data</td>
+<td><code>/data/local/bin/curl</code></td>
+<td><code>rm /data/local/bin/curl</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>只有 #1、#2 落在系统分区，其余都在
+<code>/data</code>，删包即回退；<br />
+<strong>整包刷机/OTA 会覆盖 <code>/system</code> 与 <code>/vendor</code>
+→ #1、#2 会消失</strong>（这正是”整包刷机 = 终极逃生”的兜底）。</p>
+</blockquote>
+<h2 id="一次性回退脚本">7.3 一次性回退脚本</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">adb root &amp;&amp; adb remount</span><br><span class="line">adb shell <span class="built_in">rm</span> -rf /system/priv-app/RebootTool          <span class="comment"># 1</span></span><br><span class="line">adb shell pm <span class="built_in">enable</span> com.autonavi.amapauto/.controller.AutoStartupReceiver   <span class="comment"># 3</span></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> com.sgm.elite.base.receiver.BootBroadcastReceiver \</span><br><span class="line">         com.abupdate.iot_libs.receiver.UpgradeReceiver \</span><br><span class="line">         com.abupdate.iot_libs.receiver.ApkInstallReceiver \</span><br><span class="line">         cn.kuwo.base.util.NetworkStateUtil \</span><br><span class="line">         com.sgm.elite.main.ui.receiver.OnStartTelephoneBroadcastReceiver \</span><br><span class="line">         com.sgm.elite.sysinteraction.receiver.CallingReceiver \</span><br><span class="line">         com.abupdate.iot_libs.service.JobSchedulerService ; <span class="keyword">do</span></span><br><span class="line">  adb shell pm <span class="built_in">enable</span> com.sgm.onstarcarlink/<span class="variable">$c</span>           <span class="comment"># 4</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">adb shell <span class="built_in">rm</span> -f /data/property/persist.adb.tcp.port      <span class="comment"># 6</span></span><br><span class="line">adb shell <span class="built_in">rm</span> -f /data/local/bin/curl                    <span class="comment"># 8</span></span><br><span class="line">adb shell pm uninstall com.gaurav.avnc                   <span class="comment"># 7（可选）</span></span><br><span class="line">adb reboot</span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="方法论-这次能收敛靠的是这七条">8. 方法论
+这次能收敛靠的是这七条</h1>
+<ol type="1">
+<li><p><strong>先分清”发送端”与”接收端”。</strong><br />
+投屏能不能零安装，<strong>取决于接收端存不存在</strong>，而不是手机支持哪些协议。<br />
+本例中手机支持 Miracast / DLNA / AirPlay 一大堆，车机却一个 Sink
+都没有。</p></li>
+<li><p><strong>协议先看”有没有广播服务”，再看”有没有代码”。</strong><br />
+<code>dns-sd -B _miracast._tcp</code> + SSDP <code>M-SEARCH</code> +
+<code>/proc/net/udp</code> 看 1900，<br />
+三条命令就能判死一个方案，比翻 APK 快得多。</p></li>
+<li><p><strong>区分”授权锁住”与”硬件做不到”。</strong><br />
+ZLink 的 <code>regMode</code> 是授权层（能花钱解），<br />
+而 <strong>MT6630 只支持 2.4GHz</strong>
+是硬件层（花钱也解不了）。<br />
+把两者混为一谈，就会白花钱。</p></li>
+<li><p><strong>选纯 TCP 的方案。</strong><br />
+Miracast 依赖 P2P + 5GHz + 认证协商，变量太多；<br />
+VNC / 普通 HTTP 只依赖 TCP，在这种”老 SoC + 单射频 +
+厂商定制”的设备上稳得多。</p></li>
+<li><p><strong>静态分析给假设，实机给判决。</strong><br />
+反编译只能告诉你”软件会怎么判断”；<br />
+<code>ls /system/bin/mfi_test</code>、<code>getprop | grep wifi</code>
+这种一条命令，<br />
+就能把”待验证假设”变成”已验证结论”。</p></li>
+<li><p><strong>先摸清”这台机器最紧的资源是什么”。</strong><br />
+1.8 GB 内存 + 0 Swap + 860 MB 空闲 <code>/data</code> + 单射频 2.4G +
+Mali-400 →<br />
+这些约束直接排除了一大半”看起来可行”的方案。</p></li>
+<li><p><strong>userdebug 车机上，先把可逆边界划清楚。</strong><br />
+<code>adb root</code> + 无 verity + SELinux 关闭 ⇒ <code>/data</code>
+层改动都能一键回退；<br />
+真正不可逆的只有 <code>/system</code>、<code>/vendor</code>
+改动与刷机。<br />
+本次新增的东西（AVNC、喜马拉雅 1.7.1、静态 curl）<strong>全部在
+<code>/data</code></strong>，删掉即回退。</p></li>
+</ol>
+<hr />
+<h1 id="附录-a-命令与参数速查">附录 A 命令与参数速查</h1>
+<h2 id="a.1-地址与账号">A.1 地址与账号</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车机 IP（WiFi ADB）</td>
+<td><code>10.208.253.186:5555</code></td>
+</tr>
+<tr>
+<td>手机热点网关 / VNC 服务端</td>
+<td><code>10.208.253.57:5900</code></td>
+</tr>
+<tr>
+<td>电脑（Mac）</td>
+<td><code>10.208.253.171</code></td>
+</tr>
+<tr>
+<td>热点 SSID</td>
+<td><code>荣耀Magic7</code>（2.4GHz / 20MHz / 72 Mbps）</td>
+</tr>
+<tr>
+<td>VNC 密码</td>
+<td><code>12345678</code></td>
+</tr>
+<tr>
+<td>VNC accessKey</td>
+<td><code>carproj</code></td>
+</tr>
+<tr>
+<td>droidVNC-NG 包名</td>
+<td><code>net.christianbeier.droidvnc_ng</code></td>
+</tr>
+<tr>
+<td>AVNC 包名</td>
+<td><code>com.gaurav.avnc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="a.2-常用命令">A.2 常用命令</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 连接与提权</span></span><br><span class="line">adb connect 10.208.253.186:5555</span><br><span class="line">adb root &amp;&amp; adb remount</span><br><span class="line"></span><br><span class="line"><span class="comment"># 投屏相关</span></span><br><span class="line">adb -s 10.208.253.186:5555 install -r com.gaurav.avnc_53.apk   <span class="comment"># 车机端装客户端</span></span><br><span class="line">adb -s &lt;手机&gt; install -r net.christianbeier.droidvnc_ng_65.apk <span class="comment"># 手机端装服务端</span></span><br><span class="line">adb -s &lt;手机&gt; shell pm grant net.christianbeier.droidvnc_ng android.permission.POST_NOTIFICATIONS</span><br><span class="line">adb -s &lt;手机&gt; shell cmd appops <span class="built_in">set</span> net.christianbeier.droidvnc_ng PROJECT_MEDIA allow</span><br><span class="line">adb -s &lt;手机&gt; shell settings put secure enabled_accessibility_services net.christianbeier.droidvnc_ng/.InputService</span><br><span class="line"></span><br><span class="line"><span class="comment"># 锁横屏（避免画面被压成窄条）</span></span><br><span class="line">adb -s &lt;手机&gt; shell settings put system accelerometer_rotation 0</span><br><span class="line">adb -s &lt;手机&gt; shell settings put system user_rotation 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 状态确认</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/net/tcp | grep 170C      <span class="comment"># 车机侧是否有到 5900 的连接</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/net/udp                  <span class="comment"># 有无 1900(SSDP) → 判断有无 DLNA</span></span><br></pre></td></tr></table></figure>
+<h2 id="a.3-关键参数">A.3 关键参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFB 版本</td>
+<td><code>003.008</code></td>
+<td>droidVNC-NG 与 AVNC 协商结果</td>
+</tr>
+<tr>
+<td>安全类型</td>
+<td><code>[2, 16]</code></td>
+<td>2 = VNC Password（DES challenge-response）</td>
+</tr>
+<tr>
+<td>虚拟屏</td>
+<td><code>840x379</code></td>
+<td>2800×1264 × 0.30 降采样</td>
+</tr>
+<tr>
+<td>车机显示</td>
+<td><code>1024×462</code></td>
+<td>在 1024×600 画面中等比缩放后的实际区域</td>
+</tr>
+<tr>
+<td>车机 PSS</td>
+<td>≈ 44 MB</td>
+<td>AVNC 常驻内存</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="附录-b-故障排查对照表">附录 B 故障排查对照表</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>症状</th>
+<th>根因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车机 AVNC 里搜不到 / 连不上</td>
+<td>手机服务没起 / 端口不对 / 密码错 /
+<strong>用户名没留空</strong></td>
+<td>先在手机端确认服务在跑；AVNC 填 <code>10.208.253.57</code> /
+<code>5900</code> / <strong>用户名字段清空</strong> / 密码
+<code>12345678</code></td>
+</tr>
+<tr>
+<td>握手失败、连上就断</td>
+<td>AVNC 填了用户名</td>
+<td>droidVNC-NG <strong>只认密码</strong>，用户名必须留空</td>
+</tr>
+<tr>
+<td>车机画面被压成窄条</td>
+<td>手机竖屏（<code>screenOrientation=-1</code> 跟随系统）</td>
+<td>锁横屏：<code>accelerometer_rotation 0</code> +
+<code>user_rotation 1</code>，再 <code>am force-stop</code> 应用</td>
+</tr>
+<tr>
+<td>画面模糊、拉大更糊</td>
+<td>「缩放」是<strong>服务端降采样</strong></td>
+<td>往右拉大（1.0 = 原生 2800×1264），接受更高带宽/解码压力</td>
+</tr>
+<tr>
+<td>服务一起来就退</td>
+<td><code>pm clear</code> 清空了录屏授权</td>
+<td>权限三连 + 打开 App 点「开始」完成前台录屏授权</td>
+</tr>
+<tr>
+<td>改了 <code>defaults.json</code> 没生效</td>
+<td>预置配置只在”清数据后首启”读取</td>
+<td>改完 <code>pm clear</code>，再重做权限三连</td>
+</tr>
+<tr>
+<td>手机重启后服务没起</td>
+<td>荣耀”自启动管理”独立开关</td>
+<td>设置 → 应用启动管理 → droidVNC-NG → 允许自启动 + 自动管理</td>
+</tr>
+<tr>
+<td>车机连不上热点</td>
+<td>单射频 2.4G，车机开热点时无法做 STA</td>
+<td><strong>必须由手机开热点</strong>、车机做客户端</td>
+</tr>
+<tr>
+<td>无线 CarPlay 测不了</td>
+<td>单射频 2.4G，STA 与 P2P/热点互斥</td>
+<td>测无线 CarPlay 前先断 ADB；且本机无 5GHz，测了也不通</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="附录-c-组件与属性速查">附录 C 组件与属性速查</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>组件 / 属性</th>
+<th>值</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>com.gaurav.avnc</code></td>
+<td>3.3.1</td>
+<td>车机端 VNC 客户端（GPL-3.0，F-Droid）</td>
+</tr>
+<tr>
+<td><code>net.christianbeier.droidvnc_ng</code></td>
+<td>2.22.0</td>
+<td>手机端 VNC 服务端（GPL-2.0，F-Droid）</td>
+</tr>
+<tr>
+<td><code>com.zjinnova.zlink</code></td>
+<td>3.5.59</td>
+<td>厂商 CarPlay/CarLife（<code>/vendor/third-app</code>）</td>
+</tr>
+<tr>
+<td><code>mediatek.wlan.chip</code></td>
+<td><code>CONSYS_MT6735</code></td>
+<td><strong>纯 2.4GHz</strong></td>
+</tr>
+<tr>
+<td><code>WIFI_ID_MT6630</code> / <code>BT_ID_MT6630</code></td>
+<td>—</td>
+<td>Wi-Fi / 蓝牙合一芯片</td>
+</tr>
+<tr>
+<td><code>ro.mediatek.wlan.p2p</code></td>
+<td><code>1</code></td>
+<td>支持 Wi-Fi Direct（但单射频限制）</td>
+</tr>
+<tr>
+<td><code>wlan.wfd.security.image</code></td>
+<td><code>1</code></td>
+<td>WFD 相关镜像配置存在，<strong>不代表有 Sink</strong></td>
+</tr>
+<tr>
+<td><code>persist.adb.tcp.port</code></td>
+<td><code>5555</code></td>
+<td>ADB over WiFi 已固化</td>
+</tr>
+<tr>
+<td><code>ro.adb.secure</code> / <code>ro.debuggable</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>免授权 + 可 <code>adb root</code></td>
+</tr>
+<tr>
+<td><code>androidboot.selinux</code></td>
+<td><code>disabled</code></td>
+<td>root 脚本无 SELinux 限制</td>
+</tr>
+<tr>
+<td><code>zj.wirelesscarplay.state</code></td>
+<td><code>1</code></td>
+<td>系统侧无线 CarPlay 开关是开的（被授权/硬件挡住）</td>
+</tr>
+<tr>
+<td><code>persist.sys.zlink.mode.registed</code></td>
+<td><code>lc</code></td>
+<td>ZLink 授权模式</td>
+</tr>
+<tr>
+<td><code>sys.hk.tbox.connect</code></td>
+<td><code>connected</code></td>
+<td>4G 通道已接通（与投屏链路无关）</td>
+</tr>
+<tr>
+<td><code>/storage/emulated/legacy/zlink/.d</code></td>
+<td><code>{"regMode":"LA",...}</code></td>
+<td>ZLink 授权档位明文文件</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="附录-d-关联文档与交叉引用">附录 D 关联文档与交叉引用</h1>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>本文内容</th>
+<th>对应总文档章节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车机系统基线、存储、射频</td>
+<td>总文档 §1 平台与设备基线、§3.6 内存与 CPU 现状</td>
+</tr>
+<tr>
+<td>WiFi ADB / root 能力</td>
+<td>总文档 §2 调试与连接、§3.1 连接方式与 root 能力</td>
+</tr>
+<tr>
+<td>风险红线与回退顺序</td>
+<td>总文档 §6 安全调测顺序与逃生方案、附录 B 风险红线</td>
+</tr>
+<tr>
+<td>已装应用与改动清单</td>
+<td>总文档 §3 实机调测记录、附录 D 实机调测速查</td>
+</tr>
+<tr>
+<td>投屏方案总览</td>
+<td>总文档 §8 手机屏幕投屏</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐阅读顺序</strong>：先看总文档建立设备认知，再按本文第 3–5
+章复现。</p>
+<hr />
+<h1 id="附录-e-安全与合规提示">附录 E 安全与合规提示</h1>
+<ol type="1">
+<li><strong>VNC 密码是明文挑战应答（DES），不是加密传输</strong>；RFB
+协议本身不提供 TLS。<br />
+只在自己的热点/局域网内使用，不要暴露到公网。</li>
+<li><strong>车机本机风险更高</strong>：<code>ro.adb.secure=0</code> + 可
+<code>adb root</code> ⇒ <strong>同网段任意设备都可能拿到
+root</strong>。<br />
+插公共 WiFi 或借给别人用车机前，至少临时关闭 WiFi
+ADB（<code>rm /data/property/persist.adb.tcp.port</code> +
+reboot）。</li>
+<li><strong>投屏会把手机屏幕内容原样送到车机</strong>，注意导航中的私人信息、聊天通知等。</li>
+<li>本方案<strong>不涉及破解厂商授权、不绕过 CarPlay 认证、不修改
+CarManager / 倒车 / 语音等行车安全相关模块</strong>。</li>
+<li>新增组件全部来自 <strong>F-Droid 官方仓库</strong>并核对了
+SHA256；静态 <code>curl</code> 来自
+<code>moparisthebest/static-curl</code> 官方 Release 并核对了
+sha256。</li>
+<li>投屏是<strong>观看性</strong>操作，请勿在驾驶过程中操作手机。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/" title="把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录">https://sunjunior.github.io/2026/10/22/把手机屏幕投到安卓车机大屏/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-%E8%BD%A6%E6%9C%BA-AC8317-%E6%8A%95%E5%B1%8F-VNC-Android-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, 车机, AC8317, 投屏, VNC, Android, 折腾记录</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/18/AC8317%E8%BD%A6%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E6%80%BB%E6%96%87%E6%A1%A3/" rel="prev" title="AC8317（ONSTAR_LITE_K215）车机系统分析总文档">
+                  <i class="fa fa-angle-left"></i> AC8317（ONSTAR_LITE_K215）车机系统分析总文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
