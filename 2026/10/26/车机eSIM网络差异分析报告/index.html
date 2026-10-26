@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文档是独立自包含的：不依赖任何其他文件即可开展工作。所有背景、结论、命令、脚本、坑与红线都在本文内。 对象：别克英朗车机（AC8317 &#x2F; Android 6.0，ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM shinco） 关联阅读（背景知识，非依赖）：《AC8317 车机系统分析总文档》—— 设备基线、ADB&#x2F;root 与固件分析方法；本文网络部分自包含，可独立阅读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="车机 eSIM 网络差异分析报告">
+<meta property="og:url" content="https://sunjunior.github.io/2026/10/26/%E8%BD%A6%E6%9C%BAeSIM%E7%BD%91%E7%BB%9C%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="本文档是独立自包含的：不依赖任何其他文件即可开展工作。所有背景、结论、命令、脚本、坑与红线都在本文内。 对象：别克英朗车机（AC8317 &#x2F; Android 6.0，ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM shinco） 关联阅读（背景知识，非依赖）：《AC8317 车机系统分析总文档》—— 设备基线、ADB&#x2F;root 与固件分析方法；本文网络部分自包含，可独立阅读">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-26T01:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-26T01:18:48.395Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, 车机, AC8317, eSIM, DNS, IPv6, 网络分析">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/10/26/%E8%BD%A6%E6%9C%BAeSIM%E7%BD%91%E7%BB%9C%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/10/26/%E8%BD%A6%E6%9C%BAeSIM%E7%BD%91%E7%BB%9C%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/","path":"2026/10/26/车机eSIM网络差异分析报告/","title":"车机 eSIM 网络差异分析报告"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>车机 eSIM 网络差异分析报告 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E5%85%88%E8%AF%BB%E8%BF%99%E6%AE%B5"><span class="nav-text">0. 摘要（先读这段）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-text">1. 环境、访问方式与工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-text">1.1 车机基本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F"><span class="nav-text">1.2 访问方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E4%B8%8A%E5%8F%AF%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7%E5%AE%9E%E6%B5%8B%E5%88%AB%E5%86%8D%E5%8E%BB%E8%A3%85%E4%B8%9C%E8%A5%BF"><span class="nav-text">1.3
+车机上可用的工具（实测，别再去装东西）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%AE%9E%E6%B5%8B"><span class="nav-text">2. 网络拓扑（实测）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E5%9D%97%E7%BD%91%E5%8D%A1"><span class="nav-text">2.1 两块网卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E4%B8%8E%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1-%E7%90%86%E8%A7%A3-m1-%E7%9A%84%E5%85%B3%E9%94%AE"><span class="nav-text">2.2 路由与策略路由（⭐ 理解 M1
+的关键）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipv6-%E9%A6%96%E8%A6%81%E5%AB%8C%E7%96%91%E7%9A%84%E7%89%A9%E7%90%86%E5%9F%BA%E7%A1%80"><span class="nav-text">2.3 IPv6（⭐ 首要嫌疑的物理基础）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E8%B1%A1%E4%B8%8E%E5%88%86%E5%B1%82%E7%BB%93%E8%AE%BA"><span class="nav-text">3. 现象与分层结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%85%BE%E8%AE%AF%E7%B3%BBesim-%E7%9A%84-dns-%E5%81%9A%E4%BA%86%E5%9F%9F%E5%90%8D%E7%BA%A7%E5%B1%8F%E8%94%BD%E5%B7%B2%E7%A1%AE%E8%AF%81"><span class="nav-text">4. 腾讯系：eSIM 的 DNS
+做了域名级屏蔽（已确证）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85%E7%B4%A0%E6%9D%90%E5%BD%92%E5%B1%9E%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%81%87%E8%AE%BE"><span class="nav-text">5.
+喜马拉雅：素材归属、实测数据与假设</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A0%E6%9D%90%E5%BD%92%E5%B1%9E%E5%93%AA%E4%BA%9B%E6%98%AF%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85%E8%87%AA%E5%B7%B1%E7%9A%84%E5%93%AA%E4%BA%9B%E6%98%AF%E8%85%BE%E8%AE%AF%E7%9A%84"><span class="nav-text">5.1
+素材归属（“哪些是喜马拉雅自己的、哪些是腾讯的”）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#esim-%E4%B8%8B-21-%E4%B8%AA%E5%9F%9F%E5%90%8D%E9%80%90%E4%B8%AA%E5%AE%9E%E6%B5%8B%E5%85%A8%E9%83%A8%E6%94%BE%E8%A1%8C"><span class="nav-text">5.2 eSIM 下 21
+个域名逐个实测（全部放行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E9%93%81%E8%AF%81%E8%BD%A6%E6%9C%BA-logcat"><span class="nav-text">5.3 运行时铁证（车机 logcat）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apk-%E5%86%85%E7%9A%84%E7%BA%BF%E7%B4%A2"><span class="nav-text">5.4 APK 内的线索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9F%B3%E9%A2%91-cdn-%E7%9A%84%E7%9C%9F%E5%AE%9E-ip-%E4%B8%8E%E5%BD%92%E5%B1%9Edoh-%E5%A4%8D%E6%A0%B8%E7%BB%95%E8%BF%87%E6%9C%AC%E5%9C%B0%E5%81%87-dns"><span class="nav-text">5.5 音频 CDN
+的真实 IP 与归属（DoH 复核，绕过本地假 DNS）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E5%86%B3%E5%81%87%E8%AE%BE%E6%8C%89%E5%AB%8C%E7%96%91%E6%8E%92%E5%BA%8F%E5%BE%85-7-%E9%AA%8C%E8%AF%81"><span class="nav-text">5.6 未决假设（按嫌疑排序，待 §7
+验证）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%AD%A6%E6%9B%B4%E6%AD%A3%E4%B8%8E%E5%88%A4%E6%8D%AE%E8%A1%80%E6%B3%AA%E6%95%99%E8%AE%AD%E5%8A%A8%E6%89%8B%E5%89%8D%E5%BF%85%E8%AF%BB"><span class="nav-text">6.
+方法学更正与判据（血泪教训，动手前必读）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%9D%A1%E7%A1%AC%E7%BB%93%E8%AE%BAm1m2m3"><span class="nav-text">6.1 三条硬结论（M1&#x2F;M2&#x2F;M3）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%8D%AE%E5%BF%85%E9%A1%BB%E9%98%B2%E9%A2%84%E7%BC%93%E5%AD%98%E9%80%A0%E6%88%90%E7%9A%84%E5%81%87%E9%98%B3%E6%80%A7"><span class="nav-text">6.2
+判据：必须防”预缓存”造成的假阳性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%BF%85%E7%9F%A5%E5%9D%91"><span class="nav-text">6.3 其它必知坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E4%B8%80%E8%BD%AE%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%A1%88%E6%9C%89%E7%BA%BF-usb%E5%8F%AF%E7%9B%B4%E6%8E%A5%E7%85%A7%E5%81%9A"><span class="nav-text">7. 下一轮实验方案（有线
+USB）——可直接照做</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E5%8A%A1%E5%BF%85%E7%A1%AE%E8%AE%A4"><span class="nav-text">7.0 前置条件（务必确认）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-1-%E7%BD%91%E7%BB%9C%E8%87%AA%E6%A3%80%E5%85%88%E8%AF%81%E6%98%8E%E8%B5%B0%E7%9A%84%E6%98%AF-esim"><span class="nav-text">7.1 Step 1 —
+网络自检（先证明”走的是 eSIM”）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-2-%E6%8A%8A%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC%E6%8E%A8%E5%88%B0%E8%BD%A6%E6%9C%BA"><span class="nav-text">7.2 Step 2 — 把测试脚本推到车机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-3-%E6%8A%93%E5%8C%85-%E8%A7%A6%E5%8F%91%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC%E5%85%A8%E6%96%87"><span class="nav-text">7.3 Step 3 — 抓包 +
+触发播放（脚本全文）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-4-%E6%80%8E%E4%B9%88%E8%AF%BB%E7%BB%93%E6%9E%9C%E5%88%A4%E5%AE%9A%E8%A1%A8"><span class="nav-text">7.4 Step 4 — 怎么读结果（判定表）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-5-%E8%8B%A5%E8%A6%81%E9%AA%8C%E8%AF%81%E4%BB%85-wifi%E5%81%87%E8%AE%BE"><span class="nav-text">7.5 Step 5 — 若要验证”仅
+WiFi”假设</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-6-%E6%94%B6%E5%B0%BE"><span class="nav-text">7.6 Step 6 — 收尾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plan-b%E4%B8%87%E4%B8%80%E5%B8%A6%E7%BA%BF-usb-%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="nav-text">7.7 Plan B：万一带线 USB 不可用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF%E5%8A%A1%E5%BF%85%E9%81%B5%E5%AE%88"><span class="nav-text">8. 安全红线（务必遵守）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E4%BF%AE%E5%A4%8D%E6%96%B9%E5%90%91%E5%BE%85%E9%AA%8C%E8%AF%81"><span class="nav-text">9. 可选修复方向（待验证）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="nav-text">10. 命令速查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E4%B8%8E-root"><span class="nav-text">10.1 连接与 root</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%81"><span class="nav-text">10.2 网络状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%93%E5%8C%85%E4%B8%8E%E8%BF%9E%E6%8E%A5"><span class="nav-text">10.3 抓包与连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E6%92%AD%E6%94%BE%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%851024600"><span class="nav-text">10.4
+触发播放（喜马拉雅，1024×600）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E9%80%90%E4%B8%AA%E6%B5%8B5-%E7%A7%92%E8%B6%85%E6%97%B6"><span class="nav-text">10.5 域名解析（逐个测，5 秒超时）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8C%85%E5%90%8D-uid"><span class="nav-text">10.6 常用包名 &#x2F; uid</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="nav-text">11. 变更记录</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/10/26/%E8%BD%A6%E6%9C%BAeSIM%E7%BD%91%E7%BB%9C%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="车机 eSIM 网络差异分析报告 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="本文档是独立自包含的：不依赖任何其他文件即可开展工作。所有背景、结论、命令、脚本、坑与红线都在本文内。 对象：别克英朗车机（AC8317 &#x2F; Android 6.0，ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM shinco） 关联阅读（背景知识，非依赖）：《AC8317 车机系统分析总文档》—— 设备基线、ADB&#x2F;root 与固件分析方法；本文网络部分自包含，可独立阅读...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          车机 eSIM 网络差异分析报告
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-26 09:30:00 / 修改时间：09:18:48" itemprop="dateCreated datePublished" datetime="2026-10-26T09:30:00+08:00">2026-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">本文档是独立自包含的：不依赖任何其他文件即可开展工作。所有背景、结论、命令、脚本、坑与红线都在本文内。 对象：别克英朗车机（AC8317 / Android 6.0，ro.fota.device=ONSTAR_LITE_K215，OEM shinco） 关联阅读（背景知识，非依赖）：《AC8317 车机系统分析总文档》—— 设备基线、ADB/root 与固件分析方法；本文网络部分自包含，可独立阅读...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p><strong>本文档是独立自包含的</strong>：不依赖任何其他文件即可开展工作。所有背景、结论、命令、脚本、坑与红线都在本文内。<br />
+<strong>对象</strong>：别克英朗车机（AC8317 / Android
+6.0，<code>ro.fota.device=ONSTAR_LITE_K215</code>，OEM shinco）<br />
+<strong>关联阅读（背景知识，非依赖）</strong>：《<a
+href="/2026/10/18/AC8317车机系统分析总文档/">AC8317
+车机系统分析总文档</a>》—— 设备基线、ADB/root
+与固件分析方法；本文网络部分自包含，可独立阅读。<br />
+<strong>主题</strong>：为什么”车机自带 eSIM 流量”下部分 App（喜马拉雅 /
+QQ 系列）不能用，而高德 / 网易云可以<br />
+<strong>状态</strong>：腾讯系已定论（DNS
+层）；<strong>喜马拉雅未定论</strong>（DNS 之上，首要嫌疑 =
+IPv6），<strong>待有线 USB 复测</strong><br />
+<strong>最后更新</strong>：2026-10-24 晚；<strong>下一轮</strong>：USB
+有线复测（可直接照做的方案见 §7，结果出来后追加到 §11 变更记录）</p>
+</blockquote>
+<hr />
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#0-摘要先读这段">0. 摘要（先读这段）</a></li>
+<li><a href="#1-环境访问方式与工具">1. 环境、访问方式与工具</a></li>
+<li><a href="#2-网络拓扑实测">2. 网络拓扑（实测）</a></li>
+<li><a href="#3-现象与分层结论">3. 现象与分层结论</a></li>
+<li><a href="#4-腾讯系esim-的-dns-做了域名级屏蔽已确证">4. 腾讯系：eSIM
+的 DNS 做了域名级屏蔽（已确证）</a></li>
+<li><a href="#5-喜马拉雅素材归属实测数据与假设">5.
+喜马拉雅：素材归属、实测数据与假设</a></li>
+<li><a href="#6-方法学更正与判据血泪教训动手前必读">6.
+方法学更正与判据（血泪教训，动手前必读）</a></li>
+<li><a href="#7-下一轮实验方案有线-usb可直接照做">7.
+下一轮实验方案（有线 USB）——可直接照做</a></li>
+<li><a href="#8-安全红线务必遵守">8. 安全红线（务必遵守）</a></li>
+<li><a href="#9-可选修复方向待验证">9. 可选修复方向（待验证）</a></li>
+<li><a href="#10-命令速查">10. 命令速查</a></li>
+<li><a href="#11-变更记录">11. 变更记录</a></li>
+</ul>
+<hr />
+<h2 id="摘要先读这段">0. 摘要（先读这段）</h2>
+<p><strong>现象（以用户实机体验为准）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>eSIM 流量下</th>
+<th>手机热点（Wi-Fi）下</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高德地图</td>
+<td>✅ 正常</td>
+<td>✅ 正常</td>
+</tr>
+<tr>
+<td>网易云音乐</td>
+<td>✅ 正常</td>
+<td>✅ 正常</td>
+</tr>
+<tr>
+<td><strong>喜马拉雅</strong></td>
+<td>❌ <strong>不可用</strong></td>
+<td>✅ 正常</td>
+</tr>
+<tr>
+<td><strong>QQ 系列（QQ音乐 / 腾讯视频）</strong></td>
+<td>❌ <strong>不可用</strong></td>
+<td>✅ 正常</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论（分层，两者机制不同）</strong>：</p>
+<ol type="1">
+<li><strong>腾讯系 = DNS 层被屏蔽（已确证）</strong>：eSIM 下发的 DNS
+<code>114.114.114.114</code> 对
+<code>y.qq.com</code>、<code>wns.qq.com</code>、<code>music.qq.com</code>、<code>dl.stream.qqmusic.qq.com</code>、<code>v.qq.com</code>
+等<strong>音乐/接口域名静默丢弃</strong>——注意是<strong>卡到约 20
+秒超时才失败</strong>，不是秒回
+NXDOMAIN（这是过去”批量测域名总超时”的根因）。<code>qq.com</code>
+裸域反而能解析 ⇒ 是<strong>精确的主机名白名单</strong>。</li>
+<li><strong>喜马拉雅 = 卡在 DNS 之上（未定论）</strong>：它的 <strong>21
+个域名（含音频 CDN）在 eSIM 下全部解析正常</strong>、TCP 抽测也能建连 ⇒
+<strong>不是域名屏蔽</strong>。音频素材实际从
+<strong><code>openaudio.cos.tx.xmcdn.com</code>（腾讯云
+COS）</strong>、<code>aod.cos.tx.xmcdn.com</code> 取（另有一路
+<code>audio.aliyun.xmcdn.com</code> 在阿里云）。</li>
+<li><strong>首要嫌疑（待 USB 有线复测验证）</strong>：喜马拉雅把音频 CDN
+解析成 <strong>IPv6</strong>（实测
+<code>240e:978:2608:d01:70::1e</code>）并优先使用，而 <strong>eSIM 网卡
+<code>eth0</code> 只有 <code>fe80::</code>、没有全球
+IPv6</strong>（Wi-Fi 才有全球 IPv6）⇒ eSIM-only
+时这条连接<strong>无路可走</strong>。次因：其 APK 内含”<strong>仅
+WiFi</strong>”策略开关（<code>IS_ENABLE_NETWORK_ONLY_WIFI</code>），而
+Android 把 eSIM 识别为 <strong>ETHERNET</strong>（既非 WiFi 也非
+MOBILE）。</li>
+</ol>
+<p><strong>下一轮要回答的一句话</strong>：eSIM-only（USB 有线 +
+车机不连任何 Wi-Fi）时，喜马拉雅播放失败<strong>是不是因为它去连了
+IPv6</strong>？</p>
+<hr />
+<h2 id="环境访问方式与工具">1. 环境、访问方式与工具</h2>
+<h3 id="车机基本信息">1.1 车机基本信息</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平台</td>
+<td>AC8317（AutoChips AC8227/AC8317，32-bit A7 / Mali-400），Android
+<strong>6.0</strong></td>
+</tr>
+<tr>
+<td>分辨率</td>
+<td><strong>1024×600</strong>（所有 <code>input tap</code>
+坐标都基于此）</td>
+</tr>
+<tr>
+<td>关注 App</td>
+<td><code>com.ximalaya.ting.android.car</code>（喜马拉雅车机版），<strong>uid
+10025</strong>；启动
+Activity：<code>com.ximalaya.ting.android.car/com.ximalaya.ting.android.car.activity.MainActivity</code></td>
+</tr>
+<tr>
+<td>该 APK 路径</td>
+<td><code>/data/app/com.ximalaya.ting.android.car-2/base.apk</code>（约
+4.86 MB）</td>
+</tr>
+<tr>
+<td>对比 App</td>
+<td><code>com.tencent.qqmusiccar</code>（QQ音乐车机版，uid
+10028）、<code>com.netease.cloudmusic.iot</code>（网易云）、高德</td>
+</tr>
+<tr>
+<td>eSIM 属性</td>
+<td><code>gsm.sim.state=ABSENT</code>（Android 认为无 SIM
+卡）；<code>sys.hk.tbox.connect=connected</code>；<code>persist.hk.tbox_switch=true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="访问方式">1.2 访问方式</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① USB 有线 ADB（⭐ 下一轮主用）</strong></td>
+<td>车机<strong>默认开启 USB
+调试</strong>（<code>ro.adb.secure=0</code>，无授权弹窗）。电脑插 USB 后
+<code>adb devices</code> 应直接出现车机。<strong>macOS / Linux
+免驱</strong>；Windows 需装 adb 驱动。</td>
+</tr>
+<tr>
+<td>② WiFi ADB</td>
+<td><code>adb connect 10.73.250.186:5555</code>（<code>persist.adb.tcp.port=5555</code>
+已固化 ⇒ 重启后自动开）。<strong>缺点：与 eSIM 测试互相干扰</strong>（见
+§6）。</td>
+</tr>
+<tr>
+<td>③ root shell 2223</td>
+<td>车机上有 <code>busybox telnetd</code> 监听
+<strong>2223</strong>（root 身份），iptables 只放行 loopback +
+<code>10.73.250.0/24</code> ⇒
+<strong>只在车机连着热点时可用</strong>；USB 方案下用不到。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>取得 root
+的唯一正确姿势</strong>：<code>adb shell su 0,0 &lt;命令&gt;</code>（示例
+<code>adb shell su 0,0 id</code> → <code>uid=0(root)</code>）。<br />
+⚠️ <strong>绝不要执行 <code>adb root</code></strong> —— 本 ROM 上它会把
+adbd 卡死在 <code>offline</code>，只能重启车机恢复。</p>
+</blockquote>
+<h3 id="车机上可用的工具实测别再去装东西">1.3
+车机上可用的工具（实测，别再去装东西）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>工具</th>
+<th>路径 / 用法</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>tcpdump</strong></td>
+<td><code>/system/xbin/tcpdump</code> ✅</td>
+<td><strong>可用</strong>；<code>busybox tcpdump</code> 是
+<code>applet not found</code>。参数用
+<code>-i &lt;if&gt; -n -l -s 512</code></td>
+</tr>
+<tr>
+<td>iftop / lsof / netstat</td>
+<td><code>/system/bin/</code> ✅</td>
+<td>可用</td>
+</tr>
+<tr>
+<td>busybox</td>
+<td><code>/system/xbin/busybox</code>（354 applet）</td>
+<td><code>netstat/sed/grep/sort/head/tail/awk</code> 建议都走
+busybox</td>
+</tr>
+<tr>
+<td><code>uiautomator dump</code></td>
+<td>✅</td>
+<td>拿控件<strong>精确 bounds</strong>；<strong>dump 文件属
+root，<code>adb pull</code> 会 Permission denied</strong> ⇒ 在车机上
+<code>cat</code> 出来</td>
+</tr>
+<tr>
+<td>在线分析（<code>/proc/net/tcp{,6}</code>）</td>
+<td>✅</td>
+<td>看 App
+连接：<code>busybox cat /proc/net/tcp /proc/net/tcp6 \| busybox grep ' 10025 '</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>车机上的”缺手”清单（会踩）</strong>：<br />
+- <strong>没有 <code>timeout</code>、没有
+<code>awk</code>（系统版）、没有 <code>killall</code>、<code>nc</code>
+不支持 <code>-u</code>（UDP）</strong><br />
+- <strong><code>head -c</code> 不支持</strong> ⇒ 用
+<code>busybox head -c</code><br />
+- <strong><code>sed</code> 建议一律加 <code>busybox</code>
+前缀</strong>（su 环境 PATH 里裸 <code>sed</code> 曾报
+<code>sed: No such file or directory</code>）<br />
+- <code>/etc/resolv.conf</code> 不存在；adb 输出带 <code>\r</code> ⇒
+一律 <code>tr -d '\r'</code><br />
+- <strong><code>adb shell</code> 单条命令长度上限约 2100
+字符</strong>（超了报 <code>shell command too long</code>）；长脚本用
+<code>adb push</code> 或”分两段 base64 拼接 +
+<code>busybox base64 -d | sh</code>”</p>
+<hr />
+<h2 id="网络拓扑实测">2. 网络拓扑（实测）</h2>
+<h3 id="两块网卡">2.1 两块网卡</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────┐  Wi-Fi   ┌────────────────────────┐</span><br><span class="line">│ 手机热点      │◄────────►│ wlan0  10.73.250.186   │ 类型: WIFI     netId 1001</span><br><span class="line">│ (荣耀Magic7)  │          │ 网关 10.73.250.149      │ Score 60  metered=true</span><br><span class="line">│              │          │ DNS 10.73.250.149       │ **有全球 IPv6**</span><br><span class="line">└──────────────┘          │  别克英朗车机 (AC8317)  │</span><br><span class="line">                          │  Android 6.0 / 1024×600 │</span><br><span class="line">┌──────────────┐  RNDIS   │                         │</span><br><span class="line">│ T-Box / eSIM │◄────────►│ eth0  192.168.225.2     │ 类型: ETHERNET netId 1000</span><br><span class="line">│ 网关 .225.1   │          │ DNS 114.114.114.114     │ Score 55  metered=false</span><br><span class="line">│ (中国电信车联卡)│         │ **只有 fe80::，无全球 IPv6**│</span><br><span class="line">└──────────────┘          └────────────────────────┘</span><br></pre></td></tr></table></figure>
+<p><strong>默认网络选择</strong>：Score Wi-Fi(60) &gt; eSIM(55) ⇒
+<strong>两者都在时走 Wi-Fi</strong>；Wi-Fi 一断，eSIM
+才成为默认网络。<br />
+（这正是”必须让车机不连 Wi-Fi 才能测 eSIM”的原因。）</p>
+<h3 id="路由与策略路由-理解-m1-的关键">2.2 路由与策略路由（⭐ 理解 M1
+的关键）</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># ip route show table all   （节选）</span><br><span class="line">default via 192.168.225.1 dev eth0  table eth0       # eSIM 表</span><br><span class="line">192.168.225.0/24 dev eth0  table eth0</span><br><span class="line">default via 10.73.250.149 dev wlan0 table wlan0      # Wi-Fi 表</span><br><span class="line">10.73.250.0/24 dev wlan0    table wlan0</span><br><span class="line">default via 192.168.225.1 dev eth0                   # main 表 = eSIM</span><br><span class="line"></span><br><span class="line"># ip rule show  （节选）</span><br><span class="line">10500:  from all oif eth0 lookup eth0</span><br><span class="line">10500:  from all oif wlan0 lookup wlan0</span><br><span class="line">13000:  from all fwmark 0x103e8/0x1ffff lookup eth0   # netId 1000 = eSIM</span><br><span class="line">13000:  from all fwmark 0x103e9/0x1ffff lookup wlan0  # netId 1001 = Wi-Fi</span><br><span class="line">19000:  from all fwmark 0x3e8/0x1ffff lookup eth0</span><br><span class="line">19000:  from all fwmark 0x3e9/0x1ffff lookup wlan0</span><br><span class="line">23000:  from all fwmark 0x0/0xffff lookup main</span><br></pre></td></tr></table></figure>
+<p><strong>结论</strong>：App 的 socket 会被 netd
+打上<strong>所属网络</strong>的 fwmark ⇒ <strong>按
+<code>table &lt;接口&gt;</code>
+的路由出去</strong>；只有”<strong>未标记</strong> socket”才落到 main
+表（= eSIM）。这就是为什么改了 netd 默认网络也<strong>拦不住 App 走
+Wi-Fi</strong>（§6 M1）。</p>
+<h3 id="ipv6-首要嫌疑的物理基础">2.3 IPv6（⭐ 首要嫌疑的物理基础）</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># ip -6 addr show dev eth0</span><br><span class="line">inet6 fe80::e5b:8fff:fe27:9a64/64 scope link          ← 只有链路本地！</span><br><span class="line"></span><br><span class="line"># ip -6 route show</span><br><span class="line">2408:8456:a212:34fe::/64 dev wlan0 ...                ← Wi-Fi 有全球 IPv6 段</span><br><span class="line">default via fe80::fc5d:16ff:fe4f:2707 dev wlan0 proto ra   ← Wi-Fi 有 IPv6 默认路由</span><br><span class="line">fe80::/64 dev eth0 ...</span><br></pre></td></tr></table></figure>
+<p>⇒ <strong>eSIM（eth0）没有全球 IPv6、也没有 IPv6
+默认路由</strong>；Wi-Fi 有。而喜马拉雅的音频 CDN 恰好<strong>优先解析出
+IPv6</strong>（见 §5.3）。</p>
+<hr />
+<h2 id="现象与分层结论">3. 现象与分层结论</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>应用</th>
+<th>eSIM 下 DNS</th>
+<th>eSIM 下 TCP</th>
+<th>卡在哪层</th>
+<th>定论性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>腾讯系</strong>（QQ音乐 / 腾讯视频）</td>
+<td>❌ 域名<strong>静默丢弃</strong>（~20 s 超时）</td>
+<td>—（域名都解不出）</td>
+<td><strong>DNS 层</strong></td>
+<td>✅ 已确证</td>
+</tr>
+<tr>
+<td><strong>喜马拉雅</strong></td>
+<td>✅ <strong>21 个域名全正常</strong></td>
+<td>✅ 抽测 80/443 能建连</td>
+<td><strong>DNS 之上</strong>（未定）</td>
+<td>❓ 待 USB 复测</td>
+</tr>
+<tr>
+<td>网易云 / 酷狗 / 高德</td>
+<td>✅</td>
+<td>✅ eSIM 上 80/443 实测建连成功</td>
+<td><strong>全通</strong></td>
+<td>✅ 已确证</td>
+</tr>
+</tbody>
+</table>
+<p><strong>喜马拉雅的失败链</strong>（QQ音乐是
+DNS，喜马拉雅不是）——所以要查的是：<br />
+- 是<strong>连接层</strong>（IPv6 无路由 / 被 RST）？<br />
+- 还是<strong>应用层</strong>（“仅 WiFi”策略拒绝取流）？</p>
+<hr />
+<h2 id="腾讯系esim-的-dns-做了域名级屏蔽已确证">4. 腾讯系：eSIM 的 DNS
+做了域名级屏蔽（已确证）</h2>
+<p>同一台车机、同一批域名，两种网络下的解析对比（实测，各 2 次）：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>域名</th>
+<th>归属</th>
+<th>eSIM (<code>114.114.114.114</code>)</th>
+<th>Wi-Fi (<code>10.73.250.149</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>y.qq.com</code></td>
+<td>QQ音乐</td>
+<td>❌ unknown host</td>
+<td>✅ 112.95.5.230</td>
+</tr>
+<tr>
+<td><code>c.y.qq.com</code></td>
+<td>QQ音乐</td>
+<td>❌ unknown host</td>
+<td>✅ 157.255.218.63</td>
+</tr>
+<tr>
+<td><code>wns.qq.com</code></td>
+<td>QQ音乐(WNS 长连接)</td>
+<td>❌ unknown host</td>
+<td>✅ 134.175.75.52</td>
+</tr>
+<tr>
+<td><code>music.qq.com</code></td>
+<td>QQ音乐</td>
+<td>❌ unknown host</td>
+<td>✅ 218.61.165.133</td>
+</tr>
+<tr>
+<td><code>dl.stream.qqmusic.qq.com</code></td>
+<td>QQ音乐(音频 CDN)</td>
+<td>❌ unknown host</td>
+<td>✅ 211.97.81.220</td>
+</tr>
+<tr>
+<td><code>u6.y.qq.com</code> / <code>i.y.qq.com</code></td>
+<td>QQ音乐</td>
+<td>❌ unknown host</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>v.qq.com</code> / <code>vv.video.qq.com</code> /
+<code>api.video.qq.com</code> / <code>vd.l.qq.com</code> /
+<code>cgi.connect.qq.com</code></td>
+<td>腾讯视频</td>
+<td>❌ unknown host</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>music.163.com</code></td>
+<td>网易云</td>
+<td>✅ 222.186.176.174</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>m7.music.126.net</code> / <code>m10.music.126.net</code></td>
+<td>网易云 CDN</td>
+<td>✅ 218.91.226.161 / 117.92.139.41</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>aod.cos.tx.xmcdn.com</code> 等</td>
+<td>喜马拉雅 CDN</td>
+<td>✅ 117.92.139.39</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>restapi.amap.com</code></td>
+<td>高德</td>
+<td>✅ 59.82.43.66</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>www.baidu.com</code></td>
+<td>对照</td>
+<td>✅ 180.101.51.44</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>qq.com</code>（裸域）</td>
+<td>对照</td>
+<td>✅ 113.108.81.189</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>要点</strong>：<br />
+1. 屏蔽<strong>按主机名精确做</strong>——<code>qq.com</code>
+裸域能解析，<code>y.qq.com</code>/<code>music.qq.com</code>
+全被丢。<br />
+2. <strong>与连通性无关</strong>：eSIM 下 <code>ping</code> 百度 IP 直连
+0% 丢包 ⇒ IP 层/路由通，问题只在 <strong>DNS</strong>。<br />
+3. DNS 名义是 <code>114.114.114.114</code>（南京信风公共
+DNS），但<strong>行为不符合公共 DNS</strong> ⇒ 更像 <strong>T-Box 拦截了
+53 端口查询</strong>并套用自己的域名策略。<br />
+4. ⚠️ <strong>被挡的表现是”卡到 ~20
+秒超时”</strong>（静默丢包），不是秒回 NXDOMAIN ——
+所以<strong>逐个测、单个域名 5
+秒无响应即判不可达</strong>，不要批量串测（这是过去”总超时”的根因）。<br />
+5. 官方口径推测：车联网 eSIM 的”<strong>定向流量 /
+服务白名单</strong>”（只对白名单服务放行/免流）。</p>
+<p><strong>QQ音乐失败链（logcat 实证）</strong>：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MusicApplication.onCreate</span><br><span class="line">  → NetworkEngineManager → WnsManager → WnsClient → WnsInfoCacheUtil</span><br><span class="line">     抛 java.io.IOException: BufferedOutputStream is closed      ← WNS 长连接初始化失败</span><br><span class="line">  → ClientHttpExecutor.a(): defaultHttpClient.execute(...) 抛 IOException  ← 域名解析失败</span><br><span class="line">  → /proc/net/tcp 中 0 条 uid 10028 的连接</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>⚠️ 白名单<strong>清单会漂移</strong>：同一批 QQ音乐域名，10-24
+早上还能解析、晚上就被挡 ⇒ “某天能用”不代表稳定。</p>
+</blockquote>
+<hr />
+<h2 id="喜马拉雅素材归属实测数据与假设">5.
+喜马拉雅：素材归属、实测数据与假设</h2>
+<h3 id="素材归属哪些是喜马拉雅自己的哪些是腾讯的">5.1
+素材归属（“哪些是喜马拉雅自己的、哪些是腾讯的”）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>类别</th>
+<th>域名</th>
+<th>归属</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接口 / 页面 / 上报</td>
+<td><code>api / play / mp / adse / hybrid / linkeye / xdcs-collector / dns .ximalaya.com</code></td>
+<td><strong>喜马拉雅自有</strong></td>
+</tr>
+<tr>
+<td>图片（封面、专辑图）</td>
+<td><code>imgopen.xmcdn.com</code>、<code>imagev2.xmcdn.com</code></td>
+<td><strong>喜马拉雅自有</strong></td>
+</tr>
+<tr>
+<td>自有 CDN（分发）</td>
+<td><code>fdfs / download / s1 / aod / m .xmcdn.com</code></td>
+<td><strong>喜马拉雅自有</strong></td>
+</tr>
+<tr>
+<td><strong>音频素材（播放/下载）</strong></td>
+<td><strong><code>openaudio.cos.tx.xmcdn.com</code>、<code>aod.cos.tx.xmcdn.com</code></strong></td>
+<td>域名属喜马拉雅，<strong>托管在「腾讯云
+COS」</strong>（<code>cos.tx</code> = COS + Tencent）</td>
+</tr>
+<tr>
+<td>音频（另一路）</td>
+<td><code>audio.aliyun.xmcdn.com</code></td>
+<td>域名属喜马拉雅，<strong>托管在「阿里云」</strong></td>
+</tr>
+<tr>
+<td>第三方统计 SDK</td>
+<td><code>alog / oc .umeng.com</code>、<code>log.umsns.com</code></td>
+<td><strong>友盟（阿里系）</strong>，<strong>非</strong>腾讯</td>
+</tr>
+<tr>
+<td>广告/其它</td>
+<td><code>p10155.cn</code>、<code>api.118100.cn</code></td>
+<td>第三方</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话</strong>：<strong>接口、封面、自有 CDN
+都是喜马拉雅自己的；只有”音频文件本体”托管在腾讯云 /
+阿里云的对象存储上。</strong></p>
+</blockquote>
+<h3 id="esim-下-21-个域名逐个实测全部放行">5.2 eSIM 下 21
+个域名逐个实测（全部放行）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>结果</th>
+<th>域名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ 解析正常</td>
+<td><code>api / play / audio / dns / adse / mp / hybrid / linkeye / xdcs-collector .ximalaya.com</code>、<code>imgopen / fdfs / download / imagev2 / s1 / aod / m .xmcdn.com</code>、<strong><code>aod.cos.tx.xmcdn.com</code>（腾讯云）</strong>、<strong><code>audio.aliyun.xmcdn.com</code>（阿里云）</strong>、<code>ximalaya.com</code>、<code>www.ximalaya.com</code>、<code>www.baidu.com</code>（对照）</td>
+</tr>
+<tr>
+<td>❌</td>
+<td><code>game.ximalaya.com</code>（<strong>死域名</strong>，Wi-Fi
+下同样失败）、<code>y.qq.com</code>（<strong>被屏蔽</strong>，对照组）</td>
+</tr>
+</tbody>
+</table>
+<p>⇒ <strong>喜马拉雅不是被 eSIM
+的域名白名单挡的</strong>（与腾讯系性质不同）。</p>
+<h3 id="运行时铁证车机-logcat">5.3 运行时铁证（车机 logcat）</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">D libc-netbsd: [getaddrinfo]: hostname=openaudio.cos.tx.xmcdn.com; netid=1000; mark=1000</span><br><span class="line">D libc-netbsd: res_queryN name = openaudio.cos.tx.xmcdn.com, class = 1, type = 28   ← AAAA</span><br><span class="line">D libc-netbsd: res_queryN name = openaudio.cos.tx.xmcdn.com, class = 1, type = 1    ← A</span><br><span class="line">D libc-netbsd: res_queryN name = openaudio.cos.tx.xmcdn.com succeed</span><br><span class="line">I System.out: [socket][0] connection openaudio.cos.tx.xmcdn.com/240e:978:2608:d01:70::1e:80; LocalPort=…(10000)</span><br><span class="line">I System.out: [CDS]connect[openaudio.cos.tx.xmcdn.com/240e:978:2608:d01:70::1e:80] tm:10</span><br><span class="line">D Posix   : [Posix_connect Debug]Process com.ximalaya.ting.android.car:player :80</span><br></pre></td></tr></table></figure>
+<p>⭐ <strong>两个要点</strong>：① <strong>音频走 HTTP
+:80</strong>（不是 443）；② <strong>解析结果是
+IPv6</strong>（<code>240e:…</code>，中国电信 IPv6 段）。</p>
+<h3 id="apk-内的线索">5.4 APK 内的线索</h3>
+<ul>
+<li><strong>没有任何腾讯 SDK</strong>：<code>com/tencent</code> =
+0、<code>bugly</code> = 0、<code>beacon</code> = 0、<code>qcloud</code>
+= 0、<code>cos.tx</code> = 0<br />
+⇒ 与 QQ音乐/腾讯视频（重度依赖 <code>wns.qq.com</code>
+等）<strong>性质不同</strong>。</li>
+<li><strong>有”仅
+WiFi”痕迹</strong>：<code>IS_ENABLE_NETWORK_ONLY_WIFI</code>、<code>is_enable_network_only_wifi</code>、<code>WIFIONLY</code>、<code>cdnNotWifiAlertRate</code>、<code>cdnWifiAlertRate</code>、<code>cdnNotWifiConnectTimeout</code>、<code>cdnWifiConnectTimeout</code><br />
+⇒ 存在”<strong>仅 WiFi</strong>”策略，且对<strong>非 WiFi 网络另有一套
+CDN 超时/告警参数</strong>。</li>
+<li><strong>SharedPreferences 里没有</strong>
+<code>is_enable_network_only_wifi</code> 键（说明未显式写过 ⇒
+用默认值）。</li>
+</ul>
+<h3 id="音频-cdn-的真实-ip-与归属doh-复核绕过本地假-dns">5.5 音频 CDN
+的真实 IP 与归属（DoH 复核，绕过本地假 DNS）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>域名</th>
+<th>A 记录</th>
+<th>归属</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openaudio.cos.tx.xmcdn.com</code>（App 实际播放地址）</td>
+<td><code>58.251.60.37 / .39</code></td>
+<td>AS135061 中国联通 广东</td>
+</tr>
+<tr>
+<td><code>aod.cos.tx.xmcdn.com</code></td>
+<td><code>211.97.83.39</code></td>
+<td>AS140886 中国联通 广西</td>
+</tr>
+<tr>
+<td><code>audio.aliyun.xmcdn.com</code></td>
+<td><code>118.178.3.198</code></td>
+<td><strong>AS37963 阿里云（杭州）</strong> ✅</td>
+</tr>
+<tr>
+<td><code>m7.music.126.net</code>（网易云对照）</td>
+<td><code>119.36.225.x</code></td>
+<td>AS4837 中国联通 湖北</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注：<code>cos.tx</code> 字面是”腾讯云
+COS”，但<strong>公网解析到的是各地联通 CDN
+节点</strong>，未落在腾讯云自有 ASN ⇒ “按腾讯云 IP
+段封”的猜想<strong>证据不足</strong>，不作为结论。</p>
+</blockquote>
+<h3 id="未决假设按嫌疑排序待-7-验证">5.6 未决假设（按嫌疑排序，待 §7
+验证）</h3>
+<ol type="1">
+<li><strong>IPv6 优先级（首要嫌疑）</strong><br />
+喜马拉雅把音频 CDN 解析出
+IPv6（<code>240e:978:2608:d01:70::1e</code>）并优先使用；而
+<strong>eSIM(eth0) 只有 <code>fe80::</code>、无全球 IPv6
+地址与默认路由</strong> ⇒ eSIM-only
+时这条连接<strong>无路可走</strong>；若 App 不迅速回退
+IPv4，就会卡住/超时。</li>
+<li><strong>“仅 WiFi”策略</strong><br />
+eSIM 被 Android 识别为 <strong>ETHERNET</strong>（非 WiFi、非
+MOBILE）；若 App 判定”非 WiFi
+不取流”，会<strong>直接拒绝播放</strong>（对应 §5.4 的开关）。</li>
+<li><strong>连接层过滤（可能性较低）</strong><br />
+音频 CDN 的<strong>具体 IP/端口</strong>在 eSIM 上被 RST/限速 —— 必须用
+<code>tcpdump</code> 看到”<strong>长包媒体数据</strong>”才能证实，只看
+SYN 不算。</li>
+</ol>
+<hr />
+<h2 id="方法学更正与判据血泪教训动手前必读">6.
+方法学更正与判据（血泪教训，动手前必读）</h2>
+<h3 id="三条硬结论m1m2m3">6.1 三条硬结论（M1/M2/M3）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>结论</th>
+<th>证据 / 后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>M1</strong></td>
+<td><strong><code>ndc network default set 1000</code> 只改「DNS
+解析路径」，不改 App 数据 socket 的出口网络</strong> ⇒ 用它做的”eSIM
+测试”<strong>根本没测到 eSIM 数据面</strong></td>
+<td><code>ip rule</code> 把 App 的 socket 按 fwmark 绑到
+<code>table wlan0</code>；tcpdump 实测：切了 <code>ndc</code> 之后 App
+<strong>新连接仍从 <code>10.73.250.186</code>(Wi-Fi) 发出</strong>。⇒
+过去据此得出的”某 App 能/不能走 eSIM”结论<strong>不可信</strong></td>
+</tr>
+<tr>
+<td><strong>M2</strong></td>
+<td><strong><code>svc wifi disable</code>
+是持久化写入</strong>（等价在设置里关 Wi-Fi，写
+<code>settings global wifi_on=0</code>）</td>
+<td>一旦期间车机重启，<strong>重启后 Wi-Fi 依旧是关的</strong> ⇒
+adb(5555) 与 2223
+<strong>同时失联</strong>，只能人工到屏上开。<strong>本项目禁用此法</strong></td>
+</tr>
+<tr>
+<td><strong>M3</strong></td>
+<td>做”App 走 eSIM”的<strong>无干扰</strong>测试，正解是：<strong>让
+eSIM 成为唯一数据网络，且不碰车机 Wi-Fi 开关</strong> ⇒ <strong>USB 有线
+ADB + 车机不连任何 Wi-Fi</strong></td>
+<td>见 §7</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>仍然有效</strong>的旧方法：<code>ip rule add to &lt;目标IP&gt; lookup eth0 pref 100</code>（按<strong>目标
+IP</strong> 强制走 eSIM；对 <code>nc</code>/<code>ping</code>
+<strong>以及 App 对该 IP
+的连接</strong>都生效）。它是”<strong>逐目标</strong>”的，只能做点状验证，不能代表整体。</p>
+</blockquote>
+<h3 id="判据必须防预缓存造成的假阳性">6.2
+判据：必须防”预缓存”造成的<strong>假阳性</strong></h3>
+<p>音视频 App 会<strong>预缓冲</strong>，网络断开后仍能继续播放一段时间
+⇒ <strong>“有声音”不等于”网通”</strong>。<br />
+判定”这一阶段它真的取到了网”，必须<strong>同时</strong>满足 4 条：</p>
+<ol type="1">
+<li>该时间窗内出现<strong>新的</strong> DNS 查询（logcat 的
+<code>getaddrinfo</code> / tcpdump 的
+<code>A?</code>、<code>AAAA?</code>）；</li>
+<li>出现<strong>新的</strong> TCP 连接（tcpdump
+<code>Flags [S]</code>）；</li>
+<li>该连接<strong>收到应答</strong>（<code>Flags [S.]</code>）并且有<strong>长包</strong>（媒体数据，<code>length</code>
+明显大于 0 的一串包）；</li>
+<li>音源是<strong>新切换</strong>的曲目（不是旧缓冲）——用
+<code>uiautomator dump</code> 读 <code>title_tv</code> 文本对比。</li>
+</ol>
+<h3 id="其它必知坑">6.3 其它必知坑</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>坑</th>
+<th>说明 / 对策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>媒体键控不了喜马拉雅</strong></td>
+<td>它的 <code>MusicService</code> 媒体会话
+<code>active=false</code>、无 <code>mediaButtonReceiver</code> ⇒
+<code>input keyevent 126/85</code>
+<strong>无效</strong>；媒体键会被”当时活跃”的其它
+App（网易云/QQ音乐）接走。<strong>只能点 UI</strong>（坐标见
+§10.4）</td>
+</tr>
+<tr>
+<td><strong>后台 App 污染抓包</strong></td>
+<td>网易云、酷狗、讯飞（<code>conn1.txzing.com</code>）会一直在跑；抓包里出现
+<code>music.126.net</code>、<code>kugou.com</code>
+多半不是喜马拉雅。分析时<strong>按域名/uid 过滤</strong></td>
+</tr>
+<tr>
+<td><strong>别动媒体会话归属</strong></td>
+<td><code>settings get secure media_button_receiver</code>
+会被<strong>最后注册者</strong>改写（本轮后变成了喜马拉雅的
+<code>WireControlReceiver</code>），重启才重算</td>
+</tr>
+<tr>
+<td><strong><code>uiautomator dump</code> 权限</strong></td>
+<td>dump 文件属 root，<code>adb pull</code> 会
+<code>Permission denied</code> ⇒ 在车机上读</td>
+</tr>
+<tr>
+<td><strong>车机无 <code>awk</code>/<code>timeout</code></strong></td>
+<td>脚本里别用；用 <code>busybox</code> 版本</td>
+</tr>
+<tr>
+<td><strong><code>adb shell</code> 命令长度</strong></td>
+<td>~2100 字符上限；长脚本 <code>adb push</code> 上去再跑</td>
+</tr>
+<tr>
+<td><strong>别用 <code>am force-stop</code> 停系统 App</strong></td>
+<td>会写持久化
+<code>stopped="true"</code>（<strong>重启也不清</strong>），App
+从此收不到任何广播（含 <code>BOOT_COMPLETED</code>）。要停进程用
+<code>am kill</code></td>
+</tr>
+<tr>
+<td><strong>DNS 探测要”逐个 + 5 秒超时”</strong></td>
+<td>被屏蔽的域名是<strong>静默丢包</strong>，批量串测必然整体超时</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="下一轮实验方案有线-usb可直接照做">7. 下一轮实验方案（有线
+USB）——可直接照做</h2>
+<h3 id="前置条件务必确认">7.0 前置条件（务必确认）</h3>
+<ol type="1">
+<li>电脑用 <strong>USB
+线</strong>接车机；<strong>电脑自己</strong>可以连手机热点上网（车机不需要）。</li>
+<li><strong>车机不要连接任何 Wi-Fi 热点</strong>（这样 eSIM
+是唯一数据网络）。</li>
+<li>确认车机 USB 调试开着：<code>adb devices</code>
+直接看到车机（<code>ro.adb.secure=0</code>，正常无授权弹窗）。<br />
+&gt; 若 Windows 看不到设备 → 装 adb 驱动；若 <code>unauthorized</code> →
+在车机上勾选”允许 USB 调试”。</li>
+</ol>
+<h3 id="step-1-网络自检先证明走的是-esim">7.1 Step 1 —
+网络自检（先证明”走的是 eSIM”）</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">C=&lt;车机USB序列号&gt;</span><br><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 sh -c <span class="string">&#x27;</span></span><br><span class="line"><span class="string">echo &quot;-- 接口 --&quot;;   ip -o addr show | busybox grep &quot;inet &quot;</span></span><br><span class="line"><span class="string">echo &quot;-- 路由 --&quot;;   ip route show</span></span><br><span class="line"><span class="string">echo &quot;-- IPv6 --&quot;;   ip -6 addr show dev eth0 | busybox head -3; ip -6 route show | busybox head -5</span></span><br><span class="line"><span class="string">echo &quot;-- 默认网络 --&quot;; dumpsys connectivity 2&gt;/dev/null | busybox grep -E &quot;Active default network|type: (WIFI|ETHERNET)&quot;</span></span><br><span class="line"><span class="string">echo &quot;-- Wi-Fi 状态 --&quot;; settings get global wifi_on</span></span><br><span class="line"><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><strong>期望</strong>：<code>wifi_on=0</code>（或没有 wlan0
+地址）、<code>eth0 192.168.225.2</code>、<strong>默认网络是
+eSIM</strong>、<code>eth0</code> 仍然只有 <code>fe80::</code>。</p>
+<blockquote>
+<p>若车机仍连着 Wi-Fi：<strong>不要</strong>用
+<code>svc wifi disable</code>（§6
+M2）。改在车机设置里手动”忽略/忘记”该热点，或直接不开 Wi-Fi。</p>
+</blockquote>
+<h3 id="step-2-把测试脚本推到车机">7.2 Step 2 — 把测试脚本推到车机</h3>
+<p>把下面内容存成 <code>esim_test.sh</code>，然后：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb -s <span class="variable">$C</span> push esim_test.sh /data/local/tmp/esim_test.sh</span><br><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 sh /data/local/tmp/esim_test.sh</span><br></pre></td></tr></table></figure>
+<h3 id="step-3-抓包-触发播放脚本全文">7.3 Step 3 — 抓包 +
+触发播放（脚本全文）</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line"><span class="comment"># eSIM(eth0) 播放链路取证：抓 DNS + TCP，触发喜马拉雅&quot;下一首&quot;，再汇总</span></span><br><span class="line"><span class="comment"># 用法：adb shell su 0,0 sh /data/local/tmp/esim_test.sh</span></span><br><span class="line">L=/data/local/tmp/esim_test.log</span><br><span class="line">CAP=/data/local/tmp/esim_cap.txt</span><br><span class="line">PCAP=/data/local/tmp/esim_cap.pcap</span><br><span class="line"><span class="built_in">exec</span> &gt;<span class="variable">$L</span> 2&gt;&amp;1</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;=== eSIM 有线取证 START <span class="subst">$(date)</span> ===&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 0) 自检</span></span><br><span class="line">dumpsys connectivity 2&gt;/dev/null | busybox grep <span class="string">&#x27;Active default network&#x27;</span></span><br><span class="line">ip -4 -o addr show dev eth0</span><br><span class="line">ip -6 addr show dev eth0 | busybox grep <span class="string">&#x27;inet6&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1) 抓包（eth0 = 唯一上网口）</span></span><br><span class="line">pkill tcpdump 2&gt;/dev/null</span><br><span class="line">tcpdump -i eth0 -n -l -s 512 <span class="string">&#x27;tcp or udp port 53&#x27;</span> &gt; <span class="variable">$CAP</span> 2&gt;/dev/null &amp;</span><br><span class="line">TD=$!</span><br><span class="line"><span class="comment"># 如需 pcap 归档（用 Wireshark 细看），再起一个：</span></span><br><span class="line"><span class="comment"># tcpdump -i eth0 -n -s 512 -w $PCAP &#x27;tcp or udp port 53&#x27; &gt;/dev/null 2&gt;&amp;1 &amp;</span></span><br><span class="line"><span class="built_in">sleep</span> 2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 触发播放：启动 App → 连点&quot;下一首&quot;(930,471)，每次换新曲 = 必须重新取数</span></span><br><span class="line">logcat -c</span><br><span class="line">am start -n com.ximalaya.ting.android.car/com.ximalaya.ting.android.car.activity.MainActivity &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="built_in">sleep</span> 6</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> 1 2 3; <span class="keyword">do</span></span><br><span class="line">  input tap 930 471      <span class="comment"># btn_next</span></span><br><span class="line">  <span class="built_in">sleep</span> 7</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">sleep</span> 5</span><br><span class="line"><span class="built_in">kill</span> -9 <span class="variable">$TD</span> 2&gt;/dev/null</span><br><span class="line"><span class="built_in">sleep</span> 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 汇总</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- DNS 查询域名 ---&quot;</span></span><br><span class="line">busybox grep -oE <span class="string">&#x27;A+\? [a-zA-Z0-9._-]+&#x27;</span> <span class="variable">$CAP</span> | busybox <span class="built_in">sort</span> -u</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- TCP SYN 目标 ---&quot;</span></span><br><span class="line">busybox grep <span class="string">&#x27;Flags \[S\]&#x27;</span> <span class="variable">$CAP</span> | busybox sed <span class="string">&#x27;s/.*&gt; //&#x27;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- 收到的长包(媒体数据, 前 20 行) ---&quot;</span></span><br><span class="line">busybox grep -E <span class="string">&#x27;length [0-9]&#123;3,&#125;&#x27;</span> <span class="variable">$CAP</span> | busybox <span class="built_in">head</span> -20</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- 总包数 <span class="subst">$(wc -l &lt; $CAP)</span> ---&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- App(uid 10025) 连接表 ---&quot;</span></span><br><span class="line">busybox <span class="built_in">cat</span> /proc/net/tcp /proc/net/tcp6 | busybox grep <span class="string">&#x27; 10025 &#x27;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- 当前曲目标题(确认换歌了) ---&quot;</span></span><br><span class="line">uiautomator dump /data/local/tmp/ui.xml &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">busybox grep -o <span class="string">&#x27;resource-id=&quot;com.ximalaya.ting.android.car:id/title_tv&quot;[^&gt;]*text=&quot;[^&quot;]*&quot;&#x27;</span> /data/local/tmp/ui.xml</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;--- logcat 关键行 ---&quot;</span></span><br><span class="line">logcat -d | busybox grep -E <span class="string">&#x27;xmcdn|ximalaya|\[CDS\]|\[socket\]|getaddrinfo|UnknownHost|ECONN|ETIMEDOUT|refused&#x27;</span> | busybox <span class="built_in">tail</span> -50</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;=== DONE <span class="subst">$(date)</span> ===&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>运行后取回结果</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb -s <span class="variable">$C</span> pull /data/local/tmp/esim_test.log  ./</span><br><span class="line">adb -s <span class="variable">$C</span> pull /data/local/tmp/esim_cap.txt   ./</span><br><span class="line"><span class="comment"># 若抓了 pcap：adb -s $C pull /data/local/tmp/esim_cap.pcap ./</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>⭐ <strong>先 pull
+回电脑归档，再从车机删</strong>（上一轮就是在车机上分析完直接删了，没留原始证据）。</p>
+</blockquote>
+<h3 id="step-4-怎么读结果判定表">7.4 Step 4 — 怎么读结果（判定表）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>观察到的现象</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS 里出现 <code>openaudio.cos.tx.xmcdn.com</code> /
+<code>aod.cos.tx.xmcdn.com</code>，且<strong>有链路本地外的 IPv6
+地址被尝试</strong>，但<strong>没有</strong>对应 <code>[S.]</code></td>
+<td><strong>IPv6 假设成立</strong>（连接发不出去）</td>
+</tr>
+<tr>
+<td>有 <code>[S]</code> → <code>[S.]</code>，随后出现大量长包</td>
+<td>网络是通的 ⇒ 失败原因在<strong>应用层</strong>（“仅
+WiFi”策略，或播放器内部错误）</td>
+</tr>
+<tr>
+<td>完全不出现喜马拉雅域名</td>
+<td>App <strong>没发起取数</strong> ⇒
+应用层拦截（策略/登录态/权限），<strong>不是网络问题</strong></td>
+</tr>
+<tr>
+<td>出现域名查询但<strong>卡 20 秒无应答</strong></td>
+<td>eSIM 通道异常（对照 §4 的静默丢包特征）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IPv6 假设的”实锤”条件</strong>：同一时刻，App 对<strong>音频
+CDN 域名</strong>解析出 IPv6 → 尝试连接该 IPv6 → <strong>没有 SYN-ACK /
+无数据</strong>；而对<strong>同一域名的 IPv4</strong>
+若手工测试（<code>ip rule</code> 逐目标法）<strong>是通的</strong> ⇒
+即可判定”IPv6 优先 + eSIM 无 IPv6 路由”是根因。</p>
+<p><strong>手工补测 IPv4 通路（可选，确认不是 IP 被封）</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先解析出 IPv4（从电脑侧 DoH 取，别依赖车机本地 DNS 劫持）</span></span><br><span class="line"><span class="comment"># 然后让车机经 eSIM 直连该 IP：</span></span><br><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 sh -c <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  ip rule add to 58.251.60.37 lookup eth0 pref 100</span></span><br><span class="line"><span class="string">  printf &quot;GET / HTTP/1.0\r\nHost: openaudio.cos.tx.xmcdn.com\r\nConnection: close\r\n\r\n&quot; | busybox nc -w 6 58.251.60.37 80 | busybox head -5</span></span><br><span class="line"><span class="string">  ip rule del to 58.251.60.37 lookup eth0 pref 100</span></span><br><span class="line"><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="step-5-若要验证仅-wifi假设">7.5 Step 5 — 若要验证”仅
+WiFi”假设</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 看 App 自己怎么判网络类型（eSIM 是 ETHERNET）</span></span><br><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 dumpsys connectivity | busybox grep -E <span class="string">&#x27;type: |NetworkCapabilities&#x27;</span></span><br><span class="line"><span class="comment"># 看它有没有读 WiFi 状态（无障碍，仅供参考）</span></span><br><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 dumpsys package com.ximalaya.ting.android.car | busybox grep -i <span class="string">&#x27;ACCESS_NETWORK_STATE\|ACCESS_WIFI_STATE&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>若 §7.4 显示”网络通、但 App 不取数”，即指向该策略；可尝试在 App
+设置里找”仅 WiFi 播放/下载”开关并关掉后复测。</p>
+<h3 id="step-6-收尾">7.6 Step 6 — 收尾</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 sh -c <span class="string">&#x27;rm -f /data/local/tmp/esim_* /data/local/tmp/ui.xml&#x27;</span></span><br><span class="line">adb -s <span class="variable">$C</span> shell su 0,0 sh -c <span class="string">&#x27;ip rule show | busybox grep -c &quot;pref 100&quot;&#x27;</span>   <span class="comment"># 应为 0（无残留规则）</span></span><br></pre></td></tr></table></figure>
+<h3 id="plan-b万一带线-usb-不可用">7.7 Plan B：万一带线 USB 不可用</h3>
+<p>按优先级：<br />
+1. <strong>逐目标强制法</strong>（不影响 Wi-Fi，可做点状验证）：<br />
+<code>ip rule add to &lt;目标IP&gt; lookup eth0 pref 100</code> → 测 →
+<code>ip rule del ... pref 100</code>。<br />
+局限：只能验证”<strong>指定 IP</strong> 的 eSIM
+通路”，<strong>不能</strong>代表 App 整体。<br />
+2. <strong>临时摘掉 Wi-Fi
+的默认路由</strong>（❗未验证，谨慎，务必先记下原值）：删
+<code>table wlan0</code> 的 default 路由后，App 的标记 socket 会落到
+main 表（= eSIM），而 <code>10.73.250.0/24</code> 直连路由仍在 ⇒
+<strong>Wi-Fi adb 不断</strong>。<br />
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ip route show table wlan0                       <span class="comment"># 记录原值</span></span><br><span class="line">ip route del default via 10.73.250.149 dev wlan0 table wlan0</span><br><span class="line"><span class="comment"># …测试…</span></span><br><span class="line">ip route add default via 10.73.250.149 dev wlan0 table wlan0   <span class="comment"># 恢复</span></span><br></pre></td></tr></table></figure><br />
+（netd 可能自动加回；测试期间需复查
+<code>ip route show table wlan0</code>。）<br />
+3. <strong>不要</strong>用 <code>svc wifi disable</code>（§6 M2）。</p>
+<hr />
+<h2 id="安全红线务必遵守">8. 安全红线（务必遵守）</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>红线</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>绝不执行 <code>adb root</code></strong></td>
+<td>本 ROM 会把 adbd 卡死在 <code>offline</code>，只能重启车机恢复</td>
+</tr>
+<tr>
+<td><strong>绝不用 <code>svc wifi disable</code></strong></td>
+<td>写持久化 <code>wifi_on=0</code>，重启后仍关 ⇒ adb/2223 双断（§6
+M2）</td>
+</tr>
+<tr>
+<td><strong>不对系统/厂商应用用 <code>am force-stop</code></strong></td>
+<td>写持久化 <code>stopped="true"</code>（重启不清），App
+再也收不到广播。要停进程用 <code>am kill</code></td>
+</tr>
+<tr>
+<td><strong>不 kill
+系统进程</strong>（<code>com.adayo.*</code>、<code>com.hk.*</code>、SystemUI
+等）</td>
+<td>影响驾车相关功能</td>
+</tr>
+<tr>
+<td><strong>不动嘟嘟桌面</strong>（<code>com.wow.carlauncher.mini</code>）</td>
+<td>用户要求用原版，不加任何修改</td>
+</tr>
+<tr>
+<td><strong>不禁用 QQ音乐 App</strong></td>
+<td>用户要求</td>
+</tr>
+<tr>
+<td><strong>不改
+<code>/system</code>、<code>/vendor</code>、<code>settings</code>
+持久化项</strong></td>
+<td>测试应零持久化改动。回滚备份在车机
+<code>/data/local/tmp/</code>（<code>hk_oem_init.sh.orig</code> /
+<code>su.orig</code> / <code>pr.xml.bak</code> /
+<code>pr.elite.bak</code>）</td>
+</tr>
+<tr>
+<td><strong>root 一律走 <code>su 0,0 &lt;命令&gt;</code></strong></td>
+<td>shell uid 无 <code>CHANGE_COMPONENT_ENABLED_STATE</code> 等权限</td>
+</tr>
+<tr>
+<td><strong>改前备份、改后核对、先 pull 证据再清车机</strong></td>
+<td>上一轮在车机上直接删了原始日志，无法回溯</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="可选修复方向待验证">9. 可选修复方向（待验证）</h2>
+<p>腾讯系（DNS 层）与喜马拉雅（DNS 之上）<strong>要分开治</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>方案</th>
+<th>做法</th>
+<th>适用 / 风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>改 eSIM 的 DNS</strong></td>
+<td><code>ndc resolver setnetdns 1000 "" 223.5.5.5 119.29.29.29</code></td>
+<td>对腾讯系<strong>有效</strong>（已实测：换 DNS 后
+QQ域名立刻可解析）；但<strong>连接层若还有过滤就仍会失败</strong></td>
+</tr>
+<tr>
+<td><strong>DNS 重定向</strong></td>
+<td><code>iptables -t nat -A OUTPUT -o eth0 -p udp --dport 53 -j DNAT --to 223.5.5.5</code></td>
+<td>同上，且可做成开机生效</td>
+</tr>
+<tr>
+<td><strong>静态 hosts</strong></td>
+<td>往 <code>/etc/hosts</code> 写 IP</td>
+<td>IP 会变，需长期维护</td>
+</tr>
+<tr>
+<td><strong>DoH/DoT</strong></td>
+<td>应用级加密 DNS</td>
+<td>Android 6.0 原生不支持</td>
+</tr>
+<tr>
+<td><strong>喜马拉雅（若确认是 IPv6 问题）</strong></td>
+<td>让 eth0 只拿到 A 记录；或在系统侧禁用该网络的 IPv6</td>
+<td>需先验证假设成立</td>
+</tr>
+<tr>
+<td><strong>不修</strong></td>
+<td>这些 App 继续走手机热点</td>
+<td>零风险</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>结论一句话：<strong>DNS
+层的洞能补，但”连接层/应用层”的洞不一定能补</strong> —— 先把 §7
+的实测做完再决定投入。</p>
+</blockquote>
+<hr />
+<h2 id="命令速查">10. 命令速查</h2>
+<h3 id="连接与-root">10.1 连接与 root</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb devices                                  <span class="comment"># USB 接入后应直接出现车机</span></span><br><span class="line">adb -s &lt;serial&gt; shell su 0,0 <span class="built_in">id</span>              <span class="comment"># 验证 root（uid=0）</span></span><br><span class="line"><span class="comment"># WiFi 方式（备用）：adb connect 10.73.250.186:5555</span></span><br></pre></td></tr></table></figure>
+<h3 id="网络状态">10.2 网络状态</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su 0,0 ip -o addr show                        <span class="comment"># 接口地址</span></span><br><span class="line">su 0,0 ip route show                          <span class="comment"># IPv4 路由</span></span><br><span class="line">su 0,0 ip rule show                           <span class="comment"># 策略路由（看 fwmark → table）</span></span><br><span class="line">su 0,0 ip -6 addr show dev eth0               <span class="comment"># eSIM 是否有全球 IPv6（关键）</span></span><br><span class="line">su 0,0 dumpsys connectivity | grep <span class="string">&#x27;Active default network&#x27;</span></span><br><span class="line">su 0,0 settings get global wifi_on            <span class="comment"># 1=开 0=关</span></span><br></pre></td></tr></table></figure>
+<h3 id="抓包与连接">10.3 抓包与连接</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 抓 DNS + TCP（文本，便于 grep）</span></span><br><span class="line">su 0,0 /system/xbin/tcpdump -i eth0 -n -l -s 512 <span class="string">&#x27;tcp or udp port 53&#x27;</span> &gt; /data/local/tmp/cap.txt &amp;</span><br><span class="line"><span class="comment"># 抓 pcap（给 Wireshark）</span></span><br><span class="line">su 0,0 /system/xbin/tcpdump -i eth0 -n -s 512 -w /data/local/tmp/cap.pcap <span class="string">&#x27;tcp or udp port 53&#x27;</span> &amp;</span><br><span class="line"><span class="comment"># 停：su 0,0 pkill tcpdump</span></span><br><span class="line"></span><br><span class="line">su 0,0 busybox <span class="built_in">cat</span> /proc/net/tcp /proc/net/tcp6 | busybox grep <span class="string">&#x27; 10025 &#x27;</span>     <span class="comment"># 喜马拉雅连接</span></span><br><span class="line"><span class="comment"># 本地地址判读：192.168.225.2 = eSIM ；10.73.250.186 = Wi-Fi</span></span><br></pre></td></tr></table></figure>
+<h3 id="触发播放喜马拉雅1024600">10.4
+触发播放（喜马拉雅，1024×600）</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">底部播放条（由 uiautomator dump 得到的精确 bounds）：</span><br><span class="line">  上一首 btn_pre  [747,443][804,500]  → 中心 (775,471)</span><br><span class="line">  播放/暂停 btn_play [819,438][887,506] → 中心 (853,472)</span><br><span class="line">  下一首 btn_next [902,443][959,500]  → 中心 (930,471)   ⭐ 用它强制换曲取数</span><br><span class="line">  列表  btn_menu [967,443][1024,500]  → 中心 (995,471)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">su 0,0 input tap 930 471          <span class="comment"># 点&quot;下一首&quot;</span></span><br><span class="line">su 0,0 input keyevent 86          <span class="comment"># 媒体键 STOP（会发给&quot;活跃会话&quot;，喜马拉雅可能收不到）</span></span><br><span class="line"><span class="comment"># 读当前曲目（确认真的换歌了）：</span></span><br><span class="line">su 0,0 uiautomator dump /data/local/tmp/ui.xml &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">su 0,0 busybox grep -o <span class="string">&#x27;id/title_tv&quot;[^&gt;]*text=&quot;[^&quot;]*&quot;&#x27;</span> /data/local/tmp/ui.xml</span><br></pre></td></tr></table></figure>
+<h3 id="域名解析逐个测5-秒超时">10.5 域名解析（逐个测，5 秒超时）</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 车机上无 nslookup 可用；用 ping 单域名判定（被屏蔽=静默丢包，会卡）</span></span><br><span class="line">su 0,0 sh -c <span class="string">&#x27;for d in api.ximalaya.com openaudio.cos.tx.xmcdn.com aod.cos.tx.xmcdn.com y.qq.com; do</span></span><br><span class="line"><span class="string">  ping -c 1 -W 2 &quot;$d&quot; &gt;/dev/null 2&gt;&amp;1 &amp;&amp; echo &quot;$d OK&quot; || echo &quot;$d FAIL&quot;; done&#x27;</span></span><br><span class="line"><span class="comment"># 电脑侧绕过本地假 DNS（DoH）：</span></span><br><span class="line">curl -s <span class="string">&quot;https://dns.alidns.com/resolve?name=openaudio.cos.tx.xmcdn.com&amp;type=A&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="常用包名-uid">10.6 常用包名 / uid</h3>
+<table>
+<thead>
+<tr>
+<th>包名</th>
+<th>用途</th>
+<th>uid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>com.ximalaya.ting.android.car</code></td>
+<td>喜马拉雅（测试对象）</td>
+<td>10025</td>
+</tr>
+<tr>
+<td><code>com.tencent.qqmusiccar</code></td>
+<td>QQ音乐（对照，全被 DNS 挡）</td>
+<td>10028</td>
+</tr>
+<tr>
+<td><code>com.netease.cloudmusic.iot</code></td>
+<td>网易云（对照组，eSIM 正常）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>com.autonavi.amapauto</code> / 高德</td>
+<td>对照组（eSIM 正常）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="变更记录">11. 变更记录</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>日期</th>
+<th>变更</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-10-23</td>
+<td>初版：定位”腾讯系 = eSIM DNS
+域名级屏蔽”，含域名对比表、QQ音乐失败链、实验方法</td>
+</tr>
+<tr>
+<td>2026-10-24（早）</td>
+<td>复测 eSIM/Wi-Fi 域名解析
+A/B（<code>20261024_dns_probe_esim.log</code> /
+<code>_wifi.log</code>）</td>
+</tr>
+<tr>
+<td><strong>2026-10-24（晚）</strong></td>
+<td>① <strong>修正方法学</strong>：<code>ndc</code> 只改 DNS 不改 App
+数据出口（M1）、<code>svc wifi disable</code> 持久化事故（M2）；②
+<strong>喜马拉雅</strong>：确认为<strong>不可用</strong>（用户实机），但其
+21 个域名在 eSIM 下<strong>全通</strong> ⇒ 卡点在 DNS
+之上；补齐<strong>素材归属</strong>（音频托管腾讯云 COS / 阿里云）；③
+记录车机可用工具（<code>tcpdump</code>
+等）、防预缓存判据、媒体键无效坑；④ 确定下一轮 <strong>USB
+有线方案</strong></td>
+</tr>
+<tr>
+<td>下一轮</td>
+<td>USB 有线复测结果：IPv6 假设是否成立 /
+最终定论（<strong>截至本文发布尚未执行，如实保留该未决状态</strong>）</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/10/26/%E8%BD%A6%E6%9C%BAeSIM%E7%BD%91%E7%BB%9C%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/" title="车机 eSIM 网络差异分析报告">https://sunjunior.github.io/2026/10/26/车机eSIM网络差异分析报告/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-%E8%BD%A6%E6%9C%BA-AC8317-eSIM-DNS-IPv6-%E7%BD%91%E7%BB%9C%E5%88%86%E6%9E%90/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, 车机, AC8317, eSIM, DNS, IPv6, 网络分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/22/%E6%8A%8A%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E6%8A%95%E5%88%B0%E5%AE%89%E5%8D%93%E8%BD%A6%E6%9C%BA%E5%A4%A7%E5%B1%8F/" rel="prev" title="把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录">
+                  <i class="fa fa-angle-left"></i> 把手机屏幕投到安卓车机大屏：AC8317 车机上的投屏折腾全记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
