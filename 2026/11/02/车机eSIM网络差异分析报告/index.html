@@ -28,9 +28,9 @@
 <meta property="og:description" content="本文档是独立自包含的：不依赖任何其他文件即可开展工作。所有背景、结论、命令、脚本、坑与红线都在本文内。 对象：别克英朗车机（AC8317 &#x2F; Android 6.0，ro.fota.device&#x3D;ONSTAR_LITE_K215，OEM shinco） 来源说明：本文由《车机 eSIM 网络差异分析报告》（2026-10-24~10-27）与《车机 eSIM 网络差异分析与喜马拉雅修复方案》（v6">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-11-02T01:30:00.000Z">
-<meta property="article:modified_time" content="2026-11-02T06:38:49.391Z">
+<meta property="article:modified_time" content="2026-11-03T02:00:00.000Z">
 <meta property="article:author" content="sunjunior">
-<meta property="article:tag" content="逆向工程, 车机, AC8317, eSIM, DNS, IPv6, 网络分析, Ximalaya, APK补丁">
+<meta property="article:tag" content="逆向工程, 车机, AC8317, eSIM, DNS, IPv6, 网络分析, Ximalaya, APK补丁, NetEase">
 <meta name="twitter:card" content="summary">
 
 
@@ -160,18 +160,22 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E9%80%9F%E8%A7%88%E5%85%88%E8%AF%BB%E8%BF%99%E6%AE%B5%E5%9D%87%E4%B8%BA-2026-11-01-%E6%9C%80%E7%BB%88%E5%AE%9A%E8%AE%BA"><span class="nav-text">0.
-结论速览（先读这段，均为 2026-11-01 最终定论）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87"><span class="nav-text">2. 目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E7%A1%AC%E4%BB%B6%E7%8E%AF%E5%A2%83"><span class="nav-text">3. 软硬件环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E4%BF%A1%E6%81%AF"><span class="nav-text">3.1 车机信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E4%B8%8E%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1"><span class="nav-text">3.2 网络拓扑与策略路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipv6-%E7%8E%B0%E7%8A%B6%E4%BB%85%E4%BD%9C%E4%B8%BA%E8%83%8C%E6%99%AF%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA%E8%A7%81%E9%98%B6%E6%AE%B5%E4%BA%8C%E4%B8%8E%E6%92%AD%E6%94%BE%E5%A4%B1%E8%B4%A5%E6%97%A0%E5%85%B3"><span class="nav-text">3.3 IPv6
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E9%80%9F%E8%A7%88%E5%85%88%E8%AF%BB%E8%BF%99%E6%AE%B5%E5%9D%87%E4%B8%BA-2026-11-03-%E6%9C%80%E7%BB%88%E5%AE%9A%E8%AE%BA"><span class="nav-text">0.
+结论速览（先读这段，均为 2026-11-03 最终定论）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87"><span class="nav-text">2. 目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E7%A1%AC%E4%BB%B6%E7%8E%AF%E5%A2%83"><span class="nav-text">3. 软硬件环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E4%BF%A1%E6%81%AF"><span class="nav-text">3.1 车机信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E4%B8%8E%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1"><span class="nav-text">3.2 网络拓扑与策略路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipv6-%E7%8E%B0%E7%8A%B6%E4%BB%85%E4%BD%9C%E4%B8%BA%E8%83%8C%E6%99%AF%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA%E8%A7%81%E9%98%B6%E6%AE%B5%E4%BA%8C%E4%B8%8E%E6%92%AD%E6%94%BE%E5%A4%B1%E8%B4%A5%E6%97%A0%E5%85%B3"><span class="nav-text">3.3 IPv6
 现状（仅作为背景；最终结论见阶段二：与播放失败无关）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F"><span class="nav-text">3.4 访问方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E4%B8%8A%E7%9A%84%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%BC%BA%E6%89%8B"><span class="nav-text">3.5 车机上的工具与”缺手”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%8B%86%E8%A7%A3%E6%AF%8F%E4%B8%AA%E9%98%B6%E6%AE%B5%E7%9A%84%E7%A0%B4%E8%A7%A3%E7%9B%AE%E6%A0%87%E6%96%B9%E6%A1%88%E4%B8%8E%E7%BB%93%E6%9E%9C"><span class="nav-text">4.
 阶段拆解：每个阶段的破解目标、方案与结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%B8%8010-23-10-24%E6%96%B9%E6%B3%95%E5%AD%A6%E5%BB%BA%E7%AB%8B%E4%B8%8E%E8%85%BE%E8%AE%AF%E7%B3%BB-dns-%E5%AE%9A%E8%AE%BA"><span class="nav-text">阶段一（10-23 ~
 10-24）：方法学建立与腾讯系 DNS 定论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%BA%8C10-24-%E6%99%9A-10-27usb-%E6%9C%89%E7%BA%BF%E5%A4%8D%E6%B5%8B%E6%8E%92%E9%99%A4-ipv6%E7%A1%AE%E8%AE%A4%E4%BC%AA%E9%80%A0-rst"><span class="nav-text">阶段二（10-24
 晚 ~ 10-27）：USB 有线复测，排除 IPv6，确认伪造 RST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%B8%8910-31%E5%96%9C%E9%A9%AC%E6%8B%89%E9%9B%85%E4%B8%93%E9%A1%B9%E8%AF%8A%E6%96%AD%E8%AF%81%E6%98%8E%E6%8D%A2-cdn-%E8%8A%82%E7%82%B9%E5%8D%B3%E5%8F%AF%E6%92%AD"><span class="nav-text">阶段三（10-31）：喜马拉雅专项诊断，证明”换
 CDN 节点即可播”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E5%9B%9B11-01%E6%89%BE%E5%88%B0%E7%AC%AC%E4%B8%80%E9%81%93%E9%97%B8%E9%97%A8-isconnectnetwork%E6%9C%80%E7%BB%88%E5%AE%9A%E8%AE%BA%E6%98%8E%E6%96%87-http-vs-tls"><span class="nav-text">阶段四（11-01）：找到第一道闸门
 isConnectNetwork，最终定论”明文 HTTP vs TLS”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%BA%9411-01-%E6%99%9A%E7%BD%91%E6%98%93%E4%BA%91%E5%BD%93%E5%89%8D%E7%BD%91%E7%BB%9C%E4%B8%8D%E5%8F%AF%E7%94%A8%E7%9A%84%E5%90%8C%E6%BA%90%E5%AE%9A%E4%BD%8D"><span class="nav-text">阶段五（11-01
-晚）：网易云”当前网络不可用”的同源定位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E6%B8%85%E5%8D%95"><span class="nav-text">5. 遇到的问题清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E9%97%AD%E7%8E%AF%E6%83%85%E5%86%B5"><span class="nav-text">6. 问题闭环情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%A4%84%E7%BD%AE%E4%B8%8E%E8%BD%A6%E6%9C%BA%E7%8E%B0%E7%8A%B6"><span class="nav-text">7. 最终处置与车机现状</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF%E5%8A%A1%E5%BF%85%E9%81%B5%E5%AE%88"><span class="nav-text">8. 安全红线（务必遵守）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-text">附录 A：关键脚本与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-esim-%E6%92%AD%E6%94%BE%E9%93%BE%E8%B7%AF%E5%8F%96%E8%AF%81%E8%84%9A%E6%9C%ACesim_test.sh%E5%8F%AF%E7%9B%B4%E6%8E%A5%E5%A4%8D%E7%94%A8"><span class="nav-text">A.1 eSIM
+晚）：网易云”当前网络不可用”的同源定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E5%85%AD11-02-11-03%E7%BD%91%E6%98%93%E4%BA%91%E7%AC%AC%E4%BA%8C%E8%BD%AE%E8%A1%A5%E4%B8%81%E9%AA%8C%E8%AF%81%E9%98%B2%E7%AF%A1%E6%94%B9%E9%80%86%E5%90%91%E4%B8%8E%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E4%BF%AE%E5%A4%8D%E8%90%BD%E5%9C%B0"><span class="nav-text">阶段六（11-02
+~ 11-03）：网易云第二轮——补丁验证、防篡改逆向与开机自动修复落地</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E6%B8%85%E5%8D%95"><span class="nav-text">5. 遇到的问题清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E9%97%AD%E7%8E%AF%E6%83%85%E5%86%B5"><span class="nav-text">6. 问题闭环情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%A4%84%E7%BD%AE%E4%B8%8E%E8%BD%A6%E6%9C%BA%E7%8E%B0%E7%8A%B6"><span class="nav-text">7. 最终处置与车机现状</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF%E5%8A%A1%E5%BF%85%E9%81%B5%E5%AE%88"><span class="nav-text">8. 安全红线（务必遵守）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-text">附录 A：关键脚本与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-esim-%E6%92%AD%E6%94%BE%E9%93%BE%E8%B7%AF%E5%8F%96%E8%AF%81%E8%84%9A%E6%9C%ACesim_test.sh%E5%8F%AF%E7%9B%B4%E6%8E%A5%E5%A4%8D%E7%94%A8"><span class="nav-text">A.1 eSIM
 播放链路取证脚本（esim_test.sh，可直接复用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%81%E4%B8%8E%E6%8A%93%E5%8C%85%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="nav-text">A.2 网络状态与抓包命令速查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E8%A7%A6%E5%8F%91%E6%92%AD%E6%94%BE%E5%9D%90%E6%A0%871024600"><span class="nav-text">A.3 触发播放坐标（1024×600）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E8%A1%A5%E4%B8%81%E9%AA%8C%E8%AF%81%E5%88%A4%E6%8D%AE%E4%B8%8E-20-%E7%A7%92%E5%BF%AB%E9%80%9F%E9%AA%8C%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="nav-text">A.4 补丁验证判据与 20
-秒快速验证流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.5-%E8%A1%A5%E4%B8%81%E7%9B%B8%E5%85%B3%E8%84%9A%E6%9C%AC%E4%B8%8E%E4%BA%A7%E7%89%A9"><span class="nav-text">A.5 补丁相关脚本与产物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.6-%E7%BD%91%E6%98%93%E4%BA%91%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88%E9%98%B6%E6%AE%B5%E4%BA%94%E5%BE%85%E9%AA%8C%E8%AF%81"><span class="nav-text">A.6
-网易云补丁方案（阶段五，待验证）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.7-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%AD%98%E6%A1%A3%E4%BD%8D%E7%BD%AE"><span class="nav-text">A.7 原始数据存档位置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="nav-text">附录 B：变更记录</span></a></li></ol></div>
+秒快速验证流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.5-%E8%A1%A5%E4%B8%81%E7%9B%B8%E5%85%B3%E8%84%9A%E6%9C%AC%E4%B8%8E%E4%BA%A7%E7%89%A9"><span class="nav-text">A.5 补丁相关脚本与产物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.6-%E7%BD%91%E6%98%93%E4%BA%91%E8%A1%A5%E4%B8%81%E8%A6%81%E7%82%B9%E9%98%B6%E6%AE%B5%E4%BA%94%E8%AE%BE%E8%AE%A1-%E9%98%B6%E6%AE%B5%E5%85%AD%E5%AE%9E%E6%B5%8B%E5%90%8E%E5%BC%83%E7%94%A8"><span class="nav-text">A.6
+网易云补丁要点（阶段五设计 → 阶段六实测后弃用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.7-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%AD%98%E6%A1%A3%E4%BD%8D%E7%BD%AE"><span class="nav-text">A.7 原始数据存档位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.8-%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E4%BF%AE%E5%A4%8D-eth0-%E9%92%A9%E5%AD%90%E5%B7%B2%E8%90%BD%E5%9C%B0%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE"><span class="nav-text">A.8 开机自动修复 eth0
+钩子（已落地，关键配置）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.9-eth0-%E5%B8%B8%E9%A9%BB%E7%9C%8B%E9%97%A8%E7%8B%97%E6%96%B9%E6%A1%88%E5%B7%B2%E5%AE%9A%E7%A8%BF%E6%9A%82%E4%B8%8D%E9%83%A8%E7%BD%B2"><span class="nav-text">A.9 eth0
+常驻看门狗（方案已定稿，暂不部署）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.10-%E7%BD%91%E6%98%93%E4%BA%91%E7%AC%AC%E4%BA%8C%E8%BD%AE%E5%8F%AF%E5%A4%8D%E7%94%A8%E6%B5%8B%E8%AF%95%E5%91%BD%E4%BB%A4%E9%98%B6%E6%AE%B5%E5%85%AD"><span class="nav-text">A.10
+网易云第二轮可复用测试命令（阶段六）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="nav-text">附录 B：变更记录</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -266,9 +270,15 @@ isConnectNetwork，最终定论”明文 HTTP vs TLS”</span></a></li><li class
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-11-02 09:30:00 / 修改时间：14:38:49" itemprop="dateCreated datePublished" datetime="2026-11-02T09:30:00+08:00">2026-11-02</time>
+      <time title="创建时间：2026-11-02 09:30:00" itemprop="dateCreated datePublished" datetime="2026-11-02T09:30:00+08:00">2026-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-11-03 10:00:00" itemprop="dateModified" datetime="2026-11-03T10:00:00+08:00">2026-11-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -303,10 +313,15 @@ isConnectNetwork，最终定论”明文 HTTP vs TLS”</span></a></li><li class
 6.0，<code>ro.fota.device=ONSTAR_LITE_K215</code>，OEM shinco）<br />
 <strong>来源说明</strong>：本文由《车机 eSIM
 网络差异分析报告》（2026-10-24~10-27）与《车机 eSIM
-网络差异分析与喜马拉雅修复方案》（v6，2026-11-01）合并重写，按”阶段目标
-→ 问题 → 闭环”重新组织。<strong>所有结论均以 2026-11-01
+网络差异分析与喜马拉雅修复方案》（v6 → v7，2026-11-03
+合并重写），按”阶段目标 → 问题 → 闭环”重新组织。<strong>所有结论均以
+2026-11-03
 的实测为准</strong>，各阶段旧结论只在所属阶段内保留，冲突处以”最终定论”与附录
-B 变更记录为准。<br />
+B 变更记录为准。相对 v6
+新增：网易云第二轮（补丁版验证、<code>libpoison.so</code>
+防篡改逆向、开机自动修复 eth0
+落地、第三方自启核查），并<strong>更正”／system
+只读不可写”的旧结论</strong>。<br />
 <strong>关联阅读（背景知识，非依赖）</strong>：《<a
 href="/2026/10/18/AC8317车机系统分析总文档/">AC8317
 车机系统分析总文档</a>》—— 设备基线、ADB/root 与固件分析方法。</p>
@@ -314,8 +329,8 @@ href="/2026/10/18/AC8317车机系统分析总文档/">AC8317
 <hr />
 <h2 id="目录">目录</h2>
 <ul>
-<li><a href="#0-结论速览先读这段均为-2026-11-01-最终定论">0.
-结论速览（先读这段，均为 2026-11-01 最终定论）</a></li>
+<li><a href="#0-结论速览先读这段均为-2026-11-03-最终定论">0.
+结论速览（先读这段，均为 2026-11-03 最终定论）</a></li>
 <li><a href="#1-背景">1. 背景</a></li>
 <li><a href="#2-目标">2. 目标</a></li>
 <li><a href="#3-软硬件环境">3. 软硬件环境</a></li>
@@ -337,16 +352,20 @@ isConnectNetwork，最终定论”明文 HTTP vs TLS”</a></li>
 <li><a
 href="#阶段五11-01-晚网易云当前网络不可用的同源定位">阶段五（11-01
 晚）：网易云”当前网络不可用”的同源定位</a></li>
+<li><a
+href="#阶段六11-02--11-03网易云第二轮补丁验证防篡改逆向与开机自动修复落地">阶段六（11-02
+~ 11-03）：网易云第二轮——补丁验证、防篡改逆向与开机自动修复落地</a></li>
 </ul></li>
 <li><a href="#5-遇到的问题清单">5. 遇到的问题清单</a></li>
 <li><a href="#6-问题闭环情况">6. 问题闭环情况</a></li>
 <li><a href="#7-最终处置与车机现状">7. 最终处置与车机现状</a></li>
+<li><a href="#8-安全红线务必遵守">8. 安全红线（务必遵守）</a></li>
 <li><a href="#附录-a关键脚本与配置">附录 A：关键脚本与配置</a></li>
 <li><a href="#附录-b变更记录">附录 B：变更记录</a></li>
 </ul>
 <hr />
-<h2 id="结论速览先读这段均为-2026-11-01-最终定论">0.
-结论速览（先读这段，均为 2026-11-01 最终定论）</h2>
+<h2 id="结论速览先读这段均为-2026-11-03-最终定论">0.
+结论速览（先读这段，均为 2026-11-03 最终定论）</h2>
 <ol type="1">
 <li><strong>eSIM 链路上存在一台”网络深处的中间盒”，对特定 App
 流量做选择性过滤</strong>，过滤分三层：
@@ -363,20 +382,33 @@ RST</strong> 强行拆链（TTL 恒 147、IP ID 照抄我方 SYN、PC
 </ul></li>
 <li><strong>喜马拉雅 1.7.1 的失败是三层叠加</strong>：① 系统以太网状态卡
 <code>CONNECTING</code> → <code>isConnectNetwork</code>
-预检测判”无网”根本不发请求；② CDN 节点被伪造 RST；③ 音频走明文
+预检被判”无网”根本不发请求；② CDN 节点被伪造 RST；③ 音频走明文
 HTTP:80，内容可被 DPI 并拉黑。<strong>换 CDN 节点/NAT
 只能验证，不可持续</strong>（实测节点会被明文请求”烧”掉）。</li>
-<li><strong>最终处置</strong>：换 <strong>5.0.0
+<li><strong>喜马拉雅最终处置</strong>：换 <strong>5.0.0
 车机版</strong>（音频原生走 TLS/443）——已实测 eSIM 下正常播放，无需
 NAT、无需补丁；1.7.1 走明文 HTTP，在当前链路不可持续，已停用。</li>
 <li><strong>网易云”当前网络不可用”与喜马拉雅无关</strong>：是系统以太网
-DHCP 复触发超时后 <code>NetworkInfo</code> 卡死在
-<code>CONNECTING</code>，App 按 <code>isConnected()</code>
-判离线；临时修复 <code>ifconfig eth0 down/up</code>
-已验证，离线补丁方案已设计、待上车验证。</li>
-<li>早前”IPv6 无路由”“仅 WiFi 策略”“DNS 解析失败是喜马拉雅主因”“封禁按
-IP
-仓库、换节点可持续”等结论<strong>均已被实验证伪</strong>，正文中仅在所属阶段保留并标注。</li>
+DHCP 复触发超时后 framework 旧接口 <code>NetworkInfo</code> 卡死在
+<code>CONNECTING</code>（<code>ConnectivityService</code> 侧与 IP
+全正常），App 按 <code>isConnected()</code>
+判离线。<strong>工程修复已落地（阶段六）</strong>：在
+<code>/system/bin/hk_oem_init.sh</code> 注入开机自动修复钩子，第 4
+次开机实测<strong>92
+秒稳定、失败自动重试</strong>，原版网易云恢复”浏览+播放”；离线 APK
+补丁路线技术验证通过但<strong>不能完全修复</strong>（下载/升级/主题等路径仍判离线），且必须先绕过
+<code>libpoison.so</code> native
+防篡改，<strong>已回退原版</strong>。</li>
+<li><strong>网易云播放仍会偶发失败的是另一个独立问题（第二层）</strong>：部分江苏电信段
+CDN 节点对车机 eSIM 出口直接 <code>ECONNREFUSED</code>（PC
+连接正常），DNS ECS 调度按车机出口回江苏节点、换 DNS
+绕不开；<strong>未解决</strong>，可选 DNAT
+绕行（重启失效）或改用喜马拉雅 5.0.0。</li>
+<li>早前这些结论<strong>均已被实验推翻或更正</strong>：IPv6 无路由、“仅
+WiFi”策略、DNS 解析失败是喜马拉雅主因、封禁按 IP
+仓库且换节点可持续，以及 <strong>“/system 分区只读、remount
+被拒、开机看门狗写不进去”（阶段六实测 remount
+可行，钩子已成功写入）</strong>——正文中仅在所属阶段保留并标注。</li>
 </ol>
 <hr />
 <h2 id="背景">1. 背景</h2>
@@ -423,8 +455,10 @@ IP
 就好——说明不是服务器问题，而是<strong>eSIM
 链路本身对部分应用的流量做了选择性过滤</strong>。早期猜测集中在”IPv6
 无路由”“仅 WiFi 策略”“DNS
-被劫持”等方向，经过五个阶段的实验，最终确认根因是<strong>链路上网络深处的中间盒</strong>（详见阶段二~四），并一并解决了网易云的”网络不可用”（阶段五，与
-eSIM 过滤同源于”以太网状态机卡死”这一系统性问题）。</p>
+被劫持”等方向，经过六个阶段的实验，最终确认根因是<strong>链路上网络深处的中间盒</strong>（详见阶段二~四）；网易云的”网络不可用”则与
+eSIM
+过滤无关，同源于”以太网状态机卡死”这一系统性问题（阶段五定位根因，阶段六通过补丁验证
++ 系统层开机钩子完成工程落地）。</p>
 <h2 id="目标">2. 目标</h2>
 <ol type="1">
 <li><strong>查明差异机制</strong>：对每个 App，定位它在 eSIM
@@ -432,12 +466,12 @@ eSIM 过滤同源于”以太网状态机卡死”这一系统性问题）。</p
 系统状态字段）。</li>
 <li><strong>修复喜马拉雅</strong>：让喜马拉雅在 eSIM
 下可以正常播放，且方案可长期使用。</li>
-<li><strong>查明网易云</strong>：解释”能加载内容但点卡片提示网络不可用”的矛盾现象，并给出修复。</li>
+<li><strong>修复网易云</strong>：解释”能加载内容但点卡片提示网络不可用”的矛盾现象并消除它；同时解释”修好提示后播放仍偶发失败”的第二层原因。</li>
 <li><strong>方法学正确</strong>：保证每一轮测试真的走的是 eSIM
 数据面（早期因此吃过亏）。</li>
-<li><strong>零持久化改动</strong>：全程不改
-<code>/system</code>、<code>/vendor</code>、固件与 persistent
-settings；设备必须始终可回滚。</li>
+<li><strong>改动可回滚</strong>：对必须持久化的改动（如
+<code>/system</code> 开机钩子），严格走”备份 → 受控写入 → 校验 →
+可一键回滚出厂”的流程；其余测试保持零持久化。</li>
 </ol>
 <h2 id="软硬件环境">3. 软硬件环境</h2>
 <h3 id="车机信息">3.1 车机信息</h3>
@@ -610,7 +644,7 @@ denied，需在车机上 <code>cat</code>）</td>
 <hr />
 <h2 id="阶段拆解每个阶段的破解目标方案与结果">4.
 阶段拆解：每个阶段的破解目标、方案与结果</h2>
-<p>整个过程按认识推进分为五个阶段。每个阶段写清楚：<strong>本阶段目标 →
+<p>整个过程按认识推进分为六个阶段。每个阶段写清楚：<strong>本阶段目标 →
 采用的方案 → 关键结果 → 发现的问题</strong>。问题与闭环状态集中在第 5、6
 章。</p>
 <h3 id="阶段一10-23-10-24方法学建立与腾讯系-dns-定论">阶段一（10-23 ~
@@ -1175,15 +1209,244 @@ CONNECTING</strong>。</li>
 - <code>ifconfig eth0 down ; sleep 2 ; ifconfig eth0 up</code> → 2
 秒内回 <code>CONNECTED</code>，点”每日推荐”直接进入播放页
 ✅（<strong>临时修复</strong>：链路 up 事件后再触发会复发）。<br />
-- 加固尝试：开机看门狗（crond + down/up）逻辑可行但 <code>/system</code>
-只读、remount 被拒 ⇒ 开机钩子写不进去，已全部撤除；静态 IP
-属持久配置不采用。<br />
-- <strong>选定方案（待验证，未闭环）</strong>：离线给网易云打补丁——目标
-<code>Lcom/netease/cloudmusic/utils/c0;-&gt;g(...)I</code>，只改 1 条
-<code>if-eqz</code> 跳转目标（“<code>!isConnected()</code> 就 return 0”
-改为 fallback 到 <code>return 4</code>）；需重签 → 先卸载、备份 App
-数据、回填并 <code>chown</code> 新 uid。原版
-<code>ne_base.apk</code>（25.2MB）已备份。</p>
+- 加固尝试：开机看门狗（crond +
+down/up）。<strong>当时结论”<code>/system</code>
+只读、<code>remount,rw</code>
+被拒、钩子写不进去”——该结论后被阶段六更正</strong>：实测
+<code>/system</code> 可以 remount 为 rw 并成功写入（当前
+<code>/system</code> 已还原为 ro）；静态 IP 属持久配置不采用。<br />
+-
+<strong>试定方案（后被阶段六验证并调整）</strong>：离线给网易云打补丁——原设计只改
+<code>c0</code> 的 1 条 <code>if-eqz</code>
+跳转目标（“<code>!isConnected()</code> 就 return
+0”）。实测发现<strong>只改 <code>c0.g()</code>
+不够</strong>（调用链根本不经过它，见阶段六），且重签前必须先绕过 APK
+内置的 native 防篡改。</p>
+<h3
+id="阶段六11-02-11-03网易云第二轮补丁验证防篡改逆向与开机自动修复落地">阶段六（11-02
+~ 11-03）：网易云第二轮——补丁验证、防篡改逆向与开机自动修复落地</h3>
+<blockquote>
+<p>本阶段目标不再是”定位”，而是<strong>工程闭环</strong>：把”提示网络不可用”消灭掉，并让修复在每次开机后自动生效。先后走了两条路——应用层补丁（技术验证通过但<strong>弃用</strong>）与系统层开机修复（<strong>最终落地</strong>）。</p>
+</blockquote>
+<p><strong>目标</strong>：① 给网易云补丁上车验证；② 彻底解决以太网
+<code>NetworkInfo</code> 卡死（不再依赖每次手动 down/up）；③
+核查第三方应用自启动现状。</p>
+<p><strong>1）补丁动手前的三个前提</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>前提问题</th>
+<th>实测结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重启后会不会自愈？</td>
+<td><strong>不会</strong>。开机 2 分 27 秒 <code>NetworkInfo</code> 仍为
+<code>CONNECTING</code></td>
+</tr>
+<tr>
+<td>普通 App 能否拿到 root（决定”做一键修复 APK”是否可行）？</td>
+<td><strong>不能</strong>。<code>su</code> 是 AOSP 版、权限
+<code>4750 root:shell</code>，App 执行直接
+<code>Permission denied</code> ⇒ APK 自启修复方案作废，转向
+<code>/system</code> 开机钩子</td>
+</tr>
+<tr>
+<td>重签 APK 能否直接装？</td>
+<td><strong>不能</strong>——重签名（哪怕 dex 一字未改）包会在 200~450ms
+内被进程主动退出（见 2）native 防篡改）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2）网易云补丁（阶段五方案的实测与结论）</strong></p>
+<ul>
+<li>调用链发现（为什么只改 <code>c0.g()</code> 无效）：SDK 23
+下首页卡片走 <code>s.i()</code> → <code>s.k()</code> →
+<code>NeteaseMusicUtils.a0()</code> → <code>c0.q()</code> →（SDK&lt;29
+分支）<code>c0.t()</code>，<strong>完全不经过
+<code>c0.g()</code></strong>；播放还额外受 <code>c0.l()</code>（“仅 WiFi
+播放”）限制。</li>
+<li>最终补丁共 <strong>4 处</strong>（<code>ne_patched3.apk</code>，26.9
+MB）：</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>位置</th>
+<th>改动</th>
+<th>性质</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lib/armeabi-v7a/libpoison.so</code> 偏移 0x57898 附近</td>
+<td>32 字节签名白名单 <code>da6b…76d</code>（本车渠道证书 MD5）→ 自签
+<code>fa24…140</code></td>
+<td><strong>重签的必要副作用</strong>，非功能修复</td>
+</tr>
+<tr>
+<td><code>classes2.dex</code> <code>c0.g(NetworkInfo)I</code> 偏移
+12</td>
+<td><code>if-eqz v0,+015h</code> → 双 <code>nop</code></td>
+<td>全局网络状态判定</td>
+</tr>
+<tr>
+<td><code>classes2.dex</code> <code>c0.l()Z</code> 偏移 20</td>
+<td><code>if-eqz v1,+00bh</code> → 双 <code>nop</code></td>
+<td>“仅 WiFi 播放”闸门</td>
+</tr>
+<tr>
+<td><code>classes2.dex</code> <code>c0.t()Z</code> 偏移 124</td>
+<td><code>if-eqz v0,+004h</code> → 双 <code>nop</code></td>
+<td>首页卡片 / 播放按钮闸门</td>
+</tr>
+</tbody>
+</table>
+<p>三处 dex 都是 4 字节条件跳转换成两条
+<code>nop</code>（指令长度不变）；保留
+<code>NetworkInfo == null → 离线</code>，符合”真断网仍算离线”的要求。</p>
+<ul>
+<li><strong>关键发现：<code>libpoison.so</code> native
+防篡改</strong>。现象是”重签包 200~450ms 静默退出”——无
+<code>FATAL EXCEPTION</code>、无 tombstone、xcrash 目录为空（=
+主动退出，不是崩溃）。定位方法：把原版证书 DER 的
+MD5/SHA1/SHA256（hex/base64 共 18 种形式）在 APK 全部 dex/so
+里搜，唯一命中
+<code>libpoison.so 0x57898</code>，附近就是完整校验逻辑：<code>getPackageInfo(GET_SIGNATURES)</code>
+→ <code>Signature.toByteArray()</code> → MD5 → 与内嵌 7 个白名单 MD5
+比对，不匹配杀进程。<strong>解法：把本车渠道那条白名单（32
+字符）原地替换为自签证书 MD5（同为 32 字符）</strong>。</li>
+<li><strong>补丁不能完全修复</strong>（未覆盖路径）：<code>c0.d/e/u/n/o</code>（真正的
+NetworkInfo
+入口）、<code>module/player/datasource/HttpBaseDataSource</code>、<code>module/transfer/download/*</code>、<code>appupdate/*</code>、<code>theme/core/ThemeAgent</code>
+等仍直接读 <code>ConnectivityManager</code>
+或走其它判离线路径——<strong>补丁能保证”浏览 +
+播放”主链路，不等于完全修复</strong>。</li>
+<li><strong>结论：弃用</strong>。可用但代价是”自签 → 无法官方升级 +
+覆盖不全 + 每个组件状态重装即丢”，而根因（framework
+状态字段）完全可以在系统层修 ⇒
+转向开机钩子；<code>ne_patched3.apk</code> 留存备查。</li>
+</ul>
+<p><strong>3）第二层问题：网易云音频 CDN 拒绝本车 eSIM 出口（与 eth0
+修复无关）</strong></p>
+<p>补丁版/原版一样，播放时大量
+<code>ECONNREFUSED</code>（<code>iot202.music.126.net/117.89.179.163:80 after 20000ms: ECONNREFUSED</code>）。实测定性：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>端点</th>
+<th>车机 eSIM</th>
+<th>PC 对照</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>222.185.228.100:80</code>
+等（222.185/61.155/58.211/121.228/218.94 段）</td>
+<td>❌ refused</td>
+<td>部分节点 PC ✅</td>
+</tr>
+<tr>
+<td><code>157.255.34.3:80/443</code>、<code>14.204.35.86</code> 等</td>
+<td>✅ 正常</td>
+<td>✅ 正常</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>不是端口封锁</strong>（车机连 <code>157.255.34.3:80</code>
+完全正常）、<strong>不是节点全挂</strong>（同批 IP PC 可连）；</li>
+<li>特征是<strong>江苏电信段部分 CDN 节点拒绝本车 eSIM
+出口</strong>；DNS 走 ECS：车机出口在江苏 → <code>114.114.114.114</code>
+回江苏节点，<strong>换 AliDNS 也一样绕不开</strong>；</li>
+<li>已验证临时绕行：<code>iptables -t nat</code> DNAT 到
+<code>157.255.34.3</code>（重启失效）。<strong>本问题未解决</strong>——它属于链路层过滤（与第
+4 节的 eth0 状态修复不同层，eth0 修好也救不了它）。</li>
+</ul>
+<p><strong>4）开机自动修复 eth0（最终方案，已落地）</strong></p>
+<ul>
+<li><strong>根因澄清</strong>：同一个车机两个视角不一致——<code>dumpsys connectivity</code>
+已 <code>CONNECTED/validated=true</code>、IP 正常，但
+<code>dumpsys ethernet</code> 的 <code>NetworkInfo</code> 卡
+<code>CONNECTING</code>；framework 自身 DHCP
+永远超时（<code>dhcpcd</code>
+是守护进程不会”结束”，<code>DhcpStateMachine</code>
+却在等它结束）。</li>
+<li><strong>重置时机不能太早</strong>（三次开机实测）：</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>重置时刻（uptime）</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>87 秒</td>
+<td>❌ 撞
+<code>Already have a NetworkAgent - aborting</code>，状态彻底锁死</td>
+</tr>
+<tr>
+<td>105 秒</td>
+<td>⚠️ 短暂 <code>CONNECTED</code>，31 秒后 framework 自行重试失败 →
+又回 <code>CONNECTING</code></td>
+</tr>
+<tr>
+<td>160~184 秒</td>
+<td>✅ 9 秒内 <code>CONNECTED</code>，连续采样 72 秒稳定</td>
+</tr>
+</tbody>
+</table>
+<p>⇒ 必须等 framework 自己的 DHCP 彻底失败并清理完（约开机后 140
+秒）再重置；判据用”<strong>连续稳定</strong>”，不是”看到一次 CONNECTED
+就收工”。<br />
+- <strong>最终钩子</strong>（追加在
+<code>/system/bin/hk_oem_init.sh</code> 既有后台子 shell 内，全文见附录
+A.8）：<code>sleep 20</code> 起步，每 10s 采样，<strong>连续 5
+次（50s）<code>CONNECTED/CONNECTED</code> 才认定成功</strong>，否则
+<code>down/up</code> 重置，最多 15 轮（约 3 分钟）后放弃。<br />
+- <strong>不影响开机</strong>：<code>hk_oem_init</code> 是 init
+oneshot，主脚本到 <code>) &gt;/dev/null 2&gt;&amp;1 &amp;</code>
+立即返回；新增代码第一件事是等
+<code>sys.boot_completed=1</code>；<code>main()</code> 前 67
+行与出厂版<strong>逐字节一致</strong>（<code>cmp</code>
+校验）。语法用真实解释器 <code>sh -n</code> 校验（整文件用 mksh
+语义，<code>busybox sh -n</code> 检查后台子 shell 段）。<br />
+- <strong>验证记录</strong>：第 1/2 次开机（早期时机版本）分别撞锁死 /
+被打回；最终版第 3 次开机 framework 自愈、钩子未触发；<strong>第 4
+次开机”失败 → 自动重试”分支完整证实</strong>：framework
+重试失败把状态打回，钩子在第 2 轮重置，162s 起
+<code>CONNECTED</code>、251s 仍稳。<strong>开机到网络稳定约 92
+秒，全程无需人工干预。</strong></p>
+<p><strong>5）第三方应用开机自启核查</strong></p>
+<p>12 个第三方应用逐一核查 BOOT_COMPLETED 接收器 + 组件禁用位 +
+进程实际启动时刻：高德 / QQ 音乐 / 喜马拉雅 / SSHDroid /
+网易云（NimReceiver，2026-11-03
+补禁，<strong>重装会失效需重执行</strong>）接收器均已禁用；但<strong>高德仍会在开机
+~47s 被 ACC 车厂广播拉起</strong>（<code>EXTRA_ACC_STATE</code>，属”ACC
+自启”非 BOOT 自启，拦截或影响随车导航，保持现状）。</p>
+<p><strong>本阶段发现的问题</strong>：见第 5 章
+P17~P23（防篡改、调用链、时机、su 权限、重装丢状态、CDN 第二层）。</p>
 <hr />
 <h2 id="遇到的问题清单">5. 遇到的问题清单</h2>
 <p>按性质归类，每条注明所在阶段：</p>
@@ -1285,9 +1548,12 @@ IPv6，无法确定是不是根因</td>
 </tr>
 <tr>
 <td>P13</td>
-<td>加固受限</td>
-<td><code>/system</code> 只读，开机看门狗写不进去；vi/remount 被拒</td>
-<td>五</td>
+<td>加固受限（旧描述）</td>
+<td>当时的描述”/system 只读、vi/remount
+被拒”<strong>不成立</strong>——阶段六实测 remount
+可行、开机钩子写入成功；实际的限制是改动纪律（受控流程）与 root 风险（见
+P21）</td>
+<td>五 → 六</td>
 </tr>
 <tr>
 <td>P14</td>
@@ -1308,6 +1574,60 @@ IPv6，无法确定是不是根因</td>
 <td>PC 侧透明代理污染</td>
 <td>电脑开着透明代理时”连任何 IP 都成功”，PC 对照实验结论全废</td>
 <td>二</td>
+</tr>
+<tr>
+<td>P17</td>
+<td>native 防篡改静默退出</td>
+<td>网易云重签包（哪怕 dex 未改）200~450ms 内进程主动退出，无
+FATAL/tombstone/xcrash；先绕过 <code>libpoison.so</code>
+签名白名单才能装</td>
+<td>六</td>
+</tr>
+<tr>
+<td>P18</td>
+<td>补丁点位错误</td>
+<td>只改 <code>c0.g()</code> 无效：SDK 23 首页走
+<code>c0.t()</code>、播放受 <code>c0.l()</code>，<code>c0.g()</code>
+根本不在调用链；有效补丁需 3 处 dex + 1 处 so</td>
+<td>五 → 六</td>
+</tr>
+<tr>
+<td>P19</td>
+<td>补丁覆盖不全</td>
+<td>下载/升级/主题/上传等路径仍直接读 <code>ConnectivityManager</code>
+或走其它判离线路径 ⇒ “浏览+播放”主链路 ≠ 完全修复</td>
+<td>六</td>
+</tr>
+<tr>
+<td>P20</td>
+<td>开机修复时机过晚/过早</td>
+<td>87s 重置撞 <code>Already have a NetworkAgent</code> 锁死；105s 重置
+31s 后被 framework 重试打回；必须 ~140s（DHCP
+彻底失败并清理完）之后</td>
+<td>六</td>
+</tr>
+<tr>
+<td>P21</td>
+<td>App 内取不到 root</td>
+<td><code>su</code> 为 AOSP 版、权限 <code>4750 root:shell</code>，App
+执行即 <code>Permission denied</code> ⇒ “做修复 APK”方案作废</td>
+<td>六</td>
+</tr>
+<tr>
+<td>P22</td>
+<td>组件禁用随重装丢失</td>
+<td><code>pm disable</code> 写
+<code>package-restrictions.xml</code>，卸载重装即失效（网易云
+NimReceiver 即一例）</td>
+<td>六</td>
+</tr>
+<tr>
+<td>P23</td>
+<td>网易云 CDN 第二层拒绝</td>
+<td>部分江苏电信段 CDN 节点对车机 eSIM 出口
+<code>ECONNREFUSED</code>（PC 正常）；ECS 调度按出口回本省节点，换 DNS
+绕不开</td>
+<td>六</td>
 </tr>
 </tbody>
 </table>
@@ -1404,21 +1724,47 @@ HTTP 本质不可持续）</td>
 <td>构建成功但效用被”明文 vs TLS”定论取代，停止使用，保留备查</td>
 </tr>
 <tr>
-<td>P11/P12 网易云网络误判</td>
-<td>⭕ <strong>半闭环</strong></td>
-<td>根因定位 ✅ + 临时修复验证 ✅（down/up 立即恢复） +
-<strong>补丁方案已设计，待上车验证</strong>（重启后约半小时复发回归）</td>
+<td>P11/P12 网易云”网络不可用”</td>
+<td>✅ <strong>已闭环（工程闭环）</strong></td>
+<td>根因定位 ✅ +
+开机自动修复钩子<strong>已落地生效</strong>（<code>hk_oem_init.sh</code>，第
+4 次开机实测 92 秒稳定、失败自动重试）；残留：运行期状态可能偶发翻回
+<code>CONNECTING</code>，由”常驻看门狗”方案兜底（已定稿、暂不部署，附录
+A.9）</td>
 </tr>
 <tr>
-<td>P13 <code>/system</code> 只读加固</td>
+<td>网易云离线补丁（阶段五方案）</td>
+<td>✅ <strong>已闭环（验证完成，弃用）</strong></td>
+<td>技术可行，但需先绕过 <code>libpoison.so</code> 防篡改（阶段六
+2）；且覆盖不全（阶段六”未覆盖路径”）；自签无法官方升级。<strong>已回退原版</strong>，<code>ne_patched3.apk</code>
+留存备查</td>
+</tr>
+<tr>
+<td>P13 <code>/system</code> 写入</td>
+<td>✅ <strong>已闭环（结论更正）</strong></td>
+<td>旧结论”只读写不进”不成立：<code>mount -o remount,rw /system</code>
+实测可行，开机钩子已成功写入并生效；写后 <code>sh -n</code> 校验 +
+<code>/system</code> 还原 ro；出厂原版保留为
+<code>hk_oem_init.sh.orig</code></td>
+</tr>
+<tr>
+<td>系统以太网 DHCP 卡死</td>
+<td>✅ <strong>已闭环（工程兜底）</strong></td>
+<td>framework 级 bug 无从根治，但开机钩子已消除其影响（92
+秒自动恢复）；长期可靠性待观察，应急预案 = 常驻看门狗</td>
+</tr>
+<tr>
+<td>网易云播放偶发失败（第二层 CDN，P23）</td>
 <td>❌ <strong>未闭环</strong></td>
-<td>remount 被拒，开机看门狗不可行；靠手动 down/up 恢复</td>
+<td>部分江苏电信段 CDN 节点拒绝本车 eSIM 出口（ECS 调度换 DNS
+绕不开）；可选 DNAT 绕行（重启失效）或改用喜马拉雅 5.0.0</td>
 </tr>
 <tr>
-<td>系统以太网 DHCP 卡死本身</td>
-<td>❌ <strong>未闭环（系统级 bug）</strong></td>
-<td>曾卡到 <code>CONNECTING</code> 影响网易云等；重启可暂时恢复为
-<code>CONNECTED</code>，复发接受现状</td>
+<td>第三方应用自启动</td>
+<td>✅ <strong>已闭环</strong></td>
+<td>12 个第三方 App
+全部核查完毕（接收器+组件位+进程启动时刻）：核心均已禁用；高德 ACC
+自启除外 → 保持现状（拦截或影响随车导航）</td>
 </tr>
 <tr>
 <td>腾讯系不可用（QQ 音乐/腾讯视频）</td>
@@ -1443,7 +1789,7 @@ DPI）在链路侧，本地无法绕过，不修，继续走手机热点</td>
 </table>
 <hr />
 <h2 id="最终处置与车机现状">7. 最终处置与车机现状</h2>
-<p><strong>2026-11-01 深夜定稿状态</strong>：</p>
+<p><strong>2026-11-03 更新</strong>：</p>
 <table>
 <colgroup>
 <col style="width: 50%" />
@@ -1458,28 +1804,34 @@ DPI）在链路侧，本地无法绕过，不修，继续走手机热点</td>
 <tbody>
 <tr>
 <td>已装 App</td>
-<td>喜马拉雅 <strong>5.0.0</strong>（versionCode 250，最终采用；走
-<code>aod.cos.tx.xmcdn.com</code> TLS/443）</td>
-</tr>
-<tr>
-<td>网络</td>
-<td>Wi-Fi 关闭（<code>wlan0</code> down），全部流量走 eSIM
-<code>eth0</code>（192.168.225.2）；重启后
-<code>CONNECTED/CONNECTED</code></td>
-</tr>
-<tr>
-<td>播放</td>
-<td><strong>正常</strong>：<code>audio_flinger yes/A/44100Hz</code>，<code>AudioTrack</code>
-持续写入</td>
+<td>喜马拉雅 <strong>5.0.0</strong>（终局方案，走
+<code>aod.cos.tx.xmcdn.com</code>
+TLS/443）；网易云为<strong>原版</strong>
+3.1.0（官方签名，可正常升级；登录态清空，需重新扫码）</td>
 </tr>
 <tr>
 <td>网易云</td>
-<td>正常加载；点卡片偶发”网络不可用”（P11 会复发），等补丁验证</td>
+<td>首页内容加载、卡片可点、可进播放页，<strong>不再弹「当前网络不可用」</strong>（开机钩子生效）；播放仍会因第二层
+CDN（江苏电信节点 <code>ECONNREFUSED</code>）偶发失败——未解决</td>
+</tr>
+<tr>
+<td>eth0 开机修复</td>
+<td>✅
+<strong>已落地</strong>：<code>/system/bin/hk_oem_init.sh</code>（4728
+字节，<code>md5=efe8793e…</code>）内含自修复钩子；第 4 次开机实测 92
+秒稳定、失败自动重试；脚本全文见附录 A.8</td>
+</tr>
+<tr>
+<td><code>/system</code></td>
+<td>已还原 <strong>ro</strong>；出厂原版
+<code>hk_oem_init.sh.orig</code>（1961 字节）及中间版本备份于
+<code>/data/local/tmp</code>，可一键回滚</td>
 </tr>
 <tr>
 <td>自启动</td>
-<td>已禁止 App 自身 <code>BOOT_COMPLETED</code>；仅剩语音助手一次性
-<code>:player</code> 绑定</td>
+<td>12 个第三方 App 已核查：高德 / QQ 音乐 / 喜马拉雅 / SSHDroid /
+网易云（NimReceiver）接收器均已禁用；高德 ACC 自启保持现状；语音助手
+<code>:player</code> 绑定按用户决定保留</td>
 </tr>
 <tr>
 <td>iptables</td>
@@ -1492,11 +1844,23 @@ HTTP，在当前链路不可持续，不再复活</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>后续</strong>：<br />
-1. 若 5.0.0 哪天也失败，先确认该 CDN 的 443 是否被掐，再动 App；<br />
-2. 网易云补丁验证：点首页任意卡片能跳转、无提示即通过；<br />
-3. 1.7.1 若要复活只剩 HTTP→HTTPS
-包装代理或加密隧道两条路（本次未投入）；实验数据备查。</p>
+<p><strong>后续 / 待办</strong>：</p>
+<ol type="1">
+<li><strong>网易云播放层（第二层 CDN）</strong>：两条路二选一——①
+在开机钩子后台加 watcher，从 logcat 抓
+<code>music.126.net/&lt;ip&gt;:&lt;port&gt;</code>，对连不上的 IP 自动
+DNAT 到 <code>157.255.34.3</code>（已验证有效，但属绕行），②
+接受现状、用喜马拉雅 5.0.0 主听；</li>
+<li><strong>eth0 长期可靠性</strong>：若状态在开机窗口之后再次翻回
+<code>CONNECTING</code>，实施附录 A.9
+的”常驻看门狗”（方案与回滚步骤已定稿）；</li>
+<li>喜马拉雅：若 5.0.0 哪天也失败，先确认该 CDN 的 443 是否被掐，再动
+App；</li>
+<li>1.7.1 若要复活只剩 HTTP→HTTPS
+包装代理或加密隧道两条路（本次未投入）；实验数据备查；网易云补丁版
+<code>ne_patched3.apk</code>
+同样留存备查（需接受覆盖不全+自签+无法官方升级）。</li>
+</ol>
 <h2 id="安全红线务必遵守">8. 安全红线（务必遵守）</h2>
 <table>
 <colgroup>
@@ -1535,9 +1899,19 @@ QQ 音乐</strong></td>
 <td>用户要求</td>
 </tr>
 <tr>
-<td><strong>不改 <code>/system</code>、<code>/vendor</code>、persistent
-settings</strong></td>
-<td>测试应零持久化改动</td>
+<td><strong>不改 <code>/system</code>、<code>/vendor</code>
+以外的持久化项</strong>；<strong>改 <code>/system</code>
+必须走受控流程</strong>：<code>remount,rw</code> → <code>cp</code> →
+<code>chown 0:2000</code> → <code>chmod 755</code> → <code>sh -n</code>
+校验 → <code>remount,ro</code>；出厂原版 <code>.orig</code>
+永久保留且可一键回滚（阶段六在 <code>/system/bin/hk_oem_init.sh</code>
+落地即按此流程）</td>
+<td>修改必须可回滚、可审计</td>
+</tr>
+<tr>
+<td><strong>不替 root 方案</strong>（SuperSU、root APK 等）</td>
+<td>车机唯一 root 入口 <code>/system/xbin/su</code> 一旦替换失败即彻底失
+root，只能刷机；第三方 root 包来源不可信</td>
 </tr>
 <tr>
 <td><strong>root 一律 <code>su 0,0 &lt;命令&gt;</code></strong></td>
@@ -1669,7 +2043,18 @@ SHA-1/Adler-32 + 重签 + 自检；已被取代保留）</td>
 </tr>
 <tr>
 <td><code>base.apk</code> / <code>ne_base.apk</code></td>
-<td>1.7.1 原版 / 网易云原版（25.2MB）</td>
+<td>1.7.1 原版 / 网易云原版（25.2MB，SHA1
+<code>A255B623…1FB5</code>）</td>
+</tr>
+<tr>
+<td><code>ne_patched.apk</code></td>
+<td>网易云补丁（仅 3 处 dex，<strong>缺 libpoison
+白名单替换，装机会静默退出</strong>；26,938,509 B，仅存档）</td>
+</tr>
+<tr>
+<td><code>ne_patched3.apk</code></td>
+<td>网易云完整补丁（3 dex + libpoison 白名单，26,938,512 B，SHA1
+<code>876D79A8…2EF</code>；技术验证通过但弃用）</td>
 </tr>
 <tr>
 <td><code>xm_data.tgz</code></td>
@@ -1691,31 +2076,83 @@ classes.dex 摘要 + <code>SHA1-Digest-Manifest</code>，对
 日志</strong>找，别只看运行时；<br />
 5. <code>sget-object</code> 操作码是
 <code>0x62</code>，<code>0x60</code> 是 <code>sget</code>。</p>
-<h3 id="a.6-网易云补丁方案阶段五待验证">A.6
-网易云补丁方案（阶段五，待验证）</h3>
+<h3 id="a.6-网易云补丁要点阶段五设计-阶段六实测后弃用">A.6
+网易云补丁要点（阶段五设计 → 阶段六实测后弃用）</h3>
+<p>完整改动清单、<code>libpoison.so</code>
+防篡改机制与未覆盖路径见阶段六 2）；重建/复盘时的关键要素：</p>
 <ul>
-<li>目标方法：<code>Lcom/netease/cloudmusic/utils/c0;-&gt;g(Landroid/net/NetworkInfo;)I</code></li>
-<li>改法：把 “<code>!isConnected()</code> return 0” 分支的 <strong>1 条
-<code>if-eqz</code> 跳转目标</strong>改变 fallback 条路——只要
-<code>getActiveNetworkInfo()</code> 非 null
-即按”有网”对待；真断网时对象为 null 仍返回 0。其余逻辑不动。</li>
-<li>部署注意：重签 → 先卸载（登录态丢，先 root 备份 App 数据回填并
-<code>chown</code> 新 uid）；ABI <code>armeabi-v7a</code>。</li>
-<li>验证判据：点首页任意卡片正常跳转、无「当前网络不可用」提示。</li>
+<li>三处 dex 均为 <strong>4 字节 <code>if-eqz</code> → 双
+<code>nop</code> 等长替换</strong>（<code>c0.g</code><span
+class="citation" data-cites="12">@12</span> / <code>c0.l</code><span
+class="citation" data-cites="20">@20</span> / <code>c0.t</code><span
+class="citation" data-cites="124">@124</span>），保留
+<code>NetworkInfo==null → 离线</code> 语义；</li>
+<li><strong>漏掉 <code>libpoison.so</code>
+白名单替换的包，装上去会静默退出</strong>（<code>ne_patched.apk</code>
+即属此类，仅作对比存档）；另：签名格式与喜马拉雅不同——网易云原包用
+<strong>SHA-256 / v1(JAR)</strong>，条目为
+<code>META-INF/NETEASE.SF</code> + <code>NETEASE.RSA</code>（不是
+SHA1/<code>CERT.SF</code>）；</li>
+<li>备份 <code>/data/data/com.netease.cloudmusic.iot</code> → 卸载 →
+装补丁版 → 回填数据 <code>chown</code> 新 uid，可省重新扫码；</li>
+<li>自启状态（<code>pm disable</code>）随卸载丢失，重装后必须重新禁用
+<code>NimReceiver</code>（阶段六 5）。</li>
 </ul>
 <h3 id="a.7-原始数据存档位置">A.7 原始数据存档位置</h3>
 <ul>
-<li>车机 <code>/data/local/tmp/</code> 清理至 60KB；刻意保留
-<code>hk_oem_init.sh.orig</code>、<code>su.orig</code>、<code>z-link_log/</code>；</li>
+<li>车机 <code>/data/local/tmp/</code>
+刻意保留：<code>hk_oem_init.sh.orig</code>（<strong>出厂原版</strong>，1961
+字节）、<code>hk_oem_init.sh.bak_20261103</code>（上一版，3958
+字节）、<code>hk_new*.sh</code>（本轮三次迭代中间版本 4416/4600/4728
+字节）、<code>su.orig</code>、<code>z-link_log/</code>；</li>
 <li>电脑端备份
 <code>device_backup_20261101/</code>（23MB）：<code>xm_data.tgz</code>、<code>ximalaya_orig.apk</code>、<code>v5.pcap</code>（5.0.0
 播放 443 全抓包）、<code>api.pcap</code>（1.7.1 恒真补丁
 16×206）、<code>nc.pcap</code>（DNAT
 场景）、<code>state_20261101.txt</code>（getprop/ip/rule/iptables/connectivity
-全量快照）；</li>
+全量快照）；网易云补丁包 <code>ne_patched3.apk</code> 在
+<code>dexpick\</code>;</li>
 <li>车机系统自身临件（<code>/cache</code>、tombstones、dalvik-cache
 等）保持原样不清理。</li>
 </ul>
+<h3 id="a.8-开机自动修复-eth0-钩子已落地关键配置">A.8 开机自动修复 eth0
+钩子（已落地，关键配置）</h3>
+<p>写入位置：<code>/system/bin/hk_oem_init.sh</code>
+末尾<strong>既有后台子 shell</strong>
+<code>( … ) &gt;/dev/null 2&gt;&amp;1 &amp;</code>
+内、<code>sys.boot_completed</code> 等待与 telnet 服务之后：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2) eth0 状态修复: framework 的 NetworkInfo 偶发卡在 CONNECTING</span></span><br><span class="line"><span class="comment">#    (IP 已分配但 DhcpStateMachine 超时, 且因 &quot;Already have a NetworkAgent&quot;</span></span><br><span class="line"><span class="comment">#     无法自愈; 必须重新触发一次 DHCP 才能恢复)</span></span><br><span class="line"><span class="comment">#    策略: 每 10s 采样; 连续 5 次(约 50s)稳定 CONNECTED 才算成功;</span></span><br><span class="line"><span class="comment">#          否则 ifconfig eth0 down/up 重新触发。最多 15 轮(约 3 分钟)。</span></span><br><span class="line"><span class="built_in">sleep</span> 20</span><br><span class="line">ok=0</span><br><span class="line">n=0</span><br><span class="line"><span class="keyword">while</span> [ <span class="variable">$n</span> -lt 15 ]; <span class="keyword">do</span></span><br><span class="line">  st=$(dumpsys ethernet 2&gt;/dev/null | busybox grep -m1 <span class="string">&#x27;NetworkInfo:&#x27;</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&quot;<span class="variable">$st</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">    *CONNECTED/CONNECTED*) ok=$((ok+<span class="number">1</span>)) ;;</span><br><span class="line">    *) ok=0 ;;</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line">  [ <span class="variable">$ok</span> -ge 5 ] &amp;&amp; <span class="built_in">break</span></span><br><span class="line">  <span class="keyword">if</span> [ <span class="variable">$ok</span> -eq 0 ]; <span class="keyword">then</span></span><br><span class="line">    ifconfig eth0 down</span><br><span class="line">    <span class="built_in">sleep</span> 2</span><br><span class="line">    ifconfig eth0 up</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line">  n=$((n+<span class="number">1</span>))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><strong>当前生效版本</strong>：4728
+字节，<code>md5=efe8793ecd5484825e2fa4140b67a9ee</code>，<code>755 root:shell</code>。</p>
+<p><strong>部署/回滚流程（顺序不可乱）</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0,0 mount -o remount,rw /system&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 cp -f &lt;new.sh&gt; /system/bin/hk_oem_init.sh&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 chown 0:2000 /system/bin/hk_oem_init.sh&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 chmod 755 /system/bin/hk_oem_init.sh&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 sh -n /system/bin/hk_oem_init.sh &amp;&amp; echo INSTALL_OK&quot;</span>   <span class="comment"># 必须通过才继续</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 mount -o remount,ro /system&quot;</span></span><br><span class="line"><span class="comment"># 完全回滚出厂（同时去掉 telnet 服务）：</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 cp -f /data/local/tmp/hk_oem_init.sh.orig /system/bin/hk_oem_init.sh&quot;</span></span><br><span class="line"><span class="comment"># 后续步骤同上（chown/chmod/校验/remount,ro）</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>语法注意：整文件校验用真实解释器（<code>sh -n</code>，mksh
+语义）；<code>busybox sh -n</code> 检查<strong>整文件</strong>会在第 2
+行报错——出厂脚本本来就用 bash 语法的
+<code>function main() {</code>，不影响运行。</p>
+</blockquote>
+<h3 id="a.9-eth0-常驻看门狗方案已定稿暂不部署">A.9 eth0
+常驻看门狗（方案已定稿，暂不部署）</h3>
+<blockquote>
+<p>动机：framework 会在运行期自行重试 DHCP，重试失败即把状态翻回
+<code>CONNECTING</code>（实测一次）；现有钩子只覆盖开机后 ~3
+分钟窗口。先观察现方案的稳定性，确认复发再实施。不采用 SuperSU/自制 APK
+的理由见阶段六（root 风险 + 电脑端无构建工具链）。</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 3) eth0 常驻看门狗: 每分钟检查一次</span></span><br><span class="line">bad=0</span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">sleep</span> 60</span><br><span class="line">  st=$(dumpsys ethernet 2&gt;/dev/null | busybox grep -m1 <span class="string">&#x27;NetworkInfo:&#x27;</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&quot;<span class="variable">$st</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">    *CONNECTED/CONNECTED*) bad=0; <span class="built_in">continue</span> ;;</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line">  <span class="comment"># 关键保护: eth0 没有 IP 说明是真的没网(无信号/网卡未起), 不重置</span></span><br><span class="line">  busybox ip addr show eth0 2&gt;/dev/null | busybox grep -q <span class="string">&#x27;inet &#x27;</span> || &#123; bad=0; <span class="built_in">continue</span>; &#125;</span><br><span class="line">  bad=$((bad+<span class="number">1</span>))</span><br><span class="line">  [ <span class="variable">$bad</span> -lt 2 ] &amp;&amp; <span class="built_in">continue</span>          <span class="comment"># 连续 2 次(约 2 分钟)异常才动手</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(busybox date &#x27;+%F %T&#x27;)</span> reset: <span class="variable">$st</span>&quot;</span> &gt;&gt; /data/local/tmp/eth0_watch.<span class="built_in">log</span></span><br><span class="line">  ifconfig eth0 down</span><br><span class="line">  <span class="built_in">sleep</span> 2</span><br><span class="line">  ifconfig eth0 up</span><br><span class="line">  bad=0</span><br><span class="line">  <span class="built_in">sleep</span> 60</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>三重保护：<strong>有 IP
+才动手</strong>（真断网不误触发）；<strong>连续 2
+次异常</strong>（躲开机竞争与抖动）；<strong>动作后间隔 60
+秒</strong>。日志写 <code>/data/local/tmp/eth0_watch.log</code>。<br />
+验证清单：<code>ps | grep hk_oem_init</code> 存活 ≥10
+分钟、网络正常时日志为空、手动 <code>ifconfig eth0 down</code> 制造异常
+≤3 分钟内自动恢复并留日志、开机时长不变。若 <code>while true</code> 被
+init 清理进程组杀掉，备选 <code>setsid</code> 脱离或改由 crond
+执行。</p>
+<h3 id="a.10-网易云第二轮可复用测试命令阶段六">A.10
+网易云第二轮可复用测试命令（阶段六）</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># App 真正读到的网络状态 vs framework 新接口视角</span></span><br><span class="line">adb shell <span class="string">&quot;dumpsys ethernet 2&gt;/dev/null | busybox grep -m1 &#x27;NetworkInfo:&#x27;&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;dumpsys connectivity 2&gt;/dev/null | busybox grep -m1 &#x27;NetworkAgentInfo \[Ethernet&#x27;&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;cat /proc/uptime&quot;</span>                                        <span class="comment"># 开机时长</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 busybox dmesg 2&gt;/dev/null | busybox grep -iE &#x27;dhcpcd_eth0&#x27;&quot;</span>   <span class="comment"># DHCP 被重置的痕迹</span></span><br><span class="line">adb shell <span class="string">&quot;logcat -d -v time 2&gt;/dev/null | busybox grep -aE &#x27;EthernetNetworkFactory&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 手动修复（2 秒，立即生效）</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 ifconfig eth0 down; busybox sleep 2; su 0,0 ifconfig eth0 up&quot;</span></span><br><span class="line"><span class="comment"># 单 IP:端口 TCP 连通性（须 root）</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 busybox nc -w 4 &lt;IP&gt; &lt;PORT&gt; &lt; /dev/null&quot;</span></span><br><span class="line"><span class="comment"># App 实际连了哪些 CDN 端点（统计）</span></span><br><span class="line">adb shell <span class="string">&quot;logcat -d 2&gt;/dev/null | busybox grep -aoE &#x27;music\.126\.net/[0-9.]+:[0-9]+&#x27; | busybox sort | busybox uniq -c | busybox sort -rn&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断&quot;静默退出&quot;是否防篡改（三者全空 = 主动退出，不是崩溃）</span></span><br><span class="line">adb shell <span class="string">&quot;logcat -b crash -d&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 ls -la /data/tombstones | busybox tail -3&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;ls -la /sdcard/Android/data/com.netease.cloudmusic.iot/files/xcrash/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自启核查：组件声明 / 禁用位 / 进程实际启动时刻（第 22 字段 = 开机后 clock ticks）</span></span><br><span class="line">adb shell <span class="string">&quot;pm list packages -3&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;dumpsys package &lt;pkg&gt; | busybox grep -A2 &#x27;android.intent.action.BOOT_COMPLETED:&#x27;&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;dumpsys package &lt;pkg&gt; | busybox grep -A6 &#x27;disabledComponents&#x27;&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;busybox cut -d&#x27; &#x27; -f22 /proc/&lt;pid&gt;/stat&quot;</span></span><br><span class="line"><span class="comment"># 网易云 NimReceiver 开机自启的禁用（重装后需重执行；dumpsys 的清单声明仍会列出，属正常）</span></span><br><span class="line">adb shell <span class="string">&quot;su 0,0 pm disable com.netease.cloudmusic.iot/com.netease.nimlib.service.NimReceiver&quot;</span></span><br></pre></td></tr></table></figure>
 <h2 id="附录-b变更记录">附录 B：变更记录</h2>
 <table>
 <colgroup>
@@ -1782,7 +2219,30 @@ eSIM 实测可用</td>
 <tr>
 <td>2026-11-02</td>
 <td>两份文档<strong>合并重写为本文</strong>，按”阶段目标 → 问题 →
-闭环”重组结构；全文以 2026-11-01 实测为准</td>
+闭环”重组结构（以 2026-11-01 实测为准）</td>
+</tr>
+<tr>
+<td>2026-11-02</td>
+<td><strong>网易云第二轮启动</strong>：确认重启不自愈（2 分 27 秒
+<code>CONNECTING</code>）、App 取不到 root（AOSP su
+4750）；实测开机修复时机三档（87s 锁死 / 105s 被打回 / 160~184s
+稳定）</td>
+</tr>
+<tr>
+<td><strong>2026-11-03</strong></td>
+<td><strong>补丁迭代验证</strong>：3 处 dex <code>if-eqz→nop</code> +
+<code>libpoison.so</code> 白名单（定位到
+<code>0x57898</code>，GET_SIGNATURES→MD5→白名单比对杀进程）；确认”只改
+<code>c0.g</code> 不在调用链”与”补丁覆盖不全”；<strong>更正”/system
+只读”旧结论</strong>（remount 可行），<strong>开机自动修复钩子写入
+<code>hk_oem_init.sh</code> 并 4 次开机验证（92
+秒稳定，失败自动重试分支实测）</strong>；网易云回退原版；第三方自启核查
++ <code>NimReceiver</code> 禁用；常驻看门狗方案定稿（暂不部署）</td>
+</tr>
+<tr>
+<td>2026-11-03</td>
+<td>本文刷新为 v7 对应版本：新增阶段六，闭环结论基准由 2026-11-01 更新至
+2026-11-03</td>
 </tr>
 </tbody>
 </table>
@@ -1812,7 +2272,7 @@ eSIM 实测可用</td>
 </div>
 
           <div class="post-tags">
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-%E8%BD%A6%E6%9C%BA-AC8317-eSIM-DNS-IPv6-%E7%BD%91%E7%BB%9C%E5%88%86%E6%9E%90-Ximalaya-APK%E8%A1%A5%E4%B8%81/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, 车机, AC8317, eSIM, DNS, IPv6, 网络分析, Ximalaya, APK补丁</a>
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-%E8%BD%A6%E6%9C%BA-AC8317-eSIM-DNS-IPv6-%E7%BD%91%E7%BB%9C%E5%88%86%E6%9E%90-Ximalaya-APK%E8%A1%A5%E4%B8%81-NetEase/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, 车机, AC8317, eSIM, DNS, IPv6, 网络分析, Ximalaya, APK补丁, NetEase</a>
           </div>
 
         
