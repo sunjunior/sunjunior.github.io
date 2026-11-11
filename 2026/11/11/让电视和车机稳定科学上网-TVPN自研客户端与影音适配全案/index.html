@@ -34,9 +34,9 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/tvpn/07-smarttube-playing.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/tvpn/08-smarttube-playing-2.png">
 <meta property="article:published_time" content="2026-11-11T02:30:00.000Z">
-<meta property="article:modified_time" content="2026-11-11T03:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-11T07:45:00.000Z">
 <meta property="article:author" content="sunjunior">
-<meta property="article:tag" content="逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 折腾记录">
+<meta property="article:tag" content="逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 调测工具, 折腾记录">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://sunjunior.github.io/img/tvpn/04-advert-app-info.png">
 
@@ -168,9 +168,9 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E7%82%B9%E7%BD%91%E7%BB%9C%E4%B8%8D%E6%98%AF%E6%85%A2%E6%98%AF%E8%A2%AB%E9%80%89%E6%8B%A9%E6%80%A7%E8%BF%87%E6%BB%A4"><span class="nav-text">1.
-起点：网络不是「慢」，是被选择性过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E5%8F%B0%E8%AE%BE%E5%A4%87%E4%B8%A4%E5%A5%97%E6%9D%83%E9%99%90%E8%BE%B9%E7%95%8C"><span class="nav-text">2. 两台设备，两套权限边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tvpn%E4%B8%80%E4%B8%AA-240kb-%E7%9A%84%E8%87%AA%E7%A0%94-vpn-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">3. TVPN：一个 240KB 的自研 VPN
-客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%A7%86%E7%AB%AF%E6%B2%BB%E7%90%86%E5%B9%BF%E5%91%8A%E5%8C%85%E4%B8%8E%E5%BC%80%E6%9C%BA%E5%AE%88%E5%8D%AB"><span class="nav-text">4. 电视端治理：广告包与开机守卫</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BC%B9%E4%B8%8E%E8%87%AA%E6%81%A2%E5%A4%8D%E9%93%BE"><span class="nav-text">4.1 反弹与自恢复链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E7%A6%81-receiver%E4%B8%8D%E6%95%B4%E5%8C%85%E7%A6%81%E7%94%A8"><span class="nav-text">4.2 只禁 receiver，不整包禁用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%BC%80%E6%9C%BA%E9%92%A9%E5%AD%90"><span class="nav-text">4.3 真正的开机钩子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%B4%B4%E7%89%87%E5%B9%BF%E5%91%8A%E4%BB%8E%E4%B8%8D%E5%8F%AF%E8%A1%8C%E5%88%B0%E8%BF%90%E8%A1%8C%E6%97%B6-hook"><span class="nav-text">5.
-前贴片广告：从「不可行」到运行时 hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E4%B8%8E%E5%86%85%E5%AD%98%E6%B2%BB%E7%90%86"><span class="nav-text">6. 桌面与内存治理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E9%80%82%E9%85%8D%E6%88%90%E6%9E%9C"><span class="nav-text">7. 影音适配成果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E7%AB%AF"><span class="nav-text">8. 车机端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E4%B8%8E%E9%81%97%E7%95%99"><span class="nav-text">9. 结论与遗留</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF"><span class="nav-text">10. 安全红线</span></a></li></ol></div>
+起点：网络不是「慢」，是被选择性过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E5%8F%B0%E8%AE%BE%E5%A4%87%E4%B8%A4%E5%A5%97%E6%9D%83%E9%99%90%E8%BE%B9%E7%95%8C"><span class="nav-text">2. 两台设备，两套权限边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7%E5%87%86%E5%A4%87"><span class="nav-text">3. 环境与工具准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6"><span class="nav-text">3.1 硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6android-%E8%B0%83%E6%B5%8B%E5%A5%97%E4%BB%B6"><span class="nav-text">3.2 软件：Android 调测套件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7"><span class="nav-text">3.3 软件：逆向与破解工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tvpn%E4%B8%80%E4%B8%AA-240kb-%E7%9A%84%E8%87%AA%E7%A0%94-vpn-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">4. TVPN：一个 240KB 的自研 VPN
+客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%A7%86%E7%AB%AF%E6%B2%BB%E7%90%86%E5%B9%BF%E5%91%8A%E5%8C%85%E4%B8%8E%E5%BC%80%E6%9C%BA%E5%AE%88%E5%8D%AB"><span class="nav-text">5. 电视端治理：广告包与开机守卫</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BC%B9%E4%B8%8E%E8%87%AA%E6%81%A2%E5%A4%8D%E9%93%BE"><span class="nav-text">5.1 反弹与自恢复链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E7%A6%81-receiver%E4%B8%8D%E6%95%B4%E5%8C%85%E7%A6%81%E7%94%A8"><span class="nav-text">5.2 只禁 receiver，不整包禁用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%BC%80%E6%9C%BA%E9%92%A9%E5%AD%90"><span class="nav-text">5.3 真正的开机钩子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%B4%B4%E7%89%87%E5%B9%BF%E5%91%8A%E4%BB%8E%E4%B8%8D%E5%8F%AF%E8%A1%8C%E5%88%B0%E8%BF%90%E8%A1%8C%E6%97%B6-hook"><span class="nav-text">6.
+前贴片广告：从「不可行」到运行时 hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E4%B8%8E%E5%86%85%E5%AD%98%E6%B2%BB%E7%90%86"><span class="nav-text">7. 桌面与内存治理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E9%80%82%E9%85%8D%E6%88%90%E6%9E%9C"><span class="nav-text">8. 影音适配成果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E7%AB%AF"><span class="nav-text">9. 车机端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E4%B8%8E%E9%81%97%E7%95%99"><span class="nav-text">10. 结论与遗留</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF"><span class="nav-text">11. 安全红线</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -267,7 +267,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-11-11 10:30:00 / 修改时间：11:00:00" itemprop="dateCreated datePublished" datetime="2026-11-11T10:30:00+08:00">2026-11-11</time>
+      <time title="创建时间：2026-11-11 10:30:00 / 修改时间：15:45:00" itemprop="dateCreated datePublished" datetime="2026-11-11T10:30:00+08:00">2026-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -312,26 +312,27 @@
 <hr />
 <h2 id="目录">目录</h2>
 <ul>
-<li><a href="#1-起点网络不是慢是被选择性过滤">1.
+<li><a href="#起点网络不是慢是被选择性过滤">1.
 起点：网络不是「慢」，是被选择性过滤</a></li>
-<li><a href="#2-两台设备两套权限边界">2. 两台设备，两套权限边界</a></li>
-<li><a href="#3-tvpn一个-240kb-的自研-vpn-客户端">3. TVPN：一个 240KB
+<li><a href="#两台设备两套权限边界">2. 两台设备，两套权限边界</a></li>
+<li><a href="#环境与工具准备">3. 环境与工具准备</a></li>
+<li><a href="#tvpn一个-240kb-的自研-vpn-客户端">4. TVPN：一个 240KB
 的自研 VPN 客户端</a></li>
-<li><a href="#4-电视端治理广告包与开机守卫">4.
+<li><a href="#电视端治理广告包与开机守卫">5.
 电视端治理：广告包与开机守卫</a>
 <ul>
-<li><a href="#41-反弹与自恢复链">4.1 反弹与自恢复链</a></li>
-<li><a href="#42-只禁-receiver不整包禁用">4.2 只禁
+<li><a href="#反弹与自恢复链">5.1 反弹与自恢复链</a></li>
+<li><a href="#只禁-receiver不整包禁用">5.2 只禁
 receiver，不整包禁用</a></li>
-<li><a href="#43-真正的开机钩子">4.3 真正的开机钩子</a></li>
+<li><a href="#真正的开机钩子">5.3 真正的开机钩子</a></li>
 </ul></li>
-<li><a href="#5-前贴片广告从不可行到运行时-hook">5.
+<li><a href="#前贴片广告从不可行到运行时-hook">6.
 前贴片广告：从「不可行」到运行时 hook</a></li>
-<li><a href="#6-桌面与内存治理">6. 桌面与内存治理</a></li>
-<li><a href="#7-影音适配成果">7. 影音适配成果</a></li>
-<li><a href="#8-车机端">8. 车机端</a></li>
-<li><a href="#9-结论与遗留">9. 结论与遗留</a></li>
-<li><a href="#10-安全红线">10. 安全红线</a></li>
+<li><a href="#桌面与内存治理">7. 桌面与内存治理</a></li>
+<li><a href="#影音适配成果">8. 影音适配成果</a></li>
+<li><a href="#车机端">9. 车机端</a></li>
+<li><a href="#结论与遗留">10. 结论与遗留</a></li>
+<li><a href="#安全红线">11. 安全红线</a></li>
 </ul>
 <hr />
 <h2 id="起点网络不是慢是被选择性过滤">1.
@@ -433,7 +434,58 @@ root</strong>，所以客户端架构不分叉：只能走官方
 提权是后期逆向出来的——全志方案的 <code>/system/xbin/usrchan</code> 是
 setuid root:shell，口令由序列号经 HMAC
 推导，等于一条内置提权通道（细节不展开）。</p>
-<h2 id="tvpn一个-240kb-的自研-vpn-客户端">3. TVPN：一个 240KB 的自研 VPN
+<h2 id="环境与工具准备">3. 环境与工具准备</h2>
+<p>先交代一下这次用到的软硬件。硬件上其实只有一样是专门准备的——<strong>一根
+USB-A 公对公数据线</strong>；软件则是一套 Android
+调测工具加逆向工具链。</p>
+<h3 id="硬件">3.1 硬件</h3>
+<ul>
+<li><strong>USB-A 公对公数据线</strong>：PC ↔︎ 车机 / 机顶盒的 USB ADB
+连接，本次唯一的专用硬件；</li>
+<li>创维 Q6011 机顶盒（Android 10，电视端被测设备）；</li>
+<li>AutoChips AC8317 车机（Android 6.0，车机端被测设备）；</li>
+<li>荣耀路由 X2 增强版（局域网 / DHCP 观测，仅作网络环境）；</li>
+<li>一台调测 PC（Linux 或 Windows 均可）。</li>
+</ul>
+<blockquote>
+<p>不需要拆机、不需要 USB-TTL 或串口；机顶盒也可以走 WiFi ADB。</p>
+</blockquote>
+<h3 id="软件android-调测套件">3.2 软件：Android 调测套件</h3>
+<ul>
+<li><strong>Android SDK
+Platform-Tools</strong>：<code>adb</code>、<code>fastboot</code>；</li>
+<li><strong>设备侧 shell
+工具</strong>：<code>logcat</code>、<code>dumpsys</code>、<code>pm</code>、<code>am</code>、<code>cmd</code>、<code>ip rule</code>、<code>iptables</code>；</li>
+<li><strong>Android SDK
+Build-Tools</strong>：<code>aapt2</code>、<code>zipalign</code>、<code>apksigner</code>、<code>dexdump</code>；</li>
+<li><strong>Android
+NDK</strong>：<code>ndk-build</code>、<code>llvm-readelf</code>、<code>llvm-objdump</code>；</li>
+<li><strong>JDK 17 + Gradle 8.9</strong>：构建 TVPN；</li>
+<li><strong>Git + GitHub Actions</strong>：版本管理与 CI 打包。</li>
+</ul>
+<h3 id="软件逆向与破解工具">3.3 软件：逆向与破解工具</h3>
+<ul>
+<li><strong>jadx</strong>：APK/Dex 反编译，定位广告 SDK 调用链；</li>
+<li><strong>apktool</strong>：资源级解包/回包（Instagram Lite
+横屏补丁）；</li>
+<li><strong>frida /
+frida-inject</strong>（16.7.19，android-arm）：运行时 hook 广告 SDK
+门函数，设备端自持注入；</li>
+<li><strong>llvm-readelf / llvm-objdump</strong>：<code>usrchan</code>
+的符号表与 Thumb-2 反汇编；</li>
+<li><strong>自写 Python CONNECT 日志代理</strong>：明文 HTTP
+抓包与域名/IP 黑洞实验；</li>
+<li><strong>tcpdump</strong>（设备侧，root 可用时）：精确抓包并导出
+pcap；</li>
+<li><strong>PyUSB + libusb + Zadig</strong>（Windows）：绕过 fastboot
+驱动问题直读 bootloader。</li>
+</ul>
+<blockquote>
+<p>工具不在多，够用就行：这次没有用 IDA / Ghidra，<code>usrchan</code>
+的反汇编是用 NDK 自带的 <code>llvm-objdump</code> 完成的；也没有用
+mitmproxy，HTTP 抓包是自写的 Python 代理。</p>
+</blockquote>
+<h2 id="tvpn一个-240kb-的自研-vpn-客户端">4. TVPN：一个 240KB 的自研 VPN
 客户端</h2>
 <p>选型对比：sing-box/通用内核 30MB+ 在 1GB 内存设备上压力太大，放弃；纯
 Java 协议栈风险高，放弃。最终方案：</p>
@@ -454,8 +506,8 @@ rebinding，切换瞬间断流自动重连；</li>
 VPN</strong>——只能靠 <code>ip rule show | grep uidrange</code> 核对 UID
 是否注册。另外 UID 只在「启动代理」时注册，重装应用换了 UID
 后必须重启代理，否则分流悄悄失效。</p>
-<h2 id="电视端治理广告包与开机守卫">4. 电视端治理：广告包与开机守卫</h2>
-<h3 id="反弹与自恢复链">4.1 反弹与自恢复链</h3>
+<h2 id="电视端治理广告包与开机守卫">5. 电视端治理：广告包与开机守卫</h2>
+<h3 id="反弹与自恢复链">5.1 反弹与自恢复链</h3>
 <p>首轮用 Binder 事务绕过厂商对 shell <code>pm disable</code>
 的拦截，禁掉 8 个广告/统计包，60
 秒后复查全部失效。反编译定位到自恢复链：<code>com.skyworthdigital.skycommonpropertymanager</code>
@@ -466,7 +518,7 @@ VPN</strong>——只能靠 <code>ip rule show | grep uidrange</code> 核对 UID
 <code>setApplicationEnabledSetting</code>
 不走网络</strong>，挡不住。</p>
 <p>结论：只能「持续压」——设备端常驻守卫脚本每 120 秒重新压制。</p>
-<h3 id="只禁-receiver不整包禁用">4.2 只禁 receiver，不整包禁用</h3>
+<h3 id="只禁-receiver不整包禁用">5.2 只禁 receiver，不整包禁用</h3>
 <p>这里踩过两个大坑：</p>
 <ol type="1">
 <li><p><strong>整包禁用 <code>ott.advert.app</code> →
@@ -494,7 +546,7 @@ VPN</strong>——只能靠 <code>ip rule show | grep uidrange</code> 核对 UID
 应用</strong>（含桌面视频）一起静音——表现为全机无声且无任何报错。<code>disable-user</code>
 单独用就够。</p></li>
 </ol>
-<h3 id="真正的开机钩子">4.3 真正的开机钩子</h3>
+<h3 id="真正的开机钩子">5.3 真正的开机钩子</h3>
 <p>让守卫开机自启走了不少弯路：<code>/system</code> 曾 100% 满（写 1KB
 都 <code>ENOSPC</code>）、init 里厂商服务带 <code>seclabel</code> 会触发
 SELinux bounded transition 拒绝 execve、App 的
@@ -513,7 +565,7 @@ SELinux bounded transition 拒绝 execve、App 的
 <p><code>boot.sh</code> 后台运行原脚本 +
 拉起广告守卫与广告拦截守卫，最后 <code>wait</code> 常驻（oneshot
 服务结束时子进程可能被回收）。整机重启验证通过。</p>
-<h2 id="前贴片广告从不可行到运行时-hook">5.
+<h2 id="前贴片广告从不可行到运行时-hook">6.
 前贴片广告：从「不可行」到运行时 hook</h2>
 <p>极光免费专区的前贴片广告 60–120
 秒，无跳过按钮。这是全案里翻案最漂亮的一个问题：</p>
@@ -555,7 +607,7 @@ RSS 无可见增长。</p>
 2–3 个视频都没广告<strong>不能证明拦截生效</strong>——必须按「单次起播
 4–6 秒内是否已在正片」或 hook 日志 <code>[preroll] blocked #N</code>
 判断。本次排查早期就吃过这个亏。</p>
-<h2 id="桌面与内存治理">6. 桌面与内存治理</h2>
+<h2 id="桌面与内存治理">7. 桌面与内存治理</h2>
 <p>腾讯极光桌面常驻约 195MB，是电视上最大的内存块。方案分两个阶段：</p>
 <p><strong>第一阶段</strong>：换开源轻量桌面
 FLauncher（59.5MB，<code>homewhitelist</code> + HMAC
@@ -613,7 +665,7 @@ App 与释放守卫下线，日志全部加自动截断长期运行不占存储�
 <img src="/img/tvpn/02-hd-tv-live.png" alt="高清电视直播" />
 <figcaption aria-hidden="true">高清电视直播</figcaption>
 </figure>
-<h2 id="影音适配成果">7. 影音适配成果</h2>
+<h2 id="影音适配成果">8. 影音适配成果</h2>
 <p>SmartTube 首页与推荐流，经 TVPN 隧道正常加载：</p>
 <figure>
 <img src="/img/tvpn/06-smarttube-home-2.png" alt="SmartTube 首页" />
@@ -637,7 +689,7 @@ alt="SmartTube 播放中 2" />
 <code>screenOrientation</code>）、邮箱验证码登录、遥控器无障碍按键映射；</li>
 <li>重装应用会换 UID → 分流失效 + 登录态丢失，是两个已知坑。</li>
 </ul>
-<h2 id="车机端">8. 车机端</h2>
+<h2 id="车机端">9. 车机端</h2>
 <p>同一套 APK 部署到 AC8317 车机（Android 6.0，armeabi-v7a），白名单
 <code>com.mmbox.xbrowser,org.smarttube.stable</code>：</p>
 <ul>
@@ -649,7 +701,7 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 <li>车机 <code>adb root</code> 开箱即用，调测自由度比机顶盒高（可直接
 <code>ip rule add</code> 补注册 UID），但不改变客户端架构。</li>
 </ul>
-<h2 id="结论与遗留">9. 结论与遗留</h2>
+<h2 id="结论与遗留">10. 结论与遗留</h2>
 <p>已经跑通的闭环：自研 240KB 客户端 + 按应用分流 + 节点接入 +
 开机自启/保活/UID
 重注册；广告包持久压制；前贴片运行时拦截；桌面/内存治理；SmartTube 与 IG
@@ -663,7 +715,7 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 <li>厂商 OTA 可能重置 <code>homewhitelist</code>、覆盖
 <code>/system</code> 下的开机钩子符号链接，升级后需复查。</li>
 </ul>
-<h2 id="安全红线">10. 安全红线</h2>
+<h2 id="安全红线">11. 安全红线</h2>
 <ul>
 <li>车机 <code>adb root</code> 开箱即用——<strong>任何能连上 adb
 的人直接就是 uid 0</strong>，不用的关掉 USB 调试；</li>
@@ -703,7 +755,7 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 </div>
 
           <div class="post-tags">
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-Android-%E6%9C%BA%E9%A1%B6%E7%9B%92-%E5%88%9B%E7%BB%B4Q6011-VpnService-TVPN-SmartTube-%E5%8E%BB%E5%B9%BF%E5%91%8A-frida-%E8%BD%A6%E6%9C%BA-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 折腾记录</a>
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-Android-%E6%9C%BA%E9%A1%B6%E7%9B%92-%E5%88%9B%E7%BB%B4Q6011-VpnService-TVPN-SmartTube-%E5%8E%BB%E5%B9%BF%E5%91%8A-frida-%E8%BD%A6%E6%9C%BA-%E8%B0%83%E6%B5%8B%E5%B7%A5%E5%85%B7-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 调测工具, 折腾记录</a>
           </div>
 
         
