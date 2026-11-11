@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一句话结论：在无 App 级 root 的创维 Q6011 机顶盒（Android 10 &#x2F; 全志）与 AutoChips AC8317 车机（Android 6.0）上，用官方 VpnService + hev-socks5-tunnel + 自研 native relay 自研了一个 240KB 的按应用分流 VPN 客户端 TVPN，让 SmartTube、X 浏览器等应用稳定出海；电视端顺">
+<meta property="og:type" content="article">
+<meta property="og:title" content="创维 Q6011 机顶盒无 root 改造与 TVPN 自研客户端：从分流代理到影音适配全记录">
+<meta property="og:url" content="https://sunjunior.github.io/2026/11/11/%E6%9C%BA%E9%A1%B6%E7%9B%92%E6%97%A0root%E6%94%B9%E9%80%A0%E4%B8%8ETVPN%E8%87%AA%E7%A0%94%E5%AE%A2%E6%88%B7%E7%AB%AF/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="一句话结论：在无 App 级 root 的创维 Q6011 机顶盒（Android 10 &#x2F; 全志）与 AutoChips AC8317 车机（Android 6.0）上，用官方 VpnService + hev-socks5-tunnel + 自研 native relay 自研了一个 240KB 的按应用分流 VPN 客户端 TVPN，让 SmartTube、X 浏览器等应用稳定出海；电视端顺">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/tvpn/04-advert-app-info.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/tvpn/01-home.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/tvpn/02-hd-tv-live.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/tvpn/06-smarttube-home-2.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/tvpn/07-smarttube-playing.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/tvpn/08-smarttube-playing-2.png">
+<meta property="article:published_time" content="2026-11-11T02:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-11T02:30:00.000Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 折腾记录">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/tvpn/04-advert-app-info.png">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/11/11/%E6%9C%BA%E9%A1%B6%E7%9B%92%E6%97%A0root%E6%94%B9%E9%80%A0%E4%B8%8ETVPN%E8%87%AA%E7%A0%94%E5%AE%A2%E6%88%B7%E7%AB%AF/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/11/%E6%9C%BA%E9%A1%B6%E7%9B%92%E6%97%A0root%E6%94%B9%E9%80%A0%E4%B8%8ETVPN%E8%87%AA%E7%A0%94%E5%AE%A2%E6%88%B7%E7%AB%AF/","path":"2026/11/11/机顶盒无root改造与TVPN自研客户端/","title":"创维 Q6011 机顶盒无 root 改造与 TVPN 自研客户端：从分流代理到影音适配全记录"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>创维 Q6011 机顶盒无 root 改造与 TVPN 自研客户端：从分流代理到影音适配全记录 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E7%82%B9%E7%BD%91%E7%BB%9C%E4%B8%8D%E6%98%AF%E6%85%A2%E6%98%AF%E8%A2%AB%E9%80%89%E6%8B%A9%E6%80%A7%E8%BF%87%E6%BB%A4"><span class="nav-text">1.
+起点：网络不是「慢」，是被选择性过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E5%8F%B0%E8%AE%BE%E5%A4%87%E4%B8%A4%E5%A5%97%E6%9D%83%E9%99%90%E8%BE%B9%E7%95%8C"><span class="nav-text">2. 两台设备，两套权限边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tvpn%E4%B8%80%E4%B8%AA-240kb-%E7%9A%84%E8%87%AA%E7%A0%94-vpn-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">3. TVPN：一个 240KB 的自研 VPN
+客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%A7%86%E7%AB%AF%E6%B2%BB%E7%90%86%E5%B9%BF%E5%91%8A%E5%8C%85%E4%B8%8E%E5%BC%80%E6%9C%BA%E5%AE%88%E5%8D%AB"><span class="nav-text">4. 电视端治理：广告包与开机守卫</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BC%B9%E4%B8%8E%E8%87%AA%E6%81%A2%E5%A4%8D%E9%93%BE"><span class="nav-text">4.1 反弹与自恢复链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E7%A6%81-receiver%E4%B8%8D%E6%95%B4%E5%8C%85%E7%A6%81%E7%94%A8"><span class="nav-text">4.2 只禁 receiver，不整包禁用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%BC%80%E6%9C%BA%E9%92%A9%E5%AD%90"><span class="nav-text">4.3 真正的开机钩子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%B4%B4%E7%89%87%E5%B9%BF%E5%91%8A%E4%BB%8E%E4%B8%8D%E5%8F%AF%E8%A1%8C%E5%88%B0%E8%BF%90%E8%A1%8C%E6%97%B6-hook"><span class="nav-text">5.
+前贴片广告：从「不可行」到运行时 hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E4%B8%8E%E5%86%85%E5%AD%98%E6%B2%BB%E7%90%86"><span class="nav-text">6. 桌面与内存治理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E9%80%82%E9%85%8D%E6%88%90%E6%9E%9C"><span class="nav-text">7. 影音适配成果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E7%AB%AF"><span class="nav-text">8. 车机端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E4%B8%8E%E9%81%97%E7%95%99"><span class="nav-text">9. 结论与遗留</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF"><span class="nav-text">10. 安全红线</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/11/11/%E6%9C%BA%E9%A1%B6%E7%9B%92%E6%97%A0root%E6%94%B9%E9%80%A0%E4%B8%8ETVPN%E8%87%AA%E7%A0%94%E5%AE%A2%E6%88%B7%E7%AB%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="创维 Q6011 机顶盒无 root 改造与 TVPN 自研客户端：从分流代理到影音适配全记录 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="一句话结论：在无 App 级 root 的创维 Q6011 机顶盒（Android 10 &#x2F; 全志）与 AutoChips AC8317 车机（Android 6.0）上，用官方 VpnService + hev-socks5-tunnel + 自研 native relay 自研了一个 240KB 的按应用分流 VPN 客户端 TVPN，让 SmartTube、X 浏览器等应用稳定出海；电视端顺...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          创维 Q6011 机顶盒无 root 改造与 TVPN 自研客户端：从分流代理到影音适配全记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-11 10:30:00" itemprop="dateCreated datePublished" datetime="2026-11-11T10:30:00+08:00">2026-11-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">一句话结论：在无 App 级 root 的创维 Q6011 机顶盒（Android 10 / 全志）与 AutoChips AC8317 车机（Android 6.0）上，用官方 VpnService + hev-socks5-tunnel + 自研 native relay 自研了一个 240KB 的按应用分流 VPN 客户端 TVPN，让 SmartTube、X 浏览器等应用稳定出海；电视端顺...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p><strong>一句话结论</strong>：在无 App 级 root 的创维 Q6011
+机顶盒（Android 10 / 全志）与 AutoChips AC8317 车机（Android
+6.0）上，用<strong>官方 <code>VpnService</code> + hev-socks5-tunnel +
+自研 native relay</strong> 自研了一个 240KB 的按应用分流 VPN 客户端
+<strong>TVPN</strong>，让 SmartTube、X
+浏览器等应用稳定出海；电视端顺手完成<strong>广告/统计包持久压制</strong>、<strong>极光免费专区
+90–120 秒前贴片广告的运行时拦截</strong>（frida hook 广告 SDK
+门函数）、<strong>桌面与内存治理</strong>，最终让一台 1GB
+内存的机顶盒流畅播放 YouTube。</p>
+<p><strong>本文定位</strong>：完整技术细节（含全部脚本、调用链取证、反汇编）见项目内部文档《TVPN
+全案技术报告》；本文按博客体量整理主线与踩坑，配图来自设备实测截图。</p>
+</blockquote>
+<hr />
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#1-起点网络不是慢是被选择性过滤">1.
+起点：网络不是「慢」，是被选择性过滤</a></li>
+<li><a href="#2-两台设备两套权限边界">2. 两台设备，两套权限边界</a></li>
+<li><a href="#3-tvpn一个-240kb-的自研-vpn-客户端">3. TVPN：一个 240KB
+的自研 VPN 客户端</a></li>
+<li><a href="#4-电视端治理广告包与开机守卫">4.
+电视端治理：广告包与开机守卫</a>
+<ul>
+<li><a href="#41-反弹与自恢复链">4.1 反弹与自恢复链</a></li>
+<li><a href="#42-只禁-receiver不整包禁用">4.2 只禁
+receiver，不整包禁用</a></li>
+<li><a href="#43-真正的开机钩子">4.3 真正的开机钩子</a></li>
+</ul></li>
+<li><a href="#5-前贴片广告从不可行到运行时-hook">5.
+前贴片广告：从「不可行」到运行时 hook</a></li>
+<li><a href="#6-桌面与内存治理">6. 桌面与内存治理</a></li>
+<li><a href="#7-影音适配成果">7. 影音适配成果</a></li>
+<li><a href="#8-车机端">8. 车机端</a></li>
+<li><a href="#9-结论与遗留">9. 结论与遗留</a></li>
+<li><a href="#10-安全红线">10. 安全红线</a></li>
+</ul>
+<hr />
+<h2 id="起点网络不是慢是被选择性过滤">1.
+起点：网络不是「慢」，是被选择性过滤</h2>
+<p>一切源于一次故障排查：腾讯系电视/车机应用加载缓慢、CDN
+解析异常。抓包后发现，网络链路上存在一台<strong>中间盒</strong>，对流量做了<strong>三层选择性过滤</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>层</th>
+<th>机制</th>
+<th>表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS 域名级</td>
+<td><code>.qq.com</code>
+等<strong>子域</strong>被静默丢弃（裸域放行）</td>
+<td>解析不到正确 CDN</td>
+</tr>
+<tr>
+<td>IP 级</td>
+<td>命中名单的 CDN 节点<strong>伪造 RST</strong></td>
+<td>TCP 握手失败</td>
+</tr>
+<tr>
+<td>传输层</td>
+<td>明文 HTTP:80 按 Host 做 <strong>DPI</strong></td>
+<td>请求被识别、限速或拉黑</td>
+</tr>
+</tbody>
+</table>
+<p>关键判断：腾讯系电视/车机应用大量使用<strong>明文
+HTTP</strong>（<code>tv.t002.ottcn.com</code> 之类），App 内无法改
+HTTPS，<strong>不在本地建隧道就无法绕过</strong>。一旦流量被封装进 VPN
+隧道，中间盒看到的只是一条到出口的加密连接，上述三层过滤全部失效。</p>
+<p>另一个环境事实：电视端<strong>没有 GMS</strong>，YouTube
+官方客户端装不上 → 只能找无 GMS 依赖的第三方播放器（选定
+SmartTube）；车机端则需要一个能<strong>按应用分流</strong>、不给整机流量加密的通用出口。</p>
+<p>于是「自研客户端」和「影音适配」被合并成同一个需求。</p>
+<h2 id="两台设备两套权限边界">2. 两台设备，两套权限边界</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>机顶盒 创维 Q6011（eros-p1）</th>
+<th>车机 AutoChips AC8317</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android</td>
+<td>10（userdebug）</td>
+<td>6.0</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>979 MB，紧张</td>
+<td>1.8 GB，宽裕</td>
+</tr>
+<tr>
+<td><code>adb root</code></td>
+<td>❌ 厂商改写 adbd，返回自定义错误</td>
+<td>✅ 默认支持，<code>adb shell</code> 即 uid 0</td>
+</tr>
+<tr>
+<td><code>su</code>（setuid）</td>
+<td>✅ <code>/system/xbin/usrchan</code>（口令可由
+<code>ro.serialno</code> 推导，11-10 逆向还原）</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td>App 级 root</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>厂商管控</td>
+<td>后台白名单 / 广告包自恢复 / <code>pm</code> 拦截</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<p>两端<strong>共同点是都没有 App 级
+root</strong>，所以客户端架构不分叉：只能走官方
+<code>VpnService</code>。<code>adb shell</code> 级 root
+的差异只影响调测手段。机顶盒的 <code>usrchan</code>
+提权是后期逆向出来的——全志方案的 <code>/system/xbin/usrchan</code> 是
+setuid root:shell，口令由序列号经 HMAC
+推导，等于一条内置提权通道（细节不展开）。</p>
+<h2 id="tvpn一个-240kb-的自研-vpn-客户端">3. TVPN：一个 240KB 的自研 VPN
+客户端</h2>
+<p>选型对比：sing-box/通用内核 30MB+ 在 1GB 内存设备上压力太大，放弃；纯
+Java 协议栈风险高，放弃。最终方案：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">应用流量（按包名分流）</span><br><span class="line">  → VpnService tun0（26.26.26.1/32，MTU 1400）</span><br><span class="line">  → hev-socks5-tunnel（JNI，tun2socks）</span><br><span class="line">  → 本地 relay（NDK 编译的 native 进程）</span><br><span class="line">  → 上游 HTTP CONNECT + TLS 节点</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>按应用分流</strong>：白名单模式，<code>VpnService.Builder.addAllowedApplication()</code>
+只把目标 UID 拉进 tun，其余应用完全不受影响；</li>
+<li><strong>DNS 进隧道</strong>（26.26.26.2），DNS over TCP 到节点侧
+resolver；</li>
+<li><strong>上游自动切换</strong>：4G ↔︎ WiFi 热点
+rebinding，切换瞬间断流自动重连；</li>
+<li>体积：APK 约 240KB；内存：运行期 RSS 约 34MB；</li>
+<li>单 APK 同时兼容 Android 6.0 与 Android 10（minSdk
+21），两端共用。</li>
+</ul>
+<p>一个典型的静默失败坑：白名单包名拼错（<code>xbrowse</code> vs
+<code>xbrowser</code>）<strong>代理不报错，但应用不走
+VPN</strong>——只能靠 <code>ip rule show | grep uidrange</code> 核对 UID
+是否注册。另外 UID 只在「启动代理」时注册，重装应用换了 UID
+后必须重启代理，否则分流悄悄失效。</p>
+<h2 id="电视端治理广告包与开机守卫">4. 电视端治理：广告包与开机守卫</h2>
+<h3 id="反弹与自恢复链">4.1 反弹与自恢复链</h3>
+<p>首轮用 Binder 事务绕过厂商对 shell <code>pm disable</code>
+的拦截，禁掉 8 个广告/统计包，60
+秒后复查全部失效。反编译定位到自恢复链：<code>com.skyworthdigital.skycommonpropertymanager</code>
+的 dex 里<strong>同时包含</strong>广告包名和
+<code>setApplicationEnabledSetting</code>
+调用，开机广播里把自己和同簇包一起拉起；DNS
+拦控制名单下载有效，但<strong>本地
+<code>setApplicationEnabledSetting</code>
+不走网络</strong>，挡不住。</p>
+<p>结论：只能「持续压」——设备端常驻守卫脚本每 120 秒重新压制。</p>
+<h3 id="只禁-receiver不整包禁用">4.2 只禁 receiver，不整包禁用</h3>
+<p>这里踩过两个大坑：</p>
+<ol type="1">
+<li><p><strong>整包禁用 <code>ott.advert.app</code> →
+全应用打不开</strong>。它负责「应用启动管线」（force-stop 目标 →
+播启动广告 →
+再拉起），包被禁后广告放不了、目标应用也永远拉不起来，所有应用弹「应用无法使用
+/ 该应用是由root所管理」。修正：<strong>包保持可用，只禁它的
+<code>ACTION_APP_OPEN</code>
+广播接收器</strong>。下图就是系统设置里这个包的应用信息页（小湃通，版本
+2.17.24）：</p>
+<figure>
+<img src="/img/tvpn/04-advert-app-info.png" alt="广告包应用信息页" />
+<figcaption aria-hidden="true">广告包应用信息页</figcaption>
+</figure></li>
+<li><p><strong>压制 <code>ottstatsv2</code> →
+开机崩溃循环</strong>。它是
+<code>PERSISTENT + sharedUserId=android.uid.system</code>，<code>pm hide</code>
+后 <code>Resources</code> 为 null，2 分钟 NPE 崩溃 691
+次。结论：保持启用。</p></li>
+<li><p><strong>不要对任何 Skyworth 系统包用
+<code>pm suspend</code></strong>。全部系统包共享 uid 1000，suspend
+任一包会让 AppOps 报
+<code>Audio disabled for suspended package=...</code>，AudioFlinger
+把<strong>其它 uid 1000
+应用</strong>（含桌面视频）一起静音——表现为全机无声且无任何报错。<code>disable-user</code>
+单独用就够。</p></li>
+</ol>
+<h3 id="真正的开机钩子">4.3 真正的开机钩子</h3>
+<p>让守卫开机自启走了不少弯路：<code>/system</code> 曾 100% 满（写 1KB
+都 <code>ENOSPC</code>）、init 里厂商服务带 <code>seclabel</code> 会触发
+SELinux bounded transition 拒绝 execve、App 的
+<code>BOOT_COMPLETED</code> 被厂商杀。也一度把守卫写进
+<code>/data/xpclouddrive/run_clouddrive.sh</code>——后来实测发现它<strong>根本不是开机钩子</strong>（init
+的 <code>start_clouddrive</code> 是
+<code>disabled</code>，无任何触发者）。</p>
+<p>最终方案利用两个特性：</p>
+<ol type="1">
+<li><strong>符号链接只占元数据不占数据块</strong>——写满的
+<code>/system</code> 上也能创建；</li>
+<li>init 的 <code>sky_check</code> 服务：root、无
+<code>seclabel</code>、<code>sys.boot_completed=1</code> 时启动。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /system/bin/sky_check.sh /data/local/tmp/sky_check.sh.bak</span><br><span class="line"><span class="built_in">mv</span> /system/bin/sky_check.sh /system/bin/sky_check.sh.orig</span><br><span class="line"><span class="built_in">ln</span> -sfn /data/local/tmp/boot.sh /system/bin/sky_check.sh   <span class="comment"># 符号链接接管</span></span><br></pre></td></tr></table></figure>
+<p><code>boot.sh</code> 后台运行原脚本 +
+拉起广告守卫与广告拦截守卫，最后 <code>wait</code> 常驻（oneshot
+服务结束时子进程可能被回收）。整机重启验证通过。</p>
+<h2 id="前贴片广告从不可行到运行时-hook">5.
+前贴片广告：从「不可行」到运行时 hook</h2>
+<p>极光免费专区的前贴片广告 60–120
+秒，无跳过按钮。这是全案里翻案最漂亮的一个问题：</p>
+<p><strong>先证明「网络层全部不可行」</strong>：</p>
+<ul>
+<li>广告决策与正片 API
+<strong>同域</strong>（<code>tv.t002.ottcn.com</code>），素材与正片<strong>共用
+CDN</strong>（<code>ugc*.gtimg.com</code>），域名/IP
+无法区分广告与正片；</li>
+<li>黑洞实验：对 8 个广告域名全部 403，广告仍完整播放（本地预缓存 +
+主域通道）；</li>
+<li>App 内置 HTTPDNS3 且 native hook libc DNS，改 DNS 无效；</li>
+<li><code>iptables</code> 封 SNI、改配置
+XML（<code>scenePreRollDisabled</code>）、改 <code>shared_prefs</code>
+开关（实际被接管成 MMKV）全部无效；</li>
+<li>重打包更不行：<code>sharedUserId=android.uid.system</code> +
+平台签名，重签丢系统特权。</li>
+</ul>
+<p><strong>然后抓调用链</strong>（Frida 挂广告 SDK 打印
+<code>Throwable</code>）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QAdPreVideoImpl.loadAd      ← TVK 桥接层：前贴片入口</span><br><span class="line">  └─ ... → preroll.e.a → videoad.h.a → PlayerAdView.a</span><br><span class="line">       └─ com.tencent.ads.view.c.a(AdRequest)   ← 唯一「是否允许出广告」的门</span><br></pre></td></tr></table></figure>
+<p><code>PlayerAdView.a()</code> 拿到非空 <code>ErrorCode</code> 就走
+<code>fireFailedEvent()</code> 直接开播正片——而且源码里还有「小窗
+121」「悟空 120」两条同款早退分支，说明<strong>返回 ErrorCode
+跳过广告是官方设计路径</strong>，不是硬改逻辑。</p>
+<p><strong>落地</strong>：hook
+<code>com.tencent.ads.view.c.a()</code>，<code>adType == 1</code>（前贴片）时返回
+<code>ErrorCode(143)</code>。长期运行用 frida 官方
+<code>frida-inject</code> 设备端自持注入（不需要
+<code>frida-server</code>、不需要
+PC），<code>-e</code>（eternalize）让脚本常驻；守卫脚本轮询
+<code>pidof com.ktcp.launcher</code>，新 pid
+自动重新注入，开机钩子拉起。</p>
+<p>实测：起播 <strong>4–6
+秒直接进剧情</strong>，无倒计时、无水印、无黑屏等待；暂停广告、中插、角标等其它广告位不受影响；整机重启、进程重启均自动恢复；进程
+RSS 无可见增长。</p>
+<p>一个验证陷阱：SDK
+自带<strong>频次控制</strong>（看完一条广告后窗口期内后续视频不出广告）。连续试
+2–3 个视频都没广告<strong>不能证明拦截生效</strong>——必须按「单次起播
+4–6 秒内是否已在正片」或 hook 日志 <code>[preroll] blocked #N</code>
+判断。本次排查早期就吃过这个亏。</p>
+<h2 id="桌面与内存治理">6. 桌面与内存治理</h2>
+<p>腾讯极光桌面常驻约 195MB，是电视上最大的内存块。方案分两个阶段：</p>
+<p><strong>第一阶段</strong>：换开源轻量桌面
+FLauncher（59.5MB，<code>homewhitelist</code> + HMAC
+签名持久化），再做入口
+App（壳应用跳极光桌面）+「退出即释放」守卫（logcat 事件触发 + dumpsys
+复核 + force-stop），实测退出极光后 <code>MemAvailable</code>
+273→397MB。这期间还顺带移除了预装的「小湃桌面」（内容推荐型桌面，RSS
+296MB），删 APK 释放 16MB——<strong>更关键的收益是 <code>/system</code>
+从 0 恢复到 24MB 可写</strong>，空闲块位图异常消失。</p>
+<p><strong>第二阶段（11-11
+回摆）</strong>：前贴片拦截落地后，极光桌面的「内容入口」价值回升；内存实测（1GB
+机型，三件套同跑）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>场景</th>
+<th>MemAvailable</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLauncher 为桌面（基线）</td>
+<td>437 MB</td>
+<td>极光未运行</td>
+</tr>
+<tr>
+<td>极光后台 + SmartTube + TVPN</td>
+<td>295 MB</td>
+<td>极光 264 / SmartTube 241 / TVPN 57 MB</td>
+</tr>
+<tr>
+<td>极光作默认 HOME（重启后）</td>
+<td><strong>393 MB</strong></td>
+<td>FLauncher 不再运行</td>
+</tr>
+</tbody>
+</table>
+<p>全程没有 LowMemoryKiller 主动杀进程——<strong>1GB
+内存可以承受极光常驻</strong>。最终决定：极光改回默认 HOME 并常驻，入口
+App 与释放守卫下线，日志全部加自动截断长期运行不占存储。</p>
+<p>治理后的桌面（FLauncher，Non-TV / TV 两组应用，SmartTube(S)
+与酷喵等入口可见）：</p>
+<figure>
+<img src="/img/tvpn/01-home.png" alt="FLauncher 桌面" />
+<figcaption aria-hidden="true">FLauncher 桌面</figcaption>
+</figure>
+<p>开机后「高清电视」直播（CCTV-1，切台加载中）：</p>
+<figure>
+<img src="/img/tvpn/02-hd-tv-live.png" alt="高清电视直播" />
+<figcaption aria-hidden="true">高清电视直播</figcaption>
+</figure>
+<h2 id="影音适配成果">7. 影音适配成果</h2>
+<p>SmartTube 首页与推荐流，经 TVPN 隧道正常加载：</p>
+<figure>
+<img src="/img/tvpn/06-smarttube-home-2.png" alt="SmartTube 首页" />
+<figcaption aria-hidden="true">SmartTube 首页</figcaption>
+</figure>
+<p>播放中（画面 + 字幕，硬解正常）：</p>
+<figure>
+<img src="/img/tvpn/07-smarttube-playing.png" alt="SmartTube 播放中" />
+<figcaption aria-hidden="true">SmartTube 播放中</figcaption>
+</figure>
+<figure>
+<img src="/img/tvpn/08-smarttube-playing-2.png"
+alt="SmartTube 播放中 2" />
+<figcaption aria-hidden="true">SmartTube 播放中 2</figcaption>
+</figure>
+<p>适配要点：</p>
+<ul>
+<li><strong>4K60 VP9 解码器反复重建</strong>导致 SmartTube 间歇黑屏
+0.5–2s——这台盒子硬解上限 1080p60，限清晰度 1080p30 vp9 后根治；</li>
+<li><strong>Instagram Lite</strong> 横屏补丁（apktool 改 4 处
+<code>screenOrientation</code>）、邮箱验证码登录、遥控器无障碍按键映射；</li>
+<li>重装应用会换 UID → 分流失效 + 登录态丢失，是两个已知坑。</li>
+</ul>
+<h2 id="车机端">8. 车机端</h2>
+<p>同一套 APK 部署到 AC8317 车机（Android 6.0，armeabi-v7a），白名单
+<code>com.mmbox.xbrowser,org.smarttube.stable</code>：</p>
+<ul>
+<li>X 浏览器访问 Google 正常；SmartTube itag 136（720p AVC）+ itag
+140（AAC）硬解正常；</li>
+<li>内置 4G ↔︎ WiFi 热点<strong>上游自动切换</strong>实测通过：切换日志
+<code>upstream changed ... rebinding</code>，8 秒内 <code>wlan0</code>
+RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
+<li>车机 <code>adb root</code> 开箱即用，调测自由度比机顶盒高（可直接
+<code>ip rule add</code> 补注册 UID），但不改变客户端架构。</li>
+</ul>
+<h2 id="结论与遗留">9. 结论与遗留</h2>
+<p>已经跑通的闭环：自研 240KB 客户端 + 按应用分流 + 节点接入 +
+开机自启/保活/UID
+重注册；广告包持久压制；前贴片运行时拦截；桌面/内存治理；SmartTube 与 IG
+适配；车机部署与上游切换。</p>
+<p>仍未覆盖：</p>
+<ul>
+<li>节点故障切换靠人工固定节点，未做自动降级；</li>
+<li>极光 App 升级若改广告 SDK 类名，hook
+会静默失效（表现只是广告回来，不崩溃），需跟随版本维护；</li>
+<li><code>ottstatsv2</code> 判定不可压制，保持启用；</li>
+<li>厂商 OTA 可能重置 <code>homewhitelist</code>、覆盖
+<code>/system</code> 下的开机钩子符号链接，升级后需复查。</li>
+</ul>
+<h2 id="安全红线">10. 安全红线</h2>
+<ul>
+<li>车机 <code>adb root</code> 开箱即用——<strong>任何能连上 adb
+的人直接就是 uid 0</strong>，不用的关掉 USB 调试；</li>
+<li>机顶盒 WiFi ADB
+无认证（<code>ro.adb.secure=0</code>），同一局域网内任何人可控制设备，只在可信网络开启；</li>
+<li><code>usrchan</code>
+口令可由序列号推导，等同厂商后门，不要把设备放到不可信网络；</li>
+<li>订阅地址、节点域名即等同凭据，一律不写入文档与仓库。</li>
+</ul>
+<blockquote>
+<p>完整版技术报告（含全部脚本、usrchan 反汇编、广告链路抓包与 bootloader
+实测）存于项目内部文档，不随博客公开。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/11/11/%E6%9C%BA%E9%A1%B6%E7%9B%92%E6%97%A0root%E6%94%B9%E9%80%A0%E4%B8%8ETVPN%E8%87%AA%E7%A0%94%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="创维 Q6011 机顶盒无 root 改造与 TVPN 自研客户端：从分流代理到影音适配全记录">https://sunjunior.github.io/2026/11/11/机顶盒无root改造与TVPN自研客户端/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-Android-%E6%9C%BA%E9%A1%B6%E7%9B%92-%E5%88%9B%E7%BB%B4Q6011-VpnService-TVPN-SmartTube-%E5%8E%BB%E5%B9%BF%E5%91%8A-frida-%E8%BD%A6%E6%9C%BA-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 折腾记录</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/02/%E8%BD%A6%E6%9C%BAeSIM%E7%BD%91%E7%BB%9C%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90%E6%8A%A5%E5%91%8A/" rel="prev" title="车机 eSIM 网络差异分析与喜马拉雅修复（完整版）">
+                  <i class="fa fa-angle-left"></i> 车机 eSIM 网络差异分析与喜马拉雅修复（完整版）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
