@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：坦克大战2008 加速汉化版（Battle City 2008 NES 汉化版） 日期：2026-08-08 本系列破解层层递进，从”玩家自身无敌”到”保护基地”再到”基地被摧毁也不结束游戏” 1. 背景 经典《坦克大战》规则：玩家在保护己方老鹰基地的同时消灭敌方坦克，基地一旦被摧毁游戏立即结束。 本系列共三阶破解，难度递增，每阶都建立在前一阶的分析基础上： 阶数 破解目标 破解难度 影">
+<meta property="og:type" content="article">
+<meta property="og:title" content="坦克大战2008（NES&#x2F;FC 汉化版）三阶破解：从玩家无敌到基地不死">
+<meta property="og:url" content="https://sunjunior.github.io/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：坦克大战2008 加速汉化版（Battle City 2008 NES 汉化版） 日期：2026-08-08 本系列破解层层递进，从”玩家自身无敌”到”保护基地”再到”基地被摧毁也不结束游戏” 1. 背景 经典《坦克大战》规则：玩家在保护己方老鹰基地的同时消灭敌方坦克，基地一旦被摧毁游戏立即结束。 本系列共三阶破解，难度递增，每阶都建立在前一阶的分析基础上： 阶数 破解目标 破解难度 影">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/tank1.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/tank2.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/tank3.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/tank4.gif">
+<meta property="article:published_time" content="2026-08-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-06T01:53:48.220Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/tank1.gif">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/08/08/坦克大战2008-NES三阶破解技术文档/","title":"坦克大战2008（NES/FC 汉化版）三阶破解：从玩家无敌到基地不死"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>坦克大战2008（NES/FC 汉化版）三阶破解：从玩家无敌到基地不死 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83"><span class="nav-text">2. 分析环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E7%BB%93%E6%9E%84"><span class="nav-text">3. ROM 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%E7%8E%A9%E5%AE%B6%E5%9D%A6%E5%85%8B%E6%97%A0%E6%95%8C"><span class="nav-text">4. 第一阶段：玩家坦克无敌</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87"><span class="nav-text">4.1 目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%8A%A4%E7%9B%BE%E8%AE%A1%E6%97%B6%E5%99%A8"><span class="nav-text">4.2 定位护盾计时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E9%80%92%E5%87%8F%E6%93%8D%E4%BD%9C"><span class="nav-text">4.3 定位代码中的递减操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%B9%E6%A1%88"><span class="nav-text">4.4 修改方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-text">4.5 效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%E5%9F%BA%E5%9C%B0%E6%B0%B8%E4%B9%85%E4%BF%9D%E6%8A%A4"><span class="nav-text">5. 第二阶段：基地永久保护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87-1"><span class="nav-text">5.1 目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A4%E7%9B%BE%E8%AE%A1%E6%97%B6%E5%99%A8%E6%9C%BA%E5%88%B6"><span class="nav-text">5.2 护盾计时器机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%8A%A4%E7%9B%BE%E7%BB%98%E5%88%B6"><span class="nav-text">5.3 两种护盾绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%B9%E6%A1%88-1"><span class="nav-text">5.4 修改方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C-1"><span class="nav-text">5.5 效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%E5%9F%BA%E5%9C%B0%E8%A2%AB%E6%91%A7%E6%AF%81%E5%90%8E%E6%B8%B8%E6%88%8F%E7%BB%A7%E7%BB%AD"><span class="nav-text">6.
+第三阶段：基地被摧毁后游戏继续</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87-2"><span class="nav-text">6.1 目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D-eagle-%E6%91%A7%E6%AF%81%E6%A3%80%E6%B5%8B"><span class="nav-text">6.2 定位 EAGLE 摧毁检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E6%B8%85%E6%B8%B8%E6%88%8F%E7%BB%93%E6%9D%9F%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-text">6.3 理清游戏结束状态机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E4%BF%AE%E6%94%B9%E6%96%B9%E6%A1%88"><span class="nav-text">6.4 两种修改方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-a%E7%AE%80%E5%8D%95-nop%E5%9F%BA%E5%9C%B0%E4%B8%8D%E6%AD%BB%E7%89%88"><span class="nav-text">方案 A：简单 NOP（基地不死版）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-bjmp-%E8%B7%B3%E8%BF%87%E5%9F%BA%E5%9C%B0%E4%B8%8D%E6%AD%BB_%E6%95%8C%E4%BA%BA%E5%85%A8%E7%81%AD%E7%BB%93%E6%9D%9F%E7%89%88"><span class="nav-text">方案 B：JMP
+跳过（基地不死_敌人全灭结束版）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="nav-text">6.5 方案对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E5%AD%97%E8%8A%82"><span class="nav-text">6.6 补丁字节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C-2"><span class="nav-text">6.7 效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E7%9A%84%E9%80%92%E8%BF%9B%E5%85%B3%E7%B3%BB"><span class="nav-text">7. 三阶破解的递进关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E6%89%93%E8%A1%A5%E4%B8%81%E7%9A%84-rom"><span class="nav-text">8.1 已打补丁的 ROM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ips-%E8%A1%A5%E4%B8%81"><span class="nav-text">8.2 IPS 补丁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%90%88%E4%B8%80%E5%90%88%E5%B9%B6%E7%89%88"><span class="nav-text">8.4 三合一合并版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E5%BF%83%E5%BE%97"><span class="nav-text">9. 总结与心得</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E9%80%89%E6%8B%A9%E5%B9%B2%E5%87%80%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88-a-%E7%9A%84%E8%84%8F%E8%A1%A5%E4%B8%81pla-%E5%89%AF%E4%BD%9C%E7%94%A8%E8%99%BD%E7%84%B6%E8%A1%A8%E9%9D%A2%E5%8F%AF%E8%A1%8C%E4%BD%86%E6%96%B9%E6%A1%88-b-%E7%9A%84-jmp-%E8%B7%B3%E8%BD%AC%E6%89%8D%E6%98%AF%E6%AD%A3%E7%A1%AE%E5%81%9A%E6%B3%95%E7%A0%B4%E8%A7%A3%E8%B4%A8%E9%87%8F%E4%B8%8D%E4%BB%85%E5%9C%A8%E4%BA%8E%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8%E6%9B%B4%E5%9C%A8%E4%BA%8E%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-text">优先选择”干净补丁”：方案
+A 的脏补丁（PLA 副作用）虽然表面可行，但方案 B 的 JMP
+跳转才是正确做法。破解质量不仅在于”能不能用”，更在于”会不会出问题”。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE-lua-%E8%84%9A%E6%9C%AC"><span class="nav-text">附录：关键 Lua 脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%97%A0%E6%95%8C%E6%A8%A1%E5%BC%8F%E8%84%9A%E6%9C%AC"><span class="nav-text">A.1 无敌模式脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E5%9F%BA%E5%9C%B0%E6%91%A7%E6%AF%81%E5%88%86%E6%9E%90%E6%8E%A2%E9%92%88"><span class="nav-text">A.2 基地摧毁分析探针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E7%9C%8B%E9%97%A8%E7%8B%97%E6%8E%A2%E9%92%88"><span class="nav-text">A.3 看门狗探针</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="坦克大战2008（NES&#x2F;FC 汉化版）三阶破解：从玩家无敌到基地不死 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：坦克大战2008 加速汉化版（Battle City 2008 NES 汉化版） 日期：2026-08-08 本系列破解层层递进，从”玩家自身无敌”到”保护基地”再到”基地被摧毁也不结束游戏” 1. 背景 经典《坦克大战》规则：玩家在保护己方老鹰基地的同时消灭敌方坦克，基地一旦被摧毁游戏立即结束。 本系列共三阶破解，难度递增，每阶都建立在前一阶的分析基础上： 阶数 破解目标 破解难度 影...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          坦克大战2008（NES/FC 汉化版）三阶破解：从玩家无敌到基地不死
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-08 00:00:00" itemprop="dateCreated datePublished" datetime="2026-08-08T00:00:00+08:00">2026-08-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-06 09:53:48" itemprop="dateModified" datetime="2026-09-06T09:53:48+08:00">2026-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标游戏：坦克大战2008 加速汉化版（Battle City 2008 NES 汉化版） 日期：2026-08-08 本系列破解层层递进，从”玩家自身无敌”到”保护基地”再到”基地被摧毁也不结束游戏” 1. 背景 经典《坦克大战》规则：玩家在保护己方老鹰基地的同时消灭敌方坦克，基地一旦被摧毁游戏立即结束。 本系列共三阶破解，难度递增，每阶都建立在前一阶的分析基础上： 阶数 破解目标 破解难度 影...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>坦克大战2008 加速汉化版（Battle City 2008 NES
+汉化版）</strong><br />
+日期：2026-08-08<br />
+本系列破解层层递进，从”玩家自身无敌”到”保护基地”再到”基地被摧毁也不结束游戏”</p>
+</blockquote>
+<hr />
+<h2 id="背景">1. 背景</h2>
+<p>经典《坦克大战》规则：玩家在保护己方老鹰基地的同时消灭敌方坦克，基地一旦被摧毁游戏立即结束。</p>
+<p>本系列共三阶破解，难度递增，每阶都建立在前一阶的分析基础上：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>阶数</th>
+<th>破解目标</th>
+<th>破解难度</th>
+<th>影响的变量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一阶</td>
+<td><strong>玩家坦克无敌</strong>（无敌版）</td>
+<td>简单</td>
+<td><code>$89</code> 护盾计时器</td>
+</tr>
+<tr>
+<td>二阶</td>
+<td><strong>基地永久保护</strong>（基地永久保护）</td>
+<td>中等</td>
+<td><code>$45</code> 护盾计时器 + 绘制路径</td>
+</tr>
+<tr>
+<td>三阶</td>
+<td><strong>基地被摧毁后游戏继续</strong>（基地不死）</td>
+<td>最复杂</td>
+<td><code>$68</code> 状态机 + <code>$030B</code> 标志 +
+<code>$C159</code> 选关跳转</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="分析环境">2. 分析环境</h2>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td>Mesen2，Lua Console（GUI 模式）</td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>自写 6502 反汇编脚本（<code>dis6502.py</code>）</td>
+</tr>
+<tr>
+<td>内存跟踪</td>
+<td><code>addMemoryCallback</code> + <code>emu.getState</code></td>
+</tr>
+<tr>
+<td>ROM 修补</td>
+<td>Python 直接读写 NES 镜像字节</td>
+</tr>
+<tr>
+<td>补丁生成</td>
+<td>标准 IPS 格式</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rom-结构">3. ROM 结构</h2>
+<p>原版 ROM 信息：</p>
+<ul>
+<li>文件：<code>坦克大战2008加速汉化版.nes</code></li>
+<li>大小：24592 字节 = 16（iNES 头）+ 16KB（PRG）+ 8KB（CHR）</li>
+<li>型号：NROM-128（Mapper 0，16KB PRG）</li>
+<li>PRG 映射：CPU <code>$C000</code>-<code>$FFFF</code>（NROM-128
+固定高位）</li>
+</ul>
+<p>CPU 地址与 ROM 文件偏移的换算关系：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROM偏移 = 16 + (CPU地址 - 0xC000)</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="第一阶段玩家坦克无敌">4. 第一阶段：玩家坦克无敌</h2>
+<h3 id="目标">4.1 目标</h3>
+<p>让玩家坦克在游戏中始终保持无敌状态，被敌人子弹击中不扣生命、不爆炸。</p>
+<h3 id="定位护盾计时器">4.2 定位护盾计时器</h3>
+<p>玩家被击中后，游戏会启动一个”重生无敌”保护机制，护盾持续一段时间后自动消失。通过内存扫描找到护盾相关的变量
+<code>$89</code>（以及 <code>$89,X</code> 实体结构中的护盾字段）。</p>
+<p><code>invincible.lua</code> 脚本验证了这一猜想：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Invincible: 无敌测试脚本</span></span><br><span class="line"><span class="comment">-- 原理: 死亡重生后游戏会把 $89 (无敌/护盾计时器) 置 3 再递减。</span></span><br><span class="line"><span class="comment">--       每帧把 $89 写回 3, 让游戏认为玩家一直处于重生无敌状态。</span></span><br><span class="line"><span class="comment">-- 开关: 按 P1 的 Select 按钮 (你绑定的是 Q 键) 切换 开/关。</span></span><br><span class="line"><span class="comment">-- 验证: 开启后让敌人子弹打你, 应不再扣生命 ($51 不变, 坦克不爆炸)。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> MT = emu.memType.nesInternalRam</span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">rd</span><span class="params">(a)</span></span> <span class="keyword">return</span> emu.<span class="built_in">read</span>(a, MT) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">wr</span><span class="params">(a, v)</span></span> emu.<span class="built_in">write</span>(a, v, MT) <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> SHIELD_ADDR = <span class="number">0x89</span></span><br><span class="line"><span class="keyword">local</span> SHIELD_VAL = <span class="number">3</span></span><br><span class="line"><span class="keyword">local</span> SEL_BIT = <span class="number">0x04</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> on = <span class="literal">true</span></span><br><span class="line"><span class="keyword">local</span> lastSel = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;=== Invincible 已启动: 每帧写 $89=&quot;</span> .. SHIELD_VAL .. <span class="string">&quot; (无敌) ===&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;按 P1 Select (你绑定的 Q 键) 切换开关; 当前: 开启&quot;</span>)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> cur06 = rd(<span class="number">0x06</span>)</span><br><span class="line">  <span class="keyword">local</span> selDown = ((rd(<span class="number">0x08</span>) &amp; SEL_BIT) ~= <span class="number">0</span>) <span class="keyword">or</span> ((cur06 &amp; SEL_BIT) ~= <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">not</span> lastSel)</span><br><span class="line">  <span class="keyword">if</span> selDown <span class="keyword">then</span></span><br><span class="line">    on = <span class="keyword">not</span> on</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;无敌: &quot;</span> .. (on <span class="keyword">and</span> <span class="string">&quot;开启&quot;</span> <span class="keyword">or</span> <span class="string">&quot;关闭&quot;</span>))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  lastSel = (cur06 &amp; SEL_BIT) ~= <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> on <span class="keyword">then</span></span><br><span class="line">    wr(SHIELD_ADDR, SHIELD_VAL)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.startFrame)</span><br></pre></td></tr></table></figure>
+<h3 id="定位代码中的递减操作">4.3 定位代码中的递减操作</h3>
+<p>反汇编找到护盾计时器的递减位置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$E282: LDA $89,X    ; 加载实体护盾值</span><br><span class="line">$E284: BEQ $1E      ; 为零则跳过（无敌结束）</span><br><span class="line">$E286: LDA $0B</span><br><span class="line">$E288: AND #$3F</span><br><span class="line">$E28A: BNE $02      ; 每 64 帧才递减</span><br><span class="line">$E28C: DEC $89,X    ; ★ 递减护盾计时器</span><br></pre></td></tr></table></figure>
+<h3 id="修改方案">4.4 修改方案</h3>
+<p>将 <code>DEC $89,X</code> 这条指令（<code>D6 89</code>）替换为
+<code>NOP NOP</code>（<code>EA EA</code>），计时器永不递减，玩家永久无敌：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">原：$E28C: DEC $89,X    ; D6 89</span><br><span class="line">改：$E28C: NOP         ; EA</span><br><span class="line">     $E28D: NOP         ; EA</span><br></pre></td></tr></table></figure>
+<p><strong>补丁字节</strong>：ROM 偏移
+<code>0x229C</code>，<code>D6 89</code> → <code>EA EA</code></p>
+<blockquote>
+<p>注意：这个修改只对玩家 1 的效果最直接，因为玩家 2
+的实体索引不同。但无敌版的生成脚本已经做了适配，使两个玩家都生效。</p>
+</blockquote>
+<h3 id="效果">4.5 效果</h3>
+<ul>
+<li>✅ 玩家被敌人子弹击中不受伤害</li>
+<li>✅ 坦克不爆炸、不扣生命</li>
+<li>✅ 敌人子弹效果依然保留（击中墙壁等仍然有效）</li>
+</ul>
+<figure>
+<img src="/img/tank1.gif" alt="坦克无敌模式效果演示" />
+<figcaption aria-hidden="true">坦克无敌模式效果演示</figcaption>
+</figure>
+<hr />
+<h2 id="第二阶段基地永久保护">5. 第二阶段：基地永久保护</h2>
+<h3 id="目标-1">5.1 目标</h3>
+<p>让基地（老鹰）周围的护盾在整局游戏中<strong>永不消失</strong>。原作中护盾只在关卡开始后的短暂时间内存在，倒计时结束后基地就暴露在敌人火力下。</p>
+<h3 id="护盾计时器机制">5.2 护盾计时器机制</h3>
+<p>通过反汇编找到护盾的计时器变量 <code>$45</code>，它在关卡开始时被设为
+<code>$14</code>（20）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$EA02: LDA #$14</span><br><span class="line">$EA04: STA $45      ; 护盾倒计时 = 20</span><br><span class="line">$EA06: RTS</span><br></pre></td></tr></table></figure>
+<p>护盾的绘制逻辑位于 <code>$E2A9</code>，是一个带状态的计时器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$E2A9: LDA $45        ; 读取护盾倒计时</span><br><span class="line">$E2AB: BEQ $25        ; 为 0 → 跳过所有绘制，护盾消失</span><br><span class="line">$E2AD: LDA $0B        ; 帧计数器</span><br><span class="line">$E2AF: AND #$0F       ; 每 16 帧</span><br><span class="line">$E2B1: BNE $1F        ; 非 16 倍数 → 本次不绘制</span><br><span class="line">$E2B3: LDA $0B</span><br><span class="line">$E2B5: AND #$3F       ; 每 64 帧</span><br><span class="line">$E2B7: BNE $04        ; 非 64 倍数 → 跳到 $E2BD</span><br><span class="line">$E2B9: DEC $45        ; 每 64 帧递减一次倒计时</span><br><span class="line">$E2BB: BEQ $12        ; 减到 0 → 最终消失阶段</span><br><span class="line">$E2BD: LDA $45</span><br><span class="line">$E2BF: CMP #$04       ; 剩余 &lt; 4 进入闪烁</span><br><span class="line">$E2C1: BCS $0F        ; 剩余 &gt;= 4 → 完整护盾</span><br><span class="line">$E2C3: LDA $0B</span><br><span class="line">$E2C5: AND #$10       ; 闪烁：每 16 帧切换</span><br><span class="line">$E2C7: BEQ $06        ; 偶数帧 → 不绘制（闪烁灭）</span><br><span class="line">$E2C9: JSR $CB9E      ; 绘制护盾</span><br><span class="line">$E2CC: JMP $E2D2</span><br><span class="line">$E2CF: JSR $CAF5      ; 绘制标准护盾</span><br><span class="line">$E2D2: LDA $68        ; 继续后续处理</span><br></pre></td></tr></table></figure>
+<p>整个 <code>$E2A9-$E2D1</code> 共 41 字节，实现了护盾从完整显示 → 闪烁
+→ 消失的完整生命周期。</p>
+<h3 id="两种护盾绘制">5.3 两种护盾绘制</h3>
+<p>反汇编发现游戏中有<strong>两套护盾绘制</strong>例程：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>例程</th>
+<th>功能</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$CAF5</code></td>
+<td>标准护盾，绘制在 <code>$6D/$74/$7B/$82</code></td>
+<td>关卡开始时调用</td>
+</tr>
+<tr>
+<td><code>$CB9E</code></td>
+<td>护盾 + 调色板属性设置，绘制在 <code>$89/$90/$97/$9E</code></td>
+<td>计时器闪烁阶段调用</td>
+</tr>
+</tbody>
+</table>
+<p>两套渲染的瓦片位置不同，<code>$CB9E</code>
+额外设置了属性表字节（<code>$07F3</code>、<code>$07F4</code>）。</p>
+<h3 id="修改方案-1">5.4 修改方案</h3>
+<p><strong>修改一</strong>：将 <code>$E2A9-$E2D1</code> 的 41
+字节计时逻辑替换为无条件调用护盾绘制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原：$E2A9-$E2CF 的完整计时器控制逻辑（41 字节）</span><br><span class="line">改：$E2A9: JSR $CB9E    ; 无条件绘制护盾</span><br><span class="line">     $E2AC: JMP $E2D2   ; 跳过计时逻辑</span><br><span class="line">     $E2AF-$E2D1: NOP padding</span><br></pre></td></tr></table></figure>
+<p><strong>修改二</strong>：将 3 处
+<code>JSR $CAF5</code>（标准护盾）替换为
+<code>JSR $CB9E</code>（永久护盾）：</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>CPU 地址</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM <code>0x00F8</code></td>
+<td><code>$C0E8</code></td>
+<td>主循环中的护盾刷新</td>
+</tr>
+<tr>
+<td>ROM <code>0x01ED</code></td>
+<td><code>$C1DD</code></td>
+<td>关卡开始/选关时的护盾绘制</td>
+</tr>
+<tr>
+<td>ROM <code>0x0423</code></td>
+<td><code>$C413</code></td>
+<td>另一处关卡初始化中的护盾绘制</td>
+</tr>
+</tbody>
+</table>
+<p><strong>补丁字节</strong>：共 47 字节（41 + 2×3），具体见 IPS
+补丁。</p>
+<h3 id="效果-1">5.5 效果</h3>
+<ul>
+<li>✅ 基地护盾整局游戏不消失</li>
+<li>✅ 护盾始终保持完整状态（不闪烁）</li>
+<li>✅ 敌人无法摧毁基地（子弹被护盾挡住）</li>
+</ul>
+<figure>
+<img src="/img/tank2.gif" alt="基地永久保护效果演示" />
+<figcaption aria-hidden="true">基地永久保护效果演示</figcaption>
+</figure>
+<hr />
+<h2 id="第三阶段基地被摧毁后游戏继续">6.
+第三阶段：基地被摧毁后游戏继续</h2>
+<h3 id="目标-2">6.1 目标</h3>
+<p>在”基地保护”的基础上更进一步：<strong>即使护盾被突破、基地被摧毁，游戏也不结束</strong>。玩家可以继续完成关卡，游戏结束的唯一条件是”本关所有敌人被消灭”。</p>
+<h3 id="定位-eagle-摧毁检测">6.2 定位 EAGLE 摧毁检测</h3>
+<p>通过写回调监控，发现 <code>$030B</code> 是 EAGLE 摧毁标志，且全 ROM
+只在<strong>一处</strong>写入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$E6B4: STA abs $030B   ; 唯一写入点</span><br></pre></td></tr></table></figure>
+<p>但 <code>$030B</code>
+没有任何显式读取——它只是内部标志，真正的游戏结束判定由 <code>$68</code>
+变量驱动。</p>
+<p>继续反汇编找到碰撞检测例程 <code>$E69A</code>，其中处理”击中 EAGLE
+瓦片”的分支：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$E6A2: LDA (zp),Y     ; 读取命中瓦片</span><br><span class="line">$E6A4: AND #$FC       ; 屏蔽低 2 位</span><br><span class="line">$E6A6: CMP #$C8       ; 是 EAGLE 瓦片（$C8）？</span><br><span class="line">$E6A8: BNE $1C        ; 不是则跳到其他瓦片处理</span><br><span class="line">$E6AA: LDA $68        ; 检查 $68（倒计时/状态）</span><br><span class="line">$E6AC: BEQ $18        ; 已处理则跳过</span><br><span class="line">$E6AE: LDA #$27</span><br><span class="line">$E6B0: STA $68        ; $68 = 27（启动摧毁倒计时）</span><br><span class="line">$E6B2: LDA #$01</span><br><span class="line">$E6B4: STA $030B      ; ★ 设 EAGLE 摧毁标志</span><br><span class="line">$E6B7: STA $0307      ; 相关标志</span><br><span class="line">$E6BA: JSR $CC08      ; 播放爆炸音效</span><br><span class="line">$E6BD: LDX $5A</span><br><span class="line">$E6BF: LDA #$33</span><br><span class="line">$E6C1: STA $CC,X      ; 击杀实体</span><br><span class="line">$E6C3: JMP $E709      ; 正常返回</span><br></pre></td></tr></table></figure>
+<p><strong>判定逻辑</strong>：子弹命中的瓦片值（屏蔽低 2 位后）等于
+<code>$C8</code> 即认为是 EAGLE。</p>
+<h3 id="理清游戏结束状态机">6.3 理清游戏结束状态机</h3>
+<p><code>$68</code> 是核心状态变量，贯穿游戏全程：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>$68 值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正常游玩</td>
+<td><code>$80</code></td>
+<td>允许输入，游戏继续</td>
+</tr>
+<tr>
+<td>基地被摧毁</td>
+<td><code>$27</code></td>
+<td>进入倒计时，输入被禁用</td>
+</tr>
+<tr>
+<td>倒计时结束</td>
+<td>回到 <code>$80</code></td>
+<td>触发游戏结束</td>
+</tr>
+</tbody>
+</table>
+<p>输入处理例程 <code>$C2A2</code> 验证了这一点：<code>$68==$80</code>
+时允许输入，否则清空所有输入（摧毁动画期间禁用操作）。</p>
+<p>真正触发”游戏结束/回选关”的判定在主循环
+<code>$C273-$C280</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$C273: LDA $51</span><br><span class="line">$C275: CLC</span><br><span class="line">$C276: ADC $52       ; $51 + $52（与玩家数量/生命相关）</span><br><span class="line">$C278: BEQ $09       ; 两者为 0 则跳过判定</span><br><span class="line">$C27A: LDA $68</span><br><span class="line">$C27C: CMP #$80      ; $68 == $80 ?</span><br><span class="line">$C27E: BNE $03       ; 不等则跳过</span><br><span class="line">$C280: JMP $C159     ; ★ 进入游戏结束 / 选关画面处理</span><br><span class="line">$C283: JSR $C5D9     ; 正常游玩</span><br></pre></td></tr></table></figure>
+<p>同时确认”过关/全灭敌人”有独立路径：<code>$CA7B: JMP $C159</code>。这条路径保留不动，以维持”全灭敌人后回选关”的正常行为。</p>
+<h3 id="两种修改方案">6.4 两种修改方案</h3>
+<h4 id="方案-a简单-nop基地不死版">方案 A：简单 NOP（基地不死版）</h4>
+<p>在”基地不死”版中，将 <code>$E6AE-$E6B0</code> 的
+<code>LDA #$27; STA $68</code>（<code>A9 27 85</code>）NOP 掉：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">原：$E6AE: LDA #$27   ; A9 27</span><br><span class="line">     $E6B0: STA $68   ; 85 68</span><br><span class="line">改：$E6AE: NOP        ; EA</span><br><span class="line">     $E6AF: NOP        ; EA</span><br><span class="line">     $E6B0: NOP        ; EA</span><br><span class="line">     $E6B1: 68         ; (原 STA $68 的操作数，变为 PLA)</span><br></pre></td></tr></table></figure>
+<p>此方案阻止了 <code>$68</code> 被设为 <code>$27</code>，但保留了
+<code>$030B</code> 标志的设置和爆炸音效。代价是 <code>$E6B1</code>
+的字节 <code>68</code> 被解释为 <code>PLA</code>
+指令，会破坏栈平衡——属于”脏补丁”，但在实际运行中由于栈深度足够，通常不会崩溃。</p>
+<h4 id="方案-bjmp-跳过基地不死_敌人全灭结束版">方案 B：JMP
+跳过（基地不死_敌人全灭结束版）</h4>
+<p>将 <code>$E6AA-$E6AC</code> 的 <code>LDA $68; BEQ $18</code> 替换为
+<code>JMP $E6BA</code>，跳过整个标志设置区域，直接进入爆炸音效和实体击杀：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原：$E6AA: LDA $68    ; A5 68</span><br><span class="line">     $E6AC: BEQ $18   ; F0 18</span><br><span class="line">改：$E6AA: JMP $E6BA  ; 4C BA E6</span><br><span class="line">     $E6AD: NOP       ; EA</span><br></pre></td></tr></table></figure>
+<p>修改后的执行流：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$E6A6: CMP #$C8      ; 检测到 EAGLE</span><br><span class="line">$E6A8: BNE $1C</span><br><span class="line">$E6AA: JMP $E6BA     ; ★ 跳过所有标志，直达音效</span><br><span class="line">...</span><br><span class="line">$E6BA: JSR $CC08     ; 播放爆炸音效</span><br><span class="line">$E6BD: LDX $5A</span><br><span class="line">$E6BF: LDA #$33</span><br><span class="line">$E6C1: STA $CC,X     ; 击杀实体</span><br><span class="line">$E6C3: JMP $E709     ; 正常返回，游戏继续</span><br></pre></td></tr></table></figure>
+<p>此方案是<strong>干净补丁</strong>，不产生任何副作用指令。</p>
+<h3 id="方案对比">6.5 方案对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>方案 A（NOP）</th>
+<th>方案 B（JMP）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>修改字节数</td>
+<td>3 字节</td>
+<td>4 字节</td>
+</tr>
+<tr>
+<td>副作用</td>
+<td><code>PLA</code> 破坏栈（脏补丁）</td>
+<td>无副作用</td>
+</tr>
+<tr>
+<td>爆炸音效</td>
+<td>保留</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>实体击杀</td>
+<td>保留</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>设置 <code>$030B</code> 标志</td>
+<td>保留（不必要）</td>
+<td>跳过</td>
+</tr>
+<tr>
+<td>推荐度</td>
+<td>不推荐</td>
+<td><strong>推荐</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="补丁字节">6.6 补丁字节</h3>
+<p><strong>方案 B（推荐）</strong>：CPU 地址 <code>$E6AA</code>，ROM
+偏移 <code>0x26BA</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原：A5 68 F0 18</span><br><span class="line">改：4C BA E6 EA</span><br></pre></td></tr></table></figure>
+<h3 id="效果-2">6.7 效果</h3>
+<ul>
+<li>✅ 基地被摧毁后，游戏不结束、不回到选关界面</li>
+<li>✅ 玩家可以继续正常游玩</li>
+<li>✅ 消灭本关所有敌人后，游戏才正常回到选关画面</li>
+</ul>
+<figure>
+<img src="/img/tank3.gif" alt="基地摧毁后游戏继续效果演示" />
+<figcaption aria-hidden="true">基地摧毁后游戏继续效果演示</figcaption>
+</figure>
+<hr />
+<h2 id="三阶破解的递进关系">7. 三阶破解的递进关系</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────┐</span><br><span class="line">│ 第一阶：玩家无敌                                 │</span><br><span class="line">│ 修改：$E28C  DEC $89,X → NOP NOP                 │</span><br><span class="line">│ 效果：玩家坦克始终处于无敌状态                   │</span><br><span class="line">│ 难度：★☆☆☆☆                                     │</span><br><span class="line">├─────────────────────────────────────────────────┤</span><br><span class="line">│ 第二阶：基地永久保护                             │</span><br><span class="line">│ 修改：$E2A9-$E2D1 计时器 → JSR $CB9E + JMP     │</span><br><span class="line">│       3 处 JSR $CAF5 → JSR $CB9E                │</span><br><span class="line">│ 效果：基地护盾永不消失，敌人无法攻击基地         │</span><br><span class="line">│ 难度：★★★☆☆                                     │</span><br><span class="line">├─────────────────────────────────────────────────┤</span><br><span class="line">│ 第三阶：基地被摧毁后游戏继续                     │</span><br><span class="line">│ 修改：$E6AA  JMP $E6BA（跳过 game over 标志）    │</span><br><span class="line">│ 效果：即使基地被摧毁，游戏也不结束               │</span><br><span class="line">│       全灭敌人后正常回到选关画面                 │</span><br><span class="line">│ 难度：★★★★☆                                     │</span><br><span class="line">└─────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<p>每一阶突破都建立在前一阶对游戏机制理解的基础上：</p>
+<ul>
+<li>一阶的核心是<strong>找到护盾计时器</strong>（<code>$89</code>），理解其递减逻辑；</li>
+<li>二阶的核心是<strong>理解护盾状态机</strong>（<code>$45</code> 计时器
++ 闪烁 → 消失），并区分两套绘制路径；</li>
+<li>三阶的核心是<strong>理解游戏结束条件</strong>（<code>$68</code>
+状态机 + <code>$C159</code> 选关跳转），并找到”EAGLE
+瓦片碰撞→游戏结束”的完整链路。</li>
+</ul>
+<hr />
+<h2 id="交付物">8. 交付物</h2>
+<h3 id="已打补丁的-rom">8.1 已打补丁的 ROM</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>文件</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>坦克大战2008加速汉化版_无敌版.nes</code></td>
+<td>一阶</td>
+<td>玩家无敌，2 字节修改</td>
+</tr>
+<tr>
+<td><code>坦克大战2008加速汉化版_基地永久保护.nes</code></td>
+<td>二阶</td>
+<td>基地永久护盾，47 字节修改</td>
+</tr>
+<tr>
+<td><code>坦克大战2008加速汉化版_基地不死_敌人全灭结束.nes</code></td>
+<td>三阶</td>
+<td>基地被摧毁不结束游戏，4 字节修改</td>
+</tr>
+<tr>
+<td><code>坦克大战2008加速汉化版_三合一.nes</code></td>
+<td>全阶</td>
+<td>无敌 + 基地保护 + 基地不死，合并</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ips-补丁">8.2 IPS 补丁</h3>
+<p>见项目附带的 IPS 文件。</p>
+<h3 id="验证">8.3 验证</h3>
+<ul>
+<li>修改前后文件大小一致（24592 字节）</li>
+<li>iNES 头（前 16 字节）完全一致</li>
+<li>修改字节数与反汇编地址一一对应</li>
+</ul>
+<h3 id="三合一合并版">8.4 三合一合并版</h3>
+<p>将三个补丁合并到同一 ROM
+中，形成<strong>三合一终极版</strong>，同时具备玩家无敌、基地永久保护、基地摧毁不死三大特性。</p>
+<table>
+<thead>
+<tr>
+<th>破解</th>
+<th>偏移</th>
+<th>修改</th>
+<th>所属</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无敌</td>
+<td><code>0x229C</code></td>
+<td><code>D6 89</code> → <code>EA EA</code></td>
+<td>一阶</td>
+</tr>
+<tr>
+<td>基地保护A</td>
+<td><code>0x00F8</code></td>
+<td><code>F5 CA</code> → <code>9E CB</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地保护B</td>
+<td><code>0x01ED</code></td>
+<td><code>F5 CA</code> → <code>9E CB</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地保护C</td>
+<td><code>0x0423</code></td>
+<td><code>F5 CA</code> → <code>9E CB</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地保护D</td>
+<td><code>0x22B9</code></td>
+<td>41字节计时器 → <code>JSR $CB9E</code></td>
+<td>二阶</td>
+</tr>
+<tr>
+<td>基地不死</td>
+<td><code>0x26BA</code></td>
+<td><code>A5 68 F0 18</code> → <code>4C BA E6 EA</code></td>
+<td>三阶</td>
+</tr>
+</tbody>
+</table>
+<p><strong>文件</strong>：<code>坦克大战2008加速汉化版_三合一.nes</code></p>
+<p>六个补丁分布于不同的 ROM 偏移，互不重叠，因此合并是安全的。</p>
+<figure>
+<img src="/img/tank4.gif" alt="三合一终极版效果演示" />
+<figcaption aria-hidden="true">三合一终极版效果演示</figcaption>
+</figure>
+<hr />
+<h2 id="总结与心得">9. 总结与心得</h2>
+<ol type="1">
+<li><p><strong>由浅入深，层层递进</strong>：三个破解分别对应”变量 →
+状态机 →
+控制流”三个层次，难度递增但思路连贯。先在小范围内熟悉代码结构，再逐步深入核心逻辑。</p></li>
+<li><p><strong>区分”标志位”和”状态变量”</strong>：<code>$030B</code>
+只写不读，是纯标志位；<code>$68</code>
+才是真正驱动游戏结束的状态机。方向错了会浪费大量时间。</p></li>
+<li><p><strong>最小改动原则</strong>：每个破解都只修改最关键的指令，不动无关逻辑，最大限度降低引入副作用的风险。</p></li>
+<li><p><strong>NROM-128
+映射换算</strong>：<code>ROM偏移 = 16 + (CPU地址 - 0xC000)</code> 是 ROM
+修补的基础。</p></li>
+<li><p><strong>修改前检查引用</strong>：确认目标地址无其他跳转引用，保证补丁局部且安全。</p></li>
+<li><h2
+id="优先选择干净补丁方案-a-的脏补丁pla-副作用虽然表面可行但方案-b-的-jmp-跳转才是正确做法破解质量不仅在于能不能用更在于会不会出问题"><strong>优先选择”干净补丁”</strong>：方案
+A 的脏补丁（PLA 副作用）虽然表面可行，但方案 B 的 JMP
+跳转才是正确做法。破解质量不仅在于”能不能用”，更在于”会不会出问题”。</h2></li>
+</ol>
+<h2 id="附录关键-lua-脚本">附录：关键 Lua 脚本</h2>
+<p>分析过程中使用的核心 Lua 脚本，可在 Mesen2 的 Lua Console
+中直接加载运行。文件位于博客源码的 <code>source/files/</code>
+目录下。</p>
+<h3 id="a.1-无敌模式脚本">A.1 无敌模式脚本</h3>
+<p><strong>文件</strong>：<a
+href="/files/invincible.lua"><code>invincible.lua</code></a></p>
+<p>每帧将 <code>$89</code>（护盾计时器）写回
+3，使游戏认为玩家始终处于重生无敌状态。支持 P1 Select 键切换开关。</p>
+<h3 id="a.2-基地摧毁分析探针">A.2 基地摧毁分析探针</h3>
+<p><strong>文件</strong>：<a
+href="/files/eagle_probe.lua"><code>eagle_probe.lua</code></a></p>
+<p>增强版探针，用于捕获 EAGLE
+基地被摧毁的瞬间和后续状态变化。核心功能：</p>
+<ul>
+<li>监控 <code>$030B</code> 上升沿（EAGLE 摧毁标志），触发时转储全 RAM
+快照</li>
+<li>监控 <code>$05=$24</code>
+写入（标题画面/选关画面特征），定位写回选关的时机</li>
+<li>触发后逐帧记录关键状态，持续 6000 帧</li>
+</ul>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 核心逻辑：EAGLE 摧毁检测 + 状态跟踪</span></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">  <span class="keyword">if</span> addr == <span class="number">0x05</span> <span class="keyword">and</span> val == <span class="number">0x24</span> <span class="keyword">and</span> (f - last_title_write) &gt; <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">    last_title_write = f</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;### [05=$24 WRITE] &quot;</span> .. state() .. <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dumpSnapshot(<span class="string">&quot;05WRITE&quot;</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x05</span>, <span class="number">0x05</span>)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  f = f + <span class="number">1</span></span><br><span class="line">  <span class="keyword">local</span> b = rd(<span class="number">0x030B</span>)</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> tripped <span class="keyword">and</span> b ~= <span class="number">0</span> <span class="keyword">and</span> last030B == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    tripped = <span class="literal">true</span></span><br><span class="line">    trip_frame = f</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;=== [EAGLE-DESTROYED] &quot;</span> .. state() .. <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dumpSnapshot(<span class="string">&quot;TRIP&quot;</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  last030B = b</span><br><span class="line">  <span class="comment">-- 触发后逐帧跟踪 6000 帧内的状态变化</span></span><br><span class="line">  <span class="keyword">if</span> tripped <span class="keyword">and</span> (f - trip_frame) &lt;= <span class="number">6000</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> s = state()</span><br><span class="line">    <span class="keyword">if</span> s ~= last_state <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;[FRAME] &quot;</span> .. s .. <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">      last_state = s</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<h3 id="a.3-看门狗探针">A.3 看门狗探针</h3>
+<p><strong>文件</strong>：<a
+href="/files/eagle_watch.lua"><code>eagle_watch.lua</code></a></p>
+<p>GUI 实战验证用看门狗，检测 <code>$030B</code>
+上升沿后自动标记游戏路径：</p>
+<ul>
+<li><code>[EAGLE-DESTROYED]</code> —— 基地被摧毁瞬间，记录栈回溯</li>
+<li><code>[CONTINUE-SEEN]</code> —— 检测到 <code>$68</code> 重新变为
+<code>$80</code>（下一关开始走继续路径）</li>
+<li><code>[MENU-REACHED]</code> —— 检测到 <code>$05=$24</code> 且
+<code>$85=$01</code>（回到标题菜单）</li>
+</ul>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 核心逻辑：GUI 看门狗，标记基地摧毁后的游戏路径</span></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">  f = f + <span class="number">1</span></span><br><span class="line">  <span class="keyword">local</span> b = <span class="built_in">read</span>(<span class="number">0x030B</span>)</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> tripped <span class="keyword">and</span> b ~= <span class="number">0</span> <span class="keyword">and</span> last030B == <span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    tripped = <span class="literal">true</span></span><br><span class="line">    trip_frame = f</span><br><span class="line">    <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;=== [EAGLE-DESTROYED] 030B=&quot;</span> .. hex(b) .. <span class="string">&quot; &quot;</span> .. state() .. <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dumpStack()</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  last030B = b</span><br><span class="line">  <span class="keyword">if</span> tripped <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> saw_continue <span class="keyword">and</span> <span class="built_in">read</span>(<span class="number">0x68</span>) == <span class="number">0x80</span> <span class="keyword">then</span></span><br><span class="line">      saw_continue = <span class="literal">true</span></span><br><span class="line">      <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;*** [CONTINUE-SEEN] 68=$80 &quot;</span> .. state() .. <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> saw_menu <span class="keyword">and</span> <span class="built_in">read</span>(<span class="number">0x05</span>) == <span class="number">0x24</span> <span class="keyword">and</span> <span class="built_in">read</span>(<span class="number">0x85</span>) == <span class="number">0x01</span></span><br><span class="line">       <span class="keyword">and</span> (f - trip_frame) &gt; <span class="number">60</span> <span class="keyword">then</span></span><br><span class="line">      saw_menu = <span class="literal">true</span></span><br><span class="line">      <span class="built_in">log</span>:<span class="built_in">write</span>(<span class="string">&quot;*** [MENU-REACHED] 05=$24 85=$01 &quot;</span> .. state() .. <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/08/08/%E5%9D%A6%E5%85%8B%E5%A4%A7%E6%88%982008-NES%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="坦克大战2008（NES&#x2F;FC 汉化版）三阶破解：从玩家无敌到基地不死">https://sunjunior.github.io/2026/08/08/坦克大战2008-NES三阶破解技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 逆向工程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/07/%E5%85%94%E5%85%AB%E5%93%A5-NES%E9%81%87%E6%95%8C%E4%B8%8D%E6%AD%BBHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="兔八哥（NES &#x2F; FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复）">
+                  <i class="fa fa-angle-left"></i> 兔八哥（NES / FC）遇敌不死 Hack 技术文档（无限生命 → 原地复活 → 复活后 BGM 修复）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/12/%E9%87%8D%E8%A3%85%E6%9C%BA%E5%85%B5%E5%9B%9E%E5%BD%92-SFC%E4%B8%89%E9%98%B6%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="next" title="重装机兵：回归（SFC&#x2F;SNES）三阶破解：初始金币 999999 + 全角色技能满级">
+                  重装机兵：回归（SFC/SNES）三阶破解：初始金币 999999 + 全角色技能满级 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

@@ -1,0 +1,3644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一句话结论：把一台 2013 年的 ZTE Grand S（Android 4.1.2 &#x2F; 内核 3.4 &#x2F; ARMv7，触摸失灵）改造成常驻 Linux 小主机： 免提示 root、开机自动无线 adb 与 sshd、系统精简到 33 个包（停用 15）、 用 12.6 KB 的自写控制台 App 取代 149 MB 的定制桌面，屏幕实时显示日志（内存环形缓冲、不落盘）， 并借 SSH &#x2F; Ta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZTE Grand S（Android 4.1.2）改造为常驻 Linux 主机：从闲置手机到带屏幕的远程节点">
+<meta property="og:url" content="https://sunjunior.github.io/2026/11/16/ZTE-Grand-S-Android4.1-%E6%94%B9%E9%80%A0%E4%B8%BA%E5%B8%B8%E9%A9%BBLinux%E4%B8%BB%E6%9C%BA/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="一句话结论：把一台 2013 年的 ZTE Grand S（Android 4.1.2 &#x2F; 内核 3.4 &#x2F; ARMv7，触摸失灵）改造成常驻 Linux 小主机： 免提示 root、开机自动无线 adb 与 sshd、系统精简到 33 个包（停用 15）、 用 12.6 KB 的自写控制台 App 取代 149 MB 的定制桌面，屏幕实时显示日志（内存环形缓冲、不落盘）， 并借 SSH &#x2F; Ta">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-main.png">
+<meta property="og:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-wifi.png">
+<meta property="article:published_time" content="2026-11-16T11:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-16T11:30:00.000Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-main.png">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/11/16/ZTE-Grand-S-Android4.1-%E6%94%B9%E9%80%A0%E4%B8%BA%E5%B8%B8%E9%A9%BBLinux%E4%B8%BB%E6%9C%BA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/16/ZTE-Grand-S-Android4.1-%E6%94%B9%E9%80%A0%E4%B8%BA%E5%B8%B8%E9%A9%BBLinux%E4%B8%BB%E6%9C%BA/","path":"2026/11/16/ZTE-Grand-S-Android4.1-改造为常驻Linux主机/","title":"ZTE Grand S（Android 4.1.2）改造为常驻 Linux 主机：从闲置手机到带屏幕的远程节点"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ZTE Grand S（Android 4.1.2）改造为常驻 Linux 主机：从闲置手机到带屏幕的远程节点 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E9%AA%8C%E8%AF%81%E8%AE%B0%E5%BD%95"><span class="nav-text">附录
+B：验证记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E5%AE%9A%E4%BD%8D"><span class="nav-text">1. 背景与定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-text">2. 硬件与系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6"><span class="nav-text">2.1 硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%B8%83%E5%B1%80"><span class="nav-text">2.2 分区布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F"><span class="nav-text">2.3 系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%9C%80%E7%BB%88%E7%BB%93%E6%9E%9C"><span class="nav-text">3. 目标与最终结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">4. 总体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E6%AD%A5%E9%AA%A4"><span class="nav-text">5. 实施步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-adb-%E9%80%9A%E9%81%93"><span class="nav-text">5.1 建立 ADB 通道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#root-%E5%85%8D%E6%8F%90%E7%A4%BA"><span class="nav-text">5.2 root 免提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF-adb-%E5%9B%BA%E5%8C%96"><span class="nav-text">5.3 无线 adb 固化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-sshd"><span class="nav-text">5.4 部署 sshd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-text">5.5 开机自启</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%88%E6%8A%A4%E8%84%9A%E6%9C%AC-guard.sh"><span class="nav-text">5.6 守护脚本 guard.sh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%A1%8C%E9%9D%A2-consolehome"><span class="nav-text">5.7 控制台桌面 ConsoleHome</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%86%99"><span class="nav-text">5.7.1 为什么要自写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#apk-%E6%9E%84%E5%BB%BAwindows%E6%97%A0%E9%9C%80-android-studio"><span class="nav-text">5.7.2 APK
+构建（Windows，无需 Android Studio）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#manifest-%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-text">5.7.3 Manifest 关键点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%93%BE%E8%B7%AF%E4%B8%8D%E8%90%BD%E7%9B%98"><span class="nav-text">5.7.4 日志链路（不落盘）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E8%A1%8C"><span class="nav-text">5.7.5 状态行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu-%E6%95%B0%E5%80%BC%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-text">5.7.6 CPU 数值的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E7%9B%B4%E6%8E%A5%E6%98%BE%E7%A4%BA%E4%B8%8D%E9%94%81%E5%B1%8F"><span class="nav-text">5.7.7 开机直接显示、不锁屏</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%B2%BE%E7%AE%80"><span class="nav-text">5.8 系统精简</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E5%88%A0%E9%99%A4%E7%9A%84-apk-%E6%B8%85%E5%8D%952026-11-15"><span class="nav-text">5.9 已删除的 APK
+清单（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%90%8E%E7%9A%84%E5%90%AF%E5%8A%A8%E6%97%A5%E5%BF%97%E6%A0%A1%E9%AA%8C%E5%BF%85%E5%81%9A"><span class="nav-text">5.10 删除后的启动日志校验（必做）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%A9%E4%BD%99%E5%BE%85%E5%88%A0%E5%80%99%E9%80%89%E4%BB%85%E4%B8%A4%E4%B8%AA%E9%A3%8E%E9%99%A9%E4%B8%AD%E7%AD%89"><span class="nav-text">5.11
+剩余待删候选（仅两个，风险中等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%86%85%E7%BD%AE-wifi-%E8%AE%BE%E7%BD%AE%E4%B8%8E%E7%BD%91%E7%BB%9C%E5%85%9C%E5%BA%952026-11-15"><span class="nav-text">5.12 控制台内置 WiFi
+设置与网络兜底（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#usb-%E5%85%9C%E5%BA%95%E9%80%9A%E9%81%93%E4%B8%8E%E6%8E%92%E6%9F%A5%E7%BB%93%E8%AE%BA2026-11-15"><span class="nav-text">5.13 USB
+兜底通道与排查结论（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8pss%E5%AE%9E%E6%B5%8B"><span class="nav-text">5.14 当前内存占用（PSS，实测）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%98%A6%E8%BA%AB%E4%B8%8E%E5%9B%BA%E5%8C%96%E4%B8%BA%E7%B3%BB%E7%BB%9F%E5%BA%94%E7%94%A82026-11-15"><span class="nav-text">5.15
+控制台瘦身与固化为系统应用（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%89%B9%E5%88%A0%E9%99%A4%E4%B8%8E-sdcard-%E7%8E%B0%E7%8A%B62026-11-15"><span class="nav-text">5.16 第三批删除与 sdcard
+现状（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%93%9D%E7%89%99%E6%A8%A1%E5%9D%97%E9%AA%8C%E8%AF%81%E9%BB%98%E8%AE%A4%E5%BC%80%E5%90%AF%E4%B8%8E%E8%93%9D%E7%89%99%E5%85%B1%E4%BA%AB2026-11-15"><span class="nav-text">5.17
+蓝牙：模块验证、默认开启与蓝牙共享（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chroot-%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%AE%9E%E6%B5%8B%E4%B8%8E-git-gcc-%E8%AF%84%E4%BC%B02026-11-15"><span class="nav-text">5.18 chroot
+可行性实测与 git &#x2F; gcc 评估（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#usb-%E5%85%9C%E5%BA%95%E9%80%9A%E9%81%93%E8%B0%83%E6%B5%8B%E7%9B%AE%E6%A0%87%E6%96%B9%E6%A1%88%E5%9D%91%E4%B8%8E%E7%BB%93%E8%AE%BA2026-11-16"><span class="nav-text">5.19 USB
+兜底通道：调测目标、方案、坑与结论（2026-11-16）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E4%B8%8E-sshd-%E8%BF%81%E7%A7%BB%E5%88%B0-system2026-11-16"><span class="nav-text">5.20
+客户端免密登录与 sshd 迁移到 &#x2F;system（2026-11-16）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%B0%E8%B1%A1ssh-copy-id-%E6%88%90%E5%8A%9F%E5%90%8E%E4%BB%8D%E6%8F%90%E7%A4%BA%E5%AF%86%E7%A0%81"><span class="nav-text">5.20.1 现象：ssh-copy-id
+成功后仍提示密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E5%9B%A0authorized_keys-%E8%B7%AF%E5%BE%84%E4%B8%8D%E5%8C%B9%E9%85%8D"><span class="nav-text">5.20.2 根因：authorized_keys
+路径不匹配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sshd-%E8%BF%81%E7%A7%BB%E5%88%B0-systembin"><span class="nav-text">5.20.3 sshd 迁移到 &#x2F;system&#x2F;bin</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E4%B8%AD%E8%B8%A9%E5%88%B0%E7%9A%84%E5%9D%91"><span class="nav-text">5.20.4 迁移中踩到的坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AEmacos-tailscale"><span class="nav-text">5.20.5 客户端配置（macOS &#x2F;
+Tailscale）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#adbd-%E8%B0%83%E7%A0%94%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%B8%A6%E4%B8%8D%E5%BB%BA%E8%AE%AE%E8%BF%81%E7%A7%BB"><span class="nav-text">5.20.6 adbd
+调研：系统自带，不建议迁移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%87%BA%E5%8E%82%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8Dsystemetcsshd"><span class="nav-text">5.20.7
+恢复出厂自动恢复（&#x2F;system&#x2F;etc&#x2F;sshd）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#clash-verge-%E5%B9%B2%E6%89%B0-tailscale-udp-%E7%9A%84%E6%8E%92%E6%9F%A5%E4%B8%8E%E6%B8%85%E7%90%862026-11-16"><span class="nav-text">5.20.8
+Clash Verge 干扰 Tailscale UDP 的排查与清理（2026-11-16）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8-ssh-%E8%BF%9E%E6%8E%A5%E5%A4%8D%E7%94%A8%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%8E%8B%E4%BD%8E%E4%BA%A4%E4%BA%92%E5%BB%B6%E8%BF%9F2026-11-16"><span class="nav-text">5.20.9 用 SSH
+连接复用进一步压低交互延迟（2026-11-16）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E6%B8%85%E5%8D%95%E7%8E%B0%E8%B1%A1-%E6%A0%B9%E5%9B%A0-%E5%A4%84%E7%90%86"><span class="nav-text">6. 踩坑清单（现象 → 根因 → 处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AE%9E%E6%B5%8B"><span class="nav-text">7. 性能实测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA-mini-linux-%E4%B8%BB%E6%9C%BA%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="nav-text">8. 作为 mini Linux
+主机的可行性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%81%9A"><span class="nav-text">8.1 能做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%83%BD%E5%81%9A"><span class="nav-text">8.2 不能做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%A6%81%E7%82%B9"><span class="nav-text">8.3 部署要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E6%89%8B%E5%86%8C"><span class="nav-text">9. 运维手册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E8%BF%9E%E6%8E%A5"><span class="nav-text">9.1 日常连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A3%80%E6%9F%A5"><span class="nav-text">9.2 状态检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9-ssh-%E5%8F%A3%E4%BB%A4"><span class="nav-text">9.3 改 SSH 口令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E8%A2%AB%E5%81%9C%E7%94%A8%E7%9A%84%E5%8C%85"><span class="nav-text">9.4 恢复被停用的包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E6%BB%9A%E5%88%B0%E5%8E%9F%E6%A1%8C%E9%9D%A2"><span class="nav-text">9.5 回滚到原桌面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E5%B1%8F%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8"><span class="nav-text">9.6 黑屏是否正常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C"><span class="nav-text">10. 安全边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%97%E7%95%99%E9%97%AE%E9%A2%98%E4%B8%8E%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="nav-text">11. 遗留问题与下一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E9%83%A8%E7%BD%B2%E6%B8%85%E5%8D%95"><span class="nav-text">附录 A：部署清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E9%AA%8C%E8%AF%81%E8%AE%B0%E5%BD%95-1"><span class="nav-text">附录 B：验证记录</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/11/16/ZTE-Grand-S-Android4.1-%E6%94%B9%E9%80%A0%E4%B8%BA%E5%B8%B8%E9%A9%BBLinux%E4%B8%BB%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ZTE Grand S（Android 4.1.2）改造为常驻 Linux 主机：从闲置手机到带屏幕的远程节点 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="一句话结论：把一台 2013 年的 ZTE Grand S（Android 4.1.2 &#x2F; 内核 3.4 &#x2F; ARMv7，触摸失灵）改造成常驻 Linux 小主机： 免提示 root、开机自动无线 adb 与 sshd、系统精简到 33 个包（停用 15）、 用 12.6 KB 的自写控制台 App 取代 149 MB 的定制桌面，屏幕实时显示日志（内存环形缓冲、不落盘）， 并借 SSH &#x2F; Ta...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ZTE Grand S（Android 4.1.2）改造为常驻 Linux 主机：从闲置手机到带屏幕的远程节点
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-16 19:30:00" itemprop="dateCreated datePublished" datetime="2026-11-16T19:30:00+08:00">2026-11-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux-%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">Linux 系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">一句话结论：把一台 2013 年的 ZTE Grand S（Android 4.1.2 / 内核 3.4 / ARMv7，触摸失灵）改造成常驻 Linux 小主机： 免提示 root、开机自动无线 adb 与 sshd、系统精简到 33 个包（停用 15）、 用 12.6 KB 的自写控制台 App 取代 149 MB 的定制桌面，屏幕实时显示日志（内存环形缓冲、不落盘）， 并借 SSH / Ta...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p><strong>一句话结论</strong>：把一台 2013 年的 ZTE Grand S（Android
+4.1.2 / 内核 3.4 / ARMv7，触摸失灵）改造成常驻 Linux 小主机：<br />
+免提示 root、开机自动无线 adb 与 sshd、系统精简到 33 个包（停用
+15）、<br />
+用 12.6 KB 的自写控制台 App 取代 149 MB
+的定制桌面，屏幕实时显示日志（内存环形缓冲、不落盘），<br />
+并借 SSH / Tailscale 成为一台长期在线、低功耗的远程节点。</p>
+<p><strong>本文定位</strong>：完整、自包含的折腾记录，不依赖任何其他文档。所有命令、脚本、实测数据与踩坑复盘都在本文内；<br />
+配图来自设备实测截图。文中涉及 <code>/system</code> 写入、全局 root
+授权与端口常开，请只在专用设备上照做。</p>
+<p><strong>敏感信息处理说明</strong>：文中所有登录口令与 WiFi
+密码均已替换为占位变量 <code>&lt;password&gt;</code> /
+<code>&lt;wifi-password&gt;</code>，<br />
+公钥用 <code>AAAA...</code> 简写，MAC
+地址做了部分打码，实际复现时请替换为你自己的值 ——
+这些占位符不是可用的凭证。<br />
+内网 IP、端口与文件路径为实现细节，按原文保留。</p>
+</blockquote>
+<hr />
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#背景与定位">1. 背景与定位</a></li>
+<li><a href="#硬件与系统配置">2. 硬件与系统配置</a>
+<ul>
+<li><a href="#硬件">2.1 硬件</a></li>
+<li><a href="#分区布局">2.2 分区布局</a></li>
+<li><a href="#系统">2.3 系统</a></li>
+</ul></li>
+<li><a href="#目标与最终结果">3. 目标与最终结果</a></li>
+<li><a href="#总体架构">4. 总体架构</a></li>
+<li><a href="#实施步骤">5. 实施步骤</a>
+<ul>
+<li><a href="#建立-adb-通道">5.1 建立 ADB 通道</a></li>
+<li><a href="#root-免提示">5.2 root 免提示</a></li>
+<li><a href="#无线-adb-固化">5.3 无线 adb 固化</a></li>
+<li><a href="#部署-sshd">5.4 部署 sshd</a></li>
+<li><a href="#开机自启">5.5 开机自启</a></li>
+<li><a href="#守护脚本-guard.sh">5.6 守护脚本 guard.sh</a></li>
+<li><a href="#控制台桌面-consolehome">5.7 控制台桌面
+ConsoleHome</a></li>
+<li><a href="#系统精简">5.8 系统精简</a></li>
+<li><a href="#已删除的-apk-清单2026-11-15">5.9 已删除的 APK
+清单（2026-11-15）</a></li>
+<li><a href="#删除后的启动日志校验必做">5.10
+删除后的启动日志校验（必做）</a></li>
+<li><a href="#剩余待删候选仅两个风险中等">5.11
+剩余待删候选（仅两个，风险中等）</a></li>
+<li><a href="#控制台内置-wifi-设置与网络兜底2026-11-15">5.12 控制台内置
+WiFi 设置与网络兜底（2026-11-15）</a></li>
+<li><a href="#usb-兜底通道与排查结论2026-11-15">5.13 USB
+兜底通道与排查结论（2026-11-15）</a></li>
+<li><a href="#当前内存占用pss实测">5.14
+当前内存占用（PSS，实测）</a></li>
+<li><a href="#控制台瘦身与固化为系统应用2026-11-15">5.15
+控制台瘦身与固化为系统应用（2026-11-15）</a></li>
+<li><a href="#第三批删除与-sdcard-现状2026-11-15">5.16 第三批删除与
+sdcard 现状（2026-11-15）</a></li>
+<li><a href="#蓝牙模块验证默认开启与蓝牙共享2026-11-15">5.17
+蓝牙：模块验证、默认开启与蓝牙共享（2026-11-15）</a></li>
+<li><a href="#chroot-可行性实测与-git-gcc-评估2026-11-15">5.18 chroot
+可行性实测与 git / gcc 评估（2026-11-15）</a></li>
+<li><a href="#usb-兜底通道调测目标方案坑与结论2026-11-16">5.19 USB
+兜底通道：调测目标、方案、坑与结论（2026-11-16）</a></li>
+<li><a href="#客户端免密登录与-sshd-迁移到-system2026-11-16">5.20
+客户端免密登录与 sshd 迁移到 /system（2026-11-16）</a></li>
+</ul></li>
+<li><a href="#踩坑清单现象-根因-处理">6. 踩坑清单（现象 → 根因 →
+处理）</a></li>
+<li><a href="#性能实测">7. 性能实测</a></li>
+<li><a href="#作为-mini-linux-主机的可行性">8. 作为 mini Linux
+主机的可行性</a>
+<ul>
+<li><a href="#能做">8.1 能做</a></li>
+<li><a href="#不能做">8.2 不能做</a></li>
+<li><a href="#部署要点">8.3 部署要点</a></li>
+</ul></li>
+<li><a href="#运维手册">9. 运维手册</a>
+<ul>
+<li><a href="#日常连接">9.1 日常连接</a></li>
+<li><a href="#状态检查">9.2 状态检查</a></li>
+<li><a href="#改-ssh-口令">9.3 改 SSH 口令</a></li>
+<li><a href="#恢复被停用的包">9.4 恢复被停用的包</a></li>
+<li><a href="#回滚到原桌面">9.5 回滚到原桌面</a></li>
+<li><a href="#黑屏是否正常">9.6 黑屏是否正常</a></li>
+</ul></li>
+<li><a href="#安全边界">10. 安全边界</a></li>
+<li><a href="#遗留问题与下一步">11. 遗留问题与下一步</a></li>
+<li><a href="#附录-a部署清单">附录 A：部署清单</a></li>
+<li><h2 id="附录-b验证记录"><a href="#附录-b验证记录">附录
+B：验证记录</a></h2></li>
+</ul>
+<h2 id="背景与定位">1. 背景与定位</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设备</td>
+<td>ZTE Grand S（N988），2013 年机型</td>
+</tr>
+<tr>
+<td>现状</td>
+<td>屏幕能亮，<strong>触摸失灵</strong>，只能靠 adb / ssh 操作</td>
+</tr>
+<tr>
+<td>电池</td>
+<td>正常，可长期插电</td>
+</tr>
+<tr>
+<td>用途</td>
+<td>不再当手机用，作为<strong>带屏幕的常驻 Linux 小主机</strong></td>
+</tr>
+</tbody>
+</table>
+<p>定位：后台跑
+sshd、文件服务、下载器、脚本任务；屏幕作为<strong>只读控制台</strong>显示
+IP、CPU、内存和实时日志。<br />
+不追求图形界面，也不追求通用服务器能力。</p>
+<hr />
+<h2 id="硬件与系统配置">2. 硬件与系统配置</h2>
+<h3 id="硬件">2.1 硬件</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>规格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SoC</td>
+<td>Qualcomm <strong>APQ8064</strong>（Snapdragon S4 Pro），4× Krait 300
+@ 1.512 GHz，28 nm</td>
+</tr>
+<tr>
+<td>架构</td>
+<td>ARMv7-A，含 NEON / vfpv4（<code>armeabi-v7a</code>，<strong>只有 32
+位</strong>）</td>
+</tr>
+<tr>
+<td>内存</td>
+<td><strong>1.87 GB</strong> 可用（2 GB 物理），<strong>无
+swap</strong></td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Adreno 320；kgsl 调频 400/325/200/128 MHz；驱动包
+v6.0（<code>libEGL_adreno200.so</code> 等），暴露 <strong>GLES 2.0 +
+OpenCL 1.1</strong>；<strong>无独立显存（UMA）</strong></td>
+</tr>
+<tr>
+<td>存储</td>
+<td>eMMC 14.7 GB 总量</td>
+</tr>
+<tr>
+<td>屏幕</td>
+<td>1080×1920（触摸失灵，仅作显示）</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>WiFi（wlan0）、蜂窝（rmnet0-7）、存在
+<code>/dev/tun</code>；<strong>无 USB 主机模式</strong></td>
+</tr>
+<tr>
+<td>蓝牙</td>
+<td>Qualcomm BR/EDR（BT 4.0 级），MAC
+<code>30:F3:1D:xx:xx:E7</code>（已脱敏），名称
+<code>ZTE Grand S</code>；内核内置 BNEP/RFCOMM/HIDP，厂商声明
+<code>nap=true</code>（支持蓝牙网络共享）</td>
+</tr>
+<tr>
+<td>电池</td>
+<td>Li-ion 1806 mAh 级</td>
+</tr>
+</tbody>
+</table>
+<p>CPU
+频率档：<code>384 / 486 / 594 / 702 / 810 / 918 / 1026 / 1134 / 1242 / 1350 / 1458 / 1512 MHz</code>，<br />
+默认 governor 为 <code>ondemand</code>。</p>
+<h3 id="分区布局">2.2 分区布局</h3>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/dev/block/mmcblk0        15,388,672 KB  ≈ 14.7 GB</span><br><span class="line">  p12  786,432 KB  (768 MB)  → /system   ext4</span><br><span class="line">  p13 2,097,152 KB  (  2 GB)  → /data     ext4</span><br><span class="line">  p15  262,144 KB  (256 MB)  → /cache    ext4</span><br><span class="line">  p26 11,390,959 KB (10.9 GB) → /storage/sdcard0  vfat（noexec）</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关键：<code>/data</code> 只有 <strong>2 GB</strong>，且
+<code>/storage/sdcard0</code> 挂载参数是 <strong>vfat +
+noexec</strong>，程序不能放在 sdcard 上。</p>
+</blockquote>
+<h3 id="系统">2.3 系统</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android</td>
+<td>4.1.2（<code>JZO54K</code>），SDK <strong>16</strong></td>
+</tr>
+<tr>
+<td>内核</td>
+<td><strong>3.4.0</strong>（<code>#3 SMP PREEMPT Mon Jan 27 18:01:56 CST 2014</code>）</td>
+</tr>
+<tr>
+<td>构建</td>
+<td><code>ZTE/ZTE-Grand-S/ZTE-Grand-S:4.1.2/JZO54K/eng.root.20140127.180005:user/release-keys</code>（预
+root 定制包）</td>
+</tr>
+<tr>
+<td>SELinux</td>
+<td>无（<code>getenforce</code> 不存在）</td>
+</tr>
+<tr>
+<td><code>ro.secure</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td>默认 USB 配置</td>
+<td><code>cdrom,adb</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="目标与最终结果">3. 目标与最终结果</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>目标</th>
+<th>结果</th>
+<th>关键手段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>root 免提示</td>
+<td>✅</td>
+<td>SuperSU 默认操作 <code>拒绝</code> → <code>授权</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>开机自动无线 adb</td>
+<td>✅</td>
+<td><code>/system/etc/install-recovery.sh</code> +
+<code>service.adb.tcp.port=5555</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>开机自动 sshd（22）</td>
+<td>✅</td>
+<td>Go sshd（静态 ARM）+ PBKDF2 口令 + <code>guard.sh</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>精简预装/第三方</td>
+<td>✅ 33 个包（停用 15，删除 20+）</td>
+<td><code>pm disable</code> + 备份后删 APK</td>
+</tr>
+<tr>
+<td>5</td>
+<td>替换 149 MB 的定制桌面</td>
+<td>✅ 20.8 KB（系统应用）</td>
+<td>自写 <code>ConsoleHome</code>，装在 <code>/system/app/</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>屏幕实时显示日志、不落盘</td>
+<td>✅</td>
+<td><code>logcat</code> → FIFO → 内存环形缓冲</td>
+</tr>
+<tr>
+<td>7</td>
+<td>评估 mini Linux 主机可行性</td>
+<td>✅</td>
+<td>可 chroot，不可容器化</td>
+</tr>
+</tbody>
+</table>
+<p>最终入口：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb connect <span class="number">192.168</span>.<span class="number">3.48</span>:<span class="number">5555</span></span><br><span class="line">ssh root@<span class="number">192.168</span>.<span class="number">3.48</span>          <span class="comment"># 口令 &lt;password&gt;（PBKDF2 哈希存储，已脱敏）</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="总体架构">4. 总体架构</h2>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────── init (pid 1) ────────────────────────────┐</span><br><span class="line">│  flash_recovery 服务                                                  │</span><br><span class="line">│    └─ /system/etc/install-recovery.sh   （开机一次，root）            │</span><br><span class="line">│         ├─ setprop service.adb.tcp.port 5555 → stop/start adbd        │</span><br><span class="line">│         ├─ 启动 /system/bin/sshd -addr 0.0.0.0:22                     │</span><br><span class="line">│         └─ 启动 /data/local/tmp/sshd/guard.sh                         │</span><br><span class="line">│                                                                       │</span><br><span class="line">│  guard.sh（每 30 s 一轮，root 常驻）                                   │</span><br><span class="line">│    ├─ chmod 755 /data/local/tmp        （抵消 init 的 0771 重置）      │</span><br><span class="line">│    ├─ sshd 掉了就拉起                                                  │</span><br><span class="line">│    ├─ 保证 FIFO /data/local/tmp/console.fifo 存在                      │</span><br><span class="line">│    └─ 保证只有一个 logcat 写 FIFO（pidfile 去重）                     │</span><br><span class="line">│                                                                       │</span><br><span class="line">│  adbd（TCP 5555）        sshd（22）        logcat → FIFO               │</span><br><span class="line">└───────────────────────────────────────────────────────────────────────┘</span><br><span class="line">                                   │</span><br><span class="line">                        ConsoleHome（唯一 HOME）</span><br><span class="line">                    顶部：IP / UP / sshd / adb / CPU / MemFree</span><br><span class="line">                    下方：最近 24 行日志（内存环形缓冲 200 行）</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="实施步骤">5. 实施步骤</h2>
+<h3 id="建立-adb-通道">5.1 建立 ADB 通道</h3>
+<p><strong>现象</strong>：<code>adb devices</code> 为空，USB
+上只能看到一个 HD WebCam（另一个设备）。</p>
+<p><strong>根因</strong>：手机处于「安装驱动」的 UMS 模式，USB 描述符是
+<code>USB\Class_08</code>（大容量存储），<br />
+<strong>USB 侧根本没有 ADB 端点</strong>，所以不是驱动问题。</p>
+<p><strong>处理</strong>：把 USB 连接方式切到媒体设备/PC 套件后，PID 从
+<code>19D2:1353</code> 变为 <code>19D2:1361</code>，<br />
+新增 <code>MI_01</code>
+接口（<code>Class_ff / SubClass_42 / Prot_01</code>，WINUSB）——这就是
+ADB 接口。</p>
+<p>验证：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb devices <span class="literal">-l</span></span><br><span class="line"><span class="comment"># 192.168.3.48:5555  device</span></span><br></pre></td></tr></table></figure>
+<h3 id="root-免提示">5.2 root 免提示</h3>
+<p>设备已预装 <strong>SuperSU
+v0.99</strong>（<code>eu.chainfire.supersu</code>），<code>su</code> 为
+<code>/system/xbin/su</code>（setuid root）。</p>
+<p><strong>现象</strong>：<code>su -c id</code> 卡住 240
+秒直到超时。</p>
+<p><strong>根因</strong>：<br />
+1. 手机停在锁屏，SuperSU 授权框在锁屏下方，无人可点；<br />
+2. SuperSU 的 <strong>默认操作被设为「拒绝」</strong>。</p>
+<p><strong>处理</strong>：解锁后进入 SuperSU → 设置 → 默认操作 →
+<strong>授权</strong>。</p>
+<p>验证：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell su <span class="literal">-c</span> id</span><br><span class="line"><span class="comment"># uid=0(root) gid=0(root)</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>影响面：这是<strong>全局</strong>策略，任何应用申请 root
+都会静默通过。仅在专用设备上使用。</p>
+</blockquote>
+<h3 id="无线-adb-固化">5.3 无线 adb 固化</h3>
+<p><strong>现象</strong>：<code>adb tcpip 5555</code> 提示成功，但 5555
+不监听，<code>/proc/net/tcp</code> 里没有 <code>15B3</code>。</p>
+<p><strong>根因</strong>：<br />
+- <code>init.rc</code> 中 <code>service adbd</code> 是
+<code>disabled</code>，由 <code>sys.usb.config</code>
+属性触发启动；<br />
+- 4.1 的 adbd 只读 <code>service.adb.tcp.port</code>，不读
+<code>persist.adb.tcp.port</code>；<br />
+- <code>adb tcpip</code> 只写属性，没有真正重启 adbd（pid 未变）。</p>
+<p><strong>处理</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setprop service.adb.tcp.port 5555</span><br><span class="line">stop adbd</span><br><span class="line">start adbd</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：这条命令不能在 <code>adb shell</code>
+里直接跑——adbd 停掉会把当前会话一起杀掉。<br />
+必须放到开机脚本里（见 5.5）。</p>
+<p><strong>副作用</strong>：4.1 的 adbd 一次只能用一种传输，<strong>TCP
+模式下 USB adb 失效</strong>。<br />
+临时回 USB：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;setprop service.adb.tcp.port &quot;&quot;; stop adbd; start adbd&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="部署-sshd">5.4 部署 sshd</h3>
+<p>使用自写的 Go sshd（<code>gliderlabs/ssh</code>），特性：</p>
+<ul>
+<li>编译为 <strong>ELF32 ARM 静态链接</strong>（无 linker、无
+libc），4.1 直接可跑；</li>
+<li>口令只接受 <strong>PBKDF2-HMAC-SHA256</strong>
+哈希（<code>$pbkdf2-sha256$&lt;iter&gt;$&lt;salt&gt;$&lt;hash&gt;</code>），明文格式直接禁用密码认证；</li>
+<li>支持 <code>-hash</code> 模式从 stdin 生成哈希行。</li>
+</ul>
+<p><strong>部署位置（2026-11-16 迁移）</strong>：</p>
+<p>二进制现位于
+<strong><code>/system/bin/sshd</code></strong>（<code>/system</code> 是
+ext4 持久分区，重启保留）；<br />
+<code>/data/local/tmp/sshd/sshd</code>
+保留为原位置备份，不再被启动脚本引用。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前部署：/system/bin/sshd（755 root:root，ELF32 ARM 静态）</span></span><br><span class="line"><span class="comment"># 历史位置：/data/local/tmp/sshd/sshd（保留作回滚）</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>关键</strong>：虽然二进制在
+<code>/system/bin</code>，它读取的 <code>authorized_keys</code> /
+<code>host_ed25519</code> / <code>password</code><br />
+仍是<strong>编译期硬编码的绝对路径</strong>
+<code>/data/local/tmp/sshd/...</code>。所以这些密钥类文件继续留在
+<code>/data</code><br />
+（<code>/system</code>
+默认只读，也不适合放需要追加/更新的公钥文件）。详见 §5.20。</p>
+</blockquote>
+<p><strong>主机密钥</strong>（持久化，避免每次重启客户端告警）：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在电脑上生成 RSA 2048 PEM</span></span><br><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-b</span> <span class="number">2048</span> <span class="literal">-m</span> PEM <span class="literal">-N</span> <span class="string">&quot;&quot;</span> <span class="literal">-C</span> grands<span class="literal">-sshd</span> <span class="operator">-f</span> host_rsa</span><br><span class="line">adb push host_rsa /<span class="keyword">data</span>/local/tmp/sshd/host_ed25519     <span class="comment"># ← 文件名必须是 host_ed25519</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>坑（2026-11-16 修）</strong>：这个 sshd 二进制默认读
+<code>/data/local/tmp/sshd/host_ed25519</code>，<br />
+而早期推上设备的文件叫 <code>host_rsa</code> → <code>ReadFile</code>
+失败 → gliderlabs/ssh 每次启动<br />
+<strong>临时生成一把新密钥</strong>。现象：客户端每次重连/重启都报 host
+key 变了<br />
+（实测连续三次分别是
+<code>jISVudW…</code>、<code>NH9QSsm…</code>、<code>mOmeKfO…</code>）。</p>
+<p>修复就是改名（或
+<code>cat host_rsa &gt; host_ed25519</code>），同一把密钥、指纹从此固定：<br />
+<code>SHA256:ZcZVY1BkQfCXCxndJjVyRwOyIL+xlm5EadP81xxcwNI</code>（实测跨
+3 次重启不变）</p>
+</blockquote>
+<p><strong>口令哈希</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;echo &quot;&lt;password&gt;&quot; | /system/bin/sshd -hash &gt; /data/local/tmp/sshd/password&#x27;</span>   <span class="comment"># 替换为自己的口令</span></span><br><span class="line">su -c <span class="string">&#x27;chmod 600 /data/local/tmp/sshd/password; chown 0:0 /data/local/tmp/sshd/password&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><strong>启动</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;busybox setsid /system/bin/sshd -addr 0.0.0.0:22 \</span></span><br><span class="line"><span class="string">  &gt;&gt; /data/local/tmp/sshd/sshd.log 2&gt;&amp;1 &lt; /dev/null &amp;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>验证：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh<span class="literal">-keyscan</span> <span class="literal">-p</span> <span class="number">22</span> <span class="number">192.168</span>.<span class="number">3.48</span>      <span class="comment"># 返回 SSH-2.0-Go + RSA 主机密钥</span></span><br><span class="line">ssh root@<span class="number">192.168</span>.<span class="number">3.48</span> <span class="string">&quot;id&quot;</span>          <span class="comment"># uid=0(root)</span></span><br></pre></td></tr></table></figure>
+<h3 id="开机自启">5.5 开机自启</h3>
+<p>这台机器上 <code>/system/etc/install-recovery.sh</code>
+<strong>可用</strong>：<code>init.rc</code> 里有</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service flash_recovery /system/etc/install-recovery.sh</span><br><span class="line">    class main</span><br><span class="line">    oneshot</span><br></pre></td></tr></table></figure>
+<p>开机时以 root 执行。脚本内容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line">(</span><br><span class="line">  <span class="comment"># 恢复出厂后 /data 会被清空；先建目录，保证 LOG 可写</span></span><br><span class="line">  <span class="built_in">mkdir</span> -p /data/local/tmp/sshd</span><br><span class="line">  LOG=/data/local/tmp/sshd/boot.log</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;=== boot <span class="subst">$(date)</span> ===&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 0) 从 /system 回填 sshd 运行材料（只补缺失，不覆盖已有文件）</span></span><br><span class="line">  SRC=/system/etc/sshd</span><br><span class="line">  DST=/data/local/tmp/sshd</span><br><span class="line">  <span class="keyword">for</span> f <span class="keyword">in</span> guard.sh host_ed25519 host_rsa password authorized_keys; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$SRC</span>/<span class="variable">$f</span>&quot;</span> ] &amp;&amp; [ ! -f <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$SRC</span>/<span class="variable">$f</span>&quot;</span> &gt; <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">      <span class="built_in">chmod</span> 600 <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">      [ <span class="string">&quot;<span class="variable">$f</span>&quot;</span> = <span class="string">&quot;guard.sh&quot;</span> ] &amp;&amp; <span class="built_in">chmod</span> 755 <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">      <span class="built_in">chown</span> 0:0 <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;restored <span class="variable">$f</span>&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">  setprop service.adb.tcp.port 5555</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;prop service.adb.tcp.port=<span class="subst">$(getprop service.adb.tcp.port)</span>&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">  <span class="built_in">sleep</span> 5</span><br><span class="line">  stop adbd</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;stop adbd rc=$?&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">  <span class="built_in">sleep</span> 2</span><br><span class="line">  start adbd</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;start adbd rc=$?&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">sleep</span> 3</span><br><span class="line">  <span class="keyword">if</span> busybox ps | busybox grep -q <span class="string">&#x27;[s]shd -addr&#x27;</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;sshd already running&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    busybox setsid /system/bin/sshd -addr 0.0.0.0:22 &gt;&gt; /data/local/tmp/sshd/sshd.log 2&gt;&amp;1 &lt; /dev/null &amp;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;sshd started&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">sleep</span> 2</span><br><span class="line">  <span class="keyword">if</span> busybox ps | busybox grep -q <span class="string">&#x27;[g]uard.sh&#x27;</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;guard already running&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    busybox setsid sh /data/local/tmp/sshd/guard.sh &gt;&gt; /data/local/tmp/sshd/guard.log 2&gt;&amp;1 &lt; /dev/null &amp;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;guard started&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;=== done <span class="subst">$(date)</span> ===&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span></span><br><span class="line">) &amp;</span><br></pre></td></tr></table></figure>
+<p><strong>要点</strong>：外层 <code>( ... ) &amp;</code>
+必须要有。<code>flash_recovery</code> 是
+oneshot，脚本不能阻塞，否则会拖住 init 的服务启动流程。</p>
+<p>安装（这台机器<strong>没有 <code>cp</code></strong>，用重定向）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2026-11-16 实测：`mount -o rw,remount /system` 报 Invalid argument，</span></span><br><span class="line"><span class="comment"># 必须带设备路径；改完记得 remount ro</span></span><br><span class="line">su -c <span class="string">&#x27;busybox mount -o remount,rw /dev/block/mmcblk0p12 /system&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;cat /data/local/tmp/install-recovery.sh &gt; /system/etc/install-recovery.sh&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;chmod 755 /system/etc/install-recovery.sh; chown 0:0 /system/etc/install-recovery.sh&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;busybox mount -o remount,ro /dev/block/mmcblk0p12 /system&#x27;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>2026-11-16 迁移后，上面两处脚本中的 sshd 启动路径均为
+<code>/system/bin/sshd</code>，<br />
+guard 位置仍是
+<code>/data/local/tmp/sshd/guard.sh</code>。迁移过程与验证见
+§5.20。<br />
+脚本开头的「0) 从 /system 回填」段依赖 <code>/system/etc/sshd/</code>
+备份，见 §5.20.7。</p>
+</blockquote>
+<p><strong>重启实测（2026-11-16 08:43，脚本未改动）</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">08:43:22  adb reboot</span><br><span class="line">08:43:44  install-recovery.sh 执行（boot.log：prop=5555 / stop+start adbd / sshd started / guard started）</span><br><span class="line">08:44:36  adb connect 192.168.3.48:5555 → device（约 74 秒可连）</span><br><span class="line"></span><br><span class="line">uptime=62s   sys.boot_completed=1</span><br><span class="line">mCurrentFocus = com.fix.consolehome/.MainActivity      ← 无锁屏、无「连接到 PC」弹窗</span><br><span class="line">lockscreen.disabled = 1</span><br><span class="line">adbd=running   service.adb.tcp.port=5555   wlan0=192.168.3.48</span><br><span class="line">sshd(-addr 0.0.0.0:22) / guard.sh 各 1 个实例</span><br><span class="line">sys.usb.config = cdrom,adb (PID 1361)   ← ROM 重启后的正常值，WiFi 正常时无需处理</span><br><span class="line">/data 143M 已用   /system 297M 已用（458M 空闲）</span><br></pre></td></tr></table></figure>
+<p><strong>sshd 看门狗实测（2026-11-16）</strong>：<code>kill -9</code>
+掉 sshd 后，guard 在 34 秒内自动拉起，<br />
+22 端口重新监听（判据是端口，不是进程名——<code>busybox ps</code>
+会截断命令行）。</p>
+<h3 id="守护脚本-guard.sh">5.6 守护脚本 guard.sh</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line">FIFO=/data/local/tmp/console.fifo</span><br><span class="line">PIDFILE=/data/local/tmp/sshd/logcat.pid</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="comment"># init 每次开机把 /data/local/tmp 重置为 0771，App 无法进入，这里恢复</span></span><br><span class="line">  <span class="built_in">chmod</span> 755 /data/local/tmp 2&gt;/dev/null</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ! busybox ps | busybox grep -q <span class="string">&#x27;[s]shd -addr&#x27;</span>; <span class="keyword">then</span></span><br><span class="line">    busybox setsid /system/bin/sshd -addr 0.0.0.0:22 &gt;&gt; /data/local/tmp/sshd/sshd.log 2&gt;&amp;1 &lt; /dev/null &amp;</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> [ ! -p <span class="string">&quot;<span class="variable">$FIFO</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    busybox <span class="built_in">mknod</span> <span class="string">&quot;<span class="variable">$FIFO</span>&quot;</span> p 2&gt;/dev/null</span><br><span class="line">    <span class="built_in">chmod</span> 666 <span class="string">&quot;<span class="variable">$FIFO</span>&quot;</span> 2&gt;/dev/null</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$PIDFILE</span>&quot;</span> ] &amp;&amp; [ -d <span class="string">&quot;/proc/<span class="subst">$(cat $PIDFILE)</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    :</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">rm</span> -f <span class="string">&quot;<span class="variable">$PIDFILE</span>&quot;</span> 2&gt;/dev/null</span><br><span class="line">    busybox setsid sh -c <span class="string">&#x27;echo $$ &gt; /data/local/tmp/sshd/logcat.pid; exec logcat -v time -b main -b system -b events &gt; /data/local/tmp/console.fifo&#x27;</span> \</span><br><span class="line">      &lt; /dev/null &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">sleep</span> 30</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<h3 id="控制台桌面-consolehome">5.7 控制台桌面 ConsoleHome</h3>
+<h4 id="为什么要自写">5.7.1 为什么要自写</h4>
+<ul>
+<li>原桌面 <code>com.bluegod.launcher</code>：APK 2.6 MB，但常驻
+<strong>RSS 149 MB</strong>（比 system_server 的 94 MB 还高）；</li>
+<li>系统自带的「亲情模式」<code>com.android.MiEasyMode</code>（Family
+mode 2.1.2）：APK <strong>19.99 MB</strong>，<br />
+3 个 HOME Activity + 9 个 service + 13 个 receiver，同样不适合；</li>
+<li><strong>系统里没有 AOSP 原生桌面</strong>（无
+<code>com.android.launcher</code> / Launcher2 / Launcher3）。</li>
+</ul>
+<p>因此自写：<code>minSdk 16</code>，<code>targetSdk 16</code>，APK
+<strong>12.6 KB</strong>，0 服务、0 广播、0 定时器。</p>
+<h4 id="apk-构建windows无需-android-studio">5.7.2 APK
+构建（Windows，无需 Android Studio）</h4>
+<p>依赖：JDK 17、Android SDK
+build-tools（<code>aapt</code>/<code>d8</code>/<code>zipalign</code>/<code>apksigner</code>）、<code>platforms/android-34/android.jar</code>。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$env:JAVA_HOME</span> = <span class="string">&#x27;D:\AndroidDev\jdk17&#x27;</span></span><br><span class="line"><span class="variable">$bt</span>  = <span class="string">&#x27;D:\AndroidDev\android-sdk\build-tools\34.0.0&#x27;</span></span><br><span class="line"><span class="variable">$jar</span> = <span class="string">&#x27;D:\AndroidDev\android-sdk\platforms\android-34\android.jar&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1) 编译</span></span><br><span class="line">javac <span class="literal">-encoding</span> UTF<span class="literal">-8</span> <span class="literal">-source</span> <span class="number">8</span> <span class="literal">-target</span> <span class="number">8</span> <span class="literal">-classpath</span> <span class="variable">$jar</span> <span class="literal">-d</span> build\classes src\com\fix\consolehome\MainActivity.java</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 转 dex</span></span><br><span class="line">d8 <span class="literal">--min-api</span> <span class="number">16</span> <span class="literal">--lib</span> <span class="variable">$jar</span> <span class="literal">--output</span> build build\classes\com\fix\consolehome\MainActivity.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 打包</span></span><br><span class="line">aapt package <span class="operator">-f</span> <span class="literal">-M</span> AndroidManifest.xml <span class="literal">-I</span> <span class="variable">$jar</span> <span class="operator">-F</span> build\unaligned.apk</span><br><span class="line"><span class="built_in">Push-Location</span> build; aapt add unaligned.apk classes.dex; <span class="built_in">Pop-Location</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4) 对齐 + 签名（v1 必须，API 16 只认 v1）</span></span><br><span class="line">zipalign <span class="operator">-f</span> <span class="number">4</span> build\unaligned.apk build\aligned.apk</span><br><span class="line">keytool <span class="literal">-genkeypair</span> <span class="literal">-keystore</span> sign.keystore <span class="literal">-alias</span> app <span class="literal">-keyalg</span> RSA <span class="literal">-keysize</span> <span class="number">2048</span> `</span><br><span class="line">  <span class="literal">-validity</span> <span class="number">10000</span> <span class="literal">-storepass</span> android <span class="literal">-keypass</span> android <span class="literal">-dname</span> <span class="string">&quot;CN=AndroidDev, OU=Dev, O=Fix, C=CN&quot;</span></span><br><span class="line">apksigner sign <span class="literal">--ks</span> sign.keystore <span class="literal">--ks-pass</span> pass:android <span class="literal">--key-pass</span> pass:android `</span><br><span class="line">  <span class="literal">--v1-signing-enabled</span> true <span class="literal">--v2-signing-enabled</span> true `</span><br><span class="line">  <span class="literal">--out</span> build\app<span class="literal">-signed</span>.apk build\aligned.apk</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：PowerShell 5.1 读取无 BOM 的 UTF-8
+脚本会把中文解析乱，脚本里尽量只用 ASCII 字符串。</p>
+</blockquote>
+<h4 id="manifest-关键点">5.7.3 Manifest 关键点</h4>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-sdk</span> <span class="attr">android:minSdkVersion</span>=<span class="string">&quot;16&quot;</span> <span class="attr">android:targetSdkVersion</span>=<span class="string">&quot;16&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">&quot;android.permission.READ_EXTERNAL_STORAGE&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">&quot;.MainActivity&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:exported</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:theme</span>=<span class="string">&quot;@android:style/Theme.Black.NoTitleBar.Fullscreen&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.HOME&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>要让选择器消失，必须保证<strong>只有一个</strong> HOME 候选：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;pm disable com.bluegod.launcher&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;pm disable com.android.MiEasyMode&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="日志链路不落盘">5.7.4 日志链路（不落盘）</h4>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">logcat -v time (root)</span><br><span class="line">      │ shell 重定向</span><br><span class="line">      ▼</span><br><span class="line">/data/local/tmp/console.fifo      (FIFO, 0666)</span><br><span class="line">      │ 后台线程阻塞读</span><br><span class="line">      ▼</span><br><span class="line">ConsoleHome：ArrayDeque 环形缓冲 200 行</span><br><span class="line">      │ 每 4 秒</span><br><span class="line">      ▼</span><br><span class="line">TextView 显示最近 24 行（Gravity.BOTTOM）</span><br></pre></td></tr></table></figure>
+<p>设计要点：</p>
+<ol type="1">
+<li><strong>不使用
+<code>/sdcard/console.log</code></strong>，磁盘上不产生任何日志文件，从机制上杜绝“日志写满磁盘”；</li>
+<li>没有读者时，写端会阻塞在
+<code>open()</code>，不会堆积内存、不会丢盘；</li>
+<li>写端只有一个，由 <code>guard.sh</code> 的 pidfile 保证；</li>
+<li>App 被杀 → 管道写端 EPIPE 退出 → guard 在 30 s
+内重启写端，日志自动恢复。</li>
+</ol>
+<h4 id="状态行">5.7.5 状态行</h4>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IP 192.168.3.48   UP 0d0h5m   sshd OK   adb OK   CPU 3%   MemFree 1183MB</span><br></pre></td></tr></table></figure>
+<p>实现方式（都不走网络，避免 4.1 的
+<code>NetworkOnMainThreadException</code>）：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>字段</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IP</td>
+<td><code>NetworkInterface</code> 枚举 wlan0/eth0；失败则反射读
+<code>dhcp.wlan0.ipaddress</code></td>
+</tr>
+<tr>
+<td>UP</td>
+<td><code>/proc/uptime</code></td>
+</tr>
+<tr>
+<td>sshd / adb</td>
+<td>读 <code>/proc/net/tcp</code> <strong>和</strong>
+<code>/proc/net/tcp6</code>，匹配本地端口 + 状态
+<code>0A</code>(LISTEN)</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>逐核读 <code>/proc/stat</code> 的
+<code>cpuN</code>，只统计两次都在线的核，取<strong>平均占用（0–100%）</strong></td>
+</tr>
+<tr>
+<td>MemFree</td>
+<td><code>/proc/meminfo</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>为什么必须同时看 <code>tcp6</code>：Go 的
+<code>Listen("tcp", "0.0.0.0:22")</code> 在这台机器上实际落到<br />
+IPv6 通配 <code>[::]:22</code>，只查 <code>/proc/net/tcp</code> 会误报
+<code>--</code>。</p>
+</blockquote>
+<p><strong>实测截图</strong>：顶部状态行（IP / UP / sshd / adb / CPU /
+MemFree）+ 下方实时滚动的 logcat：</p>
+<figure>
+<img src="/img/zte-grand-s/consolehome-main.png"
+alt="ConsoleHome 状态行与实时日志" />
+<figcaption aria-hidden="true">ConsoleHome 状态行与实时日志</figcaption>
+</figure>
+<h4 id="cpu-数值的含义">5.7.6 CPU 数值的含义</h4>
+<p>显示的是<strong>当前在线核心的平均占用（0–100%）</strong>：</p>
+<ul>
+<li>不是每核相加（那样最大是 400%）；</li>
+<li>不是 <code>loadavg</code>（那是运行队列长度，4 核满载时约
+4.0）；</li>
+<li>实现是逐核读 <code>/proc/stat</code> 的 <code>cpuN</code>
+行，只累加“两次采样都在线、且 <code>idle</code> 增量合法”的核。</li>
+</ul>
+<p><strong>为什么不用汇总行（<code>cpu</code>）</strong>：这台机器的
+<strong>mpdecision
+会热插拔核心</strong>，离线核的计数会从汇总里消失。<br />
+实测汇总行的 <code>idle</code> 从 <code>134122</code> 掉到
+<code>133725</code>（倒退），按汇总算会得到负值或假 100%。</p>
+<p><strong>实测对照</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>场景</th>
+<th>显示</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空载</td>
+<td>3–8%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>跑满 1 个核（4 核在线）</td>
+<td>≈25%</td>
+<td>理论值</td>
+</tr>
+<tr>
+<td>跑满 1 个核（仅 2 核在线）</td>
+<td>≈50–55%</td>
+<td>mpdecision 关掉了 2 个核，属正确行为</td>
+</tr>
+</tbody>
+</table>
+<h4 id="开机直接显示不锁屏">5.7.7 开机直接显示、不锁屏</h4>
+<p>只靠 <code>FLAG_KEEP_SCREEN_ON</code> 不够：安装升级或重启后 App
+会短暂后台化，系统随后锁屏，屏幕就停在锁屏页。</p>
+<p>在 Activity 上同时设置四个窗口标志：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</span><br><span class="line">        | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED</span><br><span class="line">        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD</span><br><span class="line">        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KEEP_SCREEN_ON</code></td>
+<td>前台时常亮，不自动熄屏</td>
+</tr>
+<tr>
+<td><code>SHOW_WHEN_LOCKED</code></td>
+<td>锁屏状态下也显示本 Activity</td>
+</tr>
+<tr>
+<td><code>DISMISS_KEYGUARD</code></td>
+<td>显示时解除非安全锁屏（滑动锁）</td>
+</tr>
+<tr>
+<td><code>TURN_SCREEN_ON</code></td>
+<td>启动时点亮屏幕</td>
+</tr>
+</tbody>
+</table>
+<p>实测：冷启动后、以及“关屏 5 秒再开屏”，都直接看到控制台。<br />
+<code>guard.sh</code> 里另外每 30 s 发一次
+<code>input keyevent 82</code>（MENU）作为兜底。</p>
+<h3 id="系统精简">5.8 系统精简</h3>
+<p>停用（可逆）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;pm disable &lt;pkg&gt;&#x27;</span></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line">su -c <span class="string">&#x27;pm enable &lt;pkg&gt;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>本次停用 56 个包，分类如下：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>类别</th>
+<th>包</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZTE 云服务 / OTA / 统计</td>
+<td><code>com.zte.heartyservice</code>、<code>com.zte.zdm</code>、<code>com.zte.zdmdaemon</code>、<code>com.zte.aliveupdate</code>、<code>com.android.stat</code>、<code>com.android.ss</code></td>
+</tr>
+<tr>
+<td>输入法 / 浏览器 / 天气</td>
+<td><code>com.iflytek.inputmethod</code>、<code>com.ume.browser</code>、<code>com.hf</code></td>
+</tr>
+<tr>
+<td>应用商店 / 游戏</td>
+<td><code>com.tencent.android.qqplaza4zte</code>、<code>com.dsemu.drasticcn</code></td>
+</tr>
+<tr>
+<td>导航</td>
+<td><code>com.autonavi.xmgd.navigator.tob</code>、<code>com.autonavi.xmgd.searchcontentprovider</code></td>
+</tr>
+<tr>
+<td>媒体 / 工具</td>
+<td><code>cn.zte.music</code>、<code>com.zte.videoplayer</code>、<code>zte.com.cn.camera</code>、<code>zte.com.cn.gallery3d</code>、<code>zte.com.cn.alarmclock</code>、<code>zte.com.cn.flashlight</code>、<code>zte.com.cn.taskmanager</code>、<code>zte.com.cn.numberlocator</code>、<code>zte.com.cn.airfiler</code>、<code>com.android.calculator2</code></td>
+</tr>
+<tr>
+<td>桌面 / 主题 / 亲情模式</td>
+<td><code>com.bluegod.launcher</code>、<code>com.bluegod.widget</code>、<code>com.bluegod.sidebar</code>、<code>com.zte.launcher.theme.*</code>、<code>com.android.MiEasyMode</code></td>
+</tr>
+<tr>
+<td>通信（无 SIM）</td>
+<td><code>com.android.mms</code>、<code>com.android.email</code>、<code>com.android.contacts</code>、<code>com.android.bluetooth</code>、<code>com.android.smspush</code></td>
+</tr>
+<tr>
+<td>备份 / 更新 / 杂项</td>
+<td><code>com.zte.backup.mmi</code>、<code>com.android.backupconfirm</code>、<code>com.android.sharedstoragebackup</code>、<code>com.android.provision</code>、<code>com.googlesuit.ggkj</code>、<code>org.zx.AuthComp</code>、<code>com.zte.wapicert</code>、<code>com.monotype.android.font.*</code>、<code>com.svox.pico</code>、<code>com.android.wallpaper.livepicker</code>、<code>com.android.providers.userdictionary</code>、<code>com.android.providers.applications</code>、<code>com.android.providers.drm</code>、<code>com.android.ext_service</code>、<code>com.android.providers.downloads</code>、<code>com.qualcomm.services.location</code>、<code>com.qualcomm.wiper</code>、<code>com.android.DolbyMobile</code>、<code>com.android.dolbymobileaudioeffect</code>、<code>com.quicinc.fmradio</code>、<code>com.zte.emode</code>、<code>com.zte.emodespec</code>、<code>com.zte.systemuisetting</code>、<code>com.zte.zgesture</code>、<code>com.android.mipop</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>效果（重启后实测）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>精简前</th>
+<th>精简后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MemFree</code></td>
+<td>1.06 GB</td>
+<td><strong>1.20 GB</strong></td>
+</tr>
+<tr>
+<td><code>used</code></td>
+<td>805 MB</td>
+<td><strong>664 MB</strong></td>
+</tr>
+<tr>
+<td>进程数</td>
+<td>212</td>
+<td>187</td>
+</tr>
+</tbody>
+</table>
+<p>保留的系统大户（属骨架，不建议动）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">com.android.systemui        43.7 MB</span><br><span class="line">system_server (system)      32.4 MB</span><br><span class="line">com.fix.consolehome         29.7 MB</span><br><span class="line">android.process.media       19.3 MB</span><br><span class="line">com.android.phone           19.1 MB</span><br><span class="line">android.process.acore       10.2 MB</span><br><span class="line">eu.chainfire.supersu        10.2 MB</span><br><span class="line">com.android.settings         8.4 MB</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="已删除的-apk-清单2026-11-15">5.9 已删除的 APK
+清单（2026-11-15）</h3>
+<p><strong>第一批 14 个</strong>（处于 <code>pm disable</code>
+状态但仍被 system_server 反复拉起，只能删 APK）：</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>APK</th>
+<th>包名</th>
+<th>大小</th>
+<th>原用途</th>
+<th>删除理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Mms.apk</code></td>
+<td><code>com.android.mms</code></td>
+<td>5.19 MB</td>
+<td>短信/彩信</td>
+<td>无 SIM 卡</td>
+</tr>
+<tr>
+<td><code>Email.apk</code></td>
+<td><code>com.android.email</code></td>
+<td>4.24 MB</td>
+<td>邮件客户端</td>
+<td>不使用</td>
+</tr>
+<tr>
+<td><code>Calendar_103_for_rom.apk</code></td>
+<td><code>com.android.calendar</code></td>
+<td>2.37 MB</td>
+<td>日历</td>
+<td>不使用</td>
+</tr>
+<tr>
+<td><code>MIPop.apk</code></td>
+<td><code>com.android.mipop</code></td>
+<td>2.22 MB</td>
+<td>悬浮窗/多任务</td>
+<td>会被反复拉起</td>
+</tr>
+<tr>
+<td><code>DownloadMgr.apk</code></td>
+<td><code>com.android.providers.downloads</code></td>
+<td>2.01 MB</td>
+<td>下载管理</td>
+<td>无浏览器</td>
+</tr>
+<tr>
+<td><code>DolbyMobile.apk</code></td>
+<td><code>com.android.DolbyMobile</code></td>
+<td>0.27 MB</td>
+<td>杜比音效</td>
+<td>无音频需求</td>
+</tr>
+<tr>
+<td><code>DolbyMobileAudioEffectService.apk</code></td>
+<td><code>com.android.dolbymobileaudioeffect</code></td>
+<td>0.01 MB</td>
+<td>音效服务</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>ExtService.apk</code></td>
+<td><code>com.android.ext_service</code></td>
+<td>0.17 MB</td>
+<td>ZTE 扩展服务</td>
+<td>会被反复拉起</td>
+</tr>
+<tr>
+<td><code>Mi-SystemUISetting.apk</code></td>
+<td><code>com.zte.systemuisetting</code></td>
+<td>0.27 MB</td>
+<td>通知栏设置</td>
+<td>无 UI</td>
+</tr>
+<tr>
+<td><code>zgesture.apk</code></td>
+<td><code>com.zte.zgesture</code></td>
+<td>0.07 MB</td>
+<td>手势</td>
+<td>触摸失灵</td>
+</tr>
+<tr>
+<td><code>CABLService.apk</code></td>
+<td><code>com.qualcomm.cabl</code></td>
+<td>0.01 MB</td>
+<td>自适应背光</td>
+<td>屏常亮</td>
+</tr>
+<tr>
+<td><code>TimeService.apk</code></td>
+<td><code>com.qualcomm.timeservice</code></td>
+<td>&lt;0.01 MB</td>
+<td>运营商授时</td>
+<td>无 SIM</td>
+</tr>
+<tr>
+<td><code>PrivInit.apk</code></td>
+<td><code>com.qualcomm.privinit</code></td>
+<td>&lt;0.01 MB</td>
+<td>高通初始化</td>
+<td>无 SIM 场景</td>
+</tr>
+<tr>
+<td><code>com.qualcomm.services.location.apk</code></td>
+<td><code>com.qualcomm.services.location</code></td>
+<td>0.04 MB</td>
+<td>高通定位</td>
+<td>不用定位</td>
+</tr>
+</tbody>
+</table>
+<p>合计 <strong>16.9 MB</strong>。<code>/system</code> 411→394
+MB，<code>MemFree</code> 1.22→1.28 GB，相关进程 PSS 释放约 41 MB。</p>
+<blockquote>
+<p><strong>教训</strong>：这一批备份失败——脚本调用了不存在的
+<code>tar</code>（应为 <code>busybox tar</code>），错误被
+<code>|| true</code> 吞掉。<br />
+后续批次改为「设备内 <code>busybox tar</code> → <code>adb pull</code> 到
+PC → md5 校验一致」后才删除。</p>
+</blockquote>
+<p><strong>第二批 19 个（低风险，删除前已完整备份到 PC）</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>APK</th>
+<th>包名</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HeartyService.apk</code></td>
+<td><code>com.zte.heartyservice</code></td>
+<td>12.31 MB</td>
+</tr>
+<tr>
+<td><code>autonavi.apk</code></td>
+<td><code>com.autonavi.xmgd.navigator.tob</code></td>
+<td>12.23 MB</td>
+</tr>
+<tr>
+<td><code>GMS1.5.apk</code></td>
+<td><code>com.googlesuit.ggkj</code></td>
+<td>11.82 MB</td>
+</tr>
+<tr>
+<td><code>Contacts.apk</code></td>
+<td><code>com.android.contacts</code></td>
+<td>6.65 MB</td>
+</tr>
+<tr>
+<td><code>UmeBrowserV3.13.apk</code></td>
+<td><code>com.ume.browser</code></td>
+<td>4.78 MB</td>
+</tr>
+<tr>
+<td><code>MusicPlayer.apk</code></td>
+<td><code>cn.zte.music</code></td>
+<td>4.78 MB</td>
+</tr>
+<tr>
+<td><code>ChinaWeatherTV.apk</code></td>
+<td><code>com.hf</code></td>
+<td>4.77 MB</td>
+</tr>
+<tr>
+<td><code>GalleryZte.apk</code></td>
+<td><code>zte.com.cn.gallery3d</code></td>
+<td>4.06 MB</td>
+</tr>
+<tr>
+<td><code>CameraZte.apk</code></td>
+<td><code>zte.com.cn.camera</code></td>
+<td>3.90 MB</td>
+</tr>
+<tr>
+<td><code>MYoungPRC-Medium.apk</code></td>
+<td><code>com.monotype.android.font.myoungprcmedium</code></td>
+<td>3.66 MB</td>
+</tr>
+<tr>
+<td><code>ZTETheme.apk</code></td>
+<td><code>com.zte.launcher.theme.ztetheme</code></td>
+<td>3.54 MB</td>
+</tr>
+<tr>
+<td><code>BlueGodWidget.apk</code></td>
+<td><code>com.bluegod.widget</code></td>
+<td>2.86 MB</td>
+</tr>
+<tr>
+<td><code>FilerPreB04.2.apk</code></td>
+<td><code>zte.com.cn.airfiler</code></td>
+<td>2.82 MB</td>
+</tr>
+<tr>
+<td><code>BlueGodLauncher.apk</code></td>
+<td><code>com.bluegod.launcher</code></td>
+<td>2.60 MB</td>
+</tr>
+<tr>
+<td><code>Button.apk</code></td>
+<td><code>com.zte.launcher.theme.Buttonone</code></td>
+<td>2.40 MB</td>
+</tr>
+<tr>
+<td><code>AuthComp.apk</code></td>
+<td><code>org.zx.AuthComp</code></td>
+<td>1.86 MB</td>
+</tr>
+<tr>
+<td><code>ZDMSNJV3.apk</code></td>
+<td><code>com.zte.zdm</code></td>
+<td>1.67 MB</td>
+</tr>
+<tr>
+<td><code>Girl.apk</code></td>
+<td><code>com.zte.launcher.theme.Girlone</code></td>
+<td>1.66 MB</td>
+</tr>
+<tr>
+<td><code>R_UI.apk</code></td>
+<td><code>com.zte.launcher.theme.rui</code></td>
+<td>1.59 MB</td>
+</tr>
+</tbody>
+</table>
+<p>合计 <strong>90.0 MB</strong>（94,331,392 B），备份文件 md5
+<code>0eed806f7773af830a8da53a2852921c</code>（PC 与设备一致）。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>指标</th>
+<th>初始</th>
+<th>第一批后</th>
+<th>两批后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/system</code> 已用 / 空闲</td>
+<td>411 / 344 MB</td>
+<td>394 / 361 MB</td>
+<td><strong>304 / 451 MB</strong></td>
+</tr>
+<tr>
+<td><code>/system/app</code> 文件数</td>
+<td>79</td>
+<td>65</td>
+<td><strong>46</strong></td>
+</tr>
+<tr>
+<td><code>MemFree</code></td>
+<td>1.06 GB</td>
+<td>1.28 GB</td>
+<td><strong>1.28 GB</strong></td>
+</tr>
+<tr>
+<td>总包数 / 已停用</td>
+<td>86 / 0</td>
+<td>—</td>
+<td><strong>53 / 35</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="删除后的启动日志校验必做">5.10 删除后的启动日志校验（必做）</h3>
+<p>删系统包最常见的事故是<strong>框架反复重试拉起已不存在的应用</strong>，表现为
+CPU 空转与日志刷屏。<br />
+校验方法：清空缓冲 → 静置 120 s → 统计新增日志中的重试特征。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">logcat -c</span><br><span class="line"><span class="built_in">sleep</span> 120</span><br><span class="line">logcat -d -v brief &gt; /data/local/tmp/loop.log</span><br><span class="line">busybox grep -c <span class="string">&#x27;Unable to start service&#x27;</span> /data/local/tmp/loop.log   <span class="comment"># 0</span></span><br><span class="line">busybox grep -c <span class="string">&#x27;Start proc&#x27;</span>              /data/local/tmp/loop.log   <span class="comment"># 0</span></span><br><span class="line">busybox grep -c <span class="string">&#x27;not found&#x27;</span>               /data/local/tmp/loop.log   <span class="comment"># 0</span></span><br><span class="line">busybox grep -c <span class="string">&#x27;ANR in&#x27;</span>                  /data/local/tmp/loop.log   <span class="comment"># 0</span></span><br><span class="line">busybox grep -c <span class="string">&#x27;FATAL&#x27;</span>                   /data/local/tmp/loop.log   <span class="comment"># 0</span></span><br></pre></td></tr></table></figure>
+<p>实测：120 s 新增 <strong>724 行</strong>，上述关键字<strong>全为
+0</strong>，且无任何已删包名记录 → <strong>没有重试循环</strong>。</p>
+<p>开机时的一次性告警（之后不再出现），均可忽略：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>告警</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to start service ... NetworkLocationProvider</code></td>
+<td>定位提供者已停用</td>
+</tr>
+<tr>
+<td><code>... IWapPushManager</code> ×3</td>
+<td><code>com.android.smspush</code> 已停用</td>
+</tr>
+<tr>
+<td><code>... IExtendedNetworkService</code></td>
+<td>无 SIM，USSD 不适用</td>
+</tr>
+<tr>
+<td><code>Library not found: *.jar</code></td>
+<td>ROM 自带缺失库声明，与删除无关</td>
+</tr>
+</tbody>
+</table>
+<p>静置时 CPU（20 s 采样）：<code>consolehome</code> 3.6
+%/核、<code>system_server</code> 1.5 %/核、<code>surfaceflinger</code>
+0.5 %/核。</p>
+<h3 id="剩余待删候选仅两个风险中等">5.11
+剩余待删候选（仅两个，风险中等）</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>APK</th>
+<th>包名</th>
+<th>大小</th>
+<th>说明</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Settings.apk</code></td>
+<td><code>com.android.settings</code></td>
+<td>6.24 MB</td>
+<td>设置界面</td>
+<td>中：部分 <code>android.settings.*</code> intent 失效</td>
+</tr>
+<tr>
+<td><code>Phone.apk</code></td>
+<td><code>com.android.phone</code></td>
+<td>4.02 MB</td>
+<td>电话</td>
+<td>中：telephony 属框架核心</td>
+</tr>
+</tbody>
+</table>
+<p>合计 10.3 MB，不建议为这点空间动框架核心。若执意删除，删完必须重跑
+5.10 的校验。</p>
+<h3 id="控制台内置-wifi-设置与网络兜底2026-11-15">5.12 控制台内置 WiFi
+设置与网络兜底（2026-11-15）</h3>
+<p><strong>动机</strong>：这台设备没有可用的系统设置入口（触摸不灵敏），一旦路由器改了
+SSID/密码就彻底失联。<br />
+因此把 WiFi 设置直接做进唯一的桌面，而不是另做一个“兜底桌面”再切换。</p>
+<p><strong>交互设计（ConsoleHome 内置）</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>入口</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>右上角「WiFi」按钮</td>
+<td>任何时候点一下打开面板</td>
+</tr>
+<tr>
+<td>屏幕下方三个电容键</td>
+<td><strong>HOME / MENU / BACK
+任一都能切换</strong>面板（避免某一个键失灵）</td>
+</tr>
+<tr>
+<td>面板内容</td>
+<td>当前 SSID、IP、WiFi 开关状态 + 「扫描」/「WiFi
+开关」/「返回控制台」</td>
+</tr>
+<tr>
+<td>网络列表</td>
+<td>大字号、大行高，点一行 → 弹密码框 → 「连接」</td>
+</tr>
+<tr>
+<td>开放网络</td>
+<td>直接连接，不弹密码</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="/img/zte-grand-s/consolehome-wifi.png"
+alt="ConsoleHome 内置 WiFi 设置面板" />
+<figcaption aria-hidden="true">ConsoleHome 内置 WiFi
+设置面板</figcaption>
+</figure>
+<p>实现要点：</p>
+<ul>
+<li>HOME 键靠 <code>android:launchMode="singleTask"</code> +
+<code>onNewIntent()</code> 捕获；</li>
+<li>MENU / BACK 靠 <code>onKeyDown(KEYCODE_MENU / KEYCODE_BACK)</code>
+拦截；</li>
+<li>面板与日志区用 <code>FrameLayout</code> 叠放，切换只改
+<code>visibility</code>，不重建 Activity。</li>
+</ul>
+<p><strong>连接失败自动回退（60 秒）</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">点「连接」→ 记录当前网络 id（prevNetId）→ enableNetwork(新 id)</span><br><span class="line">        → 60 秒内拿到 IP 且 SSID 匹配 → 成功</span><br><span class="line">        → 超时 → removeNetwork(新 id) + enableNetwork(prevNetId) + reconnect</span><br><span class="line">状态行显示「连接 xxx 失败，已回退到原网络」</span><br></pre></td></tr></table></figure>
+<p>这样即使输错密码或热点不可用，也不会把设备永久留在无网状态。</p>
+<p><strong>输入法（已按需关闭）</strong>：4.1 的 IMMS
+只在开机扫描已启用的
+IME，重新启用后必须重启才注册。当前已停用讯飞输入法（省约 20 MB），改由
+agent 通过 <code>adb shell input text</code>
+输入密码；若需现场手输，重新执行下面三条并重启即可。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pm <span class="built_in">enable</span> com.iflytek.inputmethod</span><br><span class="line">ime <span class="built_in">enable</span> com.iflytek.inputmethod/.FlyIME</span><br><span class="line">ime <span class="built_in">set</span>    com.iflytek.inputmethod/.FlyIME</span><br></pre></td></tr></table></figure>
+<p><strong>预置网络（<code>/data/misc/wifi/wpa_supplicant.conf</code>）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>SSID</th>
+<th>优先级</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>B6-902</code></td>
+<td>18</td>
+<td>主用（家中路由器）</td>
+</tr>
+<tr>
+<td><code>FAST_888</code></td>
+<td>16</td>
+<td>备用</td>
+</tr>
+<tr>
+<td><code>B5-612</code></td>
+<td>15</td>
+<td>备用</td>
+</tr>
+<tr>
+<td><code>Honor 10</code></td>
+<td>14</td>
+<td>备用</td>
+</tr>
+<tr>
+<td><code>荣耀Magic7</code></td>
+<td>5</td>
+<td><strong>手机热点，救援用</strong></td>
+</tr>
+<tr>
+<td><code>Huawei-Guest</code></td>
+<td>1</td>
+<td>开放网络</td>
+</tr>
+</tbody>
+</table>
+<p>全部条目都加了 <code>scan_ssid=1</code>（支持隐藏 SSID）。手机 WiFi
+MAC：<code>a0:ec:80:xx:xx:82</code>（已脱敏）。</p>
+<p><strong>换路由器的注意事项</strong>：只要新路由器满足<br />
+<code>SSID=B6-902</code>、<code>密码=&lt;wifi-password&gt;</code>、<code>加密=WPA2-PSK（或 WPA/WPA2 混合）</code>、<code>不隐藏 SSID</code>，<br />
+设备开机会自动重连，无需任何操作。若开了 MAC 过滤需放行设备实际的 WiFi
+MAC（文中已脱敏）；设为 WPA3-only 则连不上（4.1 不支持）。</p>
+<p><strong>配置改坏的自动回滚（guard.sh）</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">改配置前：cp wpa_supplicant.conf → wpa_backup.conf，并写 wpa_pending</span><br><span class="line">开机后 guard 每 30 s 检查：有 wpa_pending 且无 IP</span><br><span class="line">        → 连续 10 次（≈5 分钟）仍无 IP</span><br><span class="line">        → 用 wpa_backup.conf 覆盖回去 → 重启</span><br><span class="line">有 IP → 删除 wpa_pending，记日志</span><br></pre></td></tr></table></figure>
+<h3 id="usb-兜底通道与排查结论2026-11-15">5.13 USB
+兜底通道与排查结论（2026-11-15）</h3>
+<p><strong>架构定位</strong>：SSH 为日常主通道（不依赖 adbd），USB adb
+为物理兜底。</p>
+<p><strong>4.1 的限制</strong>：adbd 一次只服务一种传输——设置
+<code>service.adb.tcp.port=5555</code> 时，USB 侧不会接 adb。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动切换</span></span><br><span class="line">sh /data/local/tmp/adbmode.sh usb   <span class="comment"># adbd 只走 USB（插线即可 adb shell）</span></span><br><span class="line">sh /data/local/tmp/adbmode.sh tcp   <span class="comment"># adbd 只走 TCP 5555（当前默认）</span></span><br></pre></td></tr></table></figure>
+<p><strong>自动兜底（guard.sh）</strong>：连续 5 分钟没有 IP →<br />
+<code>setprop service.adb.tcp.port ""</code> +
+<code>stop/start adbd</code>（切 USB）；网络恢复后自动切回 TCP。<br />
+代价只是 <code>adb connect</code> 不可用，SSH 不受影响。</p>
+<p><strong>实测枚举问题</strong>（同一根线、同一个口，四种功能组合都复现）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th><code>sys.usb.config</code></th>
+<th>手机侧</th>
+<th>PC 侧</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cdrom,adb</code></td>
+<td><code>state=CONNECTED</code>，主机完成配置（<code>config #1: android</code>），<strong>无断开事件</strong></td>
+<td>出现约 5 s，事件日志显示枚举为 <code>PROD_FILE-CD_GADGET</code>
+后消失</td>
+</tr>
+<tr>
+<td><code>mtp,adb</code></td>
+<td>同上，PID <code>0245</code></td>
+<td>11 s 出现、17 s 消失；<code>WPDClassInstaller</code> 报
+<code>0x80070651</code></td>
+</tr>
+<tr>
+<td><code>adb</code></td>
+<td>PID <code>0423</code></td>
+<td>MI_00/MI_01 驱动 <code>Error</code>，14 s 消失</td>
+</tr>
+<tr>
+<td><code>mass_storage,adb</code></td>
+<td>PID <code>1351</code>，LUN 无后端文件</td>
+<td>驱动全部 <code>OK</code>，15 s 仍消失</td>
+</tr>
+</tbody>
+</table>
+<p>结论：<strong>不是 adb
+的“使用冲突”，也不是手机配置错误</strong>——手机侧 enumeration
+成功且没有断开；<br />
+是 <strong>PC 侧在枚举完成后主动移除设备</strong>（驱动栈 / USB
+选择性暂停 / 端口）。</p>
+<p>排查建议：换后置 USB 口直插（不走 Hub）→
+关闭“允许计算机关闭此设备以节约电源” → 换一台电脑验证。</p>
+<blockquote>
+<p><strong>结论更新（2026-11-16）</strong>：上面的判断<strong>只对了一半</strong>。<br />
+真实根因是 <strong>① PC 没装 ZTE 驱动 ② 组合选错导致 PID 无驱动 ③ adbd
+传输没切到 USB</strong>，<br />
+不是端口/供电问题。经安装光盘驱动 + <code>mass_storage,adb</code>(PID
+1351) + adbd USB 模式后，<br />
+USB adb 已稳定可用（连续 60 秒无掉线）。完整记录见
+<strong>§5.19</strong>。</p>
+</blockquote>
+<p><strong>踩坑：面板每 30 秒自己弹出</strong></p>
+<p><code>guard.sh</code> 原用
+<code>input keyevent 82</code>（MENU）解除锁屏，而 App 把 MENU
+绑定成“切换 WiFi 面板”，<br />
+于是每 30 秒自己触发一次。改为
+<code>input keyevent 224</code>（WAKEUP）后消失。</p>
+<h3 id="当前内存占用pss实测">5.14 当前内存占用（PSS，实测）</h3>
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>进程</th>
+<th>PSS</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>com.fix.consolehome</code></td>
+<td>28.5 MB</td>
+<td>控制台桌面（日志 + WiFi 面板）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>system</code>（system_server）</td>
+<td>31.3 MB</td>
+<td>框架</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.android.systemui</code></td>
+<td>27.6 MB</td>
+<td>状态栏</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>com.android.phone</code></td>
+<td>26.0 MB</td>
+<td>电话（无 SIM，未动）</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>android.process.media</code></td>
+<td>24.1 MB</td>
+<td>媒体/存储（sdcard 依赖）</td>
+</tr>
+</tbody>
+</table>
+<p><code>MemFree</code> 1.14 GB / 1.87 GB，<code>loadavg</code> 约
+1.9（4 核）。</p>
+<h3 id="控制台瘦身与固化为系统应用2026-11-15">5.15
+控制台瘦身与固化为系统应用（2026-11-15）</h3>
+<p><strong>去掉顶部 WiFi 按钮</strong>：三键（HOME / MENU /
+BACK）已能呼出面板，顶部按钮每次状态刷新都要重绘，收益为负。</p>
+<p><strong>其他瘦身项</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>之前</th>
+<th>现在</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日志环形缓冲</td>
+<td>200 行</td>
+<td>120 行</td>
+</tr>
+<tr>
+<td>屏幕显示行数</td>
+<td>24 行</td>
+<td>16 行</td>
+</tr>
+<tr>
+<td>状态刷新间隔</td>
+<td>4 s</td>
+<td>5 s</td>
+</tr>
+<tr>
+<td>WiFi 列表重建</td>
+<td>每次刷新都重建（最多 20 个 Button）</td>
+<td>最多每 8 s 重建一次</td>
+</tr>
+<tr>
+<td>面板关闭时</td>
+<td>保留列表视图</td>
+<td><code>removeAllViews()</code> 释放</td>
+</tr>
+</tbody>
+</table>
+<p>实测 PSS：<strong>32.8 MB → 28.5 MB</strong>。</p>
+<p><strong>固化为系统应用</strong>（与原来的默认桌面同一路径）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mount -o rw,remount /system</span><br><span class="line"><span class="built_in">cat</span> /data/local/tmp/app.apk &gt; /system/app/ConsoleHome.apk</span><br><span class="line"><span class="built_in">chown</span> 0:0 /system/app/ConsoleHome.apk</span><br><span class="line"><span class="built_in">chmod</span> 644 /system/app/ConsoleHome.apk</span><br><span class="line"><span class="built_in">sync</span> &amp;&amp; reboot</span><br></pre></td></tr></table></figure>
+<p>结果：<code>pm path com.fix.consolehome</code> →
+<strong><code>/system/app/ConsoleHome.apk</code></strong>，<br />
+<code>/data/app</code> 下无副本，且它是<strong>唯一
+HOME</strong>（<code>am start HOME</code> 不再出现
+ResolverActivity）。</p>
+<p><strong>以后更新它的正确姿势</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 覆盖系统 APK 后重启（推荐，签名必须一致）</span></span><br><span class="line"><span class="built_in">cat</span> new.apk &gt; /system/app/ConsoleHome.apk &amp;&amp; <span class="built_in">sync</span> &amp;&amp; reboot</span><br></pre></td></tr></table></figure>
+<p>不要用 <code>pm install</code>：对系统应用它会生成一个
+<code>/data/app</code> 更新副本，<code>pm path</code>
+就指向数据分区了。</p>
+<p><strong>安装坑：安装当前 HOME 会卡住</strong></p>
+<p><code>pm install</code> 安装的正是唯一 HOME 时，PM
+会等待该应用退出，而系统又会立刻把它拉起来，导致 <code>pm install</code>
+无限等待<br />
+（实测出现两个 <code>com.android.commands.pm.Pm</code>
+进程挂起）。可靠做法是<strong>先停用再装</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pm <span class="built_in">disable</span> com.fix.consolehome</span><br><span class="line">pm install -r /data/local/tmp/app.apk</span><br><span class="line">pm <span class="built_in">enable</span> com.fix.consolehome</span><br></pre></td></tr></table></figure>
+<h3 id="第三批删除与-sdcard-现状2026-11-15">5.16 第三批删除与 sdcard
+现状（2026-11-15）</h3>
+<p><strong>第三批：ZTE 预装 + 可疑包 + /data/app 第三方</strong></p>
+<p>删除前均用 <code>busybox tar</code> 打包 → <code>adb pull</code> 到
+PC → <strong>md5 校验一致</strong>后才删除：</p>
+<table>
+<thead>
+<tr>
+<th>包</th>
+<th>内容</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sys.tar</code></td>
+<td>13 个 ZTE 预装 APK</td>
+<td>7.2 MB</td>
+</tr>
+<tr>
+<td><code>framework.tar</code></td>
+<td>2 个可疑 framework 包</td>
+<td>274 KB</td>
+</tr>
+<tr>
+<td><code>dataapp.tar</code></td>
+<td>5 个 <code>/data/app</code> 第三方</td>
+<td>47 MB</td>
+</tr>
+</tbody>
+</table>
+<p>删除清单：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>类别</th>
+<th>项目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZTE 预装（13）</td>
+<td><code>TaskManager</code>（任务管理器）、<code>DM_UI</code>（ZdmDaemon）、<code>AliveUpdateV210</code>、<code>SayBlueGod</code>、<code>EModeMini</code>、<code>EMode_Spec</code>、<code>VideoPlayer</code>、<code>WapiCert</code>、<code>alarming</code>、<code>FlashLight</code>、<code>NumberLocator</code>、<code>BlueGodSideBar_0610</code>、<code>OfflineSearch</code></td>
+</tr>
+<tr>
+<td>可疑包（3）</td>
+<td><code>/system/framework/statsold-release.apk</code>（<code>com.android.ss</code>）、<code>/system/framework/923b…_lua.apk</code>（<code>com.android.stat</code>）、<code>/system/app/Stats_12.apk</code>（<strong>同属
+<code>com.android.ss</code>，第二副本</strong>）</td>
+</tr>
+<tr>
+<td><code>/data/app</code>（5）</td>
+<td><code>com.dsemu.drasticcn</code>（NDS
+模拟器）、<code>com.tencent.android.qqplaza4zte</code>（应用宝）、<code>com.iflytek.inputmethod</code>（讯飞输入法）、<code>com.android.MiEasyMode</code>（亲情模式）、<code>com.zte.backup.mmi</code>（ZTE
+备份）</td>
+</tr>
+</tbody>
+</table>
+<p>结果：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>删除前</th>
+<th>删除后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总包数 / 已停用</td>
+<td>53 / 35</td>
+<td><strong>33 / 15</strong></td>
+</tr>
+<tr>
+<td><code>/system/app</code> 文件数</td>
+<td>46</td>
+<td><strong>33</strong></td>
+</tr>
+<tr>
+<td><code>/system</code> 已用 / 空闲</td>
+<td>304 MB / 451 MB</td>
+<td><strong>297 MB / 458 MB</strong></td>
+</tr>
+<tr>
+<td><code>/data</code> 已用</td>
+<td>222 MB</td>
+<td><strong>149 MB</strong></td>
+</tr>
+</tbody>
+</table>
+<p>删除后同样做了「清空日志 → 静置 120 秒」校验：<strong>516
+行日志，<code>Unable to start service</code> / <code>Start proc</code> /
+<code>ANR</code> / <code>FATAL</code> 全为 0</strong>。</p>
+<blockquote>
+<p>注意：<code>com.android.ss</code> 有<strong>两份
+APK</strong>（<code>/system/framework/statsold-release.apk</code> 与
+<code>/system/app/Stats_12.apk</code>），<br />
+只删一份时 <code>pm path</code> 仍指向另一份，必须两处都删并重启。</p>
+</blockquote>
+<p><strong>sdcard0 现状（4.7 GB / 10.9 GB，6.1 GB 空闲，8824
+个文件）</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>分类</th>
+<th>目录（大小）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>音乐缓存</td>
+<td><code>qqmusic</code> 1.34 GB、<code>netease</code> 615
+MB、<code>xiami</code> 440 MB</td>
+</tr>
+<tr>
+<td>下载</td>
+<td><code>ThunderDownload</code> 879 MB、<code>Download</code> 464
+MB、<code>360Download</code> 35 MB</td>
+</tr>
+<tr>
+<td>模拟器 ROM</td>
+<td><code>XiaoJi</code> 347 MB、<code>DraSticCN</code> 26
+MB、<code>Games</code> 15 MB、<code>Roms</code> 4 MB</td>
+</tr>
+<tr>
+<td>应用数据</td>
+<td><code>tencent</code> 105 MB、<code>anzhi</code> 95
+MB、<code>AnyOffice</code> 43 MB、<code>Android</code> 35
+MB、<code>bluetooth</code> 20 MB</td>
+</tr>
+<tr>
+<td>安装包残留</td>
+<td><code>konglongkuaida.apk</code> 15 MB、<code>APKPure_*.apk</code> 12
+MB</td>
+</tr>
+<tr>
+<td>其他</td>
+<td><code>DCIM</code> 8 MB、<code>weather</code> 9
+MB、<code>LOST.DIR</code> 5 MB 等</td>
+</tr>
+</tbody>
+</table>
+<p>这些目录<strong>全部来自已删除/已停用的应用</strong>（QQ音乐、网易云、虾米、迅雷、360、小鸡模拟器、应用宝等），<br />
+对当前用途（SSH 服务 + 控制台）没有价值，可以整体清空。</p>
+<p><code>sdcard2</code>（外置 SD 卡槽）当前为 <code>d---------</code>
+且内容为空 —— 没有插卡，无需处理。</p>
+<p><strong>实际清理结果（2026-11-15）</strong>：</p>
+<ul>
+<li><code>DCIM/Camera</code> 的 5 张照片（2020-02 ～
+2022-04）已备份到<br />
+<code>D:\AndroidDev\work\zte-grand-s\backup\photos</code>，<strong>逐张
+md5 校验一致</strong>；</li>
+<li><code>sdcard0</code> 其余 128 个顶层条目全部删除：文件数
+<strong>8824 → 0</strong>，已用 <strong>4.7 GB → 139 MB</strong>（10 GB
+空闲）；</li>
+<li>保留挂载点 <code>.android_secure</code>（app2sd
+用），读写测试通过；<code>am force-stop android.process.media</code>
+触发重新扫描。</li>
+</ul>
+<blockquote>
+<p>两个坑：① 4.1 的 toolbox <code>rm</code> <strong>不支持
+<code>-f</code></strong>，<code>rm -rf</code> 会静默失败，必须用
+<code>busybox rm -rf</code>；<br />
+② 通配符 <code>.[!.]*</code> 匹配不到 <code>..ccid</code>
+这类“双点”文件，需用绝对路径单独删除。</p>
+</blockquote>
+<p><strong>备份归档位置</strong>：所有 APK tar 包（lowrisk / rest / sys
+/ framework / dataapp，共 274 MB）<br />
+已从 C 盘临时目录迁到
+<code>D:\AndroidDev\work\zte-grand-s\backup\</code>，5 个包 md5
+全部校验一致。</p>
+<h3 id="蓝牙模块验证默认开启与蓝牙共享2026-11-15">5.17
+蓝牙：模块验证、默认开启与蓝牙共享（2026-11-15）</h3>
+<p><strong>结论：模块正常，已设为开机默认开启；蓝牙共享（PAN/NAP）可用，等待有蓝牙的机器实测链路。</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>实测值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本机 MAC / 名称</td>
+<td><code>30:F3:1D:xx:xx:E7</code>（已脱敏）/
+<code>ZTE Grand S</code>（class <code>0x5a020c</code>）</td>
+</tr>
+<tr>
+<td>栈</td>
+<td><code>/system/bin/bluetoothd -n</code> 常驻（uid
+1002），<code>hci0</code> 存在，rfkill <code>state=1</code></td>
+</tr>
+<tr>
+<td>内核支持</td>
+<td><code>CONFIG_BT_BNEP=y</code>、<code>CONFIG_BT_RFCOMM=y</code>、<code>CONFIG_BT_HIDP=y</code>（全部内置，不依赖
+.ko）</td>
+</tr>
+<tr>
+<td>厂商声明</td>
+<td><code>ro.qualcomm.bluetooth.nap=true</code> → 支持
+<strong>NAP</strong>（蓝牙网络共享总端）</td>
+</tr>
+<tr>
+<td>历史配对</td>
+<td><code>Honor 10</code>、<code>OnePlus 5T</code>、<code>JBL T280BT</code>、<code>BT Gamepad</code>、<code>HONOR Band 5</code>
+等 → 模块历史上一直可用</td>
+</tr>
+<tr>
+<td>上电验证</td>
+<td><code>features</code> 从 <code>0x0000000000000000</code> →
+<code>0xfffe8ffed83f5b87</code>，<code>dumpsys bluetooth</code> 出现
+Local address</td>
+</tr>
+<tr>
+<td>PAN 服务</td>
+<td><code>--Bluetooth Service- Pan Profile</code>
+已注册（<code>PAN profile state:0</code> = 未连接）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>默认开启的做法</strong></p>
+<p>4.1 的蓝牙开关存在 <code>settings/secure</code> 表（<strong>4.2
+之后才改到 <code>global</code></strong>），键名
+<code>bluetooth_on</code>。<br />
+系统开机时读它决定是否自动上电，所以置 1 即可：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">content query  --uri content://settings/secure --<span class="built_in">where</span> <span class="string">&quot;name=&#x27;bluetooth_on&#x27;&quot;</span></span><br><span class="line">content update --uri content://settings/secure --<span class="built_in">bind</span> value:i:1 --<span class="built_in">where</span> <span class="string">&quot;name=&#x27;bluetooth_on&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>4.1 镜像里<strong>没有 <code>settings</code> 命令、也没有
+<code>sqlite3</code></strong>，只有 <code>content</code>（通过
+ContentProvider 读写）。</p>
+</blockquote>
+<p><code>guard.sh</code> 增加了一次性自愈（<code>bt_default_done</code>
+标记，只在每次开机跑一次），<br />
+防止被误关后 <code>bluetooth_on</code> 停在 0
+导致以后开机都不再自动上电。</p>
+<p><strong>重启验证</strong>：开机 116 s 时
+<code>features=0xfffe8ffed83f5b87</code>、<code>bluetooth_on=value=1</code>，无需人工干预。</p>
+<p><strong>蓝牙共享（PAN/NAP）</strong></p>
+<ul>
+<li>入口：设置 → 更多 → 网络共享与移动热点 →
+勾选「蓝牙共享网络」（实测勾选成功）</li>
+<li>4.1
+<strong>不持久化</strong>这个开关，重启后回到关闭；需要时再点一次</li>
+<li>当前没有 <code>bnep0</code>：NAP 的 <code>bnep0</code>
+一般要等对端（PANU）连上才出现</li>
+<li>待实测（需要带蓝牙的 Mac）：
+<ol type="1">
+<li>Mac 与手机配对（手机实际 MAC，文中已脱敏）</li>
+<li>Mac 侧加入 PAN，拿到 <code>192.168.44.x</code></li>
+<li><code>ssh root@192.168.44.1</code>（手机作为 NAP 的网关）</li>
+</ol></li>
+<li>带宽预期：BR/EDR PAN 理论 1–2 Mbps，实测常在 100–300 KB/s —— 够
+SSH/控制台，不适合传大文件</li>
+</ul>
+<blockquote>
+<p>安全提醒：蓝牙共享等于把手机网络借给已配对设备，默认保持关闭；<br />
+老芯片上 WiFi 2.4 GHz
+与蓝牙共存会有互相干扰，长期开着蓝牙会有额外待机功耗。</p>
+</blockquote>
+<h3 id="chroot-可行性实测与-git-gcc-评估2026-11-15">5.18 chroot
+可行性实测与 git / gcc 评估（2026-11-15）</h3>
+<p><strong>先说结论：当前系统没有用 chroot</strong> —— sshd（静态
+Go）、busybox、ConsoleHome 全部原生跑在 Android 上；<br />
+chroot
+只是”以后要装工具链”的路线，本轮把它的三个关键前提都实测了一遍。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>前提</th>
+<th>实测结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loop 设备</td>
+<td><code>/dev/block/loop0-7</code> 存在，<code>losetup</code>
+绑定/解绑正常</td>
+</tr>
+<tr>
+<td>ext4 镜像挂载</td>
+<td><strong>可用，但必须关新特性</strong>：<code>mke2fs 1.47</code>
+默认带 <code>metadata_csum</code>/<code>64bit</code>，内核 3.4 直接
+<code>EINVAL</code>；改用
+<code>-O ^metadata_csum,^64bit,^orphan_file,^casefold,^bigalloc</code>
+后挂载成功（<code>EXT4-fs (loop0): mounted</code>）</td>
+</tr>
+<tr>
+<td>chroot</td>
+<td><code>mount --bind</code> +
+<code>busybox chroot &lt;mnt&gt; /hello</code>
+成功执行镜像内的静态二进制</td>
+</tr>
+<tr>
+<td>静态二进制</td>
+<td>NDK r26 生成的 armeabi-v7a 静态 ELF 会被 4.1 的 linker
+拒绝：<code>TLS segment is underaligned: alignment is 8, needs to be at least 32</code>；把
+ELF 的 <code>PT_TLS</code> <code>p_align</code> 改成 32 后正常运行</td>
+</tr>
+</tbody>
+</table>
+<p><strong>git / gcc 放在哪</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>需求</th>
+<th>原生 bionic 直接跑</th>
+<th>chroot 发行版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>git</td>
+<td>可行，但没有官方静态包，要自己交叉编译</td>
+<td><code>apt install git</code>，最省事</td>
+</tr>
+<tr>
+<td>gcc</td>
+<td><strong>基本无解</strong>（不存在 bionic 版 gcc；老的 Terminal IDE
+方案已过时）</td>
+<td><code>apt install build-essential</code>，完整可用</td>
+</tr>
+<tr>
+<td>体积</td>
+<td>10–20 MB（只有 git）</td>
+<td>Debian 最小系统 + gcc + git ≈ 700 MB–1 GB</td>
+</tr>
+<tr>
+<td>落盘</td>
+<td><code>/data</code>（1.8 GB 空闲，exec）</td>
+<td>镜像放 <code>sdcard0</code>（10 GB），loop 挂载即可 exec</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>原生</td>
+<td>也是原生速度（chroot 无虚拟化开销）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>传输瓶颈（实测）</strong>：<code>adb push</code> ≈ 0.4
+MB/s、<code>adb pull</code> ≈ 0.2–0.3 MB/s。<br />
+2 GB 的 rootfs 从 PC 推要一个半小时以上，<strong>建议在手机侧直接
+<code>wget</code> 下载</strong>，或经 Mac/局域网 HTTP 中转。</p>
+<p><strong>系统能不能”升级”</strong> —— 分三层看：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>层</th>
+<th>能否</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android ROM</td>
+<td><strong>否</strong>（不建议）</td>
+<td>官方止步 4.1.2（<code>BlueGod_N988_JB_V1.0.0B09</code>），没有 4.2+
+官方包，社区也基本没有 N988 的可用 ROM；刷机还必须走 USB
+fastboot，而本机 USB 数据通道异常（§5.13）</td>
+</tr>
+<tr>
+<td>内核</td>
+<td><strong>否</strong></td>
+<td><code>boot</code>/<code>recovery</code> 分区由 aboot
+校验（<code>m9kefs*</code> / <code>safeKeybox</code>），驱动闭源且无 3.4
+之后的源码 —— 与参考文章结论一致：bootloader 限制内核替换</td>
+</tr>
+<tr>
+<td>用户态 Linux（chroot）</td>
+<td><strong>可以，随时</strong></td>
+<td>换发行版或滚版本即可；但要接受内核 3.4 的限制，见下</td>
+</tr>
+</tbody>
+</table>
+<p>内核 3.4 对用户态的真实约束（<code>/proc/config.gz</code>
+实测）：</p>
+<ul>
+<li><strong>无 namespace</strong>：只开了
+<code>CONFIG_NAMESPACES=y</code>，UTS/IPC/PID/NET/USER 全未开 →
+Docker/LXC/podman 不可能</li>
+<li><strong>cgroup 只有 <code>freezer</code></strong> → systemd
+起不来，得用 sysvinit 或手写启动脚本</li>
+<li><strong>无 seccomp / io_uring / eBPF</strong> →
+部分新程序（沙箱类、异步 IO 类）跑不了</li>
+<li><code>CONFIG_SWAP=y</code> → 可以挂 swapfile 缓解 gcc
+的内存压力</li>
+<li>glibc 2.31+ 要求内核 ≥ 3.2，所以 <strong>Debian 11/12 armhf、或
+Alpine</strong> 都能用</li>
+</ul>
+<blockquote>
+<p>参考：sunjunior《安卓手机如何变成一台便携式Linux主机》用的就是同一套<br />
+“loop 挂 ext4 镜像 → bind /dev /proc /sys → chroot → 里面跑
+sshd”，只是它用的是 2018 年的 Arch 镜像，<br />
+没有踩到 <code>metadata_csum</code> 这个新坑。</p>
+</blockquote>
+<h3 id="usb-兜底通道调测目标方案坑与结论2026-11-16">5.19 USB
+兜底通道：调测目标、方案、坑与结论（2026-11-16）</h3>
+<p><strong>调测目标</strong></p>
+<ol type="1">
+<li>WiFi 失效时仍能进系统（USB adb 作为兜底，不依赖网络）</li>
+<li>插上 USB 自动弹出「连接到 PC」界面，可选择 USB 模式</li>
+<li>不破坏既有的 adb wifi 开机自启</li>
+</ol>
+<p><strong>先给结论（三条缺一不可）</strong></p>
+<p>USB adb 能用的前提：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>PC 装好 ZTE USB 驱动</td>
+<td>用光盘里的 <code>Installer\Setup.exe</code>；装完
+<code>oem16~oem29.inf</code> 覆盖 <code>VID_19D2</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>手机组合必须是 <code>mass_storage,adb</code></td>
+<td>对应 <strong>PID 1351</strong>，只有这个 PID 在 ZTE 驱动里有
+INF</td>
+</tr>
+<tr>
+<td>3</td>
+<td>adbd 切到 USB 传输</td>
+<td><code>setprop service.adb.tcp.port ""</code> + 重启 adbd</td>
+</tr>
+</tbody>
+</table>
+<p>缺任意一条，现象都是：<strong>Windows 里设备出现约 2
+秒后消失</strong>。</p>
+<p>另外还有两条”运行期”前提（都实际踩过，见下文演练）：</p>
+<ol type="1">
+<li><strong>adbd 必须在 USB 重新枚举完成之后再启动</strong>，否则
+<code>dmesg</code> 里没有 <code>adb_open</code>，手机侧一切正常但 PC
+永远看不到；</li>
+<li><strong>PC 侧 <code>adb kill-server</code> 要在手机切到 USB
+之后执行</strong>；如果线是切换前就插着的，先拔插一次再
+<code>kill-server</code>。</li>
+</ol>
+<p><strong>模式 → PID 映射（实测）</strong></p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>入口</th>
+<th><code>sys.usb.config</code></th>
+<th>idProduct</th>
+<th>Windows 结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设置→USB大容量存储</td>
+<td><code>mass_storage</code></td>
+<td>1353</td>
+<td>✅ 识别为 U 盘</td>
+</tr>
+<tr>
+<td>设置→连接 PC 侧软件</td>
+<td><code>diag,diag_mdm,adb</code></td>
+<td>—（未测）</td>
+<td>❌ 需高通 PC 套件</td>
+</tr>
+<tr>
+<td>设置→媒体设备(MTP)</td>
+<td><code>mtp,adb</code></td>
+<td>0245</td>
+<td>❌ 驱动无此 PID，2 秒消失</td>
+</tr>
+<tr>
+<td>设置→安装驱动</td>
+<td><code>cdrom,adb</code></td>
+<td>1361</td>
+<td>✅ 光驱（驱动盘）</td>
+</tr>
+<tr>
+<td>手动</td>
+<td><code>mass_storage,adb</code></td>
+<td><strong>1351</strong></td>
+<td>✅ U 盘 + ADB（推荐）</td>
+</tr>
+<tr>
+<td>手动</td>
+<td><code>adb</code></td>
+<td>0423</td>
+<td>❌ ROM 不支持单独 adb</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>关键：<strong>PID 由 <code>sys.usb.config</code>
+决定</strong>，不是固定的。选错组合 = 选了一个没有驱动的 PID。</p>
+</blockquote>
+<p><strong>adbd 4.1 的传输互斥（实测 A/B）</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>service.adb.tcp.port</code></th>
+<th><code>adb devices</code>（PC 侧 kill-server 后）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>5555</code></td>
+<td>只有 <code>192.168.3.48:5555</code>（USB 接口存在但无人服务）</td>
+</tr>
+<tr>
+<td>空</td>
+<td>只有 <code>ZTE-Grand-S</code>（USB 序列号）</td>
+</tr>
+</tbody>
+</table>
+<p>所以不可能”同时开”。方案定为：<strong>WiFi 主用，5 分钟无 IP 才切
+USB，WiFi 恢复立刻切回</strong>。</p>
+<p><strong>最终配置</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service.adb.tcp.port   = 5555                <span class="comment"># 默认走 adb wifi</span></span><br><span class="line">sys.usb.config         = mass_storage,adb    <span class="comment"># PID 1351（guard 切 USB 时强制）</span></span><br><span class="line">persist.sys.usb.config = cdrom,adb           <span class="comment"># ROM 每次开机都会重置成这个，别指望它</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>persist.sys.usb.config</code> 改不动就改不动：ROM
+开机时把它重置为 <code>cdrom,adb</code>（PID 1361，无驱动）。<br />
+所以 guard 在需要耗时切 USB 时<strong>强制</strong>写
+<code>sys.usb.config=mass_storage,adb</code>，而不是依赖 persist。</p>
+</blockquote>
+<p><strong>guard.sh 里的兜底逻辑（已部署）</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每 30 秒一次</span></span><br><span class="line"><span class="keyword">if</span> wifi_up; <span class="keyword">then</span></span><br><span class="line">    DOWN=0</span><br><span class="line">    <span class="keyword">if</span> [ -z <span class="string">&quot;<span class="subst">$(getprop service.adb.tcp.port)</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        setprop service.adb.tcp.port 5555</span><br><span class="line">        stop adbd; <span class="built_in">sleep</span> 1; start adbd        <span class="comment"># 切回 wifi（实测 IP 恢复后 13–19 秒完成）</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    DOWN=$((DOWN+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$DOWN</span>&quot;</span> -ge 10 ] &amp;&amp; [ <span class="string">&quot;<span class="subst">$(getprop service.adb.tcp.port)</span>&quot;</span> = <span class="string">&quot;5555&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="comment"># 10 × 30s ≈ 5 分钟</span></span><br><span class="line">        setprop service.adb.tcp.port <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 只有 1351 这个 PID 在 Windows 侧有驱动，必须强制对齐（ROM 会重置 persist）</span></span><br><span class="line">        CUR=$(getprop sys.usb.config)</span><br><span class="line">        [ <span class="string">&quot;<span class="variable">$CUR</span>&quot;</span> != <span class="string">&quot;mass_storage,adb&quot;</span> ] &amp;&amp; setprop sys.usb.config <span class="string">&quot;mass_storage,adb&quot;</span></span><br><span class="line">        <span class="built_in">sleep</span> 4                              <span class="comment"># ← 关键：等 USB 重新枚举完成</span></span><br><span class="line">        stop adbd; <span class="built_in">sleep</span> 2; start adbd; <span class="built_in">sleep</span> 3</span><br><span class="line">        <span class="comment"># adbd 抢跑会开不了 adb 功能（dmesg 里没有 adb_open），复核一次再补一刀</span></span><br><span class="line">        busybox dmesg | busybox <span class="built_in">tail</span> -25 | busybox grep -q adb_open || &#123;</span><br><span class="line">            stop adbd; <span class="built_in">sleep</span> 2; start adbd</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>sleep 4</code> 不是凑数：最早写成
+<code>stop adbd; sleep 1; start adbd</code>，adbd 在 USB
+还没枚举完就启动，<br />
+结果是 <strong>USB 侧 <code>adb_open</code>
+根本没发生</strong>，手机端一切”正常”、PC 端永远看不到设备。</p>
+</blockquote>
+<p><strong>手工切 USB（救援时用）</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手机侧（SSH 或已有的 adb 通道都能执行）</span></span><br><span class="line">su -c <span class="string">&#x27;setprop sys.usb.config mass_storage,adb; setprop service.adb.tcp.port &quot;&quot;; stop adbd; sleep 2; start adbd&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>PC 侧顺序很重要：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1) 如果线一直插着：先拔掉，等 3 秒再插回（fresh attach）</span></span><br><span class="line"><span class="comment"># 2) 再重启 adb server，最后看列表</span></span><br><span class="line">adb <span class="built_in">kill</span><span class="literal">-server</span></span><br><span class="line">adb devices            <span class="comment"># 应出现 ZTE-Grand-S</span></span><br></pre></td></tr></table></figure>
+<p><strong>为什么必须”先插线、后重启 server”</strong>：adb server
+如果跨越了 adbd 的切换过程一直活着，<br />
+会一直挂着旧的 <code>192.168.3.48:5555 offline</code>
+条目、看不到新出现的 USB 设备；<br />
+反过来，切换完成后新起的 server 立刻就能枚举到。</p>
+<p><strong>设备侧 <code>state</code> 怎么读（最省时的判据）</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th><code>/sys/class/android_usb/android0/state</code></th>
+<th>含义</th>
+<th>adb 能用吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CONFIGURED</code></td>
+<td>主机已完成 SET_CONFIGURATION，驱动绑好</td>
+<td>✅ 能</td>
+</tr>
+<tr>
+<td><code>CONNECTED</code></td>
+<td>线通了，但主机没配置设备（Windows 卡住）</td>
+<td>❌ 永远看不到</td>
+</tr>
+<tr>
+<td><code>DISCONNECTED</code></td>
+<td>主机侧已摘掉设备（线/口/搬运中）</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>看到 <code>CONNECTED</code> 或 <code>DISCONNECTED</code> 就别再折腾
+adb 了，直接拔插线最快。</p>
+</blockquote>
+<p><strong>插上自动弹窗（ConsoleHome）</strong></p>
+<blockquote>
+<p><strong>2026-11-16
+变更</strong>：按用户要求<strong>已取消自动弹窗</strong>（开机或插拔都不再自动弹出），<br />
+ConsoleHome 里的 <code>UsbStateReceiver</code>
+已移除。需要时手动打开：<br />
+<code>am start -n com.android.settings/.ConnectSettings</code></p>
+<p>当初的实现（留档）：监听
+<code>android.hardware.usb.action.USB_STATE</code>，以<br />
+<code>/sys/class/android_usb/android0/state == CONNECTED</code> 为准，5
+秒节流后拉起 <code>ConnectSettings</code>；<br />
+实测真实插入时该界面会到前台。</p>
+</blockquote>
+<p><strong>开机直接进 ConsoleHome（2026-11-16）</strong></p>
+<ul>
+<li><code>settings/secure/lockscreen.disabled = 1</code>（同时把 ZTE
+锁屏引导标记置为已看过）</li>
+<li>重启实测：前台直接是
+<code>com.fix.consolehome/.MainActivity</code>，无锁屏、无「连接到
+PC」弹窗</li>
+<li>注意：ROM 每次开机会把 <code>persist.sys.usb.config</code> 重置回
+<code>cdrom,adb</code>（PID 1361，无驱动），<br />
+所以 guard 在切 USB 时必须<strong>强制</strong>设置
+<code>sys.usb.config=mass_storage,adb</code>（不能只判断是否含
+adb）</li>
+</ul>
+<p><strong>踩过的坑</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>现象</th>
+<th>根因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设备 2–6 秒后从 Windows 消失</td>
+<td>组合的 PID 没有驱动；Windows 复位端口</td>
+<td>换 <code>mass_storage,adb</code>(1351) + 装 ZTE 驱动</td>
+</tr>
+<tr>
+<td><code>charger type=0</code>、<code>usbin_uv/ov</code>、<code>CONNECT_EVENT=0</code></td>
+<td>插拔瞬间的电气抖动，<strong>不是尾插坏</strong></td>
+<td>早期误判，已纠正</td>
+</tr>
+<tr>
+<td>系统 USB 设置页一点就崩</td>
+<td><code>Settings.apk</code> 声明了
+<code>Settings$UsbSettingsActivity</code>，但 dex 里没有这个类（ROM
+打包缺陷）</td>
+<td>改用 ZTE 的 <code>com.android.settings/.ConnectSettings</code></td>
+</tr>
+<tr>
+<td>切成纯 <code>adb</code> 后设备消失</td>
+<td>这个 ROM 不支持单独 adb，只支持 <code>diag,diag_mdm,adb</code>
+等组合</td>
+<td>不再使用纯 adb</td>
+</tr>
+<tr>
+<td>切通道后 PC 显示 <code>offline</code></td>
+<td>adb server 缓存了旧 TCP 条目</td>
+<td><code>adb kill-server</code> 后重新扫描</td>
+</tr>
+<tr>
+<td>guard 出现两个实例</td>
+<td>kill 后重启未确认</td>
+<td>重启后 <code>ps</code> 确认只有 1 个</td>
+</tr>
+<tr>
+<td>手机侧 <code>state=CONFIGURED</code>，PC 侧仍无设备</td>
+<td>adbd 抢在 USB 枚举前启动，<code>dmesg</code> 无
+<code>adb_open</code></td>
+<td>先 <code>sleep 4</code> 等枚举，再重启 adbd；<code>dmesg</code>
+复核</td>
+</tr>
+<tr>
+<td>server 跨过切换一直活着 → 永远看不到 USB</td>
+<td>adb server 持有旧的 TCP/USB 句柄</td>
+<td>切换<strong>之后</strong>再 <code>adb kill-server</code></td>
+</tr>
+<tr>
+<td>线一直插着做 in-place 切换 → <code>state=CONNECTED</code> 不动</td>
+<td>Windows 侧设备栈卡在”未配置”，只有重挂才恢复</td>
+<td><strong>拔插一次线</strong>（fresh attach），实测立即恢复</td>
+</tr>
+</tbody>
+</table>
+<p><strong>验证记录（2026-11-16，拔插线后实测）</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Windows PnP:</span><br><span class="line">  USB\VID_19D2&amp;PID_1351&amp;MI_00  → USB 大容量存储设备    OK   （WinUSB）</span><br><span class="line">  USB\VID_19D2&amp;PID_1351&amp;MI_01  → ADB Device           OK   （DeviceInterfaceGUIDs=&#123;F72FE0D4-...&#125;）</span><br><span class="line">  USB\VID_19D2&amp;PID_1351        → USB Composite Device  OK   （序列号 ZTE-GRAND-S）</span><br><span class="line">连续观察 60 秒无掉线</span><br><span class="line"></span><br><span class="line">设备侧：state=CONFIGURED  idProduct=1351  service.adb.tcp.port=&quot;&quot;  adbd=running</span><br><span class="line">PC 侧： adb devices → ZTE-Grand-S device</span><br><span class="line">        adb -s ZTE-Grand-S shell → su / getprop / ifconfig 均可执行</span><br><span class="line"></span><br><span class="line">恢复后：service.adb.tcp.port=5555  adb 192.168.3.48:5555 device</span><br><span class="line">        guard 单实例，sshd 正常</span><br></pre></td></tr></table></figure>
+<p>完整演练过程与三轮时间线见下面「7 分钟实战演练」。</p>
+<p><strong>开机提示「安卓升级程序 / 正在优化应用」</strong></p>
+<ul>
+<li>这是系统在开机阶段对<strong>系统 APK 做 dexopt</strong>
+时显示的进度界面</li>
+<li>触发条件：覆盖过
+<code>/system/app/ConsoleHome.apk</code>（包管理器认为”已更新”）</li>
+<li>只在该次开机会出现；之后再重启不会（实测：<code>lastUpdateTime</code>
+不变、无 dexopt 日志）</li>
+<li>属于系统应用的正常行为，不是故障；普通 <code>/data</code>
+应用在安装时就完成优化，所以看不到</li>
+</ul>
+<p><strong>7 分钟实战演练（2026-11-16，3 轮）</strong></p>
+<p>演练脚本跑在手机侧（detached），用 <code>svc</code> 开关 WiFi，避免动
+UI：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line"><span class="comment"># 7 分钟兜底演练：T0 关 WiFi，T+420s 保险开 WiFi，全程 30s 采样</span></span><br><span class="line">BB=/system/xbin/busybox</span><br><span class="line">LOG=/data/local/tmp/sshd/drill.log</span><br><span class="line"><span class="function"><span class="title">ipnow</span></span>() &#123; <span class="variable">$BB</span> ifconfig wlan0 2&gt;/dev/null | <span class="variable">$BB</span> grep -o <span class="string">&#x27;inet addr:[0-9.]*&#x27;</span> | <span class="variable">$BB</span> <span class="built_in">head</span> -1; &#125;</span><br><span class="line"><span class="function"><span class="title">stamp</span></span>() &#123; <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date &#x27;+%H:%M:%S&#x27;)</span> <span class="variable">$1</span> ip=[<span class="subst">$(ipnow)</span>] tcp=[<span class="subst">$(getprop service.adb.tcp.port)</span>] \</span></span><br><span class="line"><span class="string">usb=<span class="subst">$(getprop sys.usb.config)</span> state=<span class="subst">$(cat /sys/class/android_usb/android0/state)</span> \</span></span><br><span class="line"><span class="string">pid=<span class="subst">$(cat /sys/class/android_usb/android0/idProduct)</span>&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span>; &#125;</span><br><span class="line"></span><br><span class="line">stamp <span class="string">&quot;T0-before&quot;</span>; <span class="built_in">sleep</span> 2</span><br><span class="line">svc wifi <span class="built_in">disable</span>; <span class="built_in">sleep</span> 5; stamp <span class="string">&quot;T0+5s&quot;</span></span><br><span class="line">i=0; <span class="keyword">while</span> [ <span class="string">&quot;<span class="variable">$i</span>&quot;</span> -lt 14 ]; <span class="keyword">do</span> <span class="built_in">sleep</span> 30; i=$((i+<span class="number">1</span>)); stamp <span class="string">&quot;T<span class="subst">$((i*30)</span>)s&quot;</span>; <span class="keyword">done</span></span><br><span class="line">stamp <span class="string">&quot;T420 INSURANCE&quot;</span>; svc wifi <span class="built_in">enable</span>; <span class="built_in">sleep</span> 5; stamp <span class="string">&quot;T425s&quot;</span></span><br><span class="line">j=0; <span class="keyword">while</span> [ <span class="string">&quot;<span class="variable">$j</span>&quot;</span> -lt 8 ]; <span class="keyword">do</span> <span class="built_in">sleep</span> 30; j=$((j+<span class="number">1</span>)); stamp <span class="string">&quot;T<span class="subst">$((420+j*30)</span>)s&quot;</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>启动方式（必须 detached，否则 adb 断开会连带杀掉脚本）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;busybox setsid sh /data/local/tmp/drill.sh &gt;/dev/null 2&gt;&amp;1 &lt;/dev/null &amp;&#x27;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>4.1 自带
+<code>/system/bin/svc</code>（<code>svc wifi enable|disable</code>），不用点设置界面；<br />
+<code>settings</code> 里的 <code>wifi_on</code>
+只是状态记录，改了不会立刻生效。</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th>轮次</th>
+<th>WiFi 关闭</th>
+<th>guard 切 USB</th>
+<th>耗时</th>
+<th>设备侧</th>
+<th>PC 侧 <code>adb</code></th>
+<th>保险开 WiFi</th>
+<th>guard 切回 TCP → PC 可连</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#1 07:41–07:48</td>
+<td>07:41:15</td>
+<td>07:46:06</td>
+<td>4m51s</td>
+<td><code>CONFIGURED</code> / 1351</td>
+<td>❌ dmesg 无 <code>adb_open</code></td>
+<td>07:48:22</td>
+<td>07:48:41 → 07:48:45</td>
+</tr>
+<tr>
+<td>#2 07:52–07:59</td>
+<td>07:52:15</td>
+<td>07:57:11</td>
+<td>4m56s</td>
+<td><code>CONFIGURED</code> / 1351</td>
+<td>❌ server 是切换前起的</td>
+<td>07:59:22</td>
+<td>07:59:53 → 07:59:58</td>
+</tr>
+<tr>
+<td>#3 08:08–08:16</td>
+<td>08:08:21</td>
+<td>08:13:12</td>
+<td>4m37s</td>
+<td>一直 <code>CONNECTED</code></td>
+<td>❌ Windows 未配置设备</td>
+<td>08:15:27</td>
+<td>08:15:54 → 08:16:03</td>
+</tr>
+</tbody>
+</table>
+<p><strong>这三轮暴露、并已修掉的三个问题</strong></p>
+<ol type="1">
+<li><p><strong>adbd 抢跑（#1）</strong>：原来
+<code>stop adbd; sleep 1; start adbd</code>，adbd 在 USB
+重新枚举完成前就启动，<br />
+<code>dmesg</code> 里根本没有 <code>adb_open</code> /
+<code>adb_bind_config</code> → 手机侧看起来一切正常，PC
+侧永远看不到设备。<br />
+修法：先 <code>sleep 4</code> 等枚举，再重启 adbd，并用
+<code>dmesg | grep adb_open</code> 复核、必要时补一次重启。</p></li>
+<li><p><strong>adb server 必须”切换之后再重启”（#2）</strong>：server
+在切换前启动、跨过整个切换过程时，<br />
+会一直挂着旧的 <code>192.168.3.48:5555 offline</code>
+条目，不会去枚举新出现的 USB 设备。<br />
+手机侧 <code>dmesg</code> 明明有 <code>adb_open</code>（07:57:17），PC
+侧还是空的，就是这个原因。</p></li>
+<li><p><strong>线一直插着做 in-place 切换，Windows
+会卡在”未配置”（#3）</strong>：<br />
+三轮里 PC 侧反复 <code>kill-server</code> 都救不回来，设备侧
+<code>state</code> 停在 <code>CONNECTED</code>（线通、主机没
+SET_CONFIGURATION）。<br />
+<strong>拔插一次线（fresh
+attach）立刻恢复</strong>——而真实救援场景本来就是”WiFi
+挂了再插线”，天然是 fresh attach。</p></li>
+</ol>
+<p><strong>最终验证（08:36，拔插后）</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">手机侧： service.adb.tcp.port=&quot;&quot;   sys.usb.config=mass_storage,adb   adbd=running</span><br><span class="line">         state=CONFIGURED   idProduct=1351</span><br><span class="line">PC 侧：  拔插一次 USB 线 → adb kill-server → adb devices</span><br><span class="line">         ZTE-Grand-S	device            （连续 60 秒无掉线）</span><br><span class="line">         adb -s ZTE-Grand-S shell        （su / getprop / ifconfig 均可执行）</span><br></pre></td></tr></table></figure>
+<p><strong>救援 SOP（WiFi 彻底挂了）</strong></p>
+<ol type="1">
+<li>插上 USB 线（fresh attach，不必管当前是什么模式）</li>
+<li>PC 侧 <code>adb kill-server</code> →
+<code>adb devices</code>，确认出现 <code>ZTE-Grand-S</code></li>
+<li>用 <code>adb -s ZTE-Grand-S shell</code> 进去修（或直接改
+<code>service.adb.tcp.port</code> 切回 TCP）</li>
+<li>WiFi 恢复后 guard 30 秒内自动切回 TCP，PC 侧
+<code>adb connect 192.168.3.48:5555</code></li>
+</ol>
+<blockquote>
+<p>演练全程<strong>没有重启手机</strong>，<code>install-recovery.sh</code>
+未改动，重启后依然会恢复 adb wifi(5555)+sshd+guard。<br />
+演练脚本与日志（<code>drill.log</code> / <code>ctl.log</code>
+等）用完已删除，<code>/data/local/tmp</code> 只剩生产文件 3.9 MB。</p>
+</blockquote>
+<h3 id="客户端免密登录与-sshd-迁移到-system2026-11-16">5.20
+客户端免密登录与 sshd 迁移到 /system（2026-11-16）</h3>
+<h4 id="现象ssh-copy-id-成功后仍提示密码">5.20.1 现象：ssh-copy-id
+成功后仍提示密码</h4>
+<p>macOS 客户端：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> ssh<span class="literal">-copy-id</span> <span class="literal">-i</span> ~/.ssh/opencode_debug.pub zte<span class="literal">-grand-s</span></span><br><span class="line">Number of key(s) added: <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$</span> ssh zte<span class="literal">-grand-s</span></span><br><span class="line">root@<span class="number">100.107</span>.<span class="number">4.30</span><span class="string">&#x27;s password:        # ← 仍然要密码</span></span><br></pre></td></tr></table></figure>
+<p>服务端 <code>SSH-2.0-Go</code>。客户端 <code>-vvv</code> 日志：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">debug1: Offering public key: ~/.ssh/opencode_debug ED25519 ...</span><br><span class="line">debug3: receive packet: type 51      ← 服务端拒绝公钥</span><br><span class="line">debug1: Authentications that can continue: password,publickey</span><br></pre></td></tr></table></figure>
+<p>说明公钥已经发出，<strong>问题在服务端没有读到这把钥匙</strong>，不是客户端配置问题。</p>
+<h4 id="根因authorized_keys-路径不匹配">5.20.2 根因：authorized_keys
+路径不匹配</h4>
+<ul>
+<li>设备是 Android，root 的
+<code>HOME=/data</code>；<code>ssh-copy-id</code> 据此写<br />
+<code>$HOME/.ssh/authorized_keys</code> →
+<code>/data/.ssh/authorized_keys</code>。</li>
+<li>但这个 Go sshd 的 <code>authorized_keys</code>
+是<strong>编译期硬编码的绝对路径</strong>：<br />
+<code>/data/local/tmp/sshd/authorized_keys</code>（<code>host_ed25519</code>、<code>password</code>
+同理）。</li>
+<li><code>/data/.ssh/</code> 实际并不存在，服务从不读那里。</li>
+</ul>
+<p>设备侧验证：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -la /data/.ssh</span><br><span class="line"><span class="built_in">ls</span>: /data/.ssh: No such file or directory</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">cat</span> /data/local/tmp/sshd/authorized_keys</span><br><span class="line">ssh-ed25519 AAAA... sunjunior@          <span class="comment"># 只有设备原有的一把</span></span><br></pre></td></tr></table></figure>
+<p>修复——把客户端公钥追加到服务真正读取的文件：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;echo &quot;ssh-ed25519 AAAA... opencode-debug&quot; &gt;&gt; /data/local/tmp/sshd/authorized_keys&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>追加后 sshd 日志变成
+<code>(password=true, keys=2)</code>，客户端免密通过：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> ssh <span class="literal">-o</span> BatchMode=yes zte<span class="literal">-grand-s</span> <span class="string">&#x27;id&#x27;</span></span><br><span class="line">uid=<span class="number">0</span>(root) gid=<span class="number">0</span>(root)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>BatchMode=yes</code>
+会禁用密码提示，能返回结果就证明走的确实是公钥认证。</p>
+</blockquote>
+<h4 id="sshd-迁移到-systembin">5.20.3 sshd 迁移到 /system/bin</h4>
+<p>动机：原二进制在
+<code>/data/local/tmp/sshd/sshd</code>，希望和系统二进制放在一起、落到
+system 分区。</p>
+<p>事实核对：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>路径</th>
+<th>性质</th>
+<th>能否持久放</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/sbin/adbd</code></td>
+<td>rootfs（ramdisk）<code>ro</code>，<strong>重启即失</strong></td>
+<td>❌ 不能</td>
+</tr>
+<tr>
+<td><code>/system</code></td>
+<td>独立 ext4（<code>/dev/block/mmcblk0p12</code>），可 remount rw</td>
+<td>✅ 可持久</td>
+</tr>
+<tr>
+<td><code>/data/local/tmp</code></td>
+<td><code>/data</code> ext4，持久</td>
+<td>✅ 但属用户数据区</td>
+</tr>
+</tbody>
+</table>
+<p>所以虽然 <code>adbd</code> 在 <code>/sbin</code>，但
+<code>/sbin</code> 是只读 rootfs，<strong>无法</strong>把 sshd
+持久放过去；<br />
+最终落到 <strong><code>/system/bin/sshd</code></strong>。</p>
+<p>操作：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1) remount rw（必须带设备路径）</span></span><br><span class="line">busybox mount -o remount,rw /dev/block/mmcblk0p12 /system</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 复制并校验（没有 cp，用 busybox）</span></span><br><span class="line">busybox <span class="built_in">cp</span> -a /data/local/tmp/sshd/sshd /system/bin/sshd</span><br><span class="line"><span class="built_in">chmod</span> 755 /system/bin/sshd</span><br><span class="line"><span class="built_in">chown</span> root:root /system/bin/sshd</span><br><span class="line">md5 /system/bin/sshd /data/local/tmp/sshd/sshd     <span class="comment"># 两行必须一致</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 只改启动/守护脚本里的这一处路径：</span></span><br><span class="line"><span class="comment">#    /data/local/tmp/sshd/sshd  →  /system/bin/sshd</span></span><br><span class="line"><span class="comment">#    涉及 /system/etc/install-recovery.sh 与 /data/local/tmp/sshd/guard.sh</span></span><br><span class="line"><span class="comment">#    改前备份：</span></span><br><span class="line"><span class="comment">#    /data/local/tmp/sshd/install-recovery.sh.bak-20261116-143927</span></span><br><span class="line"><span class="comment">#    /data/local/tmp/sshd/guard.sh.bak-20261116-143927</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4) 重启 guard，让它重新加载脚本（见 §5.20.4 第 1 条）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5) 恢复只读</span></span><br><span class="line">busybox mount -o remount,ro /dev/block/mmcblk0p12 /system</span><br></pre></td></tr></table></figure>
+<p>验证（迁移完成后）:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ssh zte-grand-s <span class="string">&#x27;busybox ps | busybox grep &quot;[s]shd&quot;&#x27;</span></span><br><span class="line">11188 ... /system/bin/sshd -addr 0.0.0.0:22</span><br><span class="line"></span><br><span class="line">$ ssh zte-grand-s <span class="string">&#x27;md5 /system/bin/sshd&#x27;</span></span><br><span class="line">a624dc73b85093079e7f4b2b33e32bb6</span><br></pre></td></tr></table></figure>
+<p>注意：二进制虽然搬到 <code>/system/bin</code>，它读取的
+<code>authorized_keys</code> / <code>host_ed25519</code> /
+<code>password</code><br />
+仍是 <code>/data/local/tmp/sshd/</code>
+下的文件；<strong>密钥类文件不需要跟着搬</strong>。</p>
+<h4 id="迁移中踩到的坑">5.20.4 迁移中踩到的坑</h4>
+<ol type="1">
+<li><strong>运行中的 guard.sh 不会重读脚本</strong>。改完
+<code>guard.sh</code> 后，旧 guard（PID 1120）仍按内存里的旧路径<br />
+拉起 <code>/data/local/tmp/sshd/sshd</code>，<code>ps</code>
+里始终是旧路径。必须 kill 旧 guard 再重新启动，<br />
+新实例才会使用 <code>/system/bin/sshd</code>。</li>
+<li><strong>busybox 1.8.1 的 sed 很难用</strong>：
+<ul>
+<li>不支持 <code>#</code> 作分隔符（报
+<code>unmatched '#'</code>）；</li>
+<li>模式里出现 <code>-addr</code>
+会被当成选项（<code>invalid option -- a</code>）；</li>
+<li><code>grep -e "sshd -addr"</code> 同样会把 <code>-addr</code>
+当选项。<br />
+最终改为<strong>本地编辑脚本，再用 <code>cat &gt; 远端文件</code>
+回传</strong>，最稳。</li>
+</ul></li>
+<li><strong><code>/system</code> remount
+必须带设备路径</strong>。<code>mount -o rw,remount /system</code>
+报<br />
+<code>Invalid argument</code>；用
+<code>mount -o remount,rw /dev/block/mmcblk0p12 /system</code>
+才成功。</li>
+<li><strong><code>cp</code> / <code>printf</code> 都不存在</strong>。用
+<code>busybox cp</code>、mksh 内建 <code>echo</code>；远端 shell 没有
+<code>printf</code>。</li>
+<li><strong>不要把可变密钥放进
+<code>/system</code></strong>。<code>authorized_keys</code>
+需要追加更新，留在 <code>/data/local/tmp/sshd/</code>；<br />
+<code>/system</code> 改完恢复 <code>ro</code>。</li>
+</ol>
+<h4 id="客户端配置macos-tailscale">5.20.5 客户端配置（macOS /
+Tailscale）</h4>
+<p><code>~/.ssh/config</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Host zte-grand-s</span><br><span class="line">  HostName 100.107.4.30</span><br><span class="line">  User root</span><br><span class="line">  IdentityFile ~/.ssh/opencode_debug</span><br><span class="line">  IdentitiesOnly yes</span><br><span class="line">  ServerAliveInterval 30</span><br><span class="line">  ServerAliveCountMax 6</span><br></pre></td></tr></table></figure>
+<p>之后直接 <code>ssh zte-grand-s</code> 即可免密登录。</p>
+<blockquote>
+<p>Tailscale 下该设备走 DERP 中继（实测 RTT 400–800 ms），SSH
+可用但延迟明显；<br />
+同局域网直连会快很多。</p>
+</blockquote>
+<h4 id="adbd-调研系统自带不建议迁移">5.20.6 adbd
+调研：系统自带，不建议迁移</h4>
+<p><strong>结论：<code>/sbin/adbd</code> 是 ROM
+自带，不是后来新增的。</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>证据</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>init 服务</td>
+<td><code>/init.rc:400</code> →
+<code>service adbd /sbin/adbd</code></td>
+</tr>
+<tr>
+<td>二进制</td>
+<td>ELF32 ARM, static, stripped，141144 B，md5
+<code>afc597504eb94a56ac523cc7bc9d6993</code></td>
+</tr>
+<tr>
+<td>工具链</td>
+<td><code>GCC: (GNU) 4.6.x-google 20120106 (prerelease)</code></td>
+</tr>
+<tr>
+<td>ROM 指纹</td>
+<td><code>ZTE/ZTE-Grand-S/ZTE-Grand-S:4.1.2/JZO54K/eng.root.20140127.180005:user/release-keys</code></td>
+</tr>
+<tr>
+<td>ROM 构建</td>
+<td><code>Mon Jan 27 18:00:43 CST 2014</code></td>
+</tr>
+<tr>
+<td>内核</td>
+<td><code>Linux 3.4.0 ... gcc 4.6.x-google 20120106 ... Mon Jan 27 18:01:56 CST 2014</code></td>
+</tr>
+<tr>
+<td>第三方痕迹</td>
+<td>无 <code>chainfire</code> / <code>supersu</code> /
+<code>superuser</code> 字样</td>
+</tr>
+<tr>
+<td>root 文件</td>
+<td><code>su</code> = 2019-12-16、<code>Superuser.apk</code> =
+2018-01-26 → root 是后加的，adbd 不是</td>
+</tr>
+</tbody>
+</table>
+<p>adbd 与内核使用<strong>同一条 GCC 4.6.x-google 20120106
+工具链</strong>，构建日期也都是 2014-01-27，<br />
+可以判定是 <code>BlueGod_N988_JB_V1.0.0B09</code> 这批 ROM
+一起编译的。</p>
+<blockquote>
+<p><strong>关于编译时间</strong>：ELF 内没有 <code>__DATE__</code> /
+<code>__TIME__</code> 字符串，拿不到精确编译时间；<br />
+文件上的 <code>1970-01-01</code> 是 ramdisk
+打包时间。只能依据工具链日期（20120106）+<br />
+ROM/内核构建日期（2014-01-27）判断。</p>
+</blockquote>
+<p><strong>不建议迁移到 <code>/system</code></strong>：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>原因</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>init 写死路径</td>
+<td><code>init.rc</code> 固定 <code>/sbin/adbd</code>，复制到
+<code>/system/bin</code> 不会改变启动行为</td>
+</tr>
+<tr>
+<td>要改得动 boot.img</td>
+<td><code>init.rc</code> 与 <code>/sbin</code> 都在 boot 分区
+ramdisk，需解包/重打包</td>
+</tr>
+<tr>
+<td>恢复出厂不影响</td>
+<td>factory reset 只清 <code>/data</code>、<code>/cache</code>，不动
+boot 和 <code>/system</code></td>
+</tr>
+<tr>
+<td>唯一救援通道</td>
+<td>改坏会同时失去 USB / WiFi 调试，可能彻底失联</td>
+</tr>
+</tbody>
+</table>
+<h4 id="恢复出厂自动恢复systemetcsshd">5.20.7
+恢复出厂自动恢复（/system/etc/sshd）</h4>
+<p><strong>问题</strong>：factory reset 会清空 <code>/data</code> 和
+<code>/cache</code>，保留 <code>/system</code> 与 boot。<br />
+<code>/system/bin/sshd</code>、<code>install-recovery.sh</code>
+不会丢；但下面这些在 <code>/data/local/tmp/sshd/</code>，会被清掉：</p>
+<ul>
+<li><code>guard.sh</code></li>
+<li><code>host_ed25519</code> / <code>host_rsa</code></li>
+<li><code>password</code></li>
+<li><code>authorized_keys</code></li>
+</ul>
+<p>缺 host key / password，sshd 可能起不来；缺
+<code>guard.sh</code>，守护也没了。</p>
+<p><strong>方案</strong>：备份到 <code>/system/etc/sshd/</code>，开机由
+<code>install-recovery.sh</code> 回填。</p>
+<p>备份：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">busybox mount -o remount,rw /dev/block/mmcblk0p12 /system</span><br><span class="line"><span class="built_in">mkdir</span> -p /system/etc/sshd</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> guard.sh host_ed25519 host_rsa password authorized_keys; <span class="keyword">do</span></span><br><span class="line">  busybox <span class="built_in">cp</span> -a /data/local/tmp/sshd/<span class="variable">$f</span> /system/etc/sshd/<span class="variable">$f</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">chmod</span> 600 /system/etc/sshd/host_ed25519 /system/etc/sshd/host_rsa \</span><br><span class="line">          /system/etc/sshd/password /system/etc/sshd/authorized_keys</span><br><span class="line"><span class="built_in">chmod</span> 755 /system/etc/sshd/guard.sh</span><br><span class="line"><span class="comment"># 注意：这台机器的 chown 不支持 -R（报 No such user &#x27;-R&#x27;），逐个 chown</span></span><br><span class="line"><span class="built_in">chown</span> 0:0 /system/etc/sshd/host_ed25519 /system/etc/sshd/host_rsa \</span><br><span class="line">          /system/etc/sshd/password /system/etc/sshd/authorized_keys \</span><br><span class="line">          /system/etc/sshd/guard.sh</span><br><span class="line">busybox mount -o remount,ro /dev/block/mmcblk0p12 /system</span><br></pre></td></tr></table></figure>
+<p>开机回填段（已并入 <code>install-recovery.sh</code>，见 §5.5）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /data/local/tmp/sshd</span><br><span class="line">SRC=/system/etc/sshd</span><br><span class="line">DST=/data/local/tmp/sshd</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> guard.sh host_ed25519 host_rsa password authorized_keys; <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$SRC</span>/<span class="variable">$f</span>&quot;</span> ] &amp;&amp; [ ! -f <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$SRC</span>/<span class="variable">$f</span>&quot;</span> &gt; <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">    <span class="built_in">chmod</span> 600 <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">    [ <span class="string">&quot;<span class="variable">$f</span>&quot;</span> = <span class="string">&quot;guard.sh&quot;</span> ] &amp;&amp; <span class="built_in">chmod</span> 755 <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">    <span class="built_in">chown</span> 0:0 <span class="string">&quot;<span class="variable">$DST</span>/<span class="variable">$f</span>&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;restored <span class="variable">$f</span>&quot;</span> &gt;&gt; /data/local/tmp/sshd/boot.log</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><strong>设计要点</strong>：</p>
+<ul>
+<li><strong>只补缺失</strong>（<code>[ ! -f "$DST/$f" ]</code>），不覆盖
+<code>/data</code> 已有文件：恢复出厂后能自动回填，<br />
+日常又不会把后来追加的公钥或改过的口令冲掉。</li>
+<li><code>mkdir -p</code> 必须在写 <code>boot.log</code>
+之前，否则恢复出厂后目录不存在，日志都写不出来。</li>
+<li>复制后显式 <code>chmod 600</code>（<code>guard.sh</code> 单独
+755）、<code>chown 0:0</code>，避免 <code>cat &gt;</code> 丢权限。</li>
+</ul>
+<p><strong>实测（2026-11-16）</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mv /data/local/tmp/sshd/host_rsa /data/local/tmp/sshd/host_rsa.test</span><br><span class="line">  → 运行回填段 → restored host_rsa</span><br><span class="line">  → md5 一致：bf8587ed513cd1de1b4a07645449561b</span><br><span class="line">  → 权限 -rw------- root root</span><br></pre></td></tr></table></figure>
+<p><code>/system</code> 占用仅增加约 13 KB。</p>
+<h4 id="clash-verge-干扰-tailscale-udp-的排查与清理2026-11-16">5.20.8
+Clash Verge 干扰 Tailscale UDP 的排查与清理（2026-11-16）</h4>
+<p><strong>现象</strong>：<code>ssh zte-grand-s</code> 建连高达 8
+s，<code>tailscale netcheck</code> 显示 <code>UDP: false</code>，<br />
+tailscale ping 一律走 DERP（RTT 600–700 ms），直连始终建立不了。</p>
+<p><strong>根因定位过程</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>步骤</th>
+<th>发现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tailscale netcheck</code>（电脑）</td>
+<td><code>UDP: false</code>，STUN 全部失败、拿不到本机 IPv4</td>
+</tr>
+<tr>
+<td><code>netstat -rn -f inet</code></td>
+<td>默认路由指向
+<code>utun5</code>（198.18.0.1），<code>1/8</code>、<code>2/7</code>、<code>4/6</code>
+等网段也被它接管</td>
+</tr>
+<tr>
+<td><code>ps aux</code></td>
+<td><code>clash-verge-service</code> 常驻；其 launchd plist 是
+<code>RunAtLoad + KeepAlive</code></td>
+</tr>
+<tr>
+<td>手机端 <code>netcheck</code></td>
+<td><code>UDP: true</code>，但
+<code>MappingVariesByDestIP: true</code>（对称 NAT）</td>
+</tr>
+</tbody>
+</table>
+<p>即：Clash Verge 的 TUN 模式把系统默认路由和 UDP
+流量全劫持了，Tailscale 的打洞包被吞掉；<br />
+双方又都是对称 NAT，于是只能走 DERP 中继。</p>
+<p><strong>处理</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1) 卸载 launchd job（RunAtLoad+KeepAlive，必须先 bootout，光 kill 会被拉起）</span></span><br><span class="line"><span class="built_in">sudo</span> launchctl bootout system /Library/LaunchDaemons/io.github.clash-verge-rev.clash-verge-rev.service.plist</span><br><span class="line"><span class="built_in">sudo</span> pkill -9 clash-verge-service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 关掉残留 TUN 接口（进程退出后接口仍在，路由黑洞依旧）</span></span><br><span class="line"><span class="built_in">sudo</span> ifconfig utun5 down</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 持久禁止开机自启（保留手工启动能力）</span></span><br><span class="line"><span class="built_in">sudo</span> launchctl <span class="built_in">disable</span> system/io.github.clash-verge-rev.clash-verge-rev.service</span><br><span class="line"><span class="comment"># 验证：launchctl print-disabled system | grep -i clash  →  =&gt; true</span></span><br></pre></td></tr></table></figure>
+<p>用户后来直接卸载了 Clash Verge App，但 <code>LaunchDaemons</code>
+plist 与 <code>PrivilegedHelperTools</code><br />
+bundle 仍有残留，于是又删除了这两个文件并复查 <code>disable</code>
+标记仍为 <code>true</code>。</p>
+<p><strong>效果（清理后实测）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>清理前</th>
+<th>清理后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>netcheck</code> UDP</td>
+<td><code>false</code></td>
+<td>✅ <code>true</code>（出口 <code>139.159.170.81</code>）</td>
+</tr>
+<tr>
+<td>默认路由</td>
+<td><code>utun5</code>（黑洞）</td>
+<td>✅ <code>en0</code></td>
+</tr>
+<tr>
+<td>DERP RTT</td>
+<td>600–700 ms</td>
+<td>400–520 ms（relay 从 nue 变为 lax）</td>
+</tr>
+<tr>
+<td>SSH 建连</td>
+<td>~8 s</td>
+<td>~4–5 s</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>双方对称 NAT 无法通过配置消除，所以直连仍未建立；但清理掉 Clash
+的劫持后，<br />
+UDP 可用、DERP 选择更优，延迟明显下降。</p>
+</blockquote>
+<h4 id="用-ssh-连接复用进一步压低交互延迟2026-11-16">5.20.9 用 SSH
+连接复用进一步压低交互延迟（2026-11-16）</h4>
+<p>由于双方都是对称 NAT，RTT 无法降到 100 ms 以内。但 SSH
+握手要做多次往返，<br />
+在 DERP 链路上代价很高（每次新连接 4–8 s）。用
+<code>ControlMaster</code> 复用一条已有连接，<br />
+后续 <code>ssh</code> 不再重复握手，实测把每次命令从 4–5 s 压到
+<strong>0.7–0.9 s</strong>。</p>
+<p>客户端 <code>~/.ssh/config</code>（已配置）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Host zte-grand-s</span><br><span class="line">  HostName 100.107.4.30</span><br><span class="line">  User root</span><br><span class="line">  IdentityFile ~/.ssh/opencode_debug</span><br><span class="line">  IdentitiesOnly yes</span><br><span class="line">  ServerAliveInterval 30</span><br><span class="line">  ServerAliveCountMax 6</span><br><span class="line">  ControlMaster auto</span><br><span class="line">  ControlPath ~/.ssh/cm-%r@%h:%p</span><br><span class="line">  ControlPersist 10m</span><br></pre></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ControlMaster auto</code></td>
+<td>有 master 就复用，没有就自动创建</td>
+</tr>
+<tr>
+<td><code>ControlPath ~/.ssh/cm-%r@%h:%p</code></td>
+<td>socket 存放路径，按 用户@主机:端口 区分</td>
+</tr>
+<tr>
+<td><code>ControlPersist 10m</code></td>
+<td>最后一个连接关闭后，master 再保留 10 分钟</td>
+</tr>
+</tbody>
+</table>
+<p><strong>实测对比</strong>（relay=lax，RTT ≈ 520 ms）：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>首次建 master</td>
+<td>8.04 s</td>
+</tr>
+<tr>
+<td>后续复用（第 2–6 次）</td>
+<td>0.69–1.18 s</td>
+</tr>
+<tr>
+<td>彻底绕过复用 <code>ssh -o ControlPath=none</code>（3 次）</td>
+<td>4.06–5.29 s</td>
+</tr>
+<tr>
+<td>复用态（3 次）</td>
+<td>0.69–0.90 s</td>
+</tr>
+</tbody>
+</table>
+<p>结论：<strong>约 5–7 倍提升</strong>。交互场景下先建立一次
+master，之后所有
+<code>ssh</code>/<code>scp</code>/<code>rsync</code><br />
+都走复用连接，体感接近局域网。</p>
+<p>运维命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh -O check zte-grand-s              <span class="comment"># 查看 master 状态：Master running (pid=...)</span></span><br><span class="line">ssh -O <span class="built_in">exit</span>  zte-grand-s              <span class="comment"># 主动关闭 master</span></span><br><span class="line"><span class="built_in">rm</span> -f ~/.ssh/cm-root@100.107.4.30:22  <span class="comment"># 删除残留 socket（必要时）</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：测试时 <code>-o ControlMaster=no</code>
+<strong>不能</strong>真正绕过复用——它只禁止创建新 master，<br />
+仍会连接已有 socket。要用 <code>-o ControlPath=none</code>
+才是完全不走复用。</p>
+</blockquote>
+<hr />
+<h2 id="踩坑清单现象-根因-处理">6. 踩坑清单（现象 → 根因 → 处理）</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>现象</th>
+<th>根因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>adb devices</code> 为空</td>
+<td>UMS 模式，USB 无 ADB 端点</td>
+<td>切换 USB 连接方式，出现 <code>MI_01</code>（WINUSB）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>su</code> 卡死 240 s</td>
+<td>锁屏挡住 SuperSU 弹窗 + 默认「拒绝」</td>
+<td>解锁后改默认操作为「授权」</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>adb tcpip</code> 后不监听</td>
+<td>4.1 只认 <code>service.adb.tcp.port</code>，且 adbd 未重启</td>
+<td><code>setprop</code> +
+<code>stop/start adbd</code>（放开机脚本）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>后台进程莫名消失</td>
+<td>adbd 关闭会话时向进程组发信号</td>
+<td>常驻进程一律从 init 钩子启动</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>cp: not found</code></td>
+<td>4.1 工具链极简，无
+<code>cp/head/tail/sed/grep/uname/awk</code>，<code>rm -f</code>
+不支持</td>
+<td><code>cat a &gt; b</code> 代替 <code>cp</code>；文本处理用
+<code>busybox</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>App 读不到 FIFO</td>
+<td><code>init.rc</code> 每次开机把 <code>/data/local/tmp</code> 重置为
+0771</td>
+<td>guard 每轮 <code>chmod 755</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>logcat 起多个实例、日志重复</td>
+<td><code>busybox ps</code> 截断命令行，<code>grep</code> 匹配不到</td>
+<td>改用 pidfile + <code>/proc/&lt;pid&gt;</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>状态行 <code>sshd --</code></td>
+<td>UI 线程 <code>Socket</code> 抛
+<code>NetworkOnMainThreadException</code>；且监听在
+<code>tcp6</code></td>
+<td>读 <code>/proc/net/tcp</code> + <code>/proc/net/tcp6</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td>CPU 显示负数 / 假 100%</td>
+<td>mpdecision 热插拔核心，<code>/proc/stat</code> 汇总行会倒退（idle
+134122 → 133725）</td>
+<td>改为逐核采样，跳过计数异常的核</td>
+</tr>
+<tr>
+<td>14</td>
+<td>开机停在锁屏，看不到控制台</td>
+<td>HOME 被锁屏遮住</td>
+<td>Activity 加
+<code>SHOW_WHEN_LOCKED</code>/<code>DISMISS_KEYGUARD</code>/<code>TURN_SCREEN_ON</code>/<code>KEEP_SCREEN_ON</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>pm install</code> 卡住不返回</td>
+<td>被装的就是唯一 HOME，安装时 Home 重启导致等待</td>
+<td>后台执行 <code>pm install</code> 写日志，轮询 <code>inst.log</code>
+的 <code>RC=</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td>删系统包后日志刷屏 / CPU 空转</td>
+<td>框架在重试拉起已不存在的应用</td>
+<td><code>logcat -c</code> 后静置 120 s，确认
+<code>Start proc</code>、<code>Unable to start service</code> 均为
+0</td>
+</tr>
+<tr>
+<td>17</td>
+<td>WiFi 面板每 30 秒自己弹出</td>
+<td>guard 每 30 s 发 <code>keyevent 82</code>(MENU)，与 App 的 MENU
+绑定冲突</td>
+<td>改用 <code>keyevent 224</code>(WAKEUP)</td>
+</tr>
+<tr>
+<td>18</td>
+<td>插 USB 后 Windows 几秒就移除设备</td>
+<td>手机侧枚举正常且无断开；PC 侧驱动/端口把设备移除</td>
+<td>换后置口、关 USB 选择性暂停、换电脑验证</td>
+</tr>
+<tr>
+<td>19</td>
+<td>改 WiFi 配置后彻底失联</td>
+<td>新配置有误（SSID/密码/加密不符）</td>
+<td>预置 <code>wpa_pending</code>，guard 5 分钟无 IP 自动回滚并重启</td>
+</tr>
+<tr>
+<td>9</td>
+<td>传文件极慢</td>
+<td>4.1 adbd 同步协议瓶颈</td>
+<td>用 SSH（1.74 MB/s）或 USB 大容量存储</td>
+</tr>
+<tr>
+<td>10</td>
+<td>桌面吃 149 MB</td>
+<td>定制桌面 + Widget + SideBar 常驻</td>
+<td>停用，改自写 ConsoleHome</td>
+</tr>
+<tr>
+<td>11</td>
+<td>亲情模式不能当兜底</td>
+<td>19.99 MB + 9 service + 13 receiver</td>
+<td>一并停用</td>
+</tr>
+<tr>
+<td>12</td>
+<td>装 App 后日志停</td>
+<td>App 重启导致 FIFO 写端 EPIPE</td>
+<td>guard 30 s 内自动重启写端</td>
+</tr>
+<tr>
+<td>20</td>
+<td>客户端每次连都报 host key 变了</td>
+<td>sshd 默认读 <code>host_ed25519</code>，实际文件叫
+<code>host_rsa</code> → 每次启动生成临时密钥</td>
+<td><code>cat host_rsa &gt; host_ed25519</code>，指纹固定</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>pkill -f sshd</code> 后 sshd <strong>和 guard
+一起消失</strong></td>
+<td>guard 的路径是
+<code>/data/local/tmp/sshd/guard.sh</code>，命令行里也含 “sshd”</td>
+<td>按 pid 杀，或用 <code>pkill -f 'sshd -addr'</code>；杀完
+<code>ps</code> 确认 guard 还在</td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>ssh-copy-id</code> 报告
+<code>Number of key(s) added: 1</code>，但 <code>ssh</code>
+仍要密码</td>
+<td>Go sshd 硬编码读
+<code>/data/local/tmp/sshd/authorized_keys</code>；<code>ssh-copy-id</code>
+按 <code>HOME=/data</code> 写到了
+<code>/data/.ssh/authorized_keys</code></td>
+<td>把公钥追加到
+<code>/data/local/tmp/sshd/authorized_keys</code>（§5.20.2）</td>
+</tr>
+<tr>
+<td>23</td>
+<td>想把 sshd 和 adbd 放一起，但 <code>/sbin</code> 写不进去</td>
+<td><code>adbd</code> 在 <code>/sbin/adbd</code>，<code>/sbin</code> 属
+rootfs（ramdisk，ro，重启即失）</td>
+<td>改放 <code>/system/bin/sshd</code>（ext4 持久）</td>
+</tr>
+<tr>
+<td>24</td>
+<td>改脚本时 busybox 报 <code>unmatched '#'</code> /
+<code>invalid option -- a</code></td>
+<td>busybox 1.8.1 不支持 <code>#</code> 分隔符，且把模式里的
+<code>-addr</code> 当选项</td>
+<td>本地编辑后 <code>cat &gt; 远端文件</code> 回传，不用远端 sed</td>
+</tr>
+<tr>
+<td>25</td>
+<td>改完 <code>guard.sh</code>，<code>ps</code> 里仍是旧路径
+<code>/data/local/tmp/sshd/sshd</code></td>
+<td>运行中的 guard.sh 已把脚本读入内存，不会重读</td>
+<td>kill 旧 guard，重新启动 guard，再让它拉起 sshd</td>
+</tr>
+<tr>
+<td>26</td>
+<td><code>chown -R 0:0 /system/etc/sshd</code> 报
+<code>No such user '-R'</code></td>
+<td>这台机器的 chown 不支持 <code>-R</code></td>
+<td>逐个文件 chown（或 <code>busybox chown</code>），不要用
+<code>-R</code></td>
+</tr>
+<tr>
+<td>27</td>
+<td>Tailscale <code>UDP: false</code>、SSH 8 s、无法直连</td>
+<td>Clash Verge 的 TUN（198.18.0.1）劫持默认路由和 UDP，打洞包被吞</td>
+<td>bootout + kill + <code>ifconfig utun5 down</code> +
+<code>launchctl disable</code>（§5.20.8）</td>
+</tr>
+<tr>
+<td>28</td>
+<td><code>ssh -o ControlMaster=no</code> 测复用耗时仍是 0.7 s</td>
+<td>该参数只禁止建新 master，仍连接已有 socket</td>
+<td>用 <code>-o ControlPath=none</code> 才完全绕过复用（§5.20.9）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="性能实测">7. 性能实测</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>md5 单线程</td>
+<td>58–61 MB/s</td>
+</tr>
+<tr>
+<td>md5 双线程</td>
+<td>123 MB/s（≈2.0×）</td>
+</tr>
+<tr>
+<td>md5 四线程</td>
+<td>206 MB/s（≈3.4×）</td>
+</tr>
+<tr>
+<td>顺序写 128 MB（含 sync）</td>
+<td>12.8 MB/s</td>
+</tr>
+<tr>
+<td>冷读</td>
+<td>59 MB/s</td>
+</tr>
+<tr>
+<td>满载温度</td>
+<td>48 °C</td>
+</tr>
+<tr>
+<td>空闲可用内存</td>
+<td>≈1.20 GB</td>
+</tr>
+</tbody>
+</table>
+<p>传输对比：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>速率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>adb push</code>（WiFi）</td>
+<td>0.12–0.37 MB/s</td>
+</tr>
+<tr>
+<td><code>adb pull</code>（WiFi）</td>
+<td>≈0.38 MB/s</td>
+</tr>
+<tr>
+<td>SSH（同一 WiFi）</td>
+<td><strong>1.74 MB/s</strong></td>
+</tr>
+<tr>
+<td>手机本地 eMMC 写</td>
+<td><strong>12.8 MB/s</strong></td>
+</tr>
+</tbody>
+</table>
+<p>结论：CPU 约等于树莓派 3 一档；<strong>存储和 adb
+传输是短板</strong>。</p>
+<hr />
+<h2 id="作为-mini-linux-主机的可行性">8. 作为 mini Linux
+主机的可行性</h2>
+<h3 id="能做">8.1 能做</h3>
+<ul>
+<li>SSH 常驻（已跑）</li>
+<li>Samba / FTP / WebDAV</li>
+<li>aria2 / qBittorrent 下载机（注意写入只有 12.8 MB/s）</li>
+<li>dnsmasq / 广告过滤</li>
+<li>MQTT、小型 HTTP、Git、cron、Python 脚本</li>
+<li>旁路由 / 透明代理（有 <code>/dev/tun</code> + <code>iptables</code>
+NAT 表）</li>
+</ul>
+<h3 id="不能做">8.2 不能做</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>限制</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docker / LXC / K8s</td>
+<td><strong>无 namespace</strong>（<code>/proc/self/ns</code> 不存在，无
+<code>unshare</code>）</td>
+</tr>
+<tr>
+<td>systemd</td>
+<td>cgroup 只有 <code>cpu/cpuacct/debug/freezer</code>，缺
+memory/cpuset/pids</td>
+</tr>
+<tr>
+<td>重负载数据库 / 编译</td>
+<td><code>/data</code> 仅 2 GB，写入 12.8 MB/s</td>
+</tr>
+<tr>
+<td>视频转码</td>
+<td>无硬件编码器</td>
+</tr>
+<tr>
+<td>编译内核模块</td>
+<td>内核 3.4 且无源码</td>
+</tr>
+</tbody>
+</table>
+<h3 id="部署要点">8.3 部署要点</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可执行目录</td>
+<td>只有 <code>/data</code>（ext4，2 GB）与 <code>/system</code>（768
+MB，已用约 411 MB）</td>
+</tr>
+<tr>
+<td>sdcard</td>
+<td>vfat + <strong>noexec</strong>，只能存数据</td>
+</tr>
+<tr>
+<td>文件系统</td>
+<td>支持 <code>ext4/vfat/cifs/fuse</code>；<strong>无
+squashfs/overlayfs/f2fs</strong></td>
+</tr>
+<tr>
+<td>镜像挂载</td>
+<td><code>loop0-7</code> 可挂 ext4；<strong>设备没有
+<code>mke2fs</code></strong>，镜像要在 PC 上用 <code>mke2fs.exe</code>
+做，且必须关掉 <code>metadata_csum</code> / <code>64bit</code>
+等新特性（见 §5.18）</td>
+</tr>
+<tr>
+<td>chroot</td>
+<td><code>busybox chroot</code>
+实测可用（镜像内静态二进制可执行），<code>mount --bind</code>
+也可用</td>
+</tr>
+<tr>
+<td>推荐</td>
+<td>Debian 11 armhf 最小 rootfs + <code>gcc</code> +
+<code>git</code>（约 1 GB），镜像放 sdcard0（10 GB）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="运维手册">9. 运维手册</h2>
+<h3 id="日常连接">9.1 日常连接</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb connect <span class="number">192.168</span>.<span class="number">3.48</span>:<span class="number">5555</span></span><br><span class="line">ssh root@<span class="number">192.168</span>.<span class="number">3.48</span>          <span class="comment"># 局域网（密码，或已安装公钥）</span></span><br><span class="line">ssh zte<span class="literal">-grand-s</span>                <span class="comment"># Tailscale，客户端已配置免密（§5.20.5）</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>已启用 SSH 连接复用（<code>ControlMaster</code>，§5.20.9）：首次约 8
+s，后续 <code>ssh</code>/<code>scp</code> 约 0.7 s。<br />
+查看/关闭 master：<code>ssh -O check zte-grand-s</code> /
+<code>ssh -O exit zte-grand-s</code>。</p>
+</blockquote>
+<p>若 adb 显示 <code>offline</code>（实测偶发）：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb disconnect <span class="number">192.168</span>.<span class="number">3.48</span>:<span class="number">5555</span></span><br><span class="line">adb connect <span class="number">192.168</span>.<span class="number">3.48</span>:<span class="number">5555</span></span><br></pre></td></tr></table></figure>
+<h3 id="状态检查">9.2 状态检查</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /data/local/tmp/sshd/boot.log        <span class="comment"># 本次开机自启是否执行（含 restored xxx 表示回填过）</span></span><br><span class="line"><span class="built_in">ls</span> -la /system/etc/sshd                  <span class="comment"># 恢复出厂回填用的备份</span></span><br><span class="line">su -c <span class="string">&#x27;busybox ps | busybox grep -E &quot;[s]shd|[g]uard|[l]ogcat&quot;&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;busybox free&#x27;</span>                     <span class="comment"># 内存</span></span><br><span class="line">su -c <span class="string">&#x27;cat /proc/net/tcp /proc/net/tcp6&#x27;</span> <span class="comment"># 端口监听</span></span><br></pre></td></tr></table></figure>
+<h3 id="改-ssh-口令">9.3 改 SSH 口令</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;echo 新口令 | /system/bin/sshd -hash &gt; /data/local/tmp/sshd/password&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;chmod 600 /data/local/tmp/sshd/password; chown 0:0 /data/local/tmp/sshd/password&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;busybox kill -9 $(busybox pidof sshd)&#x27;</span>   <span class="comment"># guard 会在 30 s 内重启</span></span><br></pre></td></tr></table></figure>
+<h3 id="恢复被停用的包">9.4 恢复被停用的包</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;pm enable &lt;包名&gt;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="回滚到原桌面">9.5 回滚到原桌面</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;pm enable com.bluegod.launcher&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;pm disable com.fix.consolehome&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="黑屏是否正常">9.6 黑屏是否正常</h3>
+<p>删掉桌面后，屏幕可能全黑——<strong>这是预期行为</strong>，不代表系统故障。<br />
+判断是否正常只看三条：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb connect <span class="number">192.168</span>.<span class="number">3.48</span>:<span class="number">5555</span>          <span class="comment"># 能连 = init/adbd 正常</span></span><br><span class="line">ssh root@<span class="number">192.168</span>.<span class="number">3.48</span> <span class="string">&quot;id&quot;</span>             <span class="comment"># 能登录 = 服务正常</span></span><br><span class="line">adb shell getprop sys.boot_completed   <span class="comment"># 1 = 框架启动完成</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="安全边界">10. 安全边界</h2>
+<ul>
+<li><strong>5555 常开</strong>且 <code>ro.adb.secure</code> 未设置 →
+同网段任何人都能控制设备；</li>
+<li><strong>SuperSU 默认「授权」</strong> → 任何应用静默获得 root；</li>
+<li>登录口令（文中以 <code>&lt;password&gt;</code>
+占位）本身是弱口令，离线爆破很快；仅用于可信内网；</li>
+<li><code>/data/local/tmp</code> 被放宽为 <code>0755</code>（为了 App
+能读 FIFO），同网段 root 用户本来就能访问；</li>
+<li>建议：不用时 <code>setprop service.adb.tcp.port ""</code> + 重启
+adbd，或直接在路由器上隔离该设备。</li>
+</ul>
+<hr />
+<h2 id="遗留问题与下一步">11. 遗留问题与下一步</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>现状</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scp / sftp</td>
+<td><strong>不可用</strong>：当前 Go sshd 只支持 exec/session，无 sftp
+子系统</td>
+<td>重编译加 <code>pkg/sftp</code>，或换 dropbear</td>
+</tr>
+<tr>
+<td>磁盘空间</td>
+<td><code>/system</code> 411/768 MB，<code>/data</code> 约 1.8 GB
+可用</td>
+<td>确认稳定后可删除已停用 APK（先备份）</td>
+</tr>
+<tr>
+<td>USB adb</td>
+<td>✅ 端到端已验证（§5.19）：ZTE 驱动 +
+<code>mass_storage,adb</code>(1351) + adbd USB 模式；guard 5 分钟无 WiFi
+自动切，WiFi 回来 13–19 秒切回</td>
+<td>换 PC 时记得装驱动；救援时<strong>先插线再
+<code>adb kill-server</code></strong></td>
+</tr>
+<tr>
+<td>无线 adb 稳定性</td>
+<td>偶发 offline</td>
+<td><code>adb disconnect/connect</code> 即恢复；guard 已加 adbd
+兜底</td>
+</tr>
+<tr>
+<td>USB 自动弹窗</td>
+<td>❌ 已按需求移除（<code>UsbStateReceiver</code> 已删），需要时手动
+<code>am start -n com.android.settings/.ConnectSettings</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>日志持久化</td>
+<td>有意不落盘</td>
+<td>需要留存时临时 <code>logcat -f</code>，用完删除</td>
+</tr>
+<tr>
+<td>蓝牙默认开启</td>
+<td>✅ 已完成：<code>bluetooth_on=1</code> + guard
+开机自愈，重启实测生效</td>
+<td>—</td>
+</tr>
+<tr>
+<td>蓝牙共享链路</td>
+<td>手机侧 NAP 已勾选可用，<strong>未做端到端验证</strong>（本机 PC
+无蓝牙）</td>
+<td>用带蓝牙的 Mac 配对后走 PAN，<code>ssh root@192.168.44.1</code>（见
+§5.17）</td>
+</tr>
+<tr>
+<td>蓝牙共享持久化</td>
+<td>4.1 不保存该开关，重启回落到关闭</td>
+<td>需要时再勾；或后续在 ConsoleHome 加开关</td>
+</tr>
+<tr>
+<td>工具链（git/gcc）</td>
+<td>未部署；chroot 三个前提均已实测通过（§5.18）</td>
+<td>要装就做 Debian 11 armhf 镜像，放在 sdcard0</td>
+</tr>
+<tr>
+<td>监控脚本位置</td>
+<td><code>sshd</code> 二进制已迁 <code>/system/bin</code>，但
+<code>guard.sh</code> 仍在 <code>/data/local/tmp/sshd/</code></td>
+<td>如需统一到 system，可迁 <code>/system/etc/guard.sh</code> 并同步
+<code>install-recovery.sh</code></td>
+</tr>
+<tr>
+<td>恢复出厂自动恢复</td>
+<td>✅ 已完成：<code>/system/etc/sshd</code> 备份 +
+<code>install-recovery.sh</code> 开机回填（§5.20.7）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>adbd</td>
+<td>✅ 确认 ROM 自带（2014-01-27 与内核同批工具链），保持
+<code>/sbin/adbd</code> 不动</td>
+<td>无需迁移</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="附录-a部署清单">附录 A：部署清单</h2>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/system/bin/sshd                        3.9 MB   root:root 755   （ELF32 ARM 静态，2026-11-16 迁移）</span><br><span class="line">/data/local/tmp/sshd/sshd               3.9 MB   root:root 755   （原位置备份，不再被脚本引用）</span><br><span class="line">/system/etc/install-recovery.sh         1875 B   root:root 755   （含 /system/etc/sshd 回填逻辑）</span><br><span class="line">/system/etc/sshd/guard.sh               8931 B   root:root 755   （恢复出厂回填用）</span><br><span class="line">/system/etc/sshd/host_ed25519           1679 B   root:root 600</span><br><span class="line">/system/etc/sshd/host_rsa               1679 B   root:root 600</span><br><span class="line">/system/etc/sshd/password                119 B   root:root 600</span><br><span class="line">/system/etc/sshd/authorized_keys         188 B   root:root 600</span><br><span class="line">/data/local/tmp/sshd/guard.sh           8931 B   root:root 755</span><br><span class="line">/data/local/tmp/sshd/authorized_keys     2 把公钥 root:root 600   （客户端公钥，硬编码路径）</span><br><span class="line">/data/local/tmp/sshd/host_rsa           1679 B   root:root 600   （RSA 2048 PEM）</span><br><span class="line">/data/local/tmp/sshd/host_ed25519       1679 B   root:root 600   （内容同 host_rsa；sshd 实际读这个文件名）</span><br><span class="line">/data/local/tmp/sshd/password            119 B   root:root 600   （PBKDF2 哈希）</span><br><span class="line">/data/local/tmp/sshd/boot.log                    （每次开机的自启记录）</span><br><span class="line">/data/local/tmp/console.fifo              FIFO   root:root 666   （控制台日志管道）</span><br><span class="line">/data/app/com.fix.consolehome-*.apk    12.6 KB   （签名安装）</span><br></pre></td></tr></table></figure>
+<h2 id="附录-b验证记录-1">附录 B：验证记录</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>场景</th>
+<th>预期</th>
+<th>实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重启后 adb</td>
+<td><code>device</code></td>
+<td>70–90 s 自动连上</td>
+</tr>
+<tr>
+<td>ssh 登录</td>
+<td><code>uid=0(root)</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ssh 免密（公钥）</td>
+<td>无密码登录</td>
+<td>✅ <code>authorized_keys</code> 2 把 key，<code>BatchMode</code>
+通过</td>
+</tr>
+<tr>
+<td>sshd 迁移 /system</td>
+<td>进程路径 <code>/system/bin/sshd</code></td>
+<td>✅ PID 11188，<code>-addr 0.0.0.0:22</code></td>
+</tr>
+<tr>
+<td><code>/system</code> 恢复只读</td>
+<td><code>ro</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>恢复出厂自动恢复</td>
+<td>缺文件从 <code>/system</code> 回填</td>
+<td>✅ 移走 <code>host_rsa</code> 后回填，md5 一致</td>
+</tr>
+<tr>
+<td>adbd 来源</td>
+<td>系统自带</td>
+<td>✅ GCC 4.6.x-google 20120106，与内核同批构建</td>
+</tr>
+<tr>
+<td>Clash 清理后 UDP</td>
+<td><code>true</code></td>
+<td>✅ 出口 <code>139.159.170.81</code>，默认路由回
+<code>en0</code></td>
+</tr>
+<tr>
+<td>SSH 复用（ControlMaster）</td>
+<td>后续连接 &lt;1 s</td>
+<td>✅ 0.69–0.90 s（首次 8 s）</td>
+</tr>
+<tr>
+<td><code>kill -9</code> sshd</td>
+<td>guard 拉起</td>
+<td>30 s 内恢复</td>
+</tr>
+<tr>
+<td>系统空闲 CPU</td>
+<td>个位数</td>
+<td>3%</td>
+</tr>
+<tr>
+<td>空闲内存</td>
+<td>&gt;1 GB</td>
+<td>1.18–1.24 GB</td>
+</tr>
+<tr>
+<td>磁盘日志文件</td>
+<td>无</td>
+<td>无 <code>console.log</code></td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/11/16/ZTE-Grand-S-Android4.1-%E6%94%B9%E9%80%A0%E4%B8%BA%E5%B8%B8%E9%A9%BBLinux%E4%B8%BB%E6%9C%BA/" title="ZTE Grand S（Android 4.1.2）改造为常驻 Linux 主机：从闲置手机到带屏幕的远程节点">https://sunjunior.github.io/2026/11/16/ZTE-Grand-S-Android4.1-改造为常驻Linux主机/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android-ZTE-Grand-S-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95-sshd-ADB-Tailscale-ConsoleHome-%E7%B3%BB%E7%BB%9F%E7%B2%BE%E7%AE%80-%E4%BD%8E%E5%8A%9F%E8%80%97-%E5%B8%B8%E9%A9%BB%E4%B8%BB%E6%9C%BA/" rel="tag"><i class="fa fa-tag"></i> Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/11/%E8%AE%A9%E7%94%B5%E8%A7%86%E5%92%8C%E8%BD%A6%E6%9C%BA%E7%A8%B3%E5%AE%9A%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91-TVPN%E8%87%AA%E7%A0%94%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E5%BD%B1%E9%9F%B3%E9%80%82%E9%85%8D%E5%85%A8%E6%A1%88/" rel="prev" title="让电视和车机稳定科学上网：自研 TVPN 分流客户端、去广告治理与影音适配全案">
+                  <i class="fa fa-angle-left"></i> 让电视和车机稳定科学上网：自研 TVPN 分流客户端、去广告治理与影音适配全案
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

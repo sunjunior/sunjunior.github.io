@@ -1,0 +1,3241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定满档，大幅提升攻击伤害；后发现暴击槽每击衰减的真相，v10&#x2F;v11 常驻化并调至 $90（第 14 章） 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 目标三（翻倍）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="恐龙快打（CPS1）暴击值与掉落 Hack 技术文档">
+<meta property="og:url" content="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定满档，大幅提升攻击伤害；后发现暴击槽每击衰减的真相，v10&#x2F;v11 常驻化并调至 $90（第 14 章） 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 目标三（翻倍）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino2.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino3.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino4.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/dino5.png">
+<meta property="article:published_time" content="2026-09-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-27T07:39:17.791Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="逆向工程, MAME, 街机, 恐龙快打">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/dino.gif">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/09/10/恐龙快打-CPS1暴击值最大化Hack技术文档/","title":"恐龙快打（CPS1）暴击值与掉落 Hack 技术文档"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>恐龙快打（CPS1）暴击值与掉落 Hack 技术文档 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87"><span class="nav-text">1. 背景与目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%AE%E6%A0%87"><span class="nav-text">1.1 暴击值目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%9E%AA%E6%A2%B0%E7%9B%AE%E6%A0%87"><span class="nav-text">1.2 掉落枪械目标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF"><span class="nav-text">2. ROM 与游戏信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%9C%B0%E5%9D%80%E7%BA%A6%E5%AE%9A"><span class="nav-text">关键地址约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="nav-text">玩家对象结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="nav-text">3. 分析环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-text">4. 破解总体思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E4%B8%BB%E7%BA%BF"><span class="nav-text">4.1 暴击值主线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%9E%AA%E6%A2%B0%E4%B8%BB%E7%BA%BF"><span class="nav-text">4.2 掉落枪械主线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-text">5. 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%9A%B4%E5%87%BB%E5%80%BC%E5%9C%B0%E5%9D%80"><span class="nav-text">5.1 定位暴击值地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%9A%B4%E5%87%BB%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">5.2 追踪暴击值初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%9A%B4%E5%87%BB%E5%80%BC%E8%A1%A8"><span class="nav-text">5.3 分析暴击值表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6%E8%B8%A9%E5%9D%91c6-%E5%A4%9A%E5%AF%B9%E8%B1%A1%E5%85%B1%E4%BA%AB"><span class="nav-text">5.4 暴击值递减机制（踩坑：$c6
+多对象共享）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%86%B3%E7%AD%96%E5%8F%AA%E6%94%B9%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%8A%A8%E9%80%92%E5%87%8F"><span class="nav-text">5.5
+最终决策：只改初始化、不动递减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88%E6%9C%80%E7%BB%88%E7%89%88-v3"><span class="nav-text">5.6 ROM 补丁方案（最终版 v3）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%96%B9%E6%A1%88%E6%BC%94%E8%BF%9Bv1v2v3"><span class="nav-text">5.7 补丁方案演进（v1→v2→v3）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="nav-text">5.8 插件验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%8E%89%E8%90%BD%E6%9C%BA%E5%88%B6%E9%80%86%E5%90%91%E5%88%86%E6%9E%90"><span class="nav-text">6. 敌兵掉落机制逆向分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E5%88%A4%E5%AE%9A%E5%AD%90%E7%A8%8B%E5%BA%8F-0x24b48"><span class="nav-text">6.1 掉落判定子程序
+0x24B48</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E9%A2%84%E8%AE%BE%E8%A1%A8%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%9F%BA%E5%9D%80"><span class="nav-text">6.2 掉落预设表的两个基址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E7%B4%A2%E5%BC%95%E8%B7%B3%E8%BD%AC%E8%A1%A8-0x24d6c"><span class="nav-text">6.3 武器索引跳转表
+0x24D6C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A6%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E5%9D%97%E7%A4%BA%E4%BE%8Buzi266"><span class="nav-text">6.4 武器初始化块示例（Uzi，$26&#x3D;6）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%89%E8%90%BD-hack%E5%BF%85%E6%8E%89%E6%8C%87%E5%AE%9A%E6%9E%AA%E6%A2%B0"><span class="nav-text">7. 掉落 Hack：必掉指定枪械</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-a%E5%BF%85%E6%8E%89%E7%8C%8E%E6%9E%AAd11"><span class="nav-text">7.1 方案 A：必掉猎枪（d1&#x3D;1）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b%E5%BF%85%E6%8E%89-m16-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d15%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98"><span class="nav-text">7.2 方案 B：必掉 M16
+机关枪 48 发（d1&#x3D;5，当前交付）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E5%80%BC%E5%8F%98%E4%BD%93uzi-%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91d14"><span class="nav-text">7.3 同值变体：Uzi 机关枪 48
+发（d1&#x3D;4）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%9B%9E%E5%BD%92%E9%AA%8C%E8%AF%81"><span class="nav-text">7.4 补丁操作与回归验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-text">8. 交付物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E7%89%88%E6%9C%AC%E6%80%BB%E8%A1%A8%E4%B8%8E%E4%B8%8B%E8%BD%BD"><span class="nav-text">8.1 ROM 版本总表与下载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E5%8F%8C%E5%80%8D%E5%87%BA%E5%85%B5%E5%8F%98%E6%80%81%E7%89%88"><span class="nav-text">① v11 双倍出兵变态版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E6%AD%A3%E5%B8%B8%E5%87%BA%E5%85%B5%E5%BC%BA%E5%8C%96%E7%89%88"><span class="nav-text">② v11 正常出兵强化版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v11-%E7%BA%AF%E6%9A%B4%E5%87%BB%E6%8C%81%E4%B9%85%E8%A1%A5%E4%B8%81%E7%89%88%E7%8B%AC%E7%AB%8B"><span class="nav-text">③ v11 纯暴击持久补丁版（独立）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v8-%E7%A8%B3%E5%AE%9A%E7%89%88%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">④ v8 稳定版（历史存档）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E5%A4%9A%E6%A8%A1%E5%BC%8F%E5%8A%A0%E5%BC%BA%E7%89%88-%E6%9A%B4%E5%87%BB%E5%B8%B8%E9%A9%BB-ff%E4%B8%96%E7%95%8C%E7%89%88%E6%9C%BA%E5%8F%B0-dino"><span class="nav-text">⑤ 2020
+大杂烩多模式加强版 + 暴击常驻 FF（世界版机台 dino）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E6%9B%BF%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%B7%B1%E5%85%A5%E8%B0%83%E6%9F%A5%E5%90%8E%E6%94%BE%E5%BC%83%E5%AE%8C%E6%95%B4%E5%A4%B1%E8%B4%A5%E5%88%86%E6%9E%90"><span class="nav-text">敌兵替换功能：深入调查后放弃（完整失败分析）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E5%AD%98%E6%A1%A3"><span class="nav-text">其他版本（历史存档）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">8.2 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="nav-text">8.3 效果验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%89%E8%90%BD%E6%96%B9%E6%A1%88%E5%AE%9E%E6%9C%BA%E9%AA%8C%E6%94%B6%E8%A6%81%E7%82%B9"><span class="nav-text">8.4 掉落方案实机验收要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-b-%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA100-%E6%8E%89%E8%90%BD%E6%9C%BA%E5%85%B3%E6%9E%AA-48-%E5%8F%91"><span class="nav-text">8.5 方案 B 实机演示（100%
+掉落机关枪 48 发）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#m16-%E5%8F%98%E4%BD%93%E5%BD%93%E5%89%8D%E4%BA%A4%E4%BB%98%E7%89%88%E6%9C%AC0x24b740x05%E5%AE%9E%E6%9C%BA%E6%BC%94%E7%A4%BA"><span class="nav-text">M16
+变体（当前交付版本，0x24B74&#x3D;0x05）实机演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%89%88"><span class="nav-text">8.6 可选：恢复原版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%80%BB%E7%BB%93"><span class="nav-text">9. 修改总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-text">10. 踩坑与经验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mame-0.149-%E7%A7%BB%E6%A4%8D%E4%B8%8E%E9%AA%8C%E8%AF%812026-09-14-%E6%9B%B4%E6%96%B0"><span class="nav-text">11. MAME 0.149
+移植与验证（2026-09-14 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%85%88%E8%A1%8C"><span class="nav-text">11.1 结论先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%B5%8B%E6%96%B9%E6%A1%88"><span class="nav-text">11.2 调测方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%890.149-xml-cheat%E9%98%B2%E6%85%A2%E9%80%9F%E9%80%92%E5%87%8F"><span class="nav-text">11.3 可选：0.149 XML
+cheat（防慢速递减）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E8%AE%BA"><span class="nav-text">11.4 测试结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%A7%E9%85%8D%E5%A5%97%E6%94%B9%E5%8A%A8%E6%9C%AC%E6%AC%A1%E6%9E%84%E5%BB%BA%E6%96%B0%E5%A2%9E"><span class="nav-text">11.5 0.149
+侧配套改动（本次构建新增）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack2026-09-17"><span class="nav-text">12. 敌兵翻倍 Hack（2026-09-17）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-text">12.1 目标与挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E7%89%88%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%A0%B9%E5%9B%A0%E6%80%BB%E7%BB%93"><span class="nav-text">12.2 八版失败的根因总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E5%9B%A0%E8%BF%9B%E4%BD%8D%E6%A0%87%E5%BF%97c-flag%E8%A2%AB%E4%B8%AD%E9%97%B4%E6%8C%87%E4%BB%A4%E6%B1%A1%E6%9F%93"><span class="nav-text">12.3 根因：进位标志（C
+flag）被中间指令污染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zengfr-%E6%96%87%E6%A1%A3%E6%8F%90%E4%BE%9B%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="nav-text">12.4 zengfr 文档提供的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v8-%E6%9C%80%E7%BB%88%E5%AE%9E%E7%8E%B0"><span class="nav-text">12.5 v8 最终实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%BC%96%E7%A0%81%E9%99%B7%E9%98%B1moveq-dbra-%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A0%81"><span class="nav-text">12.6 关键编码陷阱：MOVEQ &#x2F;
+DBRA 寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">12.7 备份与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-text">12.8 效果演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">12.9 参考资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%8C%E5%85%B5%E8%BF%90%E8%A1%8C%E6%97%B6%E9%9A%8F%E6%9C%BA%E5%BC%BA%E5%8C%962026-09-24"><span class="nav-text">13.
+敌兵运行时随机强化（2026-09-24）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">13.1 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">13.2 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E7%82%B9"><span class="nav-text">13.3 补丁点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91"><span class="nav-text">13.4 子程序逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E8%A1%A8"><span class="nav-text">13.5 映射表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E4%B8%8E%E8%B8%A9%E5%9D%91"><span class="nav-text">13.6 构建与踩坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E9%AA%8C%E8%AF%81"><span class="nav-text">13.7 实机验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%B4%E5%87%BB%E5%80%BC%E5%B8%B8%E9%A9%BB%E5%8C%96v10v112026-09-24"><span class="nav-text">14.
+暴击值常驻化（v10→v11，2026-09-24）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A7%E6%96%B9%E6%A1%88%E7%9A%84%E7%BC%BA%E9%99%B7%E6%9A%B4%E5%87%BB%E6%A7%BD%E4%BC%9A%E8%A1%B0%E5%87%8F"><span class="nav-text">14.1 旧方案的缺陷：暴击槽会衰减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E9%A9%BB%E5%8C%96%E9%92%A9%E5%AD%90v10%E9%92%89-ffv11%E5%9B%9E%E8%B0%83%E4%B8%BA-90"><span class="nav-text">14.2 常驻化钩子（v10：钉
+$FF；v11：回调为 $90）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">14.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E9%80%86%E5%90%91%E4%B8%8E%E5%B8%B8%E9%A9%BB-ffv4v182026-09-27"><span class="nav-text">15. 2020
+大杂烩框架的暴击系统逆向与常驻 FF（v4→v18，2026-09-27）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E6%AD%BB%E4%BB%A3%E7%A0%81%E9%99%B7%E9%98%B1"><span class="nav-text">15.1 背景与”死代码”陷阱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%99%AE%E6%9F%A5%E4%BD%8D%E7%A7%BB%E5%AD%97%E8%8A%82%E5%85%A8%E5%BA%93%E6%89%AB%E6%8F%8F"><span class="nav-text">15.2 静态普查：位移字节全库扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watchpoint-%E6%8A%93-pc%E7%9C%9F%E5%87%B6%E5%AE%9A%E6%A1%88"><span class="nav-text">15.3 watchpoint 抓 PC：真凶定案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v4v7%E7%BC%96%E7%A0%81%E4%B8%8E%E6%A0%87%E5%BF%97%E4%BD%8D"><span class="nav-text">15.4 踩坑（v4→v7）：编码与标志位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91v9v12%E5%85%B1%E4%BA%AB%E4%BE%8B%E7%A8%8B%E4%B8%8E%E5%AE%88%E5%8D%AB"><span class="nav-text">15.5
+踩坑（v9→v12）：共享例程与守卫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%A1%A5%E4%B8%81v183-%E4%B8%AA%E6%8C%82%E7%82%B9-%E5%AE%88%E5%8D%AB-stub%E4%BB%85%E5%8A%A8-21a"><span class="nav-text">15.6 最终补丁（v18：3
+个挂点 + 守卫 stub，仅动 21a）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%B2%E5%90%8D%E6%9B%BF%E6%8D%A2v15v16"><span class="nav-text">15.7 署名替换（v15→v16）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%9C%BA%E9%AA%8C%E8%AF%81%E6%88%AA%E5%9B%BE%E6%A1%86%E6%9E%B6%E7%89%88%E6%9C%AC-ff-%E6%9A%B4%E5%87%BB"><span class="nav-text">15.8 实机验证截图（框架版本 + FF
+暴击）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E7%9B%B8%E5%85%B3%E5%9C%B0%E5%9D%80%E6%B1%87%E6%80%BB"><span class="nav-text">附录 A：相关地址汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E6%9A%B4%E5%87%BB%E5%80%BC%E7%9B%B8%E5%85%B3"><span class="nav-text">A.1 暴击值相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E6%8E%89%E8%90%BD-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.2 掉落 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-%E6%95%8C%E5%85%B5%E7%BF%BB%E5%80%8D-hack-%E7%9B%B8%E5%85%B3"><span class="nav-text">A.3 敌兵翻倍 Hack 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.4-%E6%95%8C%E5%85%B5%E7%B1%BB%E5%9E%8B-id-%E6%98%A0%E5%B0%84%E8%A1%A8mame-%E8%B0%83%E8%AF%95%E5%99%A8%E5%AE%9E%E6%B5%8B"><span class="nav-text">A.4 敌兵类型 ID
+映射表（MAME 调试器实测）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E5%AE%8C%E5%85%A8%E7%A1%AE%E8%AE%A4%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%85%A8-8-%E5%85%B3%E5%AE%9E%E6%9C%BA%E5%AF%B9%E7%85%A7%E9%AA%8C%E8%AF%81"><span class="nav-text">已完全确认的类型（全 8
+关实机对照验证）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E7%A1%AE%E8%AE%A4%E7%9A%84-boss-%E5%9C%B0%E5%9D%80%E5%BF%85%E9%A1%BB%E6%8E%92%E9%99%A4%E4%B8%8D%E5%8F%AF%E4%BF%AE%E6%94%B9"><span class="nav-text">已确认的 Boss
+地址（必须排除，不可修改）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.5-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%8C%E5%85%B5%E9%9A%8F%E6%9C%BA%E5%BC%BA%E5%8C%96%E7%9B%B8%E5%85%B3%E7%AC%AC-13-%E7%AB%A0"><span class="nav-text">A.5
+运行时敌兵随机强化相关（第 13 章）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.6-2020-%E5%A4%A7%E6%9D%82%E7%83%A9%E6%A1%86%E6%9E%B6%E6%9A%B4%E5%87%BB%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E7%AC%AC-15-%E7%AB%A0%E4%B8%96%E7%95%8C%E7%89%88-cde_-%E8%8A%AF%E7%89%87%E6%9C%80%E7%BB%88-v13"><span class="nav-text">A.6
+2020 大杂烩框架暴击系统相关（第 15 章，世界版 cde_* 芯片，最终
+v13）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="恐龙快打（CPS1）暴击值与掉落 Hack 技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs &#x2F; Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定满档，大幅提升攻击伤害；后发现暴击槽每击衰减的真相，v10&#x2F;v11 常驻化并调至 $90（第 14 章） 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 &#x2F; 方案 B：M16 机关枪 48 发） 目标三（翻倍）...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          恐龙快打（CPS1）暴击值与掉落 Hack 技术文档
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-10 00:00:00" itemprop="dateCreated datePublished" datetime="2026-09-10T00:00:00+08:00">2026-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-27 15:39:17" itemprop="dateModified" datetime="2026-09-27T15:39:17+08:00">2026-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">逆向工程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">目标游戏：恐龙快打（Cadillacs &amp; Dinosaurs / Dino, CPS1, 1993 Capcom） 目标一（暴击）：将角色攻击暴击值固定满档，大幅提升攻击伤害；后发现暴击槽每击衰减的真相，v10/v11 常驻化并调至 $90（第 14 章） 目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 / 方案 B：M16 机关枪 48 发） 目标三（翻倍）...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>目标游戏：<strong>恐龙快打（Cadillacs &amp; Dinosaurs / Dino, CPS1,
+1993 Capcom）</strong><br />
+目标一（暴击）：将角色攻击暴击值固定满档，大幅提升攻击伤害；后发现暴击槽每击衰减的真相，v10/v11
+常驻化并调至 $90（第 14 章）<br />
+目标二（掉落）：调整敌人武器掉落逻辑，实现”必掉指定枪械”（方案 A：猎枪 /
+方案 B：M16 机关枪 48 发）<br />
+目标三（翻倍）：所有波次敌兵双倍出兵，含 Boss（第 12
+章，2026-09-17）<br />
+目标四（敌兵强化）：运行时随机敌兵变身，波次表零改动（第 13
+章，2026-09-24）<br />
+目标五（2020 版移植）：把常驻满暴击打到 zengfr 2020
+大杂烩框架的自有暴击系统上，全程钉 $FF（第 15 章，2026-09-27）<br />
+交付物：<strong>四个在版 ROM 包 + 一个历史包</strong>，均解压即用（详见
+§8.1 版本总表）——v11 双倍 / v11 正常 / v11
+纯暴击补丁（含世界版）/<strong>2020 大杂烩+暴击常驻 FF</strong>；v8
+稳定版存档<br />
+日期：2026-09-10（掉落 09-15，翻倍 09-17，运行时强化/暴击常驻
+09-24，2020 版 FF 09-27 定稿）</p>
+</blockquote>
+<hr />
+<h2 id="背景与目标">1. 背景与目标</h2>
+<p>《恐龙快打》是 Capcom 于 1993 年推出的 CPS1
+街机横版清关动作游戏（世界版 ROM 名 <code>dino</code>，美版
+<code>dinou</code>，日版 <code>dinoj</code>）。玩家可从 4
+名角色中选择一位，击退劫掠者并拯救恐龙。</p>
+<p>本文覆盖五个 Hack 主题，分析手段（68000 反汇编 + MAME
+实机验证）一致，但破解对象与结论各自成章：</p>
+<ul>
+<li><strong>暴击值最大化</strong>（§5、§14）：将角色隐藏的”暴击值”钉到满档。v16
+初版只改出生初始化，后发现槽为每击衰减的 16
+位能量（徒手几乎攒不满），v10 起改为运行时常驻钉值、v11 调至 $90。</li>
+<li><strong>掉落枪械定制</strong>（§6、§7）：修改敌人死亡时”是否掉落 /
+掉落哪种武器”的判定逻辑，实现每次击杀必掉指定枪械。</li>
+<li><strong>敌兵翻倍</strong>（§12）：所有出兵条目双倍生成（含
+Boss），纯 ROM 补丁实现。</li>
+<li><strong>敌兵运行时随机强化</strong>（§13）：运行时改写对象类型实现敌兵随机变身强敌；附
+§8.1 静态表替换方案的完整失败分析。</li>
+</ul>
+<h3 id="暴击值目标">1.1 暴击值目标</h3>
+<p>游戏中每个角色拥有一个隐藏的”<strong>暴击值</strong>”（Critical Hit
+Value），影响攻击造成的伤害。该值越高，每次命中敌人时的伤害加成越大。默认暴击值约为
+<strong>32（0x20）</strong>，本次任务的目标：</p>
+<ol type="1">
+<li>定位暴击值在 RAM 中的存储地址。</li>
+<li>找到其初始化来源（角色数据表）。</li>
+<li>修改 ROM，使暴击值始终为最大值 0xFF（255）。</li>
+<li>交付可用的补丁文件。</li>
+</ol>
+<p>最终成果：<strong>ROM 直接烧录补丁，无需插件</strong>，暴击值恒为
+FF，大幅提升角色输出。</p>
+<h3 id="掉落枪械目标">1.2 掉落枪械目标</h3>
+<p>原版敌人死亡后的掉落由”掉落预设表 +
+RNG”共同决定，多数情况<strong>什么都不掉</strong>，且掉落枪械类型随机。本文通过逆向掉落判定子程序（<code>0x24B48</code>），提供两档补丁：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>方案</th>
+<th>掉落结果</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案 A</td>
+<td>每次击杀<strong>必掉</strong>，掉落物为默认武器（猎枪）</td>
+<td><code>0x24B72</code> 强制掉落类型 <code>d1=1</code></td>
+</tr>
+<tr>
+<td>方案 B（当前交付）</td>
+<td>每次击杀<strong>必掉</strong>，掉落物为 <strong>M16 机关枪（48
+发）</strong></td>
+<td>强制掉落类型 <code>d1=5</code></td>
+</tr>
+</tbody>
+</table>
+<p>另有同值变体（Uzi 机关枪 48
+发，<code>d1=4</code>）可一行字节切换。</p>
+<hr />
+<h2 id="rom-与游戏信息">2. ROM 与游戏信息</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM 集</td>
+<td><code>dino.zip</code>（美版，World）</td>
+</tr>
+<tr>
+<td>主板</td>
+<td>CPS1（Capcom Play System 1, <code>cps1</code> 驱动）</td>
+</tr>
+<tr>
+<td>主 CPU</td>
+<td>Motorola
+<strong>MC68000</strong>（<code>maincpu</code>，12MHz）</td>
+</tr>
+<tr>
+<td>程序 ROM</td>
+<td><code>cde_23a.8f</code> + <code>cde_22a.7f</code> +
+<code>cde_21a.6f</code>（共
+1.5MB，<code>ROM_LOAD16_WORD_SWAP</code>）</td>
+</tr>
+<tr>
+<td>主 RAM</td>
+<td><code>0xff0000-0xffffff</code>（64KB，<code>mainram</code>）</td>
+</tr>
+<tr>
+<td>校验</td>
+<td>无 BIOS 校验（CPS1 直接执行 ROM）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="关键地址约定">关键地址约定</h3>
+<ul>
+<li><strong>CPU 地址</strong>：MAME 调试器 / Lua 看到的主 CPU 地址（如
+<code>0x24E34</code>）。</li>
+<li><strong>文件偏移</strong>：由于
+<code>ROM_LOAD16_WORD_SWAP</code>，<strong>文件内每个 16 位字的字节序与
+CPU 视图相反</strong>。打补丁时必须按字交换处理。</li>
+</ul>
+<h3 id="玩家对象结构">玩家对象结构</h3>
+<table>
+<thead>
+<tr>
+<th>偏移</th>
+<th>内容</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+0x00</code>-<code>0xBF</code></td>
+<td>基本属性</td>
+<td>ID、坐标、状态、血量等</td>
+</tr>
+<tr>
+<td><strong><code>+0xC6</code></strong></td>
+<td><strong>暴击值</strong></td>
+<td>攻击伤害加成系数，可递增/递减</td>
+</tr>
+<tr>
+<td><code>+0x5E</code></td>
+<td>拳值</td>
+<td>普通攻击系数</td>
+</tr>
+</tbody>
+</table>
+<p>P1 玩家对象基址为
+<strong><code>0xffb274</code></strong>，因此暴击值地址为
+<code>0xffb274 + 0xC6 = 0xffb33a</code>。</p>
+<hr />
+<h2 id="分析环境与工具">3. 分析环境与工具</h2>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td><strong>MAME 0.289</strong>（Arch Linux 官方包）</td>
+</tr>
+<tr>
+<td>内存读取</td>
+<td>MAME Lua
+API：<code>space:read_u8()</code>、<code>write_u8()</code></td>
+</tr>
+<tr>
+<td>调试器</td>
+<td>MAME 内置调试器（<code>-debug</code>）+ Lua
+<code>machine.debugger</code></td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>Python + capstone（68000）</td>
+</tr>
+<tr>
+<td>快照差分</td>
+<td>Python 全量 RAM 转储 + 字节级对比</td>
+</tr>
+<tr>
+<td>插件机制</td>
+<td>自定义 MAME 插件（<code>plugin.json</code> +
+<code>init.lua</code>）</td>
+</tr>
+<tr>
+<td>最终交付</td>
+<td>直接修改 <code>cde_23a.8f</code>（主程序 ROM 文件）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="破解总体思路">4. 破解总体思路</h2>
+<h3 id="暴击值主线">4.1 暴击值主线</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MAME 调试器每帧校验暴击值</span><br><span class="line">   ↓  发现 0xffb33a = 32（0x20）</span><br><span class="line">反向搜索写入源</span><br><span class="line">   ↓  找到角色数据表 0x2c9b6（初始化指令 0x11770）</span><br><span class="line">只改初始化指令为 move.b #$ff</span><br><span class="line">   ↓  暴击值初始化 = 255，不动递减/清零</span><br><span class="line">ROM 固化补丁</span><br><span class="line">   ↓  cde_23a.8f（纯 ROM 修改，零依赖）</span><br></pre></td></tr></table></figure>
+<h3 id="掉落枪械主线">4.2 掉落枪械主线</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">反汇编&quot;对象死亡掉落&quot;代码</span><br><span class="line">   ↓  定位掉落判定子程序 0x24B48（掉落预设表 $b64f2 / $b6d12）</span><br><span class="line">梳理分支：d1 == 0 不掉 / == 15 宝藏 / &gt;= 20 食物 / 其余武器</span><br><span class="line">   ↓  d1 -&gt; $26(a0) = (d1-1)*2 -&gt; $26 跳转表 0x24D6C 选武器</span><br><span class="line">确认每个 d1 对应的武器与起始弹药（Uzi/M16 均为 48 发）</span><br><span class="line">   ↓  方案A：强制 d1=1（必掉猎枪）</span><br><span class="line">   ↓  方案B：强制 d1=5（必掉 M16 机关枪 48 发，当前交付；Uzi 变体 d1=4）</span><br><span class="line">ROM 固化补丁（文件偏移 0x24B74，一行字节切换方案）</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="详细分析过程">5. 详细分析过程</h2>
+<h3 id="定位暴击值地址">5.1 定位暴击值地址</h3>
+<p>根据宝典资料，P1 玩家对象基址 <code>0xffb274</code>，偏移
+<code>+0xC6</code> = 暴击值。从 RAM 快照中读取确认：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0xffb33a = 32 (0x20)</span><br></pre></td></tr></table></figure>
+<p>通过插件每帧写入 <code>0xffb33a = 0xFF</code>，验证：<br />
+- 攻击敌人时<strong>伤害明显提升</strong>（暴击生效）<br />
+- 暴击值确为 <code>0xffb33a</code>（P1 专属地址）</p>
+<h3 id="追踪暴击值初始化">5.2 追踪暴击值初始化</h3>
+<p>反汇编搜索所有写 <code>$c6(aN)</code>
+的指令，找到角色数据<strong>表加载指令</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">地址 0x011770：move.b (a6, d1.w), $c6(a3)</span><br></pre></td></tr></table></figure>
+<p>上下文分析：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">011768: move.l   a6, -(a7)</span><br><span class="line">01176a: movea.l  #$2c9b6, a6       ; A6 = 暴击值表基址</span><br><span class="line">011770: move.b   (a6, d1.w), $c6(a3) ; 从表读出暴击值，写入玩家对象</span><br><span class="line">011776: movea.l  (a7)+, a6</span><br><span class="line">011778: rts</span><br></pre></td></tr></table></figure>
+<p>说明：角色暴击值在初始化时从<strong>地址 <code>0x2c9b6</code>
+的表中读取</strong>，索引 <code>d1</code> 由角色类型和当前段数决定。</p>
+<h3 id="分析暴击值表">5.3 分析暴击值表</h3>
+<p>转储 <code>0x2c9b6</code> 区域的数据：</p>
+<table>
+<thead>
+<tr>
+<th>偏移</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x2c9b6</code></td>
+<td><code>0x18</code> (24)</td>
+<td>角色 1 段 1</td>
+</tr>
+<tr>
+<td><code>0x2c9b7</code></td>
+<td><code>0x1c</code> (28)</td>
+<td>角色 1 段 2</td>
+</tr>
+<tr>
+<td><code>0x2c9b8-0x2c9d2</code></td>
+<td><code>0x20</code> (32)</td>
+<td><strong>默认值（大量填充）</strong></td>
+</tr>
+<tr>
+<td><code>0x2c9d3</code></td>
+<td><code>0x24</code> (36)</td>
+<td>高段位</td>
+</tr>
+<tr>
+<td><code>0x2c9d4</code></td>
+<td><code>0x2a</code> (42)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>0x2c9d5</code></td>
+<td><code>0x30</code> (48)</td>
+<td></td>
+</tr>
+<tr>
+<td>…</td>
+<td><code>0x20-0x40</code></td>
+<td>不同角色/段位的多样值</td>
+</tr>
+</tbody>
+</table>
+<p>默认暴击值 <strong>32（0x20）</strong>
+占据了表的主体。不同角色和段位的暴击值分布在 24~110 之间。</p>
+<blockquote>
+<p><strong>陷阱：</strong>
+该区域不仅包含暴击值表，还与其他道具（如手雷）的数据表共享内存。若将整表修改为
+0xFF，会破坏道具数据，导致丢手雷时触发 <code>ADDRESS ERROR</code>
+卡死。因此最终采用 §5.6 的”改指令、不改表”方案。</p>
+</blockquote>
+<h3 id="暴击值递减机制踩坑c6-多对象共享">5.4 暴击值递减机制（踩坑：$c6
+多对象共享）</h3>
+<p>反汇编寻找 <code>$c6(aN)</code>
+的写指令，发现递减和清零位于一个<strong>通用的对象更新函数</strong>中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">04fe56: subq.w   #$1, $c8(a6)         ; 通用计时器递减</span><br><span class="line">04fe5a: bcc.b    $4fe68</span><br><span class="line">04fe5c: move.w   #$12c, $c8(a6)       ; 计时器重置（300 ticks ≈ 25 秒）</span><br><span class="line">04fe62: move.b   #$1, $502(a5)</span><br><span class="line">04fe68: move.b   #$1, $0(a6)</span><br><span class="line">04fe6e: subq.w   #$1, $c6(a6)         ; $c6 递减 ← 所有对象共用！</span><br><span class="line">04fe72: bcs.b    $4fe7c               ; $c6 已到 0？</span><br><span class="line">04fe74: move.b   #$2, $0(a6)</span><br><span class="line">04fe7a: bra.b    $4fe80</span><br><span class="line">04fe7c: clr.w    $c6(a6)              ; 清零 ← 所有对象共用！</span><br><span class="line">04fe80: moveq    #$0, d0</span><br><span class="line">04fe82: move.b   $5(a6), d0</span><br><span class="line">04fe86: add.w    d0, d0</span><br><span class="line">04fe88: movea.l  $4fe8e(pc, d0.w), a0</span><br><span class="line">04fe8c: jmp      (a0)                  ; 跳转表分派</span><br></pre></td></tr></table></figure>
+<p><strong>这里的 A6
+可以是任何对象（玩家、敌人、Boss、道具）</strong>：<br />
+- 当 A6 = 玩家时，<code>$c6</code> = 暴击值（每 ~25 秒减 1）<br />
+- 当 A6 = 敌人/Boss 时，<code>$c6</code> = 阶段计数器（比如 Boss
+下车/显隐控制）<br />
+- 当 A6 = 道具时，<code>$c6</code> = 倒计时（<code>0x04c1ac</code>
+处还会被设 10 做秒杀倒计时）</p>
+<blockquote>
+<p><strong>关键踩坑</strong>：NOP 掉 <code>0x4fe6e</code>（subq）和
+<code>0x4fe7c</code>（clr）后，Boss 的 <code>$c6</code> 不再变化→Boss
+被卡在”隐藏/下车”状态无法攻击（第三关下车后 Boss
+不可见）。必须恢复这两个通用指令。</p>
+</blockquote>
+<h3 id="最终决策只改初始化不动递减">5.5
+最终决策：只改初始化、不动递减</h3>
+<p>经实测验证：<br />
+-
+暴击值受击后<strong>不会归零或恢复原值</strong>（仅有通用计时器的慢速递减）<br />
+- 暴击值递减周期 ~25 秒，从 FF（255）到 0 约需 <strong>106
+分钟</strong>，远超过一局游戏时长<br />
+- Boss 的 <code>$c6</code> 变化必须正常（否则 Boss 卡隐藏）</p>
+<p>因此<strong>维持原版的递减/清零指令不变，只修改初始化指令</strong>即可满足需求。</p>
+<h3 id="rom-补丁方案最终版-v3">5.6 ROM 补丁方案（最终版 v3）</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>修改</th>
+<th>地址</th>
+<th>原内容</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击值初始化指令</td>
+<td><code>0x11770</code></td>
+<td><code>move.b (a6,d1.w),$c6(a3)</code>
+(<code>17 76 10 00 00 c6</code>)</td>
+<td><code>move.b #$ff,$c6(a3)</code>
+(<code>17 7c 00 ff 00 c6</code>)</td>
+</tr>
+<tr>
+<td><del>NOP 暴击值递减</del></td>
+<td><del><code>0x4fe6e</code></del></td>
+<td>维持原样（通用函数，不可动）</td>
+<td>—</td>
+</tr>
+<tr>
+<td><del>NOP 暴击值清零</del></td>
+<td><del><code>0x4fe7c</code></del></td>
+<td>维持原样（通用函数，不可动）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>只需修改 <code>cde_23a.8f</code>
+这一个文件，<strong>不改数据表、不动通用函数</strong>，手雷/Boss
+等一切正常。</p>
+<h3 id="补丁方案演进v1v2v3">5.7 补丁方案演进（v1→v2→v3）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>方案</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1</td>
+<td>整表修改 <code>0x2c9b6</code> 全部为 0xFF</td>
+<td>❌ 该区域与<strong>手雷等道具数据表共享</strong>，丢手雷触发
+<code>ADDRESS ERROR</code> 卡死</td>
+</tr>
+<tr>
+<td>v2</td>
+<td>改初始化指令为立即数 + NOP 递减/清零</td>
+<td>❌ NOP 通用对象函数后 Boss
+<code>$c6</code>（阶段计数器）卡死，第三关下车后 Boss 不可见</td>
+</tr>
+<tr>
+<td><strong>v3（最终）</strong></td>
+<td><strong>只改初始化指令，不动递减/清零</strong></td>
+<td>✅ 手雷、Boss 全部正常</td>
+</tr>
+</tbody>
+</table>
+<p>v2 阶段尝试的完整改动（已被 v3 取代）如下，其中 NOP
+两项<strong>切不可保留</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>修改</th>
+<th>地址</th>
+<th>原内容</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击值初始化指令</td>
+<td><code>0x11770</code></td>
+<td><code>move.b (a6,d1.w),$c6(a3)</code>
+(<code>17 76 10 00 00 c6</code>)</td>
+<td><code>move.b #$ff,$c6(a3)</code>
+(<code>17 7c 00 ff 00 c6</code>)</td>
+</tr>
+<tr>
+<td><del>NOP 暴击值递减</del></td>
+<td><del><code>0x4fe6e</code></del></td>
+<td><code>subq.w #1,$c6(a6)</code> (<code>53 6e 00 c6</code>)</td>
+<td><code>NOP</code>（<strong>会卡 Boss，勿用</strong>）</td>
+</tr>
+<tr>
+<td><del>NOP 暴击值清零</del></td>
+<td><del><code>0x4fe7c</code></del></td>
+<td><code>clr.w $c6(a6)</code> (<code>42 6e 00 c6</code>)</td>
+<td><code>NOP</code>（<strong>会卡 Boss，勿用</strong>）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="插件验证">5.8 插件验证</h3>
+<p>先用 Lua 插件每帧强制写回
+<code>0xffb33a = 0xFF</code>，验证实际效果：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prog:write_u8(<span class="number">0xffb33a</span>, <span class="number">0xff</span>)</span><br></pre></td></tr></table></figure>
+<p>实测结果：<br />
+- ✅ 攻击伤害<strong>大幅提升</strong>（普通一拳顶原来约 3-4 拳）<br />
+- ✅ 游戏完全正常，不会崩溃<br />
+- ✅ BOSS 战同样有效</p>
+<hr />
+<h2 id="敌兵掉落机制逆向分析">6. 敌兵掉落机制逆向分析</h2>
+<blockquote>
+<p>掉落 Hack 是本文档第 2 大主题。本节描述”敌人死亡后掉落如何决定”，第 7
+节给出两档补丁方案。</p>
+</blockquote>
+<h3 id="掉落判定子程序-0x24b48">6.1 掉落判定子程序
+<code>0x24B48</code></h3>
+<p>敌人（或部分对象）死亡后调用 <code>0x24B48</code>，其判定流程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">0x24B48: move.b   $96(a6), d0        ; 取&quot;掉落预设索引&quot;（0 = 无预设，直接不掉）</span><br><span class="line">0x24B4C: beq.w    $24cc4             ;   d0 == 0 → 直接返回（不掉）</span><br><span class="line">0x24B50: movea.l  #$b64f2, a1        ; 掉落表基址 a1 = $b64f2</span><br><span class="line">0x24B56: clr.b    $96(a6)            ; 掉落预设被消费，下次死亡重新判定</span><br><span class="line">0x24B5A: andi.w   #$ff, d0</span><br><span class="line">0x24B5E: lsl.w    #$5, d0            ;   presumpt * 32 → 每预设占 32 字节</span><br><span class="line">0x24B60: adda.w   d0, a1             ;   a1 += 预设偏移</span><br><span class="line">0x24B62: jsr      $119c.l            ;   调用 RNG（伪随机）</span><br><span class="line">0x24B68: andi.w   #$1f, d0           ;   取 0-31 → 表内再随机</span><br><span class="line">0x24B6C: moveq    #$0, d1</span><br><span class="line">0x24B6E: move.b   (a1, d0.w), d1     ; d1 = 表[预设法 * 32 + 随机位]，即&quot;掉落类型&quot;</span><br><span class="line">0x24B72: bne.b    $24b76             ;   d1 != 0 → 有掉落，走分类</span><br><span class="line">0x24B74: moveq    #$1, d1            ;   [补丁点] d1 == 0 → 强制 = 1（原版直接返回不掉）</span><br><span class="line">0x24B76: cmpi.w   #$f, d1            ; 分类：</span><br><span class="line">0x24B7A: beq.w    $24c3a             ;   d1 == 15 → 宝藏类（省钱箱等）</span><br><span class="line">0x24B7E: cmpi.w   #$14, d1</span><br><span class="line">0x24B82: bcc.w    $24bbe             ;   d1 &gt;= 20 → 食物/药品类</span><br><span class="line">0x24B86: jsr      $4818.l            ;   &lt; 20 → 武器/其他类：出队取对象槽</span><br><span class="line">0x24B8C: bcs.w    $24cc4             ;   槽满 → 放弃掉落</span><br><span class="line">0x24B90: move.b   #$1, $0(a0)        ;   写入对象：类型、坐标、属性</span><br><span class="line">0x24B9C-0x24BA8: 拷贝死亡对象坐标到掉落物</span><br><span class="line">0x24BAE: subq.w   #$1, d1            ;   武器类型编码：d1 → $26</span><br><span class="line">0x24BB0: add.w    d1, d1</span><br><span class="line">0x24BB2: move.w   d1, $26(a0)        ;   $26 = (d1-1)*2  ← 武器索引</span><br><span class="line">0x24BB6: move.b   #$2, $6(a0)</span><br><span class="line">0x24BBC: rts</span><br></pre></td></tr></table></figure>
+<p><strong>关键结论：</strong><br />
+- 掉落类型由 <code>d1</code>
+决定；<code>d1 = 掉落预设表[$96(a6)*32 + RNG(0..31)]</code>。<br />
+- <strong>武器索引 <code>$26(a0) = (d1 - 1) * 2</code></strong>，随后由
+$26 跳转表选择具体武器（见 6.3）。<br />
+- 原版 <code>d1 == 0</code> 时跳过掉落（<code>bne.b</code> 本应为
+<code>beq</code> 语义——这是方案 A/B 的唯一修改点）。</p>
+<h3 id="掉落预设表的两个基址">6.2 掉落预设表的两个基址</h3>
+<table>
+<thead>
+<tr>
+<th>基址</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$b64f2</code></td>
+<td>主掉落预设表（<code>0x24B50</code> 使用）</td>
+</tr>
+<tr>
+<td><code>$b6d12</code></td>
+<td>第二预设表（另一入口 <code>0x24B36</code> 使用，机制相同）</td>
+</tr>
+</tbody>
+</table>
+<p>每行 32 字节（16 位字序读入 <code>d1</code>
+的是单字节）。表中每个字节即一个”可能掉落的类型值”。<strong>提示：方案
+A/B
+不修改表内容</strong>，因此两个基址均可不受影响地应用于所有敌人。</p>
+<h3 id="武器索引跳转表-0x24d6c">6.3 武器索引跳转表
+<code>0x24D6C</code></h3>
+<p>武器缩样对象创建后，<code>$26(a0)</code> 送入跳转逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x24D60: move.w   $26(a6), d0          ; 取武器索引</span><br><span class="line">0x24D64: move.w   $24d6c(pc, d0.w), d1 ; 查跳转表（索引 = $26，基址 0x24D6C）</span><br><span class="line">0x24D6A: jmp      $24d6c(pc, d1.w)     ; 跳到对应武器初始化块</span><br></pre></td></tr></table></figure>
+<p><strong>$26 索引 → 武器初始化块</strong>（实测识别）：</p>
+<table>
+<thead>
+<tr>
+<th>$26</th>
+<th>d1（掉落类型）</th>
+<th>目标块</th>
+<th>起始弹药</th>
+<th>武器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td><code>0x24D8A</code></td>
+<td>6（<code>moveq #$6</code>）</td>
+<td><strong>猎枪</strong>（猎人默认武器）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td><code>0x24DB0</code></td>
+<td>6</td>
+<td>手枪系（待确认）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3</td>
+<td><code>0x24DF0</code></td>
+<td>6</td>
+<td>刀/近战（<code>$a0</code>=<code>0x202</code>）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>4</td>
+<td><code>0x24E1C</code></td>
+<td><strong>48（<code>moveq #$30</code>）</strong></td>
+<td><strong>Uzi 机关枪</strong> ✅</td>
+</tr>
+<tr>
+<td>8</td>
+<td>5</td>
+<td><code>0x24E46</code></td>
+<td><strong>48（<code>moveq #$30</code>）</strong></td>
+<td><strong>M16 机关枪</strong> ✅</td>
+</tr>
+<tr>
+<td>10</td>
+<td>6</td>
+<td><code>0x24E70</code></td>
+<td>6</td>
+<td>喷子（待确认）</td>
+</tr>
+<tr>
+<td>12</td>
+<td>7</td>
+<td><code>0x24E96</code></td>
+<td>4（<code>moveq #$4</code>）</td>
+<td>火箭筒 Bazooka</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>其余为宝藏/特殊条目</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>表中弹药来自各初始化块的 <code>moveq #N, d0</code> →
+<code>move.w d0, $6c/$6e/$6a(a6)</code>（三处弹量）。</p>
+</blockquote>
+<h3 id="武器初始化块示例uzi266">6.4 武器初始化块示例（Uzi，$26=6）</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0x24E1C: move.l   #$26bbc, $40(a6)     ; 武器对象渲染数据</span><br><span class="line">0x24E24: move.w   #$206, $a0(a6)       ; 调色板/图样索引</span><br><span class="line">0x24E2A: move.w   #$10, $a2(a6)        ; 体型/碰撞半径</span><br><span class="line">0x24E30: clr.b    $80(a6)</span><br><span class="line">0x24E34: moveq    #$30, d0             ; ★ 48 发</span><br><span class="line">0x24E36-40: move.w d0, $6c/$6e/$6a(a6) ; 三份弹量</span><br><span class="line">0x24E42: bra.w    $25060               ; 进入公共武器初始化</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="掉落-hack必掉指定枪械">7. 掉落 Hack：必掉指定枪械</h2>
+<p>原版敌人死亡<strong>多数不掉任何东西</strong>（<code>d1 == 0</code>
+直接返回），掉落的随机类型也五花八门。方案 A / B 把
+<code>0x24B72-0x24B75</code>
+的”无掉落”分支改写为”强制掉落指定武器”：</p>
+<h3 id="方案-a必掉猎枪d11">7.1 方案 A：必掉猎枪（d1=1）</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>CPU 视图（0x24B72 起）</th>
+<th>文件偏移（<code>cde_23a.8f</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原版</td>
+<td><code>67 00 01 50</code>（<code>beq.w $24cc4</code>，d1==0
+不掉）</td>
+<td><code>0x24B72=0x50, 0x24B73=0x67</code>（词交换）</td>
+</tr>
+<tr>
+<td>方案 A</td>
+<td><code>66 02 72 01</code>（<code>bne.b $24b76; moveq #$1,d1</code>）</td>
+<td><code>0x24B72=0x02, 0x24B73=0x66, 0x24B74=0x01, 0x24B75=0x72</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>逻辑</strong>：<code>d1 == 0</code>（不掉）→ 强制
+<code>d1 = 1</code> → 走武器路径 → <code>$26 = 0</code> → 猎枪（6
+发）。实机验证：<strong>每次击杀 100% 掉猎枪</strong>。</p>
+<h3 id="方案-b必掉-m16-机关枪-48-发d15当前交付">7.2 方案 B：必掉 M16
+机关枪 48 发（d1=5，当前交付）</h3>
+<p>方案 B 与方案 A
+仅差<strong>一个立即数字节</strong>（<code>moveq #$1</code> →
+<code>moveq #$5</code>）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>CPU 视图</th>
+<th>文件偏移（<code>cde_23a.8f</code>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案 B</td>
+<td><code>66 02 72 05</code>（<code>bne.b $24b76; moveq #$5,d1</code>）</td>
+<td><code>0x24B74 = 0x05</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>逻辑</strong>：<code>d1 == 0</code> → 强制
+<code>d1 = 5</code> → <code>$26 = 8</code> → 跳转表 → <strong>M16 机关枪
+48 发</strong>（<code>0x24E5E: moveq #$30</code>）。</p>
+<h3 id="同值变体uzi-机关枪-48-发d14">7.3 同值变体：Uzi 机关枪 48
+发（d1=4）</h3>
+<p>想换成 Uzi，只需文件偏移 <code>0x24B74 = 0x04</code>：</p>
+<p><strong>逻辑</strong>：<code>d1 == 0</code> → 强制
+<code>d1 = 4</code> → <code>$26 = 6</code> → 跳转表 → <strong>Uzi 机关枪
+48 发</strong>（<code>0x24E34: moveq #$30</code>）。</p>
+<h3 id="补丁操作与回归验证">7.4 补丁操作与回归验证</h3>
+<ul>
+<li>备份原始 <code>dino.zip</code> 为
+<code>dino.zip.orig</code>（已就位）。</li>
+<li>方案 A 成果备份：<code>/tmp/dino_planA.zip</code>（含暴击 + 方案
+A）。</li>
+<li>方案 B
+各枪型备份：<code>/tmp/dino_planB_Uzi.zip</code>（<code>0x24B74=0x04</code>）、<code>/tmp/dino_planB_M16.zip</code>（<code>0x24B74=0x05</code>，当前交付）。</li>
+<li>修改 <code>cde_23a.8f</code> 偏移 <code>0x24B74</code> 即可在 A /
+Uzi / M16
+三档间切换（<code>01</code>/<code>04</code>/<code>05</code>）。</li>
+<li>回归要点：
+<ul>
+<li>保留暴击值补丁（文件 <code>0x11770/0x11772/0x11773</code> =
+<code>7C/FF/00</code>）不受影响。</li>
+<li>不触碰掉落表与通用对象函数，Boss、手雷、食物/宝藏分类逻辑保持原样。</li>
+<li>MAME 启动告警 <code>cde_23a.8f WRONG CHECKSUMS</code> 与
+<code>qsound.bin ROM NEEDS REDUMP</code> 均为 hack ROM 预期现象。</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="交付物">8. 交付物</h2>
+<h3 id="rom-版本总表与下载">8.1 ROM 版本总表与下载</h3>
+<blockquote>
+<p>所有版本<strong>解压即用</strong>：把内层 <code>dinou.zip</code>（或
+<code>dino.zip</code>）整个放进 MAME <code>roms</code>
+目录（文件名即机器名，不可改）。MAME 0.106+ 均可玩，checksum 告警选
+ignore。芯片 SHA1 以 TORRENTZIPPED 存盘形式计，<code>cdu_22a.7f</code>
+在所有版本均为原版
+<code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code>。</p>
+</blockquote>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>出兵</th>
+<th>运行时随机强化</th>
+<th>M16 必掉</th>
+<th>暴击</th>
+<th>机台</th>
+<th>定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v11 双倍</strong>（主推）</td>
+<td>×2</td>
+<td>✓</td>
+<td>✓</td>
+<td>常驻 $90</td>
+<td>美版</td>
+<td>高强度全家桶</td>
+</tr>
+<tr>
+<td><strong>v11 正常</strong></td>
+<td>原版波次</td>
+<td>✓</td>
+<td>✓</td>
+<td>常驻 $90</td>
+<td>美版</td>
+<td>节奏正常+敌兵变强</td>
+</tr>
+<tr>
+<td><strong>v11 纯暴击补丁</strong></td>
+<td>原版</td>
+<td>✗</td>
+<td>✗</td>
+<td>常驻 $90</td>
+<td>美版+世界版</td>
+<td>最小侵入，其余 100% 原版</td>
+</tr>
+<tr>
+<td><strong>2020 大杂烩+FF</strong>（§15）</td>
+<td>zengfr 2020 多模式</td>
+<td>✗</td>
+<td>✗</td>
+<td>常驻 $FF</td>
+<td>世界版壳</td>
+<td>8 倍血多层血条+满暴走</td>
+</tr>
+<tr>
+<td>v8 稳定版（历史）</td>
+<td>×2</td>
+<td>✗</td>
+<td>✓</td>
+<td>出生 $FF（会衰减）</td>
+<td>美版</td>
+<td>无随机强化的旧版</td>
+</tr>
+</tbody>
+</table>
+<h4 id="v11-双倍出兵变态版">① v11 双倍出兵变态版</h4>
+<p><strong><a
+href="/files/恐龙快打双倍出兵变态+持道具暴击版本.zip">恐龙快打双倍出兵变态+持道具暴击版本.zip</a></strong></p>
+<p>双倍密集出兵（第二只延迟 ~300ms，§12）＋ 运行时敌兵随机强化（§13）＋
+100% M16 ＋ 暴击槽玩家常驻钉满（§14）。全 8 关端到端实测（双倍+随机的
+v8_rand 已验全 8 关，v10/v11 仅追加暴击钩子，1-3 关实测无异常）。</p>
+<table>
+<thead>
+<tr>
+<th>芯片</th>
+<th>SHA1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cdu_21a.6f</td>
+<td><code>658e5488c21c747a6d643d216ec1da4a65c5f00a</code></td>
+</tr>
+<tr>
+<td>cdu_22a.7f</td>
+<td><code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code>（原版）</td>
+</tr>
+<tr>
+<td>cdu_23a.8f</td>
+<td><code>6494af6d8e2140f42cc1628e965be228bea2e71e</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="v11-正常出兵强化版">② v11 正常出兵强化版</h4>
+<p><strong><a
+href="/files/恐龙快打随机出兵强化+持道具暴击版本.zip">恐龙快打随机出兵强化+持道具暴击版本.zip</a></strong></p>
+<p>与①唯一区别：撤销 <code>$FD2A</code> 翻倍跳转（恢复原版
+<code>bsr.w</code>+<code>bne.w</code>、21a <code>$4430</code>
+保持原版零洞），出兵密度回归原版；其余功能与①完全相同。1-3
+关实测无异常。</p>
+<table>
+<thead>
+<tr>
+<th>芯片</th>
+<th>SHA1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cdu_21a.6f</td>
+<td><code>121226583482421c4cac17995d3c9b0a095d8d37</code></td>
+</tr>
+<tr>
+<td>cdu_22a.7f</td>
+<td><code>149cec3f…</code>（原版）</td>
+</tr>
+<tr>
+<td>cdu_23a.8f</td>
+<td><code>4cbe02561c08050c75148cfa23e261a0be4af24f</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="v11-纯暴击持久补丁版独立">③ v11 纯暴击持久补丁版（独立）</h4>
+<p><strong><a
+href="/files/恐龙快打暴击持久满伤补丁版.zip">恐龙快打暴击持久满伤补丁版.zip</a></strong>（内含<strong>美版
+<code>dinou.zip</code> + 世界版 <code>dino.zip</code></strong> 两个完整
+ROM，二选一使用）</p>
+<p>只打 §14
+的暴击钩子，不含翻倍/随机强化/M16，其余内容与原版逐字节一致——适合想要”干净加强暴击”的玩家。</p>
+<table>
+<thead>
+<tr>
+<th>芯片（cdu/cde 内容相同仅改名）</th>
+<th>SHA1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*_21a.6f</td>
+<td><code>822f0e98a9938f9951b0aa992d88769b5d9480f3</code></td>
+</tr>
+<tr>
+<td>*_22a.7f</td>
+<td>各自机器原版</td>
+</tr>
+<tr>
+<td>*_23a.8f</td>
+<td><code>ef7901939006dafad42bf02416ad503fca438588</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注：包内美版壳的 21a/23a
+与世界版同字节（世界版纯原版基座构建；美/世界 23a
+原始差异仅文本区，对本补丁无影响，MAME 告警 ignore 即可）。</p>
+</blockquote>
+<h4 id="v8-稳定版历史存档">④ v8 稳定版（历史存档）</h4>
+<p><strong><a
+href="/files/dinou_双倍出兵+暴击FF+M16_v8稳定版.zip">dinou_双倍出兵+暴击FF+M16_v8稳定版.zip</a></strong></p>
+<p>随机强化（§13）与暴击常驻化（§14）之前的历史版本：双倍+暴击（出生写一次
+$FF，<strong>每击衰减、徒手几乎无效</strong>）+M16。保留仅作谱系对照。芯片：21a=<code>99a5d935adfc12a57fc5e4cb0e2a10410679e321</code>、23a=<code>17e31b81b6405422c9086d4d23f729cd9ce87063</code>。</p>
+<h4 id="大杂烩多模式加强版-暴击常驻-ff世界版机台-dino">⑤ 2020
+大杂烩多模式加强版 + 暴击常驻 FF（世界版机台 <code>dino</code>）</h4>
+<p><strong><a
+href="/files/恐龙快打2020大杂烩+暴击常驻FF版.zip">恐龙快打2020大杂烩+暴击常驻FF版.zip</a></strong>（内含成品
+<code>dino.zip</code>，解压即玩）</p>
+<p>基座为 zengfr「2020 大杂烩多模式加强版」：8
+倍血量、多层血条、投币后上下键选 MODE（0A~59，十位定
+Boss/混兵规则、个位定同屏敌兵数）、部分模式无限弹药。在其<strong>自有暴击系统</strong>（与原版
+<code>$629F0</code> 衰减例程完全不同，后者在 2020 里是零调用死代码）上打
+3 个挂点 + 守卫 stub，把<strong>玩家对象</strong>暴击字节全程钉
+<code>$FF</code>：拳/脚/摔/武器/枪械/手雷每击满暴击，HUD 常驻 FF
+不跳变；衰减/上探例程为全体对象共享，其它对象（Boss、车辆、小兵）在 stub
+中逐条复刻原指令、行为与原版一致——敌兵伤害、二关
+Boss、第三关开车/霍戈全部正常，过关血量维持原版行为。另做 3
+处<strong>等长署名替换</strong>（§15.7）：标题画面 “Rom Hacked By Zengfr
+2020.05” 与 URL 行、滚动职员表均改为 sunjunior。完整逆向与七坑血泪见
+§15。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>芯片（存盘形式）</th>
+<th>SHA1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cde_21a.6f</td>
+<td><code>ef62573c3bc52b283fb330910e8095b38bc7b8e9</code></td>
+</tr>
+<tr>
+<td>cde_22a.7f</td>
+<td><code>69d18e60ba884092a6d8a904045bcb2c5ba2fd9b</code>（仅署名字符串）</td>
+</tr>
+<tr>
+<td>cde_23a.8f</td>
+<td><code>b4720ff47f9affebf3ca7a89c477acaedc3f7349</code>（2020
+框架原版，未动）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装（任何版本同法；⑤号包解压出的就是 dino.zip，直接放入 roms 即可）</span></span><br><span class="line">unzip -o &lt;下载包&gt;.zip dinou.zip -d &lt;你的roms目录&gt;</span><br><span class="line"><span class="comment"># 世界版玩法：v11 ①②包可解出内层 dinou.zip 的 cdu_* 改名 cde_* 后 zip 进 dino.zip；v11 ③包直接自带 dino.zip</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>构建教训</strong>（v10
+首包翻车实录）：还原/叠加补丁必须以<strong>干净基座芯片</strong>（<code>dino.zip.orig</code>、<code>dinou.zip.pre2x</code>、<code>dinou_v8_rand.zip</code>）为源，绝不能拿在测
+roms 当基座——残留实验钩子（如 <code>$18D88</code> 悬空跳转）会把 CPU
+引进数据区，产生 <code>ILLEGAL INST 1111 @0010478C</code>
+类随机崩溃。每次打包后核对上表 SHA1。</p>
+</blockquote>
+<h4
+id="敌兵替换功能深入调查后放弃完整失败分析">敌兵替换功能：深入调查后放弃（完整失败分析）</h4>
+<blockquote>
+<p>目标：把普通小兵（街头拳手/猎人/朋克飞踢男等）按地址替换为肥肥/飞刀客，做出类似”斗神版”的强敌氛围。<strong>完成全
+8 关类型采集并做出 133→137
+处替换后，因无法消除的随机崩溃，放弃该功能。</strong></p>
+</blockquote>
+<p><strong>调查过程</strong>（全部经 0.289 调试器采集 + 0.149
+实机二分定位）：</p>
+<ol type="1">
+<li><strong>第一版（v8+133 处替换）</strong>：第二关沼泽崩溃
+<code>ADDRESS ERROR 00044C67</code>。二分锁定沼泽 7 处中
+<code>0xAE102</code>（猎人）单独替换即崩。</li>
+<li><strong>修复版（跳过
+AE102）</strong>：沼泽仍出现”主角重影、无法攻击”软故障。继续二分发现是<strong>累积效应</strong>：同一批地址单独测全部安全，14
+处共存正常、15 处重影、16 处崩溃。</li>
+<li><strong>第三关（开车关）</strong>：40
+处替换一次通过一次崩，换最轻量的跳蚤人（0018）也崩——排除”对象大小”与”特定地址”因素。</li>
+<li><strong>决定性实验</strong>：三个版本<strong>第一关字节完全相同</strong>，一次稳定通关前
+4 关、一次 Boss 战崩、一次出场即崩，崩溃地址在
+<code>0x44C67</code>/<code>0x121B07</code>/<code>0x3F306</code>/<code>0x3B942</code>/<code>0xD0DF3</code>
+间随机漂移。同时关闭 M16 必掉仍崩（排除掉落物堆积因素）。</li>
+</ol>
+<p><strong>根因结论</strong>：肥肥/飞刀客是”重对象”（判定框大、动画多、附带投掷物），比原版小兵多占对象池槽位（游戏对象池仅约
+20 槽）。替换后特定帧序下对象池溢出，踩坏相邻 RAM
+中的函数指针/返回地址，CPU 跳入 ROM 数据区 →
+<code>ILLEGAL INST</code>/<code>ADDRESS ERROR</code>。<strong>崩溃概率随替换数量增加，但任何非零替换量都无法做到全稳定</strong>——ROM
+静态替换类型这条路本质上不可行。</p>
+<p><strong>留下的可复用资产</strong>：<br />
+- 全 8 关敌兵类型表 + Boss 地址排除清单（附录
+A.4，全部经调试器+画面双重确认）<br />
+- 高风险区标注：第二关沼泽全段、第三关开车段、各关 Boss 战前后<br />
+- 二分定位方法论：组批 → 单地址 → 组合累积测试，配合 0.149 快速回归</p>
+<blockquote>
+<p>后续进展：上述”运行时按类型映射”建议已于 2026-09-24
+落地为正式功能（第 13 章），交付版中的敌兵随机强化即为运行时 hook
+实现——<strong>只改写已分配对象的类型字段，绝不改动波次表数据</strong>，从机制上规避了本节的对象池溢出问题，全
+8 关实机无异常。</p>
+</blockquote>
+<h4 id="其他版本历史存档">其他版本（历史存档）</h4>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v3（仅暴击）</td>
+<td>仅含暴击值最大化补丁，SHA1
+cdu_23a.8f=<code>f988e6021c6b3178193930b3d89e827888af5756</code></td>
+</tr>
+<tr>
+<td>v8 稳定版</td>
+<td>双倍出兵 + 暴击 + M16（无敌兵强化），全 8
+关通过，现已被交付版取代</td>
+</tr>
+<tr>
+<td>v26 静态替换版</td>
+<td>第 1-2 关 24 处表内替换（已因随机崩溃放弃，见上文分析；被第 13
+章运行时方案取代）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="验证">8.2 验证</h3>
+<p>启动 MAME，进入游戏后通过调试器或 Lua 读取
+<code>0xffb33a</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">debugger&gt; print b@ffb33a</span><br><span class="line">255</span><br></pre></td></tr></table></figure>
+<p>暴击值 = 0xFF ✓</p>
+<h3 id="效果验证">8.3 效果验证</h3>
+<p>实测打出一拳即可打掉敌人<strong>约两管血条</strong>，攻击伤害相对原版大幅提升（暴击值由
+32 提升至 255，约 8 倍）：</p>
+<p><img src="/img/dino.gif" width="75%" alt="恐龙快打暴击值最大化效果演示"></p>
+<blockquote>
+<p>上图为暴击值 FF
+补丁后的实机演示：一拳打掉敌人近两管血，攻击力倍增。</p>
+</blockquote>
+<h3 id="掉落方案实机验收要点">8.4 掉落方案实机验收要点</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>方案</th>
+<th>验收方法</th>
+<th>预期</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案 A</td>
+<td>进入第一关，击杀任意敌人</td>
+<td>每次击杀必掉<strong>猎枪</strong>（6 发）</td>
+</tr>
+<tr>
+<td>方案 B（M16）</td>
+<td>同上</td>
+<td>每次击杀必掉 <strong>M16 机关枪（48 发）</strong>，拾取后弹药
+48</td>
+</tr>
+<tr>
+<td>变体 Uzi</td>
+<td>同上（文件 <code>0x24B74=0x04</code>）</td>
+<td>每次击杀必掉 <strong>Uzi 机关枪（48 发）</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>若拾取后实际弹药量不是 48，说明该 <code>$26</code>
+索引与武器块的对应关系需校正，回头核对 §6.3 表格。</p>
+</blockquote>
+<h3 id="方案-b-实机演示100-掉落机关枪-48-发">8.5 方案 B 实机演示（100%
+掉落机关枪 48 发）</h3>
+<p>方案 B 实机录制，击杀敌人后 100% 掉落机关枪（48 发）：</p>
+<p><img src="/img/dino2.gif" width="75%" alt="恐龙快打100%掉落机关枪效果演示"></p>
+<blockquote>
+<p>上图为方案 B 补丁后的实机演示：敌人每次被击杀必掉机关枪，拾取弹药 48
+发。该 GIF 录制于 Uzi 变体（<code>0x24B74=0x04</code>）；当前交付的 M16
+变体（<code>0x24B74=0x05</code>）共享同一掉落逻辑与 48
+发弹药设定，仅枪械外观不同。</p>
+</blockquote>
+<h4 id="m16-变体当前交付版本0x24b740x05实机演示">M16
+变体（当前交付版本，<code>0x24B74=0x05</code>）实机演示</h4>
+<p><img src="/img/dino3.gif" width="75%" alt="恐龙快打100%掉落M16机关枪效果演示"></p>
+<blockquote>
+<p>上图为当前交付的 <strong>M16 机关枪（48 发）</strong>
+变体实机演示：敌人 100% 掉落指定枪械 M16，拾取后弹药 48 发，与 Uzi
+变体共享同一掉落判定逻辑（仅武器索引 <code>0x24B74</code> 不同）。</p>
+</blockquote>
+<h3 id="可选恢复原版">8.6 可选：恢复原版</h3>
+<p><code>dino.zip.backup</code> 和 <code>dino.7z</code>（原始 ROM
+集）中保存着原版文件，可随时还原。</p>
+<hr />
+<h2 id="修改总结">9. 修改总结</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴击值地址 <code>0xffb33a</code></td>
+<td>✅ 已定位</td>
+<td>P1 玩家对象 +0xC6</td>
+</tr>
+<tr>
+<td>暴击值初始化表 <code>0x2c9b6</code></td>
+<td>✅ 已定位</td>
+<td>角色数据表，默认 0x20</td>
+</tr>
+<tr>
+<td>暴击值初始化指令 <code>0x11770</code></td>
+<td>✅ 已修改</td>
+<td><code>move.b #$ff,$c6(a3)</code></td>
+</tr>
+<tr>
+<td>暴击值递减/清零（通用函数）</td>
+<td>⚠️ 维持原样</td>
+<td>与其他对象共享（见 §10.7），不可 NOP</td>
+</tr>
+<tr>
+<td>掉落判定子程序 <code>0x24B48</code></td>
+<td>✅ 已逆向</td>
+<td>掉落类型 d1 → <code>$26</code> 武器索引</td>
+</tr>
+<tr>
+<td>武器跳转表 <code>0x24D6C</code></td>
+<td>✅ 已逆向</td>
+<td>锁定 Uzi/M16 均为 48 发（<code>$26=6/8</code>）</td>
+</tr>
+<tr>
+<td>方案 A 补丁（<code>0x24B72</code>）</td>
+<td>✅ 已交付</td>
+<td>必掉猎枪（d1=1）</td>
+</tr>
+<tr>
+<td>方案 B 补丁（<code>0x24B74</code>）</td>
+<td>✅ <strong>已交付</strong></td>
+<td>必掉 M16 机关枪 48 发（d1=5，当前默认）</td>
+</tr>
+<tr>
+<td>ROM 补丁固化</td>
+<td>✅ <strong>已交付</strong></td>
+<td>纯 ROM 修改，不依赖插件</td>
+</tr>
+<tr>
+<td>敌兵翻倍 <code>$FD2A→$104430</code></td>
+<td>✅ <strong>已交付</strong></td>
+<td>双倍出兵含 Boss，第二只延迟约 300ms（§12）</td>
+</tr>
+<tr>
+<td>运行时随机强化 <code>$FE36→$104460</code></td>
+<td>✅ <strong>已交付</strong></td>
+<td>对象级类型改写，波次表零改动，Boss/剧情不受影响（§13）</td>
+</tr>
+<tr>
+<td>暴击常驻化 <code>$629F0→$104596</code></td>
+<td>✅ <strong>已交付</strong></td>
+<td>接管衰减例程，玩家 $c6 钉 $90（v10 曾钉 $FF
+过猛），敌兵逻辑原样回放（§14）</td>
+</tr>
+<tr>
+<td>2020 大杂烩暴击常驻 FF（3 挂点+守卫 stub）+ sunjunior 署名</td>
+<td>✅ <strong>已交付</strong></td>
+<td>zengfr 2020 自有暴击系统玩家侧钉 $FF；共享例程经 32
+位基址守卫，Boss/车辆/小兵原版回放；7 处署名等长替换（§15）</td>
+</tr>
+<tr>
+<td>静态表替换（133-137 处）</td>
+<td>❌ 已放弃</td>
+<td>对象池溢出随机崩溃，被运行时方案取代（§8.1 失败分析）</td>
+</tr>
+<tr>
+<td>战斗验证（实际伤害）</td>
+<td>✅ 确认提升</td>
+<td>一拳打掉敌人约两管血</td>
+</tr>
+<tr>
+<td>掉落实机验证</td>
+<td>✅ 方案 A/B 均已实机确认</td>
+<td>方案 A：每次击杀必掉猎枪；方案 B：100% 掉落机关枪 48 发（GIF 见
+§8.5，M16 为当前交付变体）</td>
+</tr>
+<tr>
+<td>Boss 第三关下车后</td>
+<td>✅ 正常</td>
+<td>通用函数恢复后无异常</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="踩坑与经验总结">10. 踩坑与经验总结</h2>
+<ol type="1">
+<li><p><strong><code>$c6(aN)</code> 是多用途偏移</strong>——<span
+class="math inline">$c6(a6)
+在玩家对象上是暴击值，但在敌人/道具对象上可能是其他属性（阶段计数、显隐控制、倒计时）。NOP
+`subq.w #1,$</span>c6(a6)`
+时需确认上下文是玩家逻辑，否则可能破坏敌人行为。应优先定位到<strong>角色初始化表</strong>做修改，而非大范围
+NOP。</p></li>
+<li><p><strong>暴击值表与段位（连段等级）耦合</strong>——角色连段越高，暴击值也越高（表中可见
+24→28→32→36→42→48 的递增）。若将全表设为
+FF，所有段位的暴击值相同，弱化了段位奖励机制。接受此副作用（或保留表的梯度但整体平移）。</p></li>
+<li><p><strong>ROM 补丁 vs 插件方案</strong>——CPS1 无 BIOS 校验（不同于
+PGM），ROM 文件可随意修改，比西游释厄传（PGM 有校验）更简单。直接修改
+ROM 文件是最干净的交付方式。</p></li>
+<li><p><strong><code>ROM_LOAD16_WORD_SWAP</code>
+的坑</strong>——在文件内直接搜索 CPU 地址对应的字节，必须考虑字交换：CPU
+看到 <code>0x536e</code>，文件内存的是 <code>0x6e53</code>。patch
+脚本需先 swap 再搜索/修改。<strong>掉落补丁的 <code>bne.b/moveq</code>
+恰好落在字节边界上，改了文件 <code>0x24B74</code> 的立即数即可（见
+§7）。</strong></p></li>
+<li><p><strong>暴击值受击不会归零</strong>——实测玩家被打后暴击值<strong>不会恢复原值或归零</strong>，仅按通用计时器每
+~25 秒减 1 慢速消耗。初始 FF（255）足够一整局游戏（约 106
+分钟），无需额外 NOP 递减。</p></li>
+<li><p><strong>不要大范围改数据表</strong>——暴击值表所在区域与其他道具（手雷等）的数据表共享。若整表改为
+0xFF，会破坏道具数据，丢手雷时触发
+<code>ADDRESS ERROR</code>。应改为<strong>修改读取表的指令</strong>（如
+<code>move.b #$ff,$c6(a3)</code> 替代
+<code>move.b (a6,d1.w),$c6(a3)</code>），完全不触碰数据区。</p></li>
+<li><p><strong>通用对象更新函数不可动</strong>——<code>0x4fe6e</code>/<code>0x4fe7c</code>
+的 <code>$c6</code>
+递减/清零位于一个被<strong>所有对象</strong>共用的更新函数中。NOP
+掉后，Boss 的 <code>$c6</code>（阶段计数器）不再变化，导致第三关下车后
+Boss
+卡在隐藏状态无法攻击。<strong>判定多用途偏移的指令时，必须回溯其所在函数是否被多对象调用。</strong></p></li>
+<li><p><strong>大范围修改前先备份</strong>——每次生成新补丁前，从
+<code>dino.7z</code> 重新提取原版
+<code>cde_23a.8f</code>，避免在已污染的 ROM
+上迭代导致错误累积。</p></li>
+<li><p><strong>掉落类型值是索引而非直接武器码</strong>——<code>d1</code>
+不是武器 ID，<code>$26=(d1-1)*2</code> 作为跳转表 <code>0x24D6C</code>
+的索引。改 <code>d1</code> 时必须查表确认目标块的起始弹药（两个 48
+发的块分别对应 Uzi/M16，d1=4/5），不能凭直觉选值。</p></li>
+</ol>
+<hr />
+<h2 id="mame-0.149-移植与验证2026-09-14-更新">11. MAME 0.149
+移植与验证（2026-09-14 更新）</h2>
+<blockquote>
+<p>本文前 10 章基于 MAME 0.289 完成。第 11 章记录将”暴击值最大化 + 掉落
+Hack”成果迁移到本次自编译的 <strong>MAME 0.149</strong>（源码编译版
+<code>~/mame/bin/mame</code>）的调测方案与测试结论。</p>
+</blockquote>
+<h3 id="结论先行">11.1 结论先行</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROM 补丁文件</td>
+<td>✅ <strong>完全通用</strong>：0.149 与 0.289 使用同一份
+<code>cde_23a.8f</code>（原版 CRC <code>8f4e585e</code>），补丁版 SHA1
+<code>f988e6021c6b3178193930b3d89e827888af5756</code>（仅暴击
+v3）及叠加掉落补丁版（SHA1 随叠加变化）均零改动直用</td>
+</tr>
+<tr>
+<td>暴击值地址</td>
+<td>✅ 一致：P1 对象基址 <code>0xffb274</code> + <code>0xC6</code> =
+<code>0xffb33a</code>（同一游戏二进制布局，仅驱动外壳不同）</td>
+</tr>
+<tr>
+<td>掉落判定子程序</td>
+<td>✅ 一致：<code>0x24B48</code> / <code>0x24D6C</code> 均为 0.289
+同地址（同一 ROM，指令布局相同）</td>
+</tr>
+<tr>
+<td>已安装</td>
+<td>✅ <code>roms/dino.zip</code>
+现为<strong>全功能版</strong>（翻倍+M16+暴击+随机强化，芯片与美版逐字节相同，仅
+<code>cdu_</code>→<code>cde_</code> 改名；原版备份
+<code>dino.zip.orig</code>）</td>
+</tr>
+<tr>
+<td>启动</td>
+<td>✅ 100% 速度，仅报预期中的
+<code>cde_23a.8f WRONG CHECKSUMS</code>（hack ROM 的正常告警）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="调测方案">11.2 调测方案</h3>
+<ol type="1">
+<li><strong>核对 ROM 一致性</strong>：SHA1/CRC 对比 0.149
+驱动定义（<code>src/mame/drivers/cps1.c</code>，原版 CRC
+<code>8f4e585e</code>）与 0.289
+产出的补丁文件，确认是<strong>同一份文件</strong>，复用补丁无需重新
+PATCH。</li>
+<li><strong>替换 ROM</strong>：备份原件后把补丁 <code>cde_23a.8f</code>
+写回 <code>dino.zip</code>（<code>zip</code> 内保持同名）。</li>
+<li><strong>根因理解</strong>：0.149 的 cps1.c 对 <code>dino</code>
+使用相同 ROM 布局，暴击值初始化指令、掉落判定子程序与 RAM
+偏移全部沿用，因此零成本移植。</li>
+</ol>
+<h3 id="可选0.149-xml-cheat防慢速递减">11.3 可选：0.149 XML
+cheat（防慢速递减）</h3>
+<p>0.149 无插件系统、Lua 也无法写内存（详见《西游释厄传》文档
+§9），但内置 XML cheat 引擎可逐帧写回：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cheat</span> <span class="attr">desc</span>=<span class="string">&quot;Crit = 0xFF&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">state</span>=<span class="string">&quot;run&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        &lt;action&gt;b@<span class="number">0xffb33a</span> = <span class="number">0xff</span>&lt;/action&gt;</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">cheat</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>放至 <code>cheat/dino.xml</code>，<code>-cheat</code> 启动后
+Tab→Cheats 开启；若使用已打 <code>start="on"</code> 补丁的
+0.149，则可开机自启、F9 一键切换。</p>
+<h3 id="测试结论">11.4 测试结论</h3>
+<ul>
+<li>✅ 0.149 下 <code>dino</code> 正常进游戏，速度 100%。</li>
+<li>✅ 补丁 ROM 校验告警符合预期（hack ROM），不影响运行。</li>
+<li>✅ 掉落方案 A 在 0.149 下实机确认：击杀即掉猎枪（2026-09-14
+测试）。</li>
+<li>✅ 掉落方案 B 在 0.149 下实机确认：100% 掉落机关枪 48
+发（2026-09-15，GIF 见 §8.5；当前交付为 M16 变体）。</li>
+<li>ℹ️ 伤害效果人肉验证：同一补丁在 0.289
+已实机确认（一拳约两管血）；0.149
+因命中同一初始化指令，行为应一致。</li>
+</ul>
+<h3 id="侧配套改动本次构建新增">11.5 0.149
+侧配套改动（本次构建新增）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>补丁</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/emu/cheat.c</code> 支持
+<code>&lt;cheat start="on"&gt;</code></td>
+<td>载入即自动运行，达成”开机即生效”</td>
+</tr>
+<tr>
+<td><code>src/emu/cheat.c</code> 引擎默认启用 +
+<code>frame_update</code> 受 <code>!m_disabled</code> 门控</td>
+<td>F9 一键”冻结/放行”真正生效（修复原版开关拦不住 run 脚本的缺陷）</td>
+</tr>
+<tr>
+<td><code>src/emu/inpttype.h</code> <code>UI_TOGGLE_CHEAT</code> 默认键
+F6→F9</td>
+<td>单键切换（Frameskip+ 让位 F9）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="敌兵翻倍-hack2026-09-17">12. 敌兵翻倍 Hack（2026-09-17）</h2>
+<blockquote>
+<p>前述章节实现了暴击值最大化与 100% M16
+掉落。本节在前述成果之上新增第三大 Hack
+目标——<strong>将场上所有敌人（小兵、Boss）翻倍</strong>，且不影响暴击与掉落模块。参考资源来自
+zengfr 的 <a target="_blank" rel="noopener" href="https://github.com/zengfr/romhack">romhack
+仓库</a>（<code>dino/</code> 目录）。</p>
+</blockquote>
+<h3 id="目标与挑战">12.1 目标与挑战</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>效果</td>
+<td>每个敌人同时出现<strong>两个</strong>（小兵 ×2、Boss ×2，掉落亦
+×2）</td>
+</tr>
+<tr>
+<td>交付</td>
+<td>纯 ROM 补丁，不依赖插件/内存修改器</td>
+</tr>
+<tr>
+<td>基础</td>
+<td>叠加在暴击 FF + M16 掉落补丁之上</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心挑战</strong>：游戏对象池（<code>0xFFC834-0xFFD994</code>，约
+20
+槽）在每帧内只支持每个出兵条目处理一次。若在同一帧内对同一条目两次调用敌兵生成器
+<code>$FDAE</code>，会因对象初始化共享状态（全局”当前对象”指针/计数器）被覆盖，导致<strong>非确定性内存损坏</strong>——崩溃点随机变化（有时
+10 秒、有时 1 分钟、有时过完第一关才崩）。</p>
+<h3 id="八版失败的根因总结">12.2 八版失败的根因总结</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th>方案</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1</td>
+<td>仅远 cave
+点（<code>$7B42C</code>/<code>$7BFCE</code>/<code>$7C09A</code>）翻倍</td>
+<td>无可见效果</td>
+</tr>
+<tr>
+<td>v2</td>
+<td>近 cave（<code>$FD2A</code>）+ 远 cave 全翻倍</td>
+<td>肥肥波次崩溃</td>
+</tr>
+<tr>
+<td>v3</td>
+<td>+ bit7 过滤（避免脚本命令被翻倍）</td>
+<td>M16 兵处崩溃</td>
+</tr>
+<tr>
+<td>v4</td>
+<td>+ 第二个兵坐标偏移</td>
+<td>打小兵就崩溃</td>
+</tr>
+<tr>
+<td>v5</td>
+<td>仅近 cave + bit7 过滤</td>
+<td>首次过第一关，但<strong>随机崩溃</strong>（重跑复现，证明非确定性）</td>
+</tr>
+<tr>
+<td>v6</td>
+<td>触发值过滤（Boss 区不翻倍）</td>
+<td>肥肥波次崩溃</td>
+</tr>
+<tr>
+<td>v7</td>
+<td>帧延迟翻倍（保存 a2，下一帧再 spawn）</td>
+<td>时序错乱、未清兵就提前通关</td>
+</tr>
+<tr>
+<td><strong>v8（终版）</strong></td>
+<td><strong>严格按 zengfr 文档：<code>jmp.l</code>
+直跳方案</strong></td>
+<td>✅ <strong>稳定连续 2
+关，全部双倍，无异常</strong>（后续升级为交付版后已验证全 8 关）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="根因进位标志c-flag被中间指令污染">12.3 根因：进位标志（C
+flag）被中间指令污染</h3>
+<p>所有 v1-v7 的共同缺陷：使用 <code>bsr</code>/<code>rts</code>
+往返，cave 中的中间指令破坏了 <code>$FDAE</code>
+返回的<strong>进位标志（C flag）</strong>。</p>
+<p><code>$FD2A</code> 之后的 walker 决策：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$FD2E: bcs.w $fd3c   ; C=1 → 对象池满，停止</span><br><span class="line">$FD32: lea $10(a2),a2 ; C=0 → 推进出兵表指针，继续</span><br></pre></td></tr></table></figure></p>
+<p>v1-v7 的 cave 用 <code>rts</code> 返回时，C 已被中间指令污染：成功时
+C 被清 0 却被判失败，或失败时 C 被置 1 却继续推进 → 时序乱 / 提前通关 /
+随机崩溃。</p>
+<p><strong>关键指令对 C/V 标志的影响</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>C 标志</th>
+<th>V 标志</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MOVE</code>、<code>CLR</code>、<code>MOVEQ</code>、<code>SUBQ</code>、<code>ADDQ</code></td>
+<td><strong>清零</strong></td>
+<td>清零</td>
+</tr>
+<tr>
+<td><code>TST</code>、<code>ANDI</code>、<code>ORI</code></td>
+<td>清零</td>
+<td>清零</td>
+</tr>
+<tr>
+<td><code>MOVEM</code></td>
+<td><strong>不变</strong></td>
+<td>不变</td>
+</tr>
+<tr>
+<td><code>ST</code>/<code>SF</code>（Scc）</td>
+<td><strong>不变</strong></td>
+<td>不变</td>
+</tr>
+<tr>
+<td><code>JMP</code>、<code>RTS</code>、<code>BRA</code>、<code>BCC</code></td>
+<td>不变</td>
+<td>不变</td>
+</tr>
+</tbody>
+</table>
+<p>因此保留 C 标志的关键是：<strong>不要在成功/失败分支中使用 MOVE
+族指令，或干脆不返回</strong>。</p>
+<h3 id="zengfr-文档提供的思路">12.4 zengfr 文档提供的思路</h3>
+<p>zengfr 的 <code>dino增加敌兵翻倍.txt</code>（原文）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">org        $104430</span><br><span class="line">_ADD_ADD1</span><br><span class="line">                move.w #$4,d4</span><br><span class="line">_loop</span><br><span class="line">                jsr        $fdae</span><br><span class="line">                dbne        d4,_loop</span><br><span class="line">                bcs        _fd3c</span><br><span class="line">                jmp        $fd32</span><br><span class="line">_fd3c</span><br><span class="line">                jmp        $fd3c</span><br><span class="line">; 一个 jsr $fdae 为1倍</span><br><span class="line">; 你加个cmp筛选下需要翻倍的兵就好了</span><br></pre></td></tr></table></figure>
+<p>关键区别：<br />
+1. <code>jsr $fdae</code>（绝对长调用）——补丁区可在任意 ROM 地址，不受
+<code>bsr</code> ±32KB 限制<br />
+2. <code>jmp $fd32</code>/<code>jmp $fd3c</code> 直接返回
+walker——<strong>不 rts</strong>，彻底回避 C 标志污染<br />
+3. 补丁区 <code>$104430</code>（21a 芯片偏移 <code>0x4430</code>，原 ROM
+为全零，64 字节可用）</p>
+<h3 id="v8-最终实现">12.5 v8 最终实现</h3>
+<p><strong>修改点 1：<code>$FD2A</code>（23a 芯片）</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址</th>
+<th>原内容</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU <code>$FD2A</code></td>
+<td><code>61 00 00 82</code>（<code>bsr.w $fdae</code>）</td>
+<td><code>4E F9 00 10 44 30</code>（<code>jmp.l $104430</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>6 字节覆盖原 <code>$FD2A-$FD2F</code>，其余 2 字节
+<code>$FD30-$FD31</code> 为不可达代码，无需清理。</p>
+<p><strong>修改点 2：<code>$104430</code>（21a 芯片偏移
+<code>0x4430</code>）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">104430: 78 01                 moveq #1,d4        ; 循环计数（2 次）</span><br><span class="line">104432: 4E B9 00 00 FD AE     jsr.l $FDAE        ; 敌兵生成器</span><br><span class="line">104438: 51 CC FF F8           dbra d4, $104432   ; d4--; if d4≠-1 → 再生成一次</span><br><span class="line">10443C: 65 06                 bcs.b $104444      ; 最后一次失败 → 停止</span><br><span class="line">10443E: 4E F9 00 00 FD 32     jmp.l $FD32        ; 成功 → walker 推进表指针</span><br><span class="line">104444: 4E F9 00 00 FD 3C     jmp.l $FD3C        ; 失败 → walker 停止</span><br></pre></td></tr></table></figure>
+<p><strong>暴击 + M16 补丁不变</strong>：<code>$FD2A</code>
+只改跳转，不碰其他地址。暴击（<code>$11770</code>）与 M16
+掉落（<code>$24B72</code>）完整保留。</p>
+<h3 id="关键编码陷阱moveq-dbra-寄存器编码">12.6 关键编码陷阱：MOVEQ /
+DBRA 寄存器编码</h3>
+<p>68000 的 <code>MOVEQ</code> 与 <code>DBRA</code>
+寄存器号编码在<strong>低位 bits 2-0</strong>，手拼极易出错：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>意图</th>
+<th>正确编码</th>
+<th>错误编码（实际效果）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>moveq #1,d4</code></td>
+<td><code>78 01</code></td>
+<td><code>7C 01</code> = 实际上是 <strong>D6</strong>（循环计数用垃圾 d4
+→ 卡死）</td>
+</tr>
+<tr>
+<td><code>dbra d4,−8</code></td>
+<td><code>51 CC FF F8</code></td>
+<td><code>51 C4 FF F8</code>（bit3=0）→ 解码为 <code>SF/SUBQ</code> 变体
+→ 卡死</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>教训：凭直觉拼字节极易出错。<strong>使用 MAME
+自带反汇编器验证</strong>（<code>src/emu/cpu/m68000/m68kdasm.c</code>：DBRA
+mask <code>0xfff8</code> match <code>0x51c8</code>，寄存器在 bits
+2-0，故 D4 = <code>0x51cc</code>）。</p>
+</blockquote>
+<h3 id="备份与安装">12.7 备份与安装</h3>
+<p>v8 成品文件（美版 dinou）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>芯片</th>
+<th>SHA1</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cdu_21a.6f</code></td>
+<td><code>99a5d935adfc12a57fc5e4cb0e2a10410679e321</code></td>
+<td><code>0x104430</code> 翻倍补丁</td>
+</tr>
+<tr>
+<td><code>cdu_22a.7f</code></td>
+<td><code>149cec3fa5e1d6e39bcaf079274d47fe768c910b</code></td>
+<td>未修改</td>
+</tr>
+<tr>
+<td><code>cdu_23a.8f</code></td>
+<td><code>17e31b81b6405422c9086d4d23f729cd9ce87063</code></td>
+<td>翻倍跳转 + 暴击 + M16</td>
+</tr>
+</tbody>
+</table>
+<p>安装：三个文件替换入 <code>dinou.zip</code>（美版）/
+<code>dino.zip</code>（世界版，改
+<code>cde_21a.6f</code>/<code>cde_23a.8f</code> 对应文件）。MAME 0.149
+自编译版实测<strong>连续 2
+关无异常</strong>；作为交付版基座后已验证<strong>全 8
+关无异常</strong>（§13.7）。</p>
+<h3 id="效果演示">12.8 效果演示</h3>
+<p>v8 翻倍补丁实机演示截图（双小兵 + 双 Boss 同时在场）：</p>
+<p><img src="/img/dino4.gif" width="75%" alt="恐龙快打敌兵翻倍 Hack 效果演示"></p>
+<blockquote>
+<p>上图为 v8
+翻倍补丁的实机演示：画面中同时出现<strong>双倍小兵</strong>与<strong>双倍
+Boss</strong>，全部按原版 AI 正常行动、正常掉落 M16 机关枪。暴击值 0xFF
+最大化与 100% M16 掉落同时生效。MAME 0.149 自编译版实测连续 2
+关无异常（后在交付版中完成全 8 关验证）。</p>
+</blockquote>
+<h3 id="参考资料">12.9 参考资料</h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/zengfr/romhack">zengfr/romhack</a> —
+恐龙快打 hack 资料（出兵表、调试脚本、翻倍文档、hack ROM）</li>
+<li><code>dino增加敌兵翻倍.txt</code> —
+翻倍补丁核心文档（<code>$104430</code> 方案）</li>
+<li><code>dino.tb.出兵.txt</code> / <code>dino.tb1.txt</code> —
+出兵表结构（tb1 步长 <code>0x0E</code>）</li>
+<li><code>Cadillacs+and+Dinosaurs Memory Map.txt</code> — RAM
+地址映射</li>
+<li>MAME 0.149 源码 <code>cps1.c</code> — ROM
+芯片映射（<code>ROM_LOAD16_WORD_SWAP</code>，3×<code>0x80000</code>）</li>
+</ul>
+<hr />
+<h2 id="敌兵运行时随机强化2026-09-24">13.
+敌兵运行时随机强化（2026-09-24）</h2>
+<h3 id="背景">13.1 背景</h3>
+<p>第 8.1 节的”静态表替换”因对象池溢出被放弃后，参考 zengfr
+的开源资料（<a target="_blank" rel="noopener" href="https://my.oschina.net/zengfr/blog/3145153">oschina
+博客</a> 与 <a target="_blank" rel="noopener" href="https://github.com/zengfr/romhack">romhack 仓库</a>
+中 <code>dino/恐龙新世纪-小兵随机.X68</code>）发现：其流通的 stable
+改版从<strong>不改波次表</strong>，而是在对象创建的瞬间运行时改写对象类型。本功能
+1:1 移植该机制并适配本项目的 v8 基座。</p>
+<h3 id="原理">13.2 原理</h3>
+<p>调试器确认 <code>$FE36</code>
+是每个敌兵对象初始化时的字段拷贝入口：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FE36: 316A 0004 0020   move.w $4(a2),$20(a0)   ; 波次表type → 对象type</span><br><span class="line">FE3C: 316A 0006 0008   move.w $6(a2),$8(a0)    ; X 坐标</span><br><span class="line">FE42: 316A 0008 0010   move.w $8(a2),$10(a0)   ; Y 坐标</span><br><span class="line">FE48: 316A 000A 0026   move.w $a(a2),$26(a0)   ; 攻击属性</span><br></pre></td></tr></table></figure>
+<p><code>a2</code> = 波次表条目指针，<code>a0</code> =
+刚分配好的对象指针。<strong>在 FE36
+打桩、把”表值→对象值”的直拷贝改为”经随机映射表改写”</strong>，即可在不触碰波次表数据的前提下随机强化敌兵。</p>
+<h3 id="补丁点">13.3 补丁点</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>位置</th>
+<th>芯片/偏移</th>
+<th>原始字节</th>
+<th>补丁字节</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$FE36</code></td>
+<td>cdu_23a.8f @ 0xFE36</td>
+<td><code>316A 0004 0020</code></td>
+<td><code>4EF9 0010 4460</code></td>
+<td>jmp 随机化子程序</td>
+</tr>
+<tr>
+<td><code>$FE48</code></td>
+<td>cdu_23a.8f @ 0xFE48</td>
+<td><code>316A 000A 0026</code></td>
+<td><code>4E71 4E71 4E71</code></td>
+<td>nop 掉原属性拷贝（子程序自行补写）</td>
+</tr>
+<tr>
+<td><code>$104460</code></td>
+<td>cdu_21a.6f @ 0x4460</td>
+<td>全零空隙</td>
+<td>248 字节</td>
+<td><code>_random</code> 子程序 + 映射表</td>
+</tr>
+</tbody>
+</table>
+<p>cdu_22a.7f（波次表所在芯片）<strong>零改动</strong>——这是与失败的静态方案的本质区别，过关判定、Boss
+行为、剧情脚本的表数据完全不变。</p>
+<h3 id="子程序逻辑">13.4 子程序逻辑</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">_random:</span><br><span class="line">    movem.l d0-d2/d7,-(a7)</span><br><span class="line">    move.b  $3(a2),d0</span><br><span class="line">    andi.b  #$f,d0</span><br><span class="line">    tst.b   d0</span><br><span class="line">    bne     _out_random      ; 守卫1：w1 低半字节≠0 的条目（场景脚本）原样放行</span><br><span class="line">    moveq   #$a,d7</span><br><span class="line">_loop:</span><br><span class="line">    move.w  $4(a2),d0</span><br><span class="line">    ...遍历 _enemy_ID 白名单...</span><br><span class="line">    dbeq    d7,_loop</span><br><span class="line">    bra     _out_random      ; 守卫2：不在白名单（所有 Boss 类型）原样放行</span><br><span class="line">_in_random:</span><br><span class="line">    jsr     $119c            ; 游戏自带 RNG</span><br><span class="line">    add.w   $fff5c2,d0       ; 场景值扰动</span><br><span class="line">    divs.w  #$b,d0</span><br><span class="line">    swap    d0</span><br><span class="line">    add.w   d0,d0</span><br><span class="line">    move.w  _enemy_ID_a(pc,d0),d0</span><br><span class="line">    move.w  d0,$20(a0)       ; 运行时改写对象类型（不改表！）</span><br><span class="line">    ; 按新类型回补属性（替代被 nop 的 FE48 拷贝）：</span><br><span class="line">    ;   →$48: $26(a0)=$0200    →$16c: $26(a0)=0</span><br><span class="line">    ;   →$38: $26=随机bit      →$50: $27=6</span><br><span class="line">    jmp     $fe3c            ; 回跳原流程继续坐标拷贝</span><br><span class="line">_out_random:</span><br><span class="line">    movem.l (a7)+,d0-d2/d7</span><br><span class="line">    move.w  $4(a2),$20(a0)   ; 原样执行两条拷贝</span><br><span class="line">    move.w  $a(a2),$26(a0)</span><br><span class="line">    jmp     $fe3c</span><br></pre></td></tr></table></figure>
+<h3 id="映射表">13.5 映射表</h3>
+<table>
+<thead>
+<tr>
+<th>源类型（白名单）</th>
+<th>兵种</th>
+<th>→ 目标（等概率随机）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$0008</code></td>
+<td>街头拳手</td>
+<td><code>$0008</code>（不变，保底）</td>
+</tr>
+<tr>
+<td><code>$000C</code></td>
+<td>铁锤兵</td>
+<td><strong><code>$0048</code> Walther 级强敌</strong></td>
+</tr>
+<tr>
+<td><code>$0018</code></td>
+<td>跳蚤人</td>
+<td><code>$0018</code></td>
+</tr>
+<tr>
+<td><code>$0028</code></td>
+<td>肥肥</td>
+<td><code>$0028</code></td>
+</tr>
+<tr>
+<td><code>$0034</code></td>
+<td>猎人</td>
+<td><code>$0034</code></td>
+</tr>
+<tr>
+<td><code>$0038</code></td>
+<td>飞刀客</td>
+<td><code>$0038</code> + 随机攻击强度</td>
+</tr>
+<tr>
+<td><code>$0050</code></td>
+<td>朋克兵</td>
+<td><strong><code>$0048</code> Walther 级强敌</strong></td>
+</tr>
+<tr>
+<td><code>$0100</code></td>
+<td>手雷场景敌</td>
+<td><code>$000C</code> 铁锤兵</td>
+</tr>
+<tr>
+<td><code>$00FC</code></td>
+<td>扔刀场景敌</td>
+<td><code>$000C</code> 铁锤兵</td>
+</tr>
+</tbody>
+</table>
+<p>Boss
+类型（<code>$0048/$0014/$007C/$0064/$008C/$00B4/$0084/$0178</code>）<strong>不在源白名单</strong>，任何情况下不被改写，过关事件链完好。</p>
+<h3 id="构建与踩坑">13.6 构建与踩坑</h3>
+<ul>
+<li>汇编：Arch 官方仓库
+<code>vasm</code>（<code>vasmm68k_mot -Fbin</code>）；反汇编交叉验证用
+pip <code>capstone</code>（CS_ARCH_M68K）</li>
+<li><strong>MOVEM 掩码位序</strong>：<code>movem.l d0-d2/d7,-(a7)</code>
+→ <code>48E7 E100</code>。68000 真机掩码是 <strong>bit15=D0 …
+bit0=A7</strong>，与直觉（bit0=D0）相反——用 ROM 现成
+prologue（<code>48E7 FFFE</code> = 保存除 A7 外全部）验证后才放心</li>
+<li><strong>链接器陷阱</strong>：flat bin 在地址 0
+汇编时，<code>jmp _out_random</code> 会编成绝对短地址 <code>$E2</code>
+而错位；段内跳转一律改用 PC 相对 <code>bra</code></li>
+<li>vasm mot 的 movem 寄存器列表必须用 <code>/</code>
+分隔（逗号列表会报”not supported”）</li>
+</ul>
+<h3 id="实机验证">13.7 实机验证</h3>
+<p>以 13.3 补丁叠加在 v8（双倍+暴击+M16）基座上，MAME 0.149 全 8
+关端到端：铁锤/朋克兵战斗中随机出现 Walther
+级强敌、场景手雷兵变铁锤兵；全部 Boss
+战（含三关车战霍戈、五关老头双形态、八关最终 Boss
+变身）正常触发与过关，<strong>无崩溃、无重影、无卡关</strong>。</p>
+<hr />
+<h2 id="暴击值常驻化v10v112026-09-24">14.
+暴击值常驻化（v10→v11，2026-09-24）</h2>
+<h3 id="旧方案的缺陷暴击槽会衰减">14.1 旧方案的缺陷：暴击槽会衰减</h3>
+<p>§4-§5 的 v16 方案只在对象初始化时写一次
+<code>$c6=$ff</code>。反汇编玩家状态机后发现衰减真相：</p>
+<ul>
+<li><strong>伤害公式</strong>（<code>$2B98A</code>/<code>$4AC1A</code>
+等）：<code>最终伤害 = 攻击力表 × $c6(攻方) × 修正表 &gt;&gt;10</code>——<code>$c6</code>
+是伤害倍率分子；</li>
+<li><strong>衰减例程</strong> <code>$629F0</code>（玩家状态机 8 处
+<code>bsr.w</code>
+调用）：<code>move.w $c6(a6),d0 / subq.w #1 / 回写</code>——**<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mn>6</mn><mi>实</mi><mi>为</mi><mn>16</mn><mi>位</mi><mi>槽</mi><mo>*</mo><mi>*</mi><mi>，</mi><mi>扣</mi><mi>的</mi><mi>是</mi><mi>低</mi><mi>位</mi><mi>字</mi><mi>节</mi><mi>；</mi><mi>而</mi><mi>伤</mi><mi>害</mi><mi>只</mi><mi>读</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">c6 实为 16 位槽**，扣的是低位字节；而伤害只读 `</annotation></semantics></math>c6<code>**高字节**（</code>move.b
+$c6(a2),d0`，68K 大端）。</li>
+<li>结论：槽要从 0 涨到”高字节可见”需要 <strong>256
+次命中积累</strong>，徒手出手慢+每次挨打/时间衰减 →
+永远不满；枪械射速高（M16 每秒 10
+发）才把槽打满——这正是”只有持枪才暴击”的机制根源。</li>
+</ul>
+<h3 id="常驻化钩子v10钉-ffv11回调为-90">14.2 常驻化钩子（v10：钉
+$FF；v11：回调为 $90）</h3>
+<p>复用 §13 的运行时钩子套路，把衰减例程整体接管：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>位置</th>
+<th>改动</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>23a <code>$629F0</code></td>
+<td>6 字节 → <code>jmp.l $104596</code></td>
+</tr>
+<tr>
+<td>21a <code>$104580</code></td>
+<td>60 字节 stub：玩家基址匹配（<code>$FFB274/$FFB3F4/$FFB574</code>
+三选一）→ <code>move.b #$90,$c6(a6)</code>；<strong>其它对象原样回放原版
+-1 衰减逻辑</strong>（含归零跳
+<code>$61ADA</code>），敌兵伤害不受影响</td>
+</tr>
+</tbody>
+</table>
+<p>v10 钉的是 <code>$FF</code>（满倍率），实测伤害过猛，v11 按手感回调到
+<strong><code>$90</code></strong>（144/255 ≈ 56%
+倍率）。所有攻击类型（拳/脚/投技/武器/枪械）从第一次命中起恒定同一倍率。</p>
+<blockquote>
+<p>大端陷阱：stub 里最初写 <code>move.w #$ff,$c6(a6)</code>
+会把高字节钉成
+<code>$00</code>（<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mi>F</mi><mi>落</mi><mi>在</mi><mi>低</mi><mi>位</mi><mtext mathvariant="normal">‘</mtext></mrow><annotation encoding="application/x-tex">FF 落在低位 `</annotation></semantics></math>c7<code>）——必须是 **</code>move.b`**。</p>
+</blockquote>
+<h3 id="验证-1">14.3 验证</h3>
+<p>v10（$FF）与
+v11（$90）均在美版实机确认：徒手连段伤害明显上一个台阶、与持枪倍率一致；敌兵互殴与打玩家伤害无异样；正常/双倍两个基座版本共存无冲突。8
+管血实验（<code>$18D88</code> 死亡钩子）同期失败作废，教训见 §8.1
+构建教训。</p>
+<hr />
+<h2 id="大杂烩框架的暴击系统逆向与常驻-ffv4v182026-09-27">15. 2020
+大杂烩框架的暴击系统逆向与常驻 FF（v4→v18，2026-09-27）</h2>
+<h3 id="背景与死代码陷阱">15.1 背景与”死代码”陷阱</h3>
+<p>zengfr 2020 大杂烩多模式加强版（世界版壳）自带 8 倍血、多层血条、MODE
+选单等系统。第一次把 §14 的 <code>$629F0→stub</code>
+钩子原样移植过去，游戏照常跑但<strong>毫无效果</strong>——反汇编发现 2020
+里 <code>$629F0</code> 的调用者被 zengfr
+整体拆除了（零调用，纯死代码），且 <code>$18D88</code> 死亡判定处挂着
+zengfr 自己的 <code>jmp $1049A0</code>（8
+倍血系统入口，动不得）。原版暴击机制在 2020
+里被<strong>换成了每击实时读玩家 <code>$c6</code>
+字节</strong>的新系统，出生 <code>$40</code>、随战斗波动，HUD
+直接显示该字节。</p>
+<h3 id="静态普查位移字节全库扫描">15.2 静态普查：位移字节全库扫描</h3>
+<p>对 <code>cde_23a.8f</code>/<code>cde_21a.6f</code> 反汇编全库扫
+<code>00C6</code> 位移，得到 A/B/C/D 四个 <code>$c6</code> 读取点 +
+全部写入点。写”钉 $FF 到 A/C
+读取点”的钩子版（v2）实测：枪伤上去了，<strong>拳脚依旧波动</strong>——四读点归零诊断（diagA/B/C
+逐个把 <code>mulu $c6</code> 变 0 看哪路伤害变 1）证明：<strong>2020
+拳脚伤害根本不走原版的 A/B/C/D 读点</strong>，只认玩家对象
+<code>$c6</code> 字节本身。</p>
+<h3 id="watchpoint-抓-pc真凶定案">15.3 watchpoint 抓 PC：真凶定案</h3>
+<p>静态锁定 <code>$105506</code>（出生写
+<code>$40</code>）/<code>$105960</code>（-4
+衰减）/<code>$10596C/$10598C</code>（$28/$48
+钳位）后，改动仍被”看不见的手”抹掉。最终上 MAME 0.289 调试器
+<code>wpset FFB33A,1,w</code>
+对<strong>纯净原版</strong>做动态取证，出生/挨打/扫射全程的 PC
+流水一次性闭环：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>PC</th>
+<th>行为</th>
+<th>定案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$105506</code></td>
+<td><code>move.b #$40,$c6(a6)</code></td>
+<td>出生写值</td>
+</tr>
+<tr>
+<td><code>$105960</code></td>
+<td><code>subq.b #$4,$c6(a3)</code></td>
+<td>战斗衰减（不止挨打）</td>
+</tr>
+<tr>
+<td><code>$105964/6A/6C</code></td>
+<td><code>cmpi #$28 / bgt / move #$28</code></td>
+<td>下限钳位</td>
+</tr>
+<tr>
+<td><code>$105980</code></td>
+<td><code>addq.b #$8,$c6(a0)</code></td>
+<td>上探加成——<strong>$FF 时 +8 回绕成 $07</strong></td>
+</tr>
+<tr>
+<td><code>$503F0/$505F0</code>（23a）</td>
+<td><code>move.w #$3C/$50,$c6(a6)</code></td>
+<td>字写入——后证实作用对象是<strong>车辆/Boss</strong>，<code>$c6</code>
+在它们身上是复用字段，<strong>动不得</strong>（见 15.5）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="踩坑v4v7编码与标志位">15.4 踩坑（v4→v7）：编码与标志位</h3>
+<ol type="1">
+<li><strong>v4/v5 编码事故</strong>：把
+<code>move.b #$40,$c6(a6)</code>（<code>1d7c</code>，寄存器+位移）替换成
+<code>move.w #$FFFF,$c6(a6)</code> 时手写成
+<code>31fc ffff 00c6</code>——这是<strong>绝对地址</strong>
+<code>move.w #$FFFF,($00C6)</code>，写进了 ROM
+区被静默忽略，症状是”补丁点从未执行”。教训：<strong>改立即数不改指令</strong>，原版是字节写就保持
+<code>1d7c/177c/117c</code> 形态只换立即数字节。</li>
+<li><strong>v7 分支改反</strong>：<code>bgt→bra</code>
+意图”总执行回填”，实际 <code>bra</code>
+无条件跳过回填变成”永不恢复”，数值无限下漂。正确做法：<strong>NOP
+掉分支本身</strong>（<code>6e06→4e71</code>），让顺序执行必然落到
+<code>move.b #$FF</code>。</li>
+<li><strong>有符号钳位失效</strong>：<code>cmpi.b #$FF</code> 配
+<code>bgt</code> 在 8 位有符号域里 $00~$7F 全部”大于
+$FF(-1)“，把钳位比较改成 $FF
+反而放行所有低值。放弃”改比较”思路，改为”必执行无条件恢复”。</li>
+</ol>
+<h3 id="踩坑v9v12共享例程与守卫">15.5
+踩坑（v9→v12）：共享例程与守卫</h3>
+<p>v9（7
+处直改）实机暴雷：第三关开车/下车打霍戈<strong>零伤害</strong>、v10
+撤销车字段补丁后<strong>第二关 Boss 不出场</strong>——watchpoint +
+对照实验定性：</p>
+<ol type="1">
+<li><strong><code>$503F0/$505F0</code> 的作用对象不是玩家</strong>（全程
+watchpoint 从未抓到它写玩家槽），是车辆/Boss 状态机复用 <code>$c6</code>
+的字段，改成 <code>$FFFF</code> 直接冻结其状态机 → 一律撤销。</li>
+<li><strong><code>$10595A</code>（衰减+钳底）与 <code>$10597A</code>（+8
+上探）是全体对象共享的例程</strong>：无守卫地改写”玩家行为”会把同样的钉值/跳过逻辑强加到
+Boss、车辆、小兵头上 → Boss 卡死不出场。</li>
+<li><strong>守卫比较必须用 32 位全地址</strong>：CPS1 对象指针是
+<code>$FFFFB274</code>（<code>$10553E</code> 的
+<code>cmpa.l #$ffffb274,a6</code> 可证），v11 用
+<code>subi.l #$FFB274</code> 求差判零永远失配（差值
+<code>$FFFF0000</code>），玩家反被划进”其它对象”分支。守卫要么
+<code>cmpi.l</code> 全值三选一，要么先
+<code>andi.l #$FFFFFF</code>。</li>
+<li><strong>stub 跳板的目标要跳过整个”读标志位”段</strong>：v13 前 S2_p
+<code>jmp $10598A</code>（blt 处）时，blt 读到的是守卫 <code>beq</code>
+留下的 Z 位（不是 <code>cmpi #$48</code> 的），不跳→执行
+<code>move.b #$48</code>，HUD 出现 FF→48→FF 循环。玩家分支直接跳 blt
+的<strong>目标</strong>
+<code>$105992</code>（跳过回填路径），非玩家分支自己复刻
+<code>addq+cmpi</code> 后跳 blt——条件码由自己产生。</li>
+</ol>
+<h3 id="最终补丁v183-个挂点-守卫-stub仅动-21a">15.6 最终补丁（v18：3
+个挂点 + 守卫 stub，仅动 21a）</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>地址</th>
+<th>改动</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>21a <code>$105506+2</code></td>
+<td><code>0040→00ff</code></td>
+<td>出生即 FF（该例程仅玩家出生走）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>21a <code>$105960</code></td>
+<td>6 字节 → <code>jmp.l $104560</code></td>
+<td>衰减例程头劫持：S1 stub——a3 匹配三玩家基址才
+<code>move.b #$ff,$c6(a3)</code> 并跳 <code>$105972</code>；其它对象复刻
+<code>subq.b #4 + cmpi.b #28</code> 后跳回 <code>$10596A</code>
+原分支，行为逐位等价</td>
+</tr>
+<tr>
+<td>3</td>
+<td>21a <code>$105980</code></td>
+<td>6 字节 → <code>jmp.l $10459E</code></td>
+<td>上探例程头劫持：S2 stub——玩家跳 <code>$105992</code>（跳过 +8
+与回填）；其它对象复刻 <code>addq.b #8 + cmpi.b #48</code> 后跳回
+<code>$10598A</code></td>
+</tr>
+</tbody>
+</table>
+<p>stub 共 118 字节，放在 21a 零洞 <code>$104560-$1045D5</code>；23a/22a
+与 2020 原版<strong>逐字节一致</strong>（22a 差异仅署名文本，见
+15.7）。实测：HUD 全程稳定
+FF；拳/脚/摔/武器/枪械/手雷每击满暴击；敌兵伤害、二关
+Boss、第三关开车/霍戈、过关流程均与原版一致（过关不回血亦为原版 2020
+自带行为，经用户确认保留）。</p>
+<p><strong>v13→v18 追加两坑（崩溃修复史）</strong>：</p>
+<ol start="5" type="1">
+<li><strong>stub 压坏调用方的 d0</strong>（v13 潜伏、v16
+引爆：第二关中段
+<code>ADDRESS ERROR 0006FF29 @00014186</code>）：原版衰减/上探例程全程不使用
+d0（连入口的 <code>ori.b #$0,d0</code> 都是空操作），调用方有权假设 d0
+跨调用存活；守卫用 <code>move.l a3,d0</code>
+做基址比较等于<strong>偷了调用方的寄存器</strong>——某对象流程里 d0
+携带指针分量，被污染后 <code>$14180</code> 的
+<code>movea $30(a0),a3 + adda.w d0,a3</code>
+链算出奇地址。教训：<strong>劫持共享例程的 stub
+必须保存/恢复所有自用寄存器</strong>（本例 <code>move.l d0,-(a7)</code>
+进、<code>move.l (a7)+,d0</code> 出，push/pop
+在所有出口分支上严格配对）。</li>
+<li><strong>stub 入口定位错 2 字节</strong>（v17 引入：第一关
+<code>1111 EXCEPTION</code>）：v17 脚本按 <code>move.l a0,d0</code>
+指令搜索 S2
+入口，找到的是<strong>压栈之后的</strong>地址（<code>$1045A0</code>，正解
+<code>$10459E</code>）——跳过了 push 却照常
+pop，栈失衡，返回地址跑飞。定稿改用<strong>单一构建脚本</strong>
+<code>build_2020.py</code>：从纯基座出发、每个补丁点先断言期望原字节、完成后全芯片
+diff 审计（本表 #1-#3 + §15.7 署名 = 全部差异，23a
+必须零差异）。增量缝合多个在测版本是万恶之源。</li>
+</ol>
+<h3 id="署名替换v15v16">15.7 署名替换（v15→v16）</h3>
+<p>全库扫描 <code>Zengfr</code>/<code>Hacked</code> 直存 ASCII（芯片
+TORRENTZIPPED 交换还原后即明文可见），共 7 处、分两类文本编码：</p>
+<ul>
+<li><strong>21a
+<code>$102013</code></strong>（标题画面内嵌串）：<code>Hacked By Zengfr 2020</code>
++ <code>@</code> 尾标记（21 字节，等长改
+<code>Hacked By sunjunior</code>）</li>
+<li><strong>21a
+<code>$147985</code></strong>（标题第二屏）：<code>Rom Hacked By Zengfr 2020.05</code>（29
+字节）→ <code>Rom Hacked By sunjunior</code>+空格；同行组
+<code>$1479A3</code> URL
+<code>Https:\\github.com\zengfr\romhack</code>（33 字节）→
+<code>Https:\\sunjunior.github.io</code>+空格</li>
+<li><strong>22a
+<code>$97F67/$97FA1/$97FB8/$9806B</code></strong>（滚动职员表，<code>/</code>=条目终止、<code>@</code>=尾标记、逗号分隔多条目）：三处含
+<code>Zengfr 2020(.05)</code> 的等长空格补齐；16
+字节位点的短条目改为等长的 <code>Hacked sunjunior</code></li>
+</ul>
+<p>要点：该文本引擎里
+<strong><code>/</code>（0x2F）是条目终止符</strong>、<code>@</code>（0x40）是尾标记，替换正文绝不能引入
+<code>/</code>，URL 沿用 zengfr
+的反斜杠风格；所有替换严格等长，不碰任何终止/属性字节，替换后全库
+<code>Zengfr</code> 零残留。第二关 Boss
+画面底部的小字水印行使用子集字库，个别细笔画字形（如
+<code>i</code>）渲染有缺——经与原字节比对确认属原版自带的显示细节，非数据错误，维持原样。<strong>当前最终交付版为
+v18</strong>（<code>dino_2020_critFF_v18_rebuilt.zip</code>，SHA1
+<code>06599f8d…</code> = 暴击 v13 架构 + d0 保护修复 + 全部署名，由
+<code>build_2020.py</code> 从纯基座全量重建）。</p>
+<h3 id="实机验证截图框架版本-ff-暴击">15.8 实机验证截图（框架版本 + FF
+暴击）</h3>
+<p><img src="/img/dino5.png" width="75%" alt="恐龙快打2020大杂烩框架版FF暴击实机验证"></p>
+<blockquote>
+<p>上图为 v18 最终交付版实机截图，双重验证一次到位：① 分数下方 cheat
+overlay 显示绿色 <strong>FF</strong>——玩家 <code>$c6</code> 暴击字节被 3
+挂点 + 守卫 stub 全程钉死 $FF，HUD 常驻不跳变；② 画面底部 <strong>Hacked
+By sunjunior</strong>——标题画面内嵌署名替换生效，确认为 2020
+大杂烩框架版（zengfr 原署名已清零，<code>/</code> 终止符与
+<code>@</code> 尾标记均保留）。左下角 <code>18 UZI</code>
+为该版本自带无限弹药模式的正常显示，与暴击系统无关。</p>
+</blockquote>
+<hr />
+<h2 id="附录-a相关地址汇总">附录 A：相关地址汇总</h2>
+<h3 id="a.1-暴击值相关">A.1 暴击值相关</h3>
+<table>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xffb33a</code></td>
+<td>P1 暴击值</td>
+</tr>
+<tr>
+<td><code>0xffb33c</code></td>
+<td>P2 暴击值（若存在）</td>
+</tr>
+<tr>
+<td><code>0x2c9b6</code></td>
+<td>暴击值表基址</td>
+</tr>
+<tr>
+<td><code>0x11770</code></td>
+<td>暴击值初始化指令（已改为 <code>move.b #$ff,$c6(a3)</code>）</td>
+</tr>
+<tr>
+<td><code>0x4fe6e</code></td>
+<td>通用对象 <code>$c6</code> 递减（<strong>不可 NOP</strong>）</td>
+</tr>
+<tr>
+<td><code>0x4fe7c</code></td>
+<td>通用对象 <code>$c6</code> 清零（<strong>不可 NOP</strong>）</td>
+</tr>
+<tr>
+<td><code>0xc6(a6)</code></td>
+<td>暴击值在玩家对象中的偏移</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a.2-掉落-hack-相关">A.2 掉落 Hack 相关</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x24B48</code></td>
+<td>掉落判定子程序入口（主掉落表 <code>$b64f2</code>）</td>
+</tr>
+<tr>
+<td><code>0x24B36</code></td>
+<td>第二掉落入口（表 <code>$b6d12</code>，机制相同）</td>
+</tr>
+<tr>
+<td><code>0x24B72</code></td>
+<td>补丁点：d1==0 改走强制掉落（方案 A/B 核心跳转）</td>
+</tr>
+<tr>
+<td><code>0x24B74</code></td>
+<td>方案选择立即数：<code>01</code>=猎枪（方案 A）、<code>05</code>=M16
+48 发（方案 B，当前交付）、<code>04</code>=Uzi 48 发</td>
+</tr>
+<tr>
+<td><code>0x24B90</code></td>
+<td>武器掉落写入：<code>$26 = (d1-1)*2</code></td>
+</tr>
+<tr>
+<td><code>0x24D60</code></td>
+<td><code>$26</code> 武器索引分发器</td>
+</tr>
+<tr>
+<td><code>0x24D6C</code></td>
+<td><code>$26</code> → 武器初始化块跳转表</td>
+</tr>
+<tr>
+<td><code>0x24E1C</code></td>
+<td>Uzi 初始化块（<code>moveq #$30</code> = 48 发）</td>
+</tr>
+<tr>
+<td><code>0x24E46</code></td>
+<td>M16 初始化块（<code>moveq #$30</code> = 48 发）</td>
+</tr>
+<tr>
+<td><code>0x24D9E</code></td>
+<td>猎枪初始化块内弹药（<code>moveq #$6</code> = 6 发）</td>
+</tr>
+<tr>
+<td><code>0x24EAA</code></td>
+<td>火箭筒初始化块内弹药（<code>moveq #$4</code> = 4 发）</td>
+</tr>
+<tr>
+<td><code>0x119c</code></td>
+<td>掉落 RNG 子程序</td>
+</tr>
+<tr>
+<td><code>0x4818</code></td>
+<td>对象槽出队（槽满则放弃掉落）</td>
+</tr>
+<tr>
+<td><code>0x24BBE</code> / <code>0x24C00</code></td>
+<td>食物/药品类掉落分支</td>
+</tr>
+<tr>
+<td><code>0x24C3A</code></td>
+<td>宝藏类掉落分支</td>
+</tr>
+<tr>
+<td><code>0x96(a6)</code></td>
+<td>死亡对象的”掉落预设索引”字段</td>
+</tr>
+<tr>
+<td><code>0x26(a0)</code></td>
+<td>掉落物对象的”武器索引”字段</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a.3-敌兵翻倍-hack-相关">A.3 敌兵翻倍 Hack 相关</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xFD2A</code></td>
+<td>翻倍入口：原 <code>bsr.w $fdae</code> 改为
+<code>jmp.l $104430</code></td>
+</tr>
+<tr>
+<td><code>0x104430</code></td>
+<td>翻倍补丁区（21a 芯片）：<code>moveq #1,d4; jsr $fdae; dbra</code>
+循环 2 次</td>
+</tr>
+<tr>
+<td><code>0x6F00(a5)</code></td>
+<td>（实验版本）帧延迟翻倍用的保存槽</td>
+</tr>
+<tr>
+<td><code>0x013C98</code>—<code>0x013CD3</code></td>
+<td>（实验版本）零区 cave 空间，用于帧延迟翻倍失败尝试</td>
+</tr>
+<tr>
+<td><code>0x041EC6</code>—<code>0x041EE9</code></td>
+<td>（实验版本）远 cave 空间</td>
+</tr>
+<tr>
+<td><code>0x01370C</code></td>
+<td>（实验版本）近 cave 空间（25 字节）</td>
+</tr>
+<tr>
+<td><code>0xFE36</code></td>
+<td><code>$FDAE</code> 字段拷贝入口（hack ROM 在此处插入 jsr
+<code>$10788A</code>）</td>
+</tr>
+<tr>
+<td><code>0x4D9(a5)</code></td>
+<td>场景/episode 状态标志</td>
+</tr>
+<tr>
+<td><code>0x4DC(a5)</code></td>
+<td>walker 滚动比较模式选择</td>
+</tr>
+<tr>
+<td><code>0x5EE(a5)</code></td>
+<td>敌人 tier 配额</td>
+</tr>
+<tr>
+<td><code>0x65F4</code>—<code>0x6606</code>(a5)</td>
+<td>5 组对象空闲链表（计数器 + 指针）</td>
+</tr>
+<tr>
+<td><code>0x4818</code> / <code>0x483C</code> / <code>0x4860</code></td>
+<td>对象槽出队函数（根据敌人类型分配不同组）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a.4-敌兵类型-id-映射表mame-调试器实测">A.4 敌兵类型 ID
+映射表（MAME 调试器实测）</h3>
+<blockquote>
+<p>通过 MAME 0.289 调试器（<code>-debug</code>）在
+<code>$FE36</code>（出兵字段拷贝入口）打断点，<code>printf "TYPE=%04X\n",w@(a2+4)</code>
+采集。<code>$4(a2)</code> 为敌兵类型 ID，写入对象
+<code>$20(a0)</code>。<br />
+注意：<strong>tb1（<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mi>C</mi><mi>D</mi><mn>2</mn><mi>断</mi><mi>点</mi><mi>）</mi><mi>是</mi><mi>开</mi><mi>场</mi><mi>动</mi><mi>画</mi><mi>/</mi><mi>非</mi><mi>战</mi><mi>斗</mi><mi>s</mi><mi>p</mi><mi>a</mi><mi>w</mi><mi>n</mi><mi>，</mi><mi>不</mi><mi>可</mi><mi>修</mi><mi>改</mi><mo>*</mo><mi>*</mi><mi>；</mi><mi>实</mi><mi>际</mi><mi>战</mi><mi>斗</mi><mi>敌</mi><mi>兵</mi><mi>走</mi><mo>*</mo><mi>*</mi><mi>t</mi><mi>b</mi><mn>2</mn><mi>（</mi></mrow><annotation encoding="application/x-tex">FCD2 断点）是开场动画/非战斗 spawn，不可修改**；实际战斗敌兵走 **tb2（</annotation></semantics></math>FE36
+断点）</strong>。</p>
+</blockquote>
+<h4 id="已完全确认的类型全-8-关实机对照验证">已完全确认的类型（全 8
+关实机对照验证）</h4>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>类型 ID</th>
+<th>敌人</th>
+<th>类别</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x0008</code></td>
+<td>街头拳手</td>
+<td>小兵</td>
+<td>全关通用，替换候选</td>
+</tr>
+<tr>
+<td><code>0x000C</code></td>
+<td>LASH TERHUNE（铁锤敌人）</td>
+<td>小兵</td>
+<td>替换候选；⚠️ 第八关有 Boss 形式需按地址排除</td>
+</tr>
+<tr>
+<td><code>0x0014</code></td>
+<td>戴帽小兵</td>
+<td>小兵</td>
+<td>⚠️ 二关 Boss/七关木桶同型，仅 w1=0000 且非 Boss 地址可替换</td>
+</tr>
+<tr>
+<td><code>0x0018</code></td>
+<td>绿皮变异跳蚤人</td>
+<td>小兵</td>
+<td>替换候选</td>
+</tr>
+<tr>
+<td><code>0x0024</code></td>
+<td>场景动物</td>
+<td>场景</td>
+<td>不替换</td>
+</tr>
+<tr>
+<td><code>0x0028</code></td>
+<td>肥肥（普通）</td>
+<td>强敌</td>
+<td>替换目标</td>
+</tr>
+<tr>
+<td><code>0x0030</code></td>
+<td>未命名场景</td>
+<td>场景</td>
+<td>第二关入口 <code>0xADEE2</code>，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x0034</code></td>
+<td>猎人（拿枪）</td>
+<td>小兵</td>
+<td>替换候选</td>
+</tr>
+<tr>
+<td><code>0x0038</code></td>
+<td>飞刀客</td>
+<td>精英</td>
+<td>替换目标</td>
+</tr>
+<tr>
+<td><code>0x003C</code></td>
+<td>三角龙（麦克角龙）</td>
+<td>恐龙</td>
+<td>w1=0001 场景路径，不替换</td>
+</tr>
+<tr>
+<td><code>0x0040</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第二关 <code>0xAE042</code>，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x0048</code></td>
+<td>Walther（Boss）</td>
+<td><strong>BOSS</strong></td>
+<td>一/三/五/六/八关复出，按地址排除</td>
+</tr>
+<tr>
+<td><code>0x0050</code></td>
+<td>朋克飞踢男</td>
+<td>小兵</td>
+<td>替换候选</td>
+</tr>
+<tr>
+<td><code>0x0060</code></td>
+<td>未命名小兵</td>
+<td>小兵</td>
+<td>第二关沼泽+第五关，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x0064</code></td>
+<td>斯莱恩（Slice）</td>
+<td><strong>BOSS</strong></td>
+<td>第四关 Boss</td>
+</tr>
+<tr>
+<td><code>0x006C</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第四关 <code>0xAEEA0~EC0</code>，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x0074</code></td>
+<td>迅猛龙</td>
+<td>恐龙</td>
+<td>不替换</td>
+</tr>
+<tr>
+<td><code>0x007C</code></td>
+<td>霍戈（Hog）</td>
+<td><strong>BOSS</strong></td>
+<td>第三关 Boss</td>
+</tr>
+<tr>
+<td><code>0x0084</code></td>
+<td>双影身人</td>
+<td>特殊</td>
+<td>第七关，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x008C</code></td>
+<td>变异老头 形态1</td>
+<td><strong>BOSS</strong></td>
+<td>第五关 Boss 第一形态</td>
+</tr>
+<tr>
+<td><code>0x0098</code></td>
+<td>沼泽特殊敌</td>
+<td>小兵</td>
+<td>第二关沼泽 <code>0xAE0A2/112</code>，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x00A8</code></td>
+<td>未命名场景</td>
+<td>场景</td>
+<td>第八关，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x00AC</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第四关 <code>0xAEE90</code>，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x00B0</code></td>
+<td>透明罐跳出动物</td>
+<td>场景</td>
+<td>第八关，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x00B4</code></td>
+<td>变异老头 形态2</td>
+<td><strong>BOSS</strong></td>
+<td>第五关 Boss 第二形态</td>
+</tr>
+<tr>
+<td><code>0x00C4</code></td>
+<td>未命名场景</td>
+<td>场景</td>
+<td>w1=0001</td>
+</tr>
+<tr>
+<td><code>0x00D0</code></td>
+<td>未命名场景</td>
+<td>场景</td>
+<td>第七关，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x00D8</code></td>
+<td>未命名场景</td>
+<td>场景</td>
+<td>第七关，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x00FC</code></td>
+<td>扔刀场景敌</td>
+<td>场景</td>
+<td>扔完即消失，w1=0000，不替换</td>
+</tr>
+<tr>
+<td><code>0x0100</code></td>
+<td>扔手雷场景敌</td>
+<td>场景</td>
+<td>扔完即跑，w1=0000，不替换</td>
+</tr>
+<tr>
+<td><code>0x0104</code></td>
+<td>滚桶（场景道具）</td>
+<td>场景</td>
+<td>打破出道具，不替换</td>
+</tr>
+<tr>
+<td><code>0x0108</code></td>
+<td>未命名</td>
+<td>小兵</td>
+<td>第五关大量，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x0118</code></td>
+<td>摩托车兵</td>
+<td>小兵</td>
+<td>第七关，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x0120</code></td>
+<td>沼泽场景敌</td>
+<td>场景</td>
+<td>第二关沼泽 <code>0xAE072/122</code>，w1=0001</td>
+</tr>
+<tr>
+<td><code>0x0138</code></td>
+<td>沼泽特殊敌</td>
+<td>小兵</td>
+<td>第二关沼泽 <code>0xAE0B2/0D2</code>，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x013C</code></td>
+<td>肥肥（精英）</td>
+<td>强敌</td>
+<td>五/六关确认</td>
+</tr>
+<tr>
+<td><code>0x0140</code></td>
+<td>沼泽特殊敌</td>
+<td>小兵</td>
+<td>第二关沼泽 <code>0xAE0C2</code>，w1=0000</td>
+</tr>
+<tr>
+<td><code>0x0148</code></td>
+<td>翼手龙（天上飞）</td>
+<td>恐龙</td>
+<td>不替换</td>
+</tr>
+<tr>
+<td><code>0x016C</code></td>
+<td>未出现</td>
+<td>—</td>
+<td>未实测到，疑似 Boss</td>
+</tr>
+<tr>
+<td><code>0x0178</code></td>
+<td>最终 Boss</td>
+<td><strong>BOSS</strong></td>
+<td>第八关，变身 type 不变</td>
+</tr>
+</tbody>
+</table>
+<h4 id="已确认的-boss-地址必须排除不可修改">已确认的 Boss
+地址（必须排除，不可修改）</h4>
+<table>
+<thead>
+<tr>
+<th>关卡</th>
+<th>地址</th>
+<th>TYPE</th>
+<th>Boss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一关</td>
+<td><code>0xADE52</code></td>
+<td><code>003C</code></td>
+<td>三角龙（战前）</td>
+</tr>
+<tr>
+<td>第一关</td>
+<td><code>0xADE62</code></td>
+<td><code>0048</code></td>
+<td>Walther</td>
+</tr>
+<tr>
+<td>第二关</td>
+<td><code>0xAE1B2</code></td>
+<td><code>003C</code></td>
+<td>三角龙（战前）</td>
+</tr>
+<tr>
+<td>第二关</td>
+<td><code>0xAE282</code></td>
+<td><code>0014</code></td>
+<td>双刀 Boss</td>
+</tr>
+<tr>
+<td>第三关</td>
+<td><code>0xAED04</code></td>
+<td><code>007C</code></td>
+<td>霍戈（Hog）</td>
+</tr>
+<tr>
+<td>第三关</td>
+<td><code>0xAE674</code>、<code>0xAE824/834/844</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
+</tr>
+<tr>
+<td>第四关</td>
+<td><code>0xAF2B0</code></td>
+<td><code>0064</code></td>
+<td>斯莱恩（Slice）</td>
+</tr>
+<tr>
+<td>第四关</td>
+<td><code>0xAF340</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
+</tr>
+<tr>
+<td>第五关</td>
+<td><code>0xAFA94</code></td>
+<td><code>008C</code></td>
+<td>变异老头 形态1</td>
+</tr>
+<tr>
+<td>第五关</td>
+<td><code>0xAFAA4</code></td>
+<td><code>00B4</code></td>
+<td>变异老头 形态2</td>
+</tr>
+<tr>
+<td>第五关</td>
+<td><code>0xAFCDE</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
+</tr>
+<tr>
+<td>第六关</td>
+<td><code>0xB0206</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
+</tr>
+<tr>
+<td>第七关</td>
+<td><code>0xB0DE2</code></td>
+<td><code>0084</code></td>
+<td>双影身人</td>
+</tr>
+<tr>
+<td>第八关</td>
+<td><code>0xB1AB2</code></td>
+<td><code>0178</code></td>
+<td>最终 Boss</td>
+</tr>
+<tr>
+<td>第八关</td>
+<td><code>0xB2012</code>/<code>0xB2058</code></td>
+<td><code>0048</code></td>
+<td>中段复出 Walther</td>
+</tr>
+<tr>
+<td>第八关</td>
+<td><code>0xB2022</code>/<code>0xB2068</code></td>
+<td><code>000C</code></td>
+<td>中段复出铁锤 Boss</td>
+</tr>
+</tbody>
+</table>
+<p><strong>采集结论与坑</strong>：<br />
+-
+<strong>替换安全目标</strong>：<code>0x0028</code>（肥肥）、<code>0x0038</code>（飞刀客），经实机验证在
+tb2 任意场景可生成<br />
+-
+<strong>替换候选（w1=0000）</strong>：<code>0x0008</code>、<code>0x000C</code>、<code>0x0014</code>、<code>0x0034</code>、<code>0x0050</code>（需避开
+Boss 地址）<br />
+- <strong>按地址精确修改法</strong>（v22+）：只改调试器确认过的具体
+<code>w1=0x00</code>
+且类型为普通小兵（0008/000C/0014/0034/0050）的条目，避开 Boss 地址 →
+<strong>局部稳定，但全局仍会随机崩</strong>（见 8.1
+失败分析：肥肥/刀客重对象累积撑爆对象池）<br />
+- <strong>高风险区实测清单</strong>：第二关沼泽全段（累积 15+
+处即软故障）、第三关开车段（任何类型替换均崩）、各关 Boss 战前后<br />
+- <strong>静态替换已被运行时方案取代</strong>（第 13
+章）：本表全部数据在运行时方案中用作类型识别依据</p>
+<ul>
+<li><strong>不可直接批量改 tb2 表</strong>：部分 <code>w1=0</code>
+条目实际是场景控制脚本（如沉睡恐龙），误改死机</li>
+<li><strong>Boss
+多关复出</strong>：<code>0x0048</code>（Walther）、<code>0x000C</code>（铁锤）在后续关卡以
+Boss 形式出现，必须按地址排除而非按 type 一刀切</li>
+</ul>
+<h3 id="a.5-运行时敌兵随机强化相关第-13-章">A.5
+运行时敌兵随机强化相关（第 13 章）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xFE36</code></td>
+<td>敌兵对象字段拷贝入口（<code>move.w $4(a2),$20(a0)</code>），补丁点
+1：jmp <code>_random</code></td>
+</tr>
+<tr>
+<td><code>0xFE3C</code></td>
+<td>拷贝入口第二条（X 坐标），<code>_random</code> 执行完回跳此处</td>
+</tr>
+<tr>
+<td><code>0xFE48</code></td>
+<td>拷贝入口第四条（<code>$a(a2)→$26(a0)</code> 属性），补丁点 2：改
+nop（由子程序补写）</td>
+</tr>
+<tr>
+<td><code>0x104460</code></td>
+<td><code>_random</code> 子程序 + 映射表（cdu_21a.6f 文件偏移
+<code>0x4460</code>，248 字节空隙区）</td>
+</tr>
+<tr>
+<td><code>0x104430</code></td>
+<td>第 12 章翻倍补丁代码区（<code>0x4430-0x444A</code>，与
+<code>_random</code> 共用 21a 空隙，勿重叠）</td>
+</tr>
+<tr>
+<td><code>0x0629F0</code></td>
+<td>第 14 章暴击槽 16 位-1
+衰减例程入口，补丁点：<code>jmp.l $104596</code></td>
+</tr>
+<tr>
+<td><code>0x104580</code></td>
+<td>暴击钉 stub 代码区（cdu_21a.6f 偏移 <code>0x4580</code>，60
+字节；入口 <code>_hook=$104596</code>，<code>$4600</code>
+起为数据区不可占用）</td>
+</tr>
+<tr>
+<td><code>0x061ADA</code></td>
+<td>暴击槽归零处理（仅非玩家对象到达）</td>
+</tr>
+<tr>
+<td><code>0x119C</code></td>
+<td>游戏自带伪随机数子程序（返回 d0）</td>
+</tr>
+<tr>
+<td><code>0xFFF5C2</code></td>
+<td>场景值（参与随机数扰动，<code>a5</code> 基址绝对地址）</td>
+</tr>
+<tr>
+<td><code>0xFFDD14</code></td>
+<td>敌兵/Boss 对象池区基址，槽位步长
+<code>0xE0</code>，<code>+0x20</code>=类型，<code>+0x6A/0x6C</code>=最大/当前
+HP（zengfr 内存图交叉验证）</td>
+</tr>
+<tr>
+<td><code>0xFF84D9</code></td>
+<td>关卡 ID（<code>(a5)</code> 偏移 <code>$4D9</code>，0 起）</td>
+</tr>
+<tr>
+<td><code>0xFF8786</code></td>
+<td>区域 ID（<code>(a5)</code> 偏移 <code>$786</code>）</td>
+</tr>
+<tr>
+<td><code>$4(a2)/$3(a2)</code></td>
+<td>波次表条目：类型字段 / w1 标志（<code>$3(a2)&amp;$F</code>
+判场景脚本条目）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3
+id="a.6-2020-大杂烩框架暴击系统相关第-15-章世界版-cde_-芯片最终-v13">A.6
+2020 大杂烩框架暴击系统相关（第 15 章，世界版 cde_* 芯片，最终
+v13）</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>地址（CPU 视图）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x105506</code></td>
+<td>出生初始化 <code>move.b #$40,$c6(a6)</code>，补丁点 1：仅改立即数
+<code>$0040→$00FF</code>（该例程仅玩家出生执行，watchpoint 证实）</td>
+</tr>
+<tr>
+<td><code>0x105960</code></td>
+<td>共享衰减例程头 <code>subq.b #$4,$c6(a3)</code>，补丁点 2：6
+字节→<code>jmp.l $104560</code>（S1 守卫 stub：玩家三基址钉 FF 跳
+<code>$105972</code>；其它对象复刻 <code>subq+cmpi #$28</code> 跳回
+<code>$10596A</code>；进出口成对
+<code>move.l d0,-(a7)</code>/<code>move.l (a7)+,d0</code>）</td>
+</tr>
+<tr>
+<td><code>0x105980</code></td>
+<td>共享上探例程 <code>addq.b #$8,$c6(a0)</code>，补丁点 3：6
+字节→<code>jmp.l $10459E</code>（S2 stub 入口必须含压栈指令，v17
+曾错定位 <code>$1045A0</code> 致栈失衡；玩家跳 <code>$105992</code> 避开
+FF+8 回绕；其它对象复刻 <code>addq+cmpi #$48</code> 跳回
+<code>$10598A</code>）</td>
+</tr>
+<tr>
+<td><code>0x104560-$1045D5</code></td>
+<td>118 字节 stub 区（21a 零洞，勿与 <code>$4600</code>
+起数据区混淆；<code>$4560-$4700</code> 均为零可安全占用）</td>
+</tr>
+<tr>
+<td><code>0x105964/6A/6C</code></td>
+<td>原下限钳位（比较/bgt/回填 $28），v13
+<strong>未改</strong>（共享逻辑由 stub 分支接管）</td>
+</tr>
+<tr>
+<td><code>0x0503F0</code> / <code>0x0505F0</code></td>
+<td><code>move.w #$3C/$50,$c6(a6)</code>——车辆/Boss
+状态机的<strong>复用字段</strong>，严禁当暴击改（v9
+误改致第三关霍戈零伤害）</td>
+</tr>
+<tr>
+<td><code>0x0629F0</code></td>
+<td>原版衰减例程在 2020
+中的残留——<strong>零调用死代码</strong>（移植钩子无效的根因）</td>
+</tr>
+<tr>
+<td><code>0x018D88</code></td>
+<td>死亡判定入口，2020 被改为 <code>jmp $1049A0</code>（zengfr 8
+倍血系统，不可占用）</td>
+</tr>
+<tr>
+<td><code>0x1049A0</code></td>
+<td>zengfr 每帧玩家例程（血条/多层血/状态刷新）</td>
+</tr>
+<tr>
+<td><code>0x10553E</code></td>
+<td><code>cmpa.l #$FFFFB274,a6</code>——对象指针为 32
+位全地址的<strong>铁证</strong>（守卫必须 <code>cmpi.l</code>
+全值）</td>
+</tr>
+<tr>
+<td><code>0xFFB33A</code></td>
+<td>P1 暴击字节（<code>wpset ,1,w</code> 动态取证目标；P2/P3
+<code>FFB4BA/FFB63A</code>）</td>
+</tr>
+<tr>
+<td><code>0xFFB2E0/FFB274</code></td>
+<td>P1 血量字 / 玩家对象基址（8 倍血制出生
+<code>$320</code>=800；过关不回血为原版 2020 自带行为）</td>
+</tr>
+<tr>
+<td><code>0x102013</code> / <code>0x147985</code> /
+<code>0x1479A3</code>（21a）</td>
+<td>署名串：标题画面行 / 标题第二屏 “Rom Hacked By…” 行 / URL
+行；<code>@</code>(0x40) 为尾标记</td>
+</tr>
+<tr>
+<td><code>0x097F67</code> / <code>0x097FA1</code> /
+<code>0x097FB8</code> / <code>0x09806B</code>（22a）</td>
+<td>滚动职员表署名条目（<code>/</code>=条目终止符、<code>,</code>=同位串分隔；正文严禁引入
+0x2F）</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/09/10/%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93-CPS1%E6%9A%B4%E5%87%BB%E5%80%BC%E6%9C%80%E5%A4%A7%E5%8C%96Hack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="恐龙快打（CPS1）暴击值与掉落 Hack 技术文档">https://sunjunior.github.io/2026/09/10/恐龙快打-CPS1暴击值最大化Hack技术文档/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-MAME-%E8%A1%97%E6%9C%BA-%E6%81%90%E9%BE%99%E5%BF%AB%E6%89%93/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, MAME, 街机, 恐龙快打</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/08/%E8%A5%BF%E6%B8%B8%E9%87%8A%E5%8E%84%E4%BC%A0-PGM%E6%97%A0%E9%99%90%E6%94%BE%E5%AE%9DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="西游释厄传（PGM &#x2F; ARC）无限放宝 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 西游释厄传（PGM / ARC）无限放宝 Hack 技术文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/14/MAME0.149%E6%BA%90%E7%A0%81%E5%9C%A8ArchLinux%E4%B8%8A%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E8%B0%83%E6%B5%8B%E5%AE%9E%E8%B7%B5/" rel="next" title="MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证）">
+                  MAME 0.149 源码在 Arch Linux 上的编译与调测实践（附恐龙快打运行验证） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
