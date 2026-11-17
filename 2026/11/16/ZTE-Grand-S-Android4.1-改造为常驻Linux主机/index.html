@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-main.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-wifi.png">
 <meta property="article:published_time" content="2026-11-16T11:30:00.000Z">
-<meta property="article:modified_time" content="2026-11-17T11:35:00.000Z">
+<meta property="article:modified_time" content="2026-11-17T12:05:00.000Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机, Arch Linux, chroot">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,9 @@ chroot（已实现）</span></a></li></ol></li><li class="nav-item nav-level-3">
 对开机&#x2F;系统的影响（结论：不影响开机）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E6%AD%A5%E9%AA%A4%E5%B7%B2%E6%89%A7%E8%A1%8C"><span class="nav-text">5.22.3 迁移步骤（已执行）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E8%AE%B0%E5%BD%95"><span class="nav-text">5.22.4 实施记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%A0%B9%E5%9B%A0ext4check.sh-%E5%BC%80%E6%9C%BA%E6%8A%8A-p26-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%9B%9E-fat32%E5%B7%B2%E8%A7%A3%E5%86%B3"><span class="nav-text">5.22.5
 关键根因：ext4check.sh 开机把 p26 格式化回 FAT32（已解决）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D-node.js-%E7%9A%84-libcrypto.so.4-%E7%BC%BA%E5%A4%B1"><span class="nav-text">5.22.6 修复 node.js 的
 libcrypto.so.4 缺失</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D-chroot-shell.sh-%E9%87%8D%E5%A4%8D-bind-%E6%8C%82%E8%BD%BD%E4%B8%8E-df-%E4%B8%8D%E6%98%BE%E7%A4%BA%E6%A0%B9%E5%88%86%E5%8C%BA"><span class="nav-text">5.22.7
-修复 chroot-shell.sh 重复 bind 挂载与 df 不显示根分区</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E6%B8%85%E5%8D%95%E7%8E%B0%E8%B1%A1-%E6%A0%B9%E5%9B%A0-%E5%A4%84%E7%90%86"><span class="nav-text">6. 踩坑清单（现象 → 根因 → 处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AE%9E%E6%B5%8B"><span class="nav-text">7. 性能实测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA-mini-linux-%E4%B8%BB%E6%9C%BA%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="nav-text">8. 作为 mini Linux
+修复 chroot-shell.sh 重复 bind 挂载与 df 不显示根分区</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E6%B8%85%E5%8D%95%E7%8E%B0%E8%B1%A1-%E6%A0%B9%E5%9B%A0-%E5%A4%84%E7%90%86"><span class="nav-text">6. 踩坑清单（现象 → 根因 → 处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AE%9E%E6%B5%8B"><span class="nav-text">7. 性能实测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cpu-%E8%B0%83%E9%A2%91%E6%9C%BA%E5%88%B6%E4%B8%8E%E9%94%81%E9%A2%91%E5%AE%9E%E9%AA%8C2026-11-17"><span class="nav-text">7.1 CPU
+调频机制与锁频实验（2026-11-17）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%98%BE%E7%A4%BA%E4%B8%8E%E9%A1%B5%E7%BC%93%E5%AD%982026-11-17"><span class="nav-text">7.2
+内存显示与页缓存（2026-11-17）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA-mini-linux-%E4%B8%BB%E6%9C%BA%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="nav-text">8. 作为 mini Linux
 主机的可行性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%81%9A"><span class="nav-text">8.1 能做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%83%BD%E5%81%9A"><span class="nav-text">8.2 不能做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%A6%81%E7%82%B9"><span class="nav-text">8.3 部署要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E6%89%8B%E5%86%8C"><span class="nav-text">9. 运维手册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E8%BF%9E%E6%8E%A5"><span class="nav-text">9.1 日常连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A3%80%E6%9F%A5"><span class="nav-text">9.2 状态检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9-ssh-%E5%8F%A3%E4%BB%A4"><span class="nav-text">9.3 改 SSH 口令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E8%A2%AB%E5%81%9C%E7%94%A8%E7%9A%84%E5%8C%85"><span class="nav-text">9.4 恢复被停用的包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E6%BB%9A%E5%88%B0%E5%8E%9F%E6%A1%8C%E9%9D%A2"><span class="nav-text">9.5 回滚到原桌面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E5%B1%8F%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8"><span class="nav-text">9.6 黑屏是否正常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C"><span class="nav-text">10. 安全边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%97%E7%95%99%E9%97%AE%E9%A2%98%E4%B8%8E%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="nav-text">11. 遗留问题与下一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E9%83%A8%E7%BD%B2%E6%B8%85%E5%8D%95"><span class="nav-text">附录 A：部署清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E9%AA%8C%E8%AF%81%E8%AE%B0%E5%BD%95-1"><span class="nav-text">附录 B：验证记录</span></a></li></ol></div>
         </div>
         <!--/noindex-->
@@ -296,7 +298,7 @@ libcrypto.so.4 缺失</span></a></li><li class="nav-item nav-level-4"><a class="
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-17 19:35:00" itemprop="dateModified" datetime="2026-11-17T19:35:00+08:00">2026-11-17</time>
+      <time title="修改时间：2026-11-17 20:05:00" itemprop="dateModified" datetime="2026-11-17T20:05:00+08:00">2026-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -409,7 +411,13 @@ sdcard 从 FAT32 迁移到 ext4（整分区直接用，2026-11-17）</a></li>
 </ul></li>
 <li><a href="#踩坑清单现象-根因-处理">6. 踩坑清单（现象 → 根因 →
 处理）</a></li>
-<li><a href="#性能实测">7. 性能实测</a></li>
+<li><a href="#性能实测">7. 性能实测</a>
+<ul>
+<li><a href="#cpu-调频机制与锁频实验2026-11-17">7.1 CPU
+调频机制与锁频实验（2026-11-17）</a></li>
+<li><a href="#内存显示与页缓存2026-11-17">7.2
+内存显示与页缓存（2026-11-17）</a></li>
+</ul></li>
 <li><a href="#作为-mini-linux-主机的可行性">8. 作为 mini Linux
 主机的可行性</a>
 <ul>
@@ -4014,6 +4022,101 @@ ext4 挂在宿主路径 <code>/storage/sdcard0</code>（chroot
 </table>
 <p>结论：CPU 约等于树莓派 3 一档；<strong>存储和 adb
 传输是短板</strong>。</p>
+<h3 id="cpu-调频机制与锁频实验2026-11-17">7.1 CPU
+调频机制与锁频实验（2026-11-17）</h3>
+<p><strong>调频现状</strong>：<code>mpdecision</code>
+管理核心热插拔，governor 默认 <code>ondemand</code>；可用档位<br />
+<code>384 / 486 / 594 / 702 / 810 / 918 / 1026 / 1134 / 1242 / 1350 / 1458 / 1512 MHz</code>。<br />
+空闲时只有 cpu0 在线、384 MHz，其余三核 offline。</p>
+<p><strong>历史失败根因</strong>：此前「停 mpdecision + 4 核全开 +
+performance 固定 1512 MHz」导致设备异常重启。<br />
+不是锁频机制不可用，而是 4 核同时顶满 1512 MHz 超出这颗 APQ8064
+的功耗/散热预算，触发 thermald 保护。</p>
+<p><strong>本次实测</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>实验</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>强制 384 MHz → 切回 ondemand → 双核 md5 满载</td>
+<td><strong>3 秒内 cpu0 自动从 384 冲到 1512 MHz</strong>，持续满载 24
+s，温度 42→46 °C，无重启</td>
+</tr>
+<tr>
+<td>2 核锁 1242 MHz（约 82%）</td>
+<td>静置 60 s + 双核满载 48 s 全程稳定，最高 50 °C，无重启</td>
+</tr>
+<tr>
+<td>1242 MHz 吞吐（200 MB md5）</td>
+<td>5.16 s</td>
+</tr>
+<tr>
+<td>384 MHz 吞吐（200 MB md5）</td>
+<td>16.32 s（约 3.2× 差距）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论</strong>：默认 <code>ondemand</code>
+在满载时本来就会自动拉满最高频，手动锁频得不偿失（牺牲待机功耗）。<br />
+维持现状即可。若确实需要持续高性能，安全的档位是 <strong>2 核 <span
+class="citation" data-cites="1242">@1242</span> MHz</strong>；<strong>4
+核 <span class="citation" data-cites="1512">@1512</span> MHz
+不要重试</strong>。</p>
+<h3 id="内存显示与页缓存2026-11-17">7.2
+内存显示与页缓存（2026-11-17）</h3>
+<p>ConsoleHome 状态行的 <code>MemFree</code> 直接读
+<code>/proc/meminfo</code> 的 <strong>MemFree</strong>，而 Linux
+会把空闲内存<br />
+拿来做文件页缓存，所以久了之后看起来「只剩 200 多 MB」。Android 4.1 没有
+<code>MemAvailable</code> 字段，更容易误判。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>缓存增长后</th>
+<th><code>drop_caches</code> 后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MemFree</td>
+<td>296 MB</td>
+<td><strong>1.55 GB</strong></td>
+</tr>
+<tr>
+<td>Cached</td>
+<td>1.21 GB</td>
+<td>66 MB</td>
+</tr>
+<tr>
+<td>Active(file)</td>
+<td>196 MB</td>
+<td>59 MB</td>
+</tr>
+<tr>
+<td>Inactive(file)</td>
+<td>1.07 GB</td>
+<td>4 MB</td>
+</tr>
+</tbody>
+</table>
+<p>执行 <code>echo 3 &gt; /proc/sys/vm/drop_caches</code> 后 MemFree
+立刻回到 1.55 GB，证明那约 900 MB 全是<br />
+<strong>可回收页缓存</strong>，不是内存泄漏。<code>dumpsys meminfo</code>
+里全部 App 的 PSS 合计仅约 <strong>160 MB</strong><br />
+（systemui 44 / system 37 / ConsoleHome 30 / superSU 14
+…），没有异常进程。</p>
+<p><strong>结论</strong>：真实可用内存 ≈ MemFree + Cached ≈ <strong>1.5
+GB</strong>，与早期观测一致；<br />
+屏幕上的 200 多 MB 只是统计口径差异，不需要处理。</p>
 <hr />
 <h2 id="作为-mini-linux-主机的可行性">8. 作为 mini Linux
 主机的可行性</h2>
