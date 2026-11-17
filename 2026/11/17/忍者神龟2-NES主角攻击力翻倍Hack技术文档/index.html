@@ -27,11 +27,13 @@
 <meta property="og:site_name" content="sunjunior的个人技术博客">
 <meta property="og:description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC） 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：伤害值不是一个单一的表，而是两类数据来源——普通攻击来自「攻击记录」里 7 字节">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunjunior.github.io/img/turtle.gif">
 <meta property="article:published_time" content="2026-11-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-17T00:00:51.632Z">
+<meta property="article:modified_time" content="2026-11-17T00:22:29.810Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, NES, 忍者神龟, Mesen2, Game Genie">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/turtle.gif">
 
 
 <link rel="canonical" href="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
@@ -166,7 +168,8 @@
 PC（关键突破）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E6%B1%87%E7%BC%96%E4%BC%A4%E5%AE%B3%E4%BE%8B%E7%A8%8B%E6%89%BE%E5%88%B0%E4%BC%A4%E5%AE%B3%E5%8F%98%E9%87%8F-0e"><span class="nav-text">5.5 反汇编伤害例程，找到伤害变量
 $0E</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%8C%87%E9%92%88-aaab7-%E5%AD%97%E8%8A%82%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95%E8%A1%A8"><span class="nav-text">5.6 追踪指针
 $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#game-genie-%E5%8F%8D%E8%A7%A3%E5%9D%90%E5%AE%9E%E4%B8%89%E5%A4%84%E4%BC%A4%E5%AE%B3%E5%B8%B8%E9%87%8F"><span class="nav-text">5.7 Game Genie
-反解：坐实三处伤害常量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%81%E4%B8%A4%E7%B1%BB%E6%95%B0%E6%8D%AE%E5%90%84-2"><span class="nav-text">6. 打补丁：两类数据各 ×2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">7. 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%80%BC%E7%9B%B4%E6%8E%A5%E8%AF%BB%E5%9B%9E"><span class="nav-text">7.1 伤害值直接读回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%90%8C%E8%BE%93%E5%85%A5%E5%BA%8F%E5%88%97%E7%9A%84-hp-%E5%B7%AE%E5%88%86"><span class="nav-text">7.2 相同输入序列的 HP 差分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E4%BC%9A%E8%AF%AF%E4%BC%A4%E7%8E%A9%E5%AE%B6%E5%8F%97%E5%88%B0%E7%9A%84%E4%BC%A4%E5%AE%B3"><span class="nav-text">7.3 不会误伤”玩家受到的伤害”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95"><span class="nav-text">7.4 冒烟测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9"><span class="nav-text">8. 产物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF%E7%BB%93%E8%AE%BA"><span class="nav-text">9. 综合关键技术结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE-lua-%E8%84%9A%E6%9C%AC"><span class="nav-text">10. 附录：关键 Lua 脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E5%86%99-hp-cpuexec-%E6%8A%93-pctmnt_hitpc.lua-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.1 写 HP + cpuExec
+反解：坐实三处伤害常量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%81%E4%B8%A4%E7%B1%BB%E6%95%B0%E6%8D%AE%E5%90%84-2"><span class="nav-text">6. 打补丁：两类数据各 ×2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-text">7. 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%80%BC%E7%9B%B4%E6%8E%A5%E8%AF%BB%E5%9B%9E"><span class="nav-text">7.1 伤害值直接读回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%90%8C%E8%BE%93%E5%85%A5%E5%BA%8F%E5%88%97%E7%9A%84-hp-%E5%B7%AE%E5%88%86"><span class="nav-text">7.2 相同输入序列的 HP 差分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%8F%96%E8%AF%81%E4%B8%80%E6%AC%A1%E6%99%AE%E9%80%9A%E6%94%BB%E5%87%BB%E5%87%BB%E6%9D%80%E6%95%8C%E4%BA%BA"><span class="nav-text">7.3
+实战取证：一次普通攻击击杀敌人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E4%BC%9A%E8%AF%AF%E4%BC%A4%E7%8E%A9%E5%AE%B6%E5%8F%97%E5%88%B0%E7%9A%84%E4%BC%A4%E5%AE%B3"><span class="nav-text">7.4 不会误伤”玩家受到的伤害”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95"><span class="nav-text">7.5 冒烟测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9"><span class="nav-text">8. 产物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF%E7%BB%93%E8%AE%BA"><span class="nav-text">9. 综合关键技术结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE-lua-%E8%84%9A%E6%9C%AC"><span class="nav-text">10. 附录：关键 Lua 脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E5%86%99-hp-cpuexec-%E6%8A%93-pctmnt_hitpc.lua-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.1 写 HP + cpuExec
 抓 PC（tmnt_hitpc.lua 核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E8%AF%BB%E6%8C%87%E9%92%88%E4%B8%8E%E4%BC%A4%E5%AE%B3%E5%AD%97%E8%8A%82tmnt_ptr.lua-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.2
 读指针与伤害字节（tmnt_ptr.lua 核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-game-genie-%E8%A7%A3%E7%A0%81decode_gg.py-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.3 Game Genie
 解码（decode_gg.py 核心）</span></a></li></ol></li></ol></div>
@@ -266,7 +269,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-11-17 00:00:00 / 修改时间：08:00:51" itemprop="dateCreated datePublished" datetime="2026-11-17T00:00:00+08:00">2026-11-17</time>
+      <time title="创建时间：2026-11-17 00:00:00 / 修改时间：08:22:29" itemprop="dateCreated datePublished" datetime="2026-11-17T00:00:00+08:00">2026-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -761,13 +764,36 @@ PC（关键突破）</h3>
 </tbody>
 </table>
 <p>正好 <strong>2 倍</strong>，与 <code>$0E</code> 读回一致。</p>
-<h3 id="不会误伤玩家受到的伤害">7.3 不会误伤”玩家受到的伤害”</h3>
+<h3 id="实战取证一次普通攻击击杀敌人">7.3
+实战取证：一次普通攻击击杀敌人</h3>
+<p>下图是补丁版 ROM 在 Mesen2 中的实际运行录屏（角色为 Don /
+多纳泰罗，对手是 Foot Soldier）：</p>
+<figure>
+<img src="/img/turtle.gif" alt="补丁版实战：一次普通攻击击杀敌人" />
+<figcaption
+aria-hidden="true">补丁版实战：一次普通攻击击杀敌人</figcaption>
+</figure>
+<p>连续过程是：Don 接近敌人 → 挥棒命中 →
+<strong>敌人直接消失</strong>，HUD 分数从 <code>70 PTS.</code> 变为
+<code>71 PTS.</code>。</p>
+<p>这正好对应伤害数据的语义：</p>
+<ul>
+<li><strong>原版</strong>普通攻击伤害为 <code>1</code>，而 Foot Soldier
+的 HP 需要 <strong>2 下</strong>普通攻击才能清空；</li>
+<li><strong>补丁版</strong>伤害翻倍为
+<code>2</code>，所以<strong>一次普通攻击就能打死一名敌人</strong>。</li>
+</ul>
+<blockquote>
+<p>注：HUD 中 <code>LIFE</code> 满格、<code>REST 2</code>
+不变，说明主角状态未受影响，变化的只有”打出去的伤害”。</p>
+</blockquote>
+<h3 id="不会误伤玩家受到的伤害">7.4 不会误伤”玩家受到的伤害”</h3>
 <p>截图取证：补丁版跑到第 2200 帧，主角 HUD 生命条仍为满格（8
 格），而敌人 HP
 已掉一半。说明翻倍的确实是<strong>主角打出的伤害</strong>，不是玩家受到的伤害——这也印证了
 <code>$EC11</code> 把伤害加进得分的语义：<code>$0568,Y</code> 是敌人
 HP，不是玩家 HP。</p>
-<h3 id="冒烟测试">7.4 冒烟测试</h3>
+<h3 id="冒烟测试">7.5 冒烟测试</h3>
 <ul>
 <li>补丁版 ROM 在 Mesen2 无头模式连续运行 2200 帧无崩溃、无花屏。</li>
 <li>关卡、敌人、得分等其它行为与原版一致。</li>
