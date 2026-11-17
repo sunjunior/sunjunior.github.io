@@ -30,9 +30,9 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-main.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-wifi.png">
 <meta property="article:published_time" content="2026-11-16T11:30:00.000Z">
-<meta property="article:modified_time" content="2026-11-16T11:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-17T09:10:00.000Z">
 <meta property="article:author" content="sunjunior">
-<meta property="article:tag" content="Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机">
+<meta property="article:tag" content="Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机, Arch Linux, chroot">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://sunjunior.github.io/img/zte-grand-s/consolehome-main.png">
 
@@ -164,7 +164,8 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E9%AA%8C%E8%AF%81%E8%AE%B0%E5%BD%95"><span class="nav-text">附录
-B：验证记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E5%AE%9A%E4%BD%8D"><span class="nav-text">1. 背景与定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-text">2. 硬件与系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6"><span class="nav-text">2.1 硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%B8%83%E5%B1%80"><span class="nav-text">2.2 分区布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F"><span class="nav-text">2.3 系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%9C%80%E7%BB%88%E7%BB%93%E6%9E%9C"><span class="nav-text">3. 目标与最终结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">4. 总体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E6%AD%A5%E9%AA%A4"><span class="nav-text">5. 实施步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-adb-%E9%80%9A%E9%81%93"><span class="nav-text">5.1 建立 ADB 通道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#root-%E5%85%8D%E6%8F%90%E7%A4%BA"><span class="nav-text">5.2 root 免提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF-adb-%E5%9B%BA%E5%8C%96"><span class="nav-text">5.3 无线 adb 固化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-sshd"><span class="nav-text">5.4 部署 sshd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-text">5.5 开机自启</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%88%E6%8A%A4%E8%84%9A%E6%9C%AC-guard.sh"><span class="nav-text">5.6 守护脚本 guard.sh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%A1%8C%E9%9D%A2-consolehome"><span class="nav-text">5.7 控制台桌面 ConsoleHome</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%86%99"><span class="nav-text">5.7.1 为什么要自写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#apk-%E6%9E%84%E5%BB%BAwindows%E6%97%A0%E9%9C%80-android-studio"><span class="nav-text">5.7.2 APK
+B：验证记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%80%BB%E8%A7%88"><span class="nav-text">0. 系统状态总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%88%AA%E8%87%B3-2026-11-17"><span class="nav-text">0.1 当前系统状态（截至
+2026-11-17）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E9%93%BE"><span class="nav-text">0.2 开机自动初始化链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F"><span class="nav-text">0.3 访问方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E5%AE%9A%E4%BD%8D"><span class="nav-text">1. 背景与定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-text">2. 硬件与系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6"><span class="nav-text">2.1 硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%B8%83%E5%B1%80"><span class="nav-text">2.2 分区布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F"><span class="nav-text">2.3 系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%B8%8E%E6%9C%80%E7%BB%88%E7%BB%93%E6%9E%9C"><span class="nav-text">3. 目标与最终结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">4. 总体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E6%AD%A5%E9%AA%A4"><span class="nav-text">5. 实施步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-adb-%E9%80%9A%E9%81%93"><span class="nav-text">5.1 建立 ADB 通道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#root-%E5%85%8D%E6%8F%90%E7%A4%BA"><span class="nav-text">5.2 root 免提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF-adb-%E5%9B%BA%E5%8C%96"><span class="nav-text">5.3 无线 adb 固化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-sshd"><span class="nav-text">5.4 部署 sshd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-text">5.5 开机自启</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%88%E6%8A%A4%E8%84%9A%E6%9C%AC-guard.sh"><span class="nav-text">5.6 守护脚本 guard.sh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%A1%8C%E9%9D%A2-consolehome"><span class="nav-text">5.7 控制台桌面 ConsoleHome</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%86%99"><span class="nav-text">5.7.1 为什么要自写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#apk-%E6%9E%84%E5%BB%BAwindows%E6%97%A0%E9%9C%80-android-studio"><span class="nav-text">5.7.2 APK
 构建（Windows，无需 Android Studio）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#manifest-%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-text">5.7.3 Manifest 关键点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%93%BE%E8%B7%AF%E4%B8%8D%E8%90%BD%E7%9B%98"><span class="nav-text">5.7.4 日志链路（不落盘）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E8%A1%8C"><span class="nav-text">5.7.5 状态行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu-%E6%95%B0%E5%80%BC%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-text">5.7.6 CPU 数值的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E7%9B%B4%E6%8E%A5%E6%98%BE%E7%A4%BA%E4%B8%8D%E9%94%81%E5%B1%8F"><span class="nav-text">5.7.7 开机直接显示、不锁屏</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%B2%BE%E7%AE%80"><span class="nav-text">5.8 系统精简</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E5%88%A0%E9%99%A4%E7%9A%84-apk-%E6%B8%85%E5%8D%952026-11-15"><span class="nav-text">5.9 已删除的 APK
 清单（2026-11-15）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%90%8E%E7%9A%84%E5%90%AF%E5%8A%A8%E6%97%A5%E5%BF%97%E6%A0%A1%E9%AA%8C%E5%BF%85%E5%81%9A"><span class="nav-text">5.10 删除后的启动日志校验（必做）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%A9%E4%BD%99%E5%BE%85%E5%88%A0%E5%80%99%E9%80%89%E4%BB%85%E4%B8%A4%E4%B8%AA%E9%A3%8E%E9%99%A9%E4%B8%AD%E7%AD%89"><span class="nav-text">5.11
 剩余待删候选（仅两个，风险中等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%86%85%E7%BD%AE-wifi-%E8%AE%BE%E7%BD%AE%E4%B8%8E%E7%BD%91%E7%BB%9C%E5%85%9C%E5%BA%952026-11-15"><span class="nav-text">5.12 控制台内置 WiFi
@@ -182,7 +183,16 @@ Tailscale）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"
 调研：系统自带，不建议迁移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%87%BA%E5%8E%82%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8Dsystemetcsshd"><span class="nav-text">5.20.7
 恢复出厂自动恢复（&#x2F;system&#x2F;etc&#x2F;sshd）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#clash-verge-%E5%B9%B2%E6%89%B0-tailscale-udp-%E7%9A%84%E6%8E%92%E6%9F%A5%E4%B8%8E%E6%B8%85%E7%90%862026-11-16"><span class="nav-text">5.20.8
 Clash Verge 干扰 Tailscale UDP 的排查与清理（2026-11-16）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8-ssh-%E8%BF%9E%E6%8E%A5%E5%A4%8D%E7%94%A8%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%8E%8B%E4%BD%8E%E4%BA%A4%E4%BA%92%E5%BB%B6%E8%BF%9F2026-11-16"><span class="nav-text">5.20.9 用 SSH
-连接复用进一步压低交互延迟（2026-11-16）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E6%B8%85%E5%8D%95%E7%8E%B0%E8%B1%A1-%E6%A0%B9%E5%9B%A0-%E5%A4%84%E7%90%86"><span class="nav-text">6. 踩坑清单（现象 → 根因 → 处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AE%9E%E6%B5%8B"><span class="nav-text">7. 性能实测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA-mini-linux-%E4%B8%BB%E6%9C%BA%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="nav-text">8. 作为 mini Linux
+连接复用进一步压低交互延迟（2026-11-16）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2-arch-linux-armarmv7chroot-%E7%8E%AF%E5%A2%832026-11-16"><span class="nav-text">5.21 部署 Arch
+Linux ARM（armv7）chroot 环境（2026-11-16）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E5%AE%8C%E6%95%B4-770-mb-%E9%95%9C%E5%83%8F%E8%80%8C%E4%B8%8D%E6%98%AF%E7%B2%BE%E7%AE%80%E7%89%88"><span class="nav-text">5.21.1 为什么选完整 770 MB
+镜像，而不是精简版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%89%8D%E6%8F%90%E4%B8%8E%E5%85%BC%E5%AE%B9%E6%80%A7%E7%A1%AE%E8%AE%A4"><span class="nav-text">5.21.2 环境前提与兼容性确认</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF%E9%9A%9C%E7%A2%8D%E4%B8%8E%E8%A7%A3%E6%B3%95"><span class="nav-text">5.21.3 关键技术障碍与解法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C%E4%B8%8E%E6%8C%82%E8%BD%BD%E5%B7%B2%E9%AA%8C%E8%AF%81%E6%88%90%E5%8A%9F"><span class="nav-text">5.21.4
+镜像制作与挂载（已验证成功）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E8%BF%9B%E5%BA%A6%E5%85%A8%E9%83%A8%E5%AE%8C%E6%88%90"><span class="nav-text">5.21.5 实施进度（全部完成）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ssh-%E7%99%BB%E5%BD%95%E8%87%AA%E5%8A%A8%E8%BF%9B%E5%85%A5-chroot%E5%B7%B2%E5%AE%9E%E7%8E%B0"><span class="nav-text">5.21.6 SSH 登录自动进入
+chroot（已实现）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sdcard-%E4%BB%8E-fat32-%E8%BF%81%E7%A7%BB%E5%88%B0-ext4%E6%95%B4%E5%88%86%E5%8C%BA%E7%9B%B4%E6%8E%A5%E7%94%A82026-11-17"><span class="nav-text">5.22 sdcard
+从 FAT32 迁移到 ext4（整分区直接用，2026-11-17）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%81%E7%A7%BB"><span class="nav-text">5.22.1 为什么迁移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E5%BC%80%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BD%B1%E5%93%8D%E7%BB%93%E8%AE%BA%E4%B8%8D%E5%BD%B1%E5%93%8D%E5%BC%80%E6%9C%BA"><span class="nav-text">5.22.2
+对开机&#x2F;系统的影响（结论：不影响开机）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E6%AD%A5%E9%AA%A4%E5%B7%B2%E6%89%A7%E8%A1%8C"><span class="nav-text">5.22.3 迁移步骤（已执行）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E8%AE%B0%E5%BD%95"><span class="nav-text">5.22.4 实施记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%A0%B9%E5%9B%A0ext4check.sh-%E5%BC%80%E6%9C%BA%E6%8A%8A-p26-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%9B%9E-fat32%E5%B7%B2%E8%A7%A3%E5%86%B3"><span class="nav-text">5.22.5
+关键根因：ext4check.sh 开机把 p26 格式化回 FAT32（已解决）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D-node.js-%E7%9A%84-libcrypto.so.4-%E7%BC%BA%E5%A4%B1"><span class="nav-text">5.22.6 修复 node.js 的
+libcrypto.so.4 缺失</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D-chroot-shell.sh-%E9%87%8D%E5%A4%8D-bind-%E6%8C%82%E8%BD%BD"><span class="nav-text">5.22.7 修复 chroot-shell.sh
+重复 bind 挂载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E6%B8%85%E5%8D%95%E7%8E%B0%E8%B1%A1-%E6%A0%B9%E5%9B%A0-%E5%A4%84%E7%90%86"><span class="nav-text">6. 踩坑清单（现象 → 根因 → 处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AE%9E%E6%B5%8B"><span class="nav-text">7. 性能实测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA-mini-linux-%E4%B8%BB%E6%9C%BA%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="nav-text">8. 作为 mini Linux
 主机的可行性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%81%9A"><span class="nav-text">8.1 能做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%83%BD%E5%81%9A"><span class="nav-text">8.2 不能做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%A6%81%E7%82%B9"><span class="nav-text">8.3 部署要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E6%89%8B%E5%86%8C"><span class="nav-text">9. 运维手册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E8%BF%9E%E6%8E%A5"><span class="nav-text">9.1 日常连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A3%80%E6%9F%A5"><span class="nav-text">9.2 状态检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9-ssh-%E5%8F%A3%E4%BB%A4"><span class="nav-text">9.3 改 SSH 口令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E8%A2%AB%E5%81%9C%E7%94%A8%E7%9A%84%E5%8C%85"><span class="nav-text">9.4 恢复被停用的包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E6%BB%9A%E5%88%B0%E5%8E%9F%E6%A1%8C%E9%9D%A2"><span class="nav-text">9.5 回滚到原桌面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E5%B1%8F%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8"><span class="nav-text">9.6 黑屏是否正常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C"><span class="nav-text">10. 安全边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%97%E7%95%99%E9%97%AE%E9%A2%98%E4%B8%8E%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="nav-text">11. 遗留问题与下一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-a%E9%83%A8%E7%BD%B2%E6%B8%85%E5%8D%95"><span class="nav-text">附录 A：部署清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95-b%E9%AA%8C%E8%AF%81%E8%AE%B0%E5%BD%95-1"><span class="nav-text">附录 B：验证记录</span></a></li></ol></div>
         </div>
         <!--/noindex-->
@@ -283,6 +293,13 @@ Clash Verge 干扰 Tailscale UDP 的排查与清理（2026-11-16）</span></a></
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-11-17 17:10:00" itemprop="dateModified" datetime="2026-11-17T17:10:00+08:00">2026-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
       </span>
       <span class="post-meta-item-text">分类于</span>
@@ -315,7 +332,11 @@ Clash Verge 干扰 Tailscale UDP 的排查与清理（2026-11-16）</span></a></
 15）、<br />
 用 12.6 KB 的自写控制台 App 取代 149 MB
 的定制桌面，屏幕实时显示日志（内存环形缓冲、不落盘），<br />
-并借 SSH / Tailscale 成为一台长期在线、低功耗的远程节点。</p>
+并借 SSH / Tailscale 成为一台长期在线、低功耗的远程节点。<br />
+最后把 11.4 GB 的 sdcard 分区从 FAT32 改为
+ext4，<strong>直接在整分区上跑 Arch Linux ARM</strong><br />
+（Python 3.14 / Node.js 26 / Git 2.56
+齐全），<code>ssh zte-grand-s</code> 登录即进入 Linux。</p>
 <p><strong>本文定位</strong>：完整、自包含的折腾记录，不依赖任何其他文档。所有命令、脚本、实测数据与踩坑复盘都在本文内；<br />
 配图来自设备实测截图。文中涉及 <code>/system</code> 写入、全局 root
 授权与端口常开，请只在专用设备上照做。</p>
@@ -330,6 +351,13 @@ Clash Verge 干扰 Tailscale UDP 的排查与清理（2026-11-16）</span></a></
 <hr />
 <h2 id="目录">目录</h2>
 <ul>
+<li><a href="#系统状态总览">0. 系统状态总览</a>
+<ul>
+<li><a href="#当前系统状态截至-2026-11-17">0.1 当前系统状态（截至
+2026-11-17）</a></li>
+<li><a href="#开机自动初始化链">0.2 开机自动初始化链</a></li>
+<li><a href="#访问方式">0.3 访问方式</a></li>
+</ul></li>
 <li><a href="#背景与定位">1. 背景与定位</a></li>
 <li><a href="#硬件与系统配置">2. 硬件与系统配置</a>
 <ul>
@@ -374,6 +402,10 @@ sdcard 现状（2026-11-15）</a></li>
 兜底通道：调测目标、方案、坑与结论（2026-11-16）</a></li>
 <li><a href="#客户端免密登录与-sshd-迁移到-system2026-11-16">5.20
 客户端免密登录与 sshd 迁移到 /system（2026-11-16）</a></li>
+<li><a href="#部署-arch-linux-armarmv7chroot-环境2026-11-16">5.21 部署
+Arch Linux ARM（armv7）chroot 环境（2026-11-16）</a></li>
+<li><a href="#sdcard-从-fat32-迁移到-ext4整分区直接用2026-11-17">5.22
+sdcard 从 FAT32 迁移到 ext4（整分区直接用，2026-11-17）</a></li>
 </ul></li>
 <li><a href="#踩坑清单现象-根因-处理">6. 踩坑清单（现象 → 根因 →
 处理）</a></li>
@@ -400,6 +432,130 @@ sdcard 现状（2026-11-15）</a></li>
 <li><h2 id="附录-b验证记录"><a href="#附录-b验证记录">附录
 B：验证记录</a></h2></li>
 </ul>
+<h2 id="系统状态总览">0. 系统状态总览</h2>
+<blockquote>
+<p>本章记录当前系统的客观状态与访问方式，不依赖任何特定操作环境。</p>
+</blockquote>
+<h3 id="当前系统状态截至-2026-11-17">0.1 当前系统状态（截至
+2026-11-17）</h3>
+<p><strong>sdcard 已格式化为 ext4，Arch
+直接运行在整分区上（不使用镜像文件）</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>路径/状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统</td>
+<td>Arch Linux
+ARM（armv7h），<code>uname -m = armv7l</code>，内核为手机原生
+3.4.0（chroot 不换内核）</td>
+</tr>
+<tr>
+<td><strong>sdcard</strong></td>
+<td><code>mmcblk0p26</code>（11.4 GB）格式化为
+ext4（<code>make_ext4fs -L archsd</code>），挂载
+<code>/storage/sdcard0</code>，10.5 G 可用</td>
+</tr>
+<tr>
+<td><strong>Arch 根目录</strong></td>
+<td><code>/sdcard/arch</code>（ext4 上的真实目录，无 2G/4G
+单文件限制）</td>
+</tr>
+<tr>
+<td>工具</td>
+<td>Python 3.14.10 / Node.js 26.13.1 / npm 12.2.2 / Git
+2.56.1（均已安装）</td>
+</tr>
+<tr>
+<td>SSH → chroot</td>
+<td>sshd 用
+<code>-shell /data/local/tmp/sshd/chroot-shell.sh</code>，自动 bind /dev
+/proc /sys 后 <code>chroot /sdcard/arch /bin/bash</code></td>
+</tr>
+<tr>
+<td>备份</td>
+<td>关键配置在
+<code>/data/local/tmp/arch_backup/</code>（pacman.conf、mirrorlist、resolv.conf、pkglist.txt）</td>
+</tr>
+<tr>
+<td>Android /sdcard</td>
+<td>vold 不识别 ext4，Android 原生文件管理器不显示内部存储（adb/ssh
+不受影响）</td>
+</tr>
+<tr>
+<td>Tailscale</td>
+<td><code>zte-grand-s</code> = <code>100.107.4.30</code>，DERP 中继
+~500–1000 ms（双方对称 NAT，直连失败）</td>
+</tr>
+<tr>
+<td>adb</td>
+<td><code>100.107.4.30:5555</code></td>
+</tr>
+<tr>
+<td>SSH 免密</td>
+<td>root 公钥在 <code>/data/local/tmp/sshd/authorized_keys</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="开机自动初始化链">0.2 开机自动初始化链</h3>
+<p>开机时由 init 触发，已固化为自动执行，无需人工干预：</p>
+<ol type="1">
+<li><code>/init.target.rc</code> 调用
+<code>ext4check.sh mmcblk0p26 GROW</code> —— 已修改该脚本的 GROW
+分支为直接退出，<br />
+避免把 ext4 分区重新格式化成 FAT32（详见 §5.22.5）。</li>
+<li><code>/system/etc/install-recovery.sh</code>（init 的
+<code>flash_recovery</code> service）自动<br />
+<code>mount -t ext4 /dev/block/mmcblk0p26 /storage/sdcard0</code>，并以
+<code>-shell /data/local/tmp/sshd/chroot-shell.sh</code> 启动
+sshd。</li>
+<li>SSH 登录后由 chroot-shell.sh 自动进入 Arch。</li>
+</ol>
+<blockquote>
+<p>验证方式：<code>ssh zte-grand-s 'cat /etc/os-release; python --version; node --version; git --version'</code>。</p>
+</blockquote>
+<h3 id="访问方式">0.3 访问方式</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH</td>
+<td><code>ssh zte-grand-s</code>（需在同一 tailnet；免密公钥在设备
+authorized_keys 中）</td>
+</tr>
+<tr>
+<td>adb</td>
+<td><code>adb connect 100.107.4.30:5555</code>（用于底层维护、救援、传文件）</td>
+</tr>
+<tr>
+<td>密码</td>
+<td>SSH 口令
+<code>&lt;password&gt;</code>（弱口令，仅用于可信网络）</td>
+</tr>
+<tr>
+<td>SSH 复用</td>
+<td>客户端可配 ControlMaster 降低交互式延迟（§5.20.9）</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="背景与定位">1. 背景与定位</h2>
 <table>
 <thead>
@@ -497,11 +653,17 @@ OpenCL 1.1</strong>；<strong>无独立显存（UMA）</strong></td>
 频率档：<code>384 / 486 / 594 / 702 / 810 / 918 / 1026 / 1134 / 1242 / 1350 / 1458 / 1512 MHz</code>，<br />
 默认 governor 为 <code>ondemand</code>。</p>
 <h3 id="分区布局">2.2 分区布局</h3>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/dev/block/mmcblk0        15,388,672 KB  ≈ 14.7 GB</span><br><span class="line">  p12  786,432 KB  (768 MB)  → /system   ext4</span><br><span class="line">  p13 2,097,152 KB  (  2 GB)  → /data     ext4</span><br><span class="line">  p15  262,144 KB  (256 MB)  → /cache    ext4</span><br><span class="line">  p26 11,390,959 KB (10.9 GB) → /storage/sdcard0  vfat（noexec）</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/dev/block/mmcblk0        15,388,672 KB  ≈ 14.7 GB</span><br><span class="line">  p12  786,432 KB  (768 MB)  → /system   ext4</span><br><span class="line">  p13 2,097,152 KB  (  2 GB)  → /data     ext4</span><br><span class="line">  p15  262,144 KB  (256 MB)  → /cache    ext4</span><br><span class="line">  p26 11,390,959 KB (10.9 GB) → /storage/sdcard0  当前为 ext4（原厂为 vfat）</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>关键：<code>/data</code> 只有 <strong>2 GB</strong>，且
-<code>/storage/sdcard0</code> 挂载参数是 <strong>vfat +
-noexec</strong>，程序不能放在 sdcard 上。</p>
+<p><strong>当前状态</strong>：p26 已格式化为
+<strong>ext4</strong>（<code>make_ext4fs -L archsd</code>），开机由<br />
+install-recovery.sh 自动挂载，无 noexec 限制、无 2 G/4 G
+单文件限制，Arch 根目录<br />
+<code>/sdcard/arch</code> 就在这里（§5.22）。</p>
+<p>历史背景：原厂 ROM 中该分区是 vfat +
+noexec，程序不能直接执行，所以早期方案是把<br />
+ext4 镜像作为普通文件放在 vfat 上、通过 loop
+挂载（§5.21）。该限制现已消除。</p>
 </blockquote>
 <h3 id="系统">2.3 系统</h3>
 <table>
@@ -705,7 +867,7 @@ key 变了<br />
 3 次重启不变）</p>
 </blockquote>
 <p><strong>口令哈希</strong>：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;echo &quot;&lt;password&gt;&quot; | /system/bin/sshd -hash &gt; /data/local/tmp/sshd/password&#x27;</span>   <span class="comment"># 替换为自己的口令</span></span><br><span class="line">su -c <span class="string">&#x27;chmod 600 /data/local/tmp/sshd/password; chown 0:0 /data/local/tmp/sshd/password&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;echo &lt;password&gt; | /system/bin/sshd -hash &gt; /data/local/tmp/sshd/password&#x27;</span>   <span class="comment"># 替换为自己的口令</span></span><br><span class="line">su -c <span class="string">&#x27;chmod 600 /data/local/tmp/sshd/password; chown 0:0 /data/local/tmp/sshd/password&#x27;</span></span><br></pre></td></tr></table></figure>
 <p><strong>启动</strong>：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su -c <span class="string">&#x27;busybox setsid /system/bin/sshd -addr 0.0.0.0:22 \</span></span><br><span class="line"><span class="string">  &gt;&gt; /data/local/tmp/sshd/sshd.log 2&gt;&amp;1 &lt; /dev/null &amp;&#x27;</span></span><br></pre></td></tr></table></figure>
 <p>验证：</p>
@@ -1469,8 +1631,8 @@ agent 通过 <code>adb shell input text</code>
 MAC：<code>a0:ec:80:xx:xx:82</code>（已脱敏）。</p>
 <p><strong>换路由器的注意事项</strong>：只要新路由器满足<br />
 <code>SSID=B6-902</code>、<code>密码=&lt;wifi-password&gt;</code>、<code>加密=WPA2-PSK（或 WPA/WPA2 混合）</code>、<code>不隐藏 SSID</code>，<br />
-设备开机会自动重连，无需任何操作。若开了 MAC 过滤需放行设备实际的 WiFi
-MAC（文中已脱敏）；设为 WPA3-only 则连不上（4.1 不支持）。</p>
+设备开机会自动重连，无需任何操作。若开了 MAC 过滤需放行上面的 MAC；设为
+WPA3-only 则连不上（4.1 不支持）。</p>
 <p><strong>配置改坏的自动回滚（guard.sh）</strong>：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">改配置前：cp wpa_supplicant.conf → wpa_backup.conf，并写 wpa_pending</span><br><span class="line">开机后 guard 每 30 s 检查：有 wpa_pending 且无 IP</span><br><span class="line">        → 连续 10 次（≈5 分钟）仍无 IP</span><br><span class="line">        → 用 wpa_backup.conf 覆盖回去 → 重启</span><br><span class="line">有 IP → 删除 wpa_pending，记日志</span><br></pre></td></tr></table></figure>
 <h3 id="usb-兜底通道与排查结论2026-11-15">5.13 USB
@@ -1851,8 +2013,8 @@ md5 校验一致</strong>；</li>
 <tbody>
 <tr>
 <td>本机 MAC / 名称</td>
-<td><code>30:F3:1D:xx:xx:E7</code>（已脱敏）/
-<code>ZTE Grand S</code>（class <code>0x5a020c</code>）</td>
+<td><code>30:F3:1D:xx:xx:E7</code> / <code>ZTE Grand S</code>（class
+<code>0x5a020c</code>）</td>
 </tr>
 <tr>
 <td>栈</td>
@@ -1914,7 +2076,7 @@ ContentProvider 读写）。</p>
 一般要等对端（PANU）连上才出现</li>
 <li>待实测（需要带蓝牙的 Mac）：
 <ol type="1">
-<li>Mac 与手机配对（手机实际 MAC，文中已脱敏）</li>
+<li>Mac 与手机配对（手机 <code>30:F3:1D:xx:xx:E7</code>）</li>
 <li>Mac 侧加入 PAN，拿到 <code>192.168.44.x</code></li>
 <li><code>ssh root@192.168.44.1</code>（手机作为 NAP 的网关）</li>
 </ol></li>
@@ -2906,6 +3068,458 @@ master，之后所有
 仍会连接已有 socket。要用 <code>-o ControlPath=none</code>
 才是完全不走复用。</p>
 </blockquote>
+<h3 id="部署-arch-linux-armarmv7chroot-环境2026-11-16">5.21 部署 Arch
+Linux ARM（armv7）chroot 环境（2026-11-16）</h3>
+<p>目标：在手机上跑完整的 Arch Linux，以便
+<code>pacman -S python nodejs git</code> 安装 AI 编码 agent
+所需的工具链。<br />
+§5.18 只做了可行性验证，本节是实际落地。</p>
+<h4 id="为什么选完整-770-mb-镜像而不是精简版">5.21.1 为什么选完整 770 MB
+镜像，而不是精简版</h4>
+<ul>
+<li>Arch Linux ARM 官网（<code>archlinuxarm.org</code>）所有 ARMv7
+rootfs 都是滚动发行，<br />
+2017 年博客里的「100 多兆」已膨胀到 <strong>770 MB</strong>（ Odroid-X /
+通用 armv7 均如此）。</li>
+<li><code>imx6-cubox</code> 镜像虽只有 9.7 MB，但里面只有 23 个 boot
+配置文件，<strong>不是 rootfs</strong>，不可用。</li>
+<li>结论：<strong>用完整 770 MB 镜像更省事</strong>——自带 pacman + base
+包，依赖解析完整，<br />
+后续装 python/nodejs/git
+不用到处补依赖。精简掉的空间不值得后续找包的麻烦。</li>
+</ul>
+<blockquote>
+<p>官网说明：各 ARMv7 镜像的 rootfs 内容基本一致，区别在
+<code>/boot</code> 的内核和设备树。<br />
+我们用 chroot（跑手机 Android
+内核），<strong>不需要它的内核</strong>，所以任选一个即可。<br />
+本次用 <code>ArchLinuxARM-armv7-latest.tar.gz</code>：<br />
+770429322 B，MD5 <code>04b2f42c710748480f2dcf5115badc43</code>（手机端与
+Mac 端下载一致）。</p>
+</blockquote>
+<h4 id="环境前提与兼容性确认">5.21.2 环境前提与兼容性确认</h4>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构</td>
+<td><code>armeabi-v7a</code>（32 位 ARMv7 硬浮点），匹配 Arch 的
+<code>armv7h</code></td>
+</tr>
+<tr>
+<td>内核</td>
+<td>Linux 3.4.0</td>
+</tr>
+<tr>
+<td>二进制要求</td>
+<td><code>file</code> 显示 bash/ld.so 要求 <code>GNU/Linux 3.2.0</code>
+→ 内核 3.4 <strong>满足</strong>（无
+<code>FATAL: kernel too old</code>）</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>1.8 GB（空闲 1.36 GB）</td>
+</tr>
+<tr>
+<td>loop 设备</td>
+<td><code>/dev/block/loop0-7</code> 齐全，<code>busybox losetup</code>
+可用（需 root）</td>
+</tr>
+<tr>
+<td>文件系统</td>
+<td><code>/data</code> 与 sdcard 都支持 ext4；内核
+<code>/proc/filesystems</code> 有 ext4</td>
+</tr>
+<tr>
+<td>root</td>
+<td><code>su</code> 可用（2019 装的 SuperSU）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="关键技术障碍与解法">5.21.3 关键技术障碍与解法</h4>
+<p><strong>障碍 1：sdcard 是 FAT32，单文件 ≤ 4 GB。</strong></p>
+<ul>
+<li>误区纠正：<code>noexec</code> 只影响「直接执行 sdcard
+上的文件」，<strong>不影响把镜像文件存在 sdcard 上</strong>。<br />
+镜像经 loop 挂载后是 ext4（默认 exec），可以执行二进制。</li>
+<li>FAT32 真正的限制是单文件上限（2³²−1 ≈ 4 GB）。所以镜像定为
+<strong>3.5 GB</strong>（<code>count=3500</code>），<br />
+足够装下完整 rootfs（解压 ~1.7 GB）+ python/nodejs/git（~0.5–1 GB）+
+余量。</li>
+<li>FAT32 不支持稀疏文件：<code>dd seek</code> 建稀疏镜像报
+<code>Invalid argument</code>，必须真实写入 3.5 GB。</li>
+</ul>
+<p><strong>障碍 2：手机端无法解 tar.gz。</strong></p>
+<ul>
+<li>这台机器的 <code>/system/bin/gzip</code> 是精简版：支持
+<code>gzip 文件</code>（压缩）和
+<code>gzip -d 文件</code>（解压），<br />
+<strong>但不支持 <code>-dc</code>（输出到 stdout）</strong>，也不支持
+<code>--help</code>。</li>
+<li>busybox 1.8.1 的 <code>tar</code> 支持 <code>-z</code>，但内部调
+gzip 失败 → <code>tar xzf xxx.tar.gz</code> 报
+<code>corrupted data</code>。</li>
+<li>验证结论：
+<ul>
+<li>✅ <code>gzip -d 文件.gz</code>（生成同目录的「文件」）可用</li>
+<li>✅ <code>busybox tar xf 文件</code>（解纯 tar）可用</li>
+<li>❌ <code>busybox tar xzf xxx.tar.gz</code> / <code>gzip -dc</code>
+不可用</li>
+</ul></li>
+<li>所以解压链路固定为：<strong>先 <code>gzip -d</code> 得到纯 tar，再
+<code>tar xf</code></strong>（两步分开）。</li>
+</ul>
+<p><strong>障碍 3：电脑↔︎手机的 DERP 链路传大文件极不稳定。</strong></p>
+<ul>
+<li>SSH（<code>scp</code>/stdin 重定向）、adb push 传 &gt;1 MB
+频繁超时中断；手机同时下载时链路会被占满到 SSH/adb 都断。</li>
+<li>解法：<strong>让手机自己从公网下载</strong>（curl 稳定 ~320
+KB/s，770 MB 约 37 分钟下完，MD5 校验一致）。</li>
+<li>镜像压缩文件（3.5 MB）的传输：Mac 起<strong>支持 Range 的 HTTP
+服务</strong>（普通 <code>python -m http.server</code><br />
+不支持 Range，返回 200 而非 206，导致 curl <code>-C -</code>
+无法续传），用自写 <code>rangeserver.py</code> 后<br />
+<code>curl -C -</code> 断点续传成功，MD5
+<code>85bc97780cf04f9db7758d2d275c6bf8</code> 一致。</li>
+</ul>
+<p><strong>关键坑：gzip 解压输出位置。</strong>
+<code>gzip -d /path/x.gz</code>
+输出到<strong>源文件同目录</strong>。<br />
+最初在 <code>/data/local/tmp</code> 解压 3.5 GB 镜像，<code>/data</code>
+只剩 1.8 GB 直接写满到 98%；<br />
+应先把压缩包 <code>mv</code> 到 sdcard（10 GB 可用），在 sdcard 上
+<code>gzip -d</code>，输出也落在 sdcard。</p>
+<h4 id="镜像制作与挂载已验证成功">5.21.4
+镜像制作与挂载（已验证成功）</h4>
+<p>Mac 上制作（装
+<code>e2fsprogs</code>，<code>mkfs.ext4 1.47.1</code>）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=arch35.img bs=1 count=0 seek=3584M</span><br><span class="line"><span class="comment"># 关键：关闭内核 3.4 不支持的新特性（§5.18 结论）</span></span><br><span class="line">mkfs.ext4 -F -O <span class="string">&#x27;^metadata_csum,^64bit,^orphan_file,^casefold,^bigalloc&#x27;</span> -b 4096 arch35.img</span><br><span class="line">gzip -9 -c arch35.img &gt; arch35.img.gz     <span class="comment"># 3.5 GB → 仅 3.5 MB</span></span><br></pre></td></tr></table></figure>
+<p>手机端挂载（<strong>实测成功</strong>）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su</span><br><span class="line">busybox losetup /dev/block/loop0 /sdcard/arch35.img</span><br><span class="line">busybox <span class="built_in">mkdir</span> -p /data/local/tmp/mnt_test</span><br><span class="line">busybox mount -t ext4 /dev/block/loop0 /data/local/tmp/mnt_test</span><br><span class="line">busybox <span class="built_in">df</span> -h /data/local/tmp/mnt_test</span><br><span class="line"><span class="comment"># /dev/block/loop0  3.4G  24.0k  3.2G  0%  /data/local/tmp/mnt_test</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：FAT32 上 <code>ls</code>/<code>stat</code> 对 &gt;2 GB 文件报
+<code>Value too large for defined data type</code>，<br />
+这是 32 位显示假象，<strong>文件实际完整</strong>（挂载后显示 3.4G
+可用即证明）。</p>
+</blockquote>
+<h4 id="实施进度全部完成">5.21.5 实施进度（全部完成）</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />确认架构/内核兼容、loop
+挂载可行</label></li>
+<li><label><input type="checkbox" checked="" />手机下载完整 rootfs（770
+MB，MD5 校验一致）</label></li>
+<li><label><input type="checkbox" checked="" />解压 rootfs 到镜像、bind
+挂载 /dev /proc /sys、chroot 成功</label></li>
+<li><label><input type="checkbox" checked="" />换镜像源（CA 镜像）、关闭
+pacman 沙箱与签名校验、pacman -Syy 成功</label></li>
+<li><label><input type="checkbox"
+checked="" /><code>pacman -S python nodejs git npm</code>（Python
+3.14.10 / Node 26.13.1 / npm 12.2.2 / Git 2.56.1）</label></li>
+<li><label><input type="checkbox" checked="" />SSH 登录自动进入
+chroot（见 §5.21.6）</label></li>
+</ul>
+<blockquote>
+<p><strong>过程波折</strong>：最初用 Mac 做的 <code>arch35.img</code> 在
+busybox tar 解压 + 一次异常重启后<br />
+ext4 inode 损坏（大量
+<code>Input/output error</code>，<code>/usr/share</code>
+下无法建目录），<br />
+pacman 无法初始化 keyring/安装。当时在手机上用 Arch 自带的
+<code>mkfs.ext4 1.47.4</code><br />
+重做干净镜像 <code>/sdcard/arch_new.img</code> 解决。<br />
+后续该系统进一步演进为 <strong>ext4
+整分区方案</strong>（§5.22），不再使用镜像文件，本节的<br />
+镜像方案保留为历史记录。</p>
+</blockquote>
+<h4 id="ssh-登录自动进入-chroot已实现">5.21.6 SSH 登录自动进入
+chroot（已实现）</h4>
+<p>关键发现：这个自写 Go sshd 支持 <code>-shell</code>
+参数（<code>sshd -h</code> 可查，默认
+<code>/system/bin/sh</code>）。<br />
+利用这一点让 SSH 登录后直接进 Arch：</p>
+<p><strong>1) 写 chroot 包装脚本</strong>
+<code>/data/local/tmp/sshd/chroot-shell.sh</code>（当前版本，指向 ext4
+整分区 <code>/sdcard/arch</code>，<br />
+并含防重复 bind 检查，见 §5.22.7）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line">B=/system/xbin/busybox</span><br><span class="line">MNT=/sdcard/arch</span><br><span class="line"><span class="function"><span class="title">mounted</span></span>() &#123; <span class="variable">$B</span> grep -q <span class="string">&quot; <span class="variable">$1</span> &quot;</span> /proc/mounts 2&gt;/dev/null; &#125;</span><br><span class="line">mounted <span class="string">&quot;<span class="variable">$MNT</span>/dev&quot;</span>  || <span class="variable">$B</span> mount -o <span class="built_in">bind</span> /dev <span class="string">&quot;<span class="variable">$MNT</span>/dev&quot;</span>   2&gt;/dev/null</span><br><span class="line">mounted <span class="string">&quot;<span class="variable">$MNT</span>/proc&quot;</span> || <span class="variable">$B</span> mount -t proc proc <span class="string">&quot;<span class="variable">$MNT</span>/proc&quot;</span>  2&gt;/dev/null</span><br><span class="line">mounted <span class="string">&quot;<span class="variable">$MNT</span>/sys&quot;</span>  || <span class="variable">$B</span> mount -o <span class="built_in">bind</span> /sys <span class="string">&quot;<span class="variable">$MNT</span>/sys&quot;</span>   2&gt;/dev/null</span><br><span class="line"><span class="built_in">exec</span> <span class="variable">$B</span> <span class="built_in">chroot</span> <span class="string">&quot;<span class="variable">$MNT</span>&quot;</span> /bin/bash <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>sshd 调用方式是
+<code>shell -c "&lt;用户命令&gt;"</code>，<code>"$@"</code> 会把
+<code>-c &lt;命令&gt;</code> 原样传给 chroot 内的 bash；<br />
+交互登录时无参数，直接进 bash 交互式 shell。</p>
+</blockquote>
+<p><strong>2) 用 <code>-shell</code> 启动 sshd</strong>（注意 guard.sh
+会用默认参数重启 sshd，需先停 guard）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停 guard + 旧 sshd</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> $(busybox ps | grep <span class="string">&#x27;[g]uard.sh&#x27;</span>); <span class="keyword">do</span> su -c <span class="string">&quot;busybox kill -9 <span class="variable">$p</span>&quot;</span>; <span class="keyword">done</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> $(busybox ps | grep <span class="string">&#x27;[s]shd -addr&#x27;</span>); <span class="keyword">do</span> su -c <span class="string">&quot;busybox kill -9 <span class="variable">$p</span>&quot;</span>; <span class="keyword">done</span></span><br><span class="line"><span class="comment"># 用 chroot shell 启动</span></span><br><span class="line">su -c <span class="string">&#x27;busybox setsid /system/bin/sshd -addr 0.0.0.0:22 \</span></span><br><span class="line"><span class="string">  -shell /data/local/tmp/sshd/chroot-shell.sh \</span></span><br><span class="line"><span class="string">  &gt;&gt; /data/local/tmp/sshd/sshd.log 2&gt;&amp;1 &lt; /dev/null &amp;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><strong>3) 最终验证</strong>（<code>ssh zte-grand-s</code> 直接进入
+Arch）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ssh zte-grand-s</span><br><span class="line">NAME=&quot;Arch Linux ARM&quot;</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">$ python --version   → Python 3.14.10</span><br><span class="line">$ node --version     → v26.13.1</span><br><span class="line">$ npm --version      → 12.2.2</span><br><span class="line">$ git --version      → git version 2.56.1</span><br><span class="line">$ df -h /            → /dev/block/loop1  3.4G  938M  2.3G  29% /</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：本节是「镜像文件方案」时期的实现。后续已迁移到
+ext4 整分区方案（§5.22），<br />
+但 <code>-shell</code> 机制保持一致，并已固化进 guard.sh 与
+install-recovery.sh 的 sshd 启动命令，<br />
+开机自动生效（见 §0.2）。</p>
+<blockquote>
+<p><strong>锁频尝试失败记录</strong>：曾尝试停 mpdecision + 4 核全开 +
+performance 锁 1512 MHz，<br />
+导致设备异常重启。已放弃，CPU 恢复默认（mpdecision 管理、单核空闲 384
+MHz）。不要重试。</p>
+</blockquote>
+<p>参考：用户博客《安卓手机安装 Archlinux 系统搭建 web 服务》<br />
+（https://sunjunior.github.io/2017/12/30/安卓手机安装Archlinux系统搭建web服务/），<br />
+方法为 PC 做 3.5 G 镜像 + 手机端 loop 挂载 + chroot，已在荣耀
+4C（Android 4.4）验证。</p>
+<h3 id="sdcard-从-fat32-迁移到-ext4整分区直接用2026-11-17">5.22 sdcard
+从 FAT32 迁移到 ext4（整分区直接用，2026-11-17）</h3>
+<p>目标：解决 FAT32 的单文件 2 G
+写入限制、空间碎片、删除残留无法回收的问题，<br />
+一劳永逸地把 11.4 G 的 sdcard 分区全部给 Arch 用。</p>
+<h4 id="为什么迁移">5.22.1 为什么迁移</h4>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>FAT32 问题</th>
+<th>实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单文件写入限制</td>
+<td>adb shell 下写文件到 2048 MB 报 <code>File too large</code>（ROM 的
+vfat 限制）</td>
+</tr>
+<tr>
+<td>空间统计不准</td>
+<td><code>df</code> 显示 10.9 G，实际分区 11.4 G；删除 3.5 G
+旧镜像后空间不回收</td>
+</tr>
+<tr>
+<td>删除残留</td>
+<td>旧镜像 arch35.img（3.5 G）+ rootfs tar 删除后，约 3.6 G
+簇无法回收，重启/remount 都无效</td>
+</tr>
+<tr>
+<td>镜像受限</td>
+<td>单个镜像文件受 FAT32 上限约束，无法做大</td>
+</tr>
+</tbody>
+</table>
+<h4 id="对开机系统的影响结论不影响开机">5.22.2
+对开机/系统的影响（结论：不影响开机）</h4>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统开机</td>
+<td>✅
+不受影响。<code>/system</code>/<code>/data</code>/<code>/cache</code>
+是独立 ext4 分区，不依赖 sdcard</td>
+</tr>
+<tr>
+<td>vold 挂载</td>
+<td>❌ Android 4.1 的
+vold（<code>dev_mount sdcard2 /storage/sdcard0 26 ...</code>，见
+<code>/system/etc/vold.fstab</code>）</td>
+</tr>
+<tr>
+<td>只认 vfat，格式化 ext4 后 <strong>Android 原生 /sdcard
+失效</strong>（App 看不到内部存储）</td>
+<td></td>
+</tr>
+<tr>
+<td>adb / SSH / Tailscale / guard.sh</td>
+<td>✅ 不受影响（都不依赖 sdcard，只用 /data/local/tmp）</td>
+</tr>
+<tr>
+<td>Arch chroot</td>
+<td>✅ 反而更好：ext4 无 2 G 限制、无碎片、可用 10.5 G</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>更正：上表「不影响开机」是初步判断。后续发现开机时
+<code>ext4check.sh</code> 会把 p26 重新格式化回<br />
+FAT32，真正解决见 §5.22.5。</p>
+</blockquote>
+<h4 id="迁移步骤已执行">5.22.3 迁移步骤（已执行）</h4>
+<p><strong>前置</strong>：关键配置备份到
+<code>/data/local/tmp/arch_backup/</code>（pacman.conf、mirrorlist、resolv.conf、pkglist.txt），<br />
+不受 sdcard 格式化影响。sshd 脚本与密钥本就在 /data，不受影响。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1) 卸载旧 loop 镜像 + 卸载 sdcard</span></span><br><span class="line">su -c <span class="string">&#x27;busybox umount /data/local/tmp/mnt_new&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;busybox losetup -d /dev/block/loop1&#x27;</span></span><br><span class="line">/system/bin/vdc volume unmount sdcard2      <span class="comment"># 状态 4 → 1 (Idle-Unmounted)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 格式化 mmcblk0p26 为 ext4（Android 原生 make_ext4fs，兼容内核 3.4）</span></span><br><span class="line">su -c <span class="string">&#x27;/system/bin/make_ext4fs -L archsd /dev/block/mmcblk0p26&#x27;</span></span><br><span class="line"><span class="comment"># Created filesystem with 11/712704 inodes and 84459/2847739 blocks</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 手动挂载（绕过 vold）</span></span><br><span class="line">su -c <span class="string">&#x27;busybox mkdir -p /storage/sdcard0&#x27;</span></span><br><span class="line">su -c <span class="string">&#x27;busybox mount -t ext4 /dev/block/mmcblk0p26 /storage/sdcard0&#x27;</span></span><br><span class="line"><span class="comment"># df: 10.7G 总，10.5G 可用</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4) 重新下载 rootfs（手机走公网 ~3 MB/s，ext4 写入快）</span></span><br><span class="line">su -c <span class="string">&#x27;busybox setsid curl -k -L -o /sdcard/ArchLinuxARM-armv7-latest.tar.gz \</span></span><br><span class="line"><span class="string">  &quot;http://ca.us.mirror.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz&quot; ... &amp;&#x27;</span></span><br><span class="line"><span class="comment"># MD5 04b2f42c710748480f2dcf5115badc43 校验一致</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5) 解压到 /sdcard/arch（真实目录，不是镜像文件）</span></span><br><span class="line"><span class="built_in">cd</span> /sdcard; gzip -d ArchLinuxARM-armv7-latest.tar.gz</span><br><span class="line">busybox tar --exclude=./boot --exclude=./usr/lib/firmware \</span><br><span class="line">  -xf /sdcard/ArchLinuxARM-armv7-latest.tar -C /sdcard/arch</span><br><span class="line"><span class="comment"># ext4 上解压 0 错误（FAT32 上的 I/O error 问题彻底消失）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6) 恢复配置 + 装工具</span></span><br><span class="line"><span class="built_in">cp</span> /data/local/tmp/arch_backup/etc/* → /sdcard/arch/etc/</span><br><span class="line"><span class="built_in">mkdir</span> -p /sdcard/arch/var/lib/pacman/&#123;<span class="built_in">sync</span>,<span class="built_in">local</span>&#125; /sdcard/arch/var/cache/pacman/pkg</span><br><span class="line">busybox <span class="built_in">chroot</span> /sdcard/arch /bin/bash</span><br><span class="line">pacman -Syy</span><br><span class="line">pacman -S --overwrite <span class="string">&#x27;*&#x27;</span> python nodejs npm git</span><br></pre></td></tr></table></figure>
+<h4 id="实施记录">5.22.4 实施记录</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />sdcard 格式化
+ext4（<code>make_ext4fs -L archsd</code>），10.5 G 可用</label></li>
+<li><label><input type="checkbox" checked="" />rootfs 直接解压到
+<code>/sdcard/arch</code>（整分区方案，无镜像文件）</label></li>
+<li><label><input type="checkbox" checked="" />恢复 pacman 配置，pacman
+-Syy 成功（ext4 上 2.7 MB/s）</label></li>
+<li><label><input type="checkbox" checked="" />安装 python / nodejs /
+npm / git</label></li>
+<li><label><input type="checkbox" checked="" /><strong>修复 node.js 的
+libcrypto.so.4</strong>：仓库 openssl 4.1 提供，但首次装成 3.6.3（提供
+.so.3）。<br />
+直接用
+<code>pacman -U --overwrite '*' openssl-4.1.0-1-armv7h.pkg.tar.xz</code>
+升级到 4.1 解决（§5.22.6）。</label></li>
+<li><label><input type="checkbox"
+checked="" />chroot-shell.sh：<code>MNT=/sdcard/arch</code>，并修复「每次连接重复
+bind」的 bug<br />
+（用 <code>mounted()</code> 检查 /proc/mounts，避免累积 13 层导致 umount
+busy）</label></li>
+<li><label><input type="checkbox" checked="" />sshd 用
+<code>-shell /data/local/tmp/chroot-shell.sh</code> 启动，SSH 直接进入
+Arch</label></li>
+<li><label><input type="checkbox"
+checked="" />固化开机：install-recovery.sh 加
+<code>mount -t ext4 /dev/block/mmcblk0p26 /storage/sdcard0</code></label>
+<ul>
+<li>sshd <code>-shell</code> 参数；实测开机自动 chroot 生效</li>
+</ul></li>
+<li><label><input type="checkbox"
+checked="" /><code>/system/etc/vold.fstab</code> 注释 sdcard2 行（vold
+不再尝试挂 vfat）</label></li>
+<li><label><input type="checkbox"
+checked="" /><code>/system/bin/ext4check.sh</code> 的 GROW 分支改为直接
+exit（§5.22.5，根治 FAT32 重格式化）</label></li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：ext4 上 chroot 的 pacman post-hook 会报
+<code>Failed to take /etc/passwd lock: Invalid argument</code><br />
+（Android 内核 3.4 的 flock 与新版 pacman
+不兼容），导致依赖升级不完整，<br />
+但包本身已正确安装。若需避免该警告，可用 <code>pacman -U</code>
+直接装本地包。</p>
+</blockquote>
+<h4 id="关键根因ext4check.sh-开机把-p26-格式化回-fat32已解决">5.22.5
+关键根因：ext4check.sh 开机把 p26 格式化回 FAT32（已解决）</h4>
+<p><strong>现象</strong>：多次格式化 p26 为
+ext4、挂载、写入数据均成功；但只要 reboot，<br />
+开机后 ext4 superblock 就损坏（<code>Superblock invalid</code> /
+<code>invalid journal inode 8</code> /<br />
+<code>Resize inode not valid</code>），<code>mount -t ext4</code> 报
+<code>Invalid argument</code>。去掉 journal、<br />
+去掉 resize_inode 都无效。一度误判为「内核 3.4 缺陷」。</p>
+<p><strong>真正根因</strong>（通过逐层排查定位）：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>排查步骤</th>
+<th>发现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>umount 后 e2fsck</td>
+<td><code>archsd: clean</code> —— 卸载时文件系统是好的</td>
+</tr>
+<tr>
+<td>reboot 后立即 e2fsck</td>
+<td>superblock 损坏 —— 破坏发生在 reboot/开机过程中</td>
+</tr>
+<tr>
+<td>读分区头字节 offset 0</td>
+<td><code>eb 58 90 61 6e 64 72 6f 69 64</code> = <strong>FAT32 BPB +
+“android” 卷标</strong>！</td>
+</tr>
+<tr>
+<td>结论</td>
+<td>开机时有脚本把 p26 <strong>重新格式化成了 FAT32</strong></td>
+</tr>
+<tr>
+<td>全系统 grep</td>
+<td><code>/init.target.rc:63</code> →
+<code>exec /system/bin/sh -c "/system/bin/ext4check.sh mmcblk0p26 GROW"</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>ext4check.sh</code> 的 <code>GROW</code> 分支逻辑：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;MOUNT_LABLE&#125;</span> == <span class="string">&quot;GROW&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    /system/bin/fsck_msdos -p -f <span class="variable">$&#123;BLOCK_DEVICE&#125;</span>   <span class="comment"># 按 FAT32 检查</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;$?&quot;</span> <span class="keyword">in</span></span><br><span class="line">        2) /system/bin/newfs_msdos -F 32 -O android <span class="variable">$&#123;BLOCK_DEVICE&#125;</span> ;;  <span class="comment"># 重格成 FAT32！</span></span><br><span class="line">    <span class="keyword">esac</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>因为 ext4 分区被 <code>fsck_msdos</code> 判为损坏（返回 2），于是被
+<code>newfs_msdos -F 32 -O android</code><br />
+重新格式化成 FAT32（卷标 “android”）——这就是 ext4 反复损坏的真相。</p>
+<blockquote>
+<p>注：<code>/init.rc:490</code> 的
+<code>flash_recovery</code>（install-recovery.sh）是
+<code>class main</code>，执行时机<strong>晚于</strong><br />
+<code>/init.target.rc</code> 的 fs 阶段，所以开机脚本里的
+<code>mount -t ext4</code> 总是失败（分区已被格式化成 FAT32）。</p>
+</blockquote>
+<p><strong>解决</strong>：<code>/init.target.rc</code> 在 ramdisk（只读
+rootfs）无法直接改，但 <code>ext4check.sh</code> 在<br />
+<code>/system/bin/</code>（可写）。把 GROW 分支改成<strong>直接
+exit，不做 FAT32 检查/格式化</strong><br />
+（原代码注释保留供回滚）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;MOUNT_LABLE&#125;</span> == <span class="string">&quot;GROW&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 2026-11-17: p26 已改为 ext4 作为 Arch 根分区，原逻辑会用 fsck_msdos</span></span><br><span class="line">    <span class="comment"># 检查并按 FAT32 重新格式化，破坏 ext4 superblock。这里直接退出。</span></span><br><span class="line">    <span class="comment"># (原 fsck_msdos/newfs_msdos 代码已注释保留)</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>同时注释 <code>/system/etc/vold.fstab</code> 的
+<code>dev_mount sdcard2 ...</code> 行（阻止 vold 按 vfat 挂载）。</p>
+<p><strong>验证</strong>（2026-11-17）：格式化 ext4 → 写标记 → reboot →
+检查：<br />
+- p26 offset 1080 = <code>53 ef</code>（ext4 magic，不再是
+<code>eb 58 90</code> FAT）<br />
+- 标记文件 <code>ext4-survives-reboot</code> 仍在<br />
+- boot.log
+<code>ext4 sdcard mounted rc=0</code>（开机脚本自动挂载成功）<br />
+- <code>df</code> 显示 10.5 G 可用</p>
+<p><strong>结论</strong>：ext4
+整分区方案现在真正可行，之前所有”内核缺陷”的判断都是误判。</p>
+<h4 id="修复-node.js-的-libcrypto.so.4-缺失">5.22.6 修复 node.js 的
+libcrypto.so.4 缺失</h4>
+<p><strong>现象</strong>：<code>node --version</code> 报
+<code>error while loading shared libraries: libcrypto.so.4: cannot open shared object file</code>。</p>
+<p><strong>根因</strong>：仓库 openssl 已是 4.1.0（提供
+<code>libcrypto.so.4</code>），但 pacman 安装时因 post-hook 失败<br />
+（<code>Failed to take /etc/passwd lock: Invalid argument</code>），实际装成旧的
+3.6.3（只提供 <code>libcrypto.so.3</code>）。<br />
+<code>pacman -S --nohooks</code>
+在这个版本不支持（<code>unrecognized option</code>），<code>-S openssl</code>
+也不升级。</p>
+<p><strong>解决</strong>：直接用 curl 下载仓库包，用
+<code>pacman -U</code> 本地安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -L -f -o /tmp/openssl.pkg.tar.xz \</span><br><span class="line">  <span class="string">&quot;http://ca.us.mirror.archlinuxarm.org/armv7h/core/openssl-4.1.0-1-armv7h.pkg.tar.xz&quot;</span></span><br><span class="line">pacman -U --noconfirm --overwrite <span class="string">&#x27;*&#x27;</span> /tmp/openssl.pkg.tar.xz</span><br><span class="line"><span class="comment"># upgrading openssl... → /usr/lib/libcrypto.so.4 出现，node 正常</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：<code>--overwrite '*'</code> 的 <code>*</code> 在多层
+shell（adb → su → chroot）中易被展开成文件名，<br />
+导致
+<code>target not found: bin/dev/etc...</code>。可靠做法是把命令写成脚本文件，通过
+adb push<br />
+到 chroot 内再用 <code>chroot &lt;dir&gt; /script.sh</code> 执行。</p>
+</blockquote>
+<h4 id="修复-chroot-shell.sh-重复-bind-挂载">5.22.7 修复 chroot-shell.sh
+重复 bind 挂载</h4>
+<p><strong>现象</strong>：每次 SSH 连接，chroot-shell.sh 都执行
+<code>mount -o bind /dev ...</code>，累积了 13 层重复挂载，<br />
+导致后续 <code>umount</code> 报
+<code>Device or resource busy</code>，loop 设备无法释放。</p>
+<p><strong>解决</strong>：用 <code>mounted()</code> 检查
+/proc/mounts，仅在未挂载时 bind：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line">B=/system/xbin/busybox</span><br><span class="line">MNT=/sdcard/arch</span><br><span class="line"><span class="function"><span class="title">mounted</span></span>() &#123; <span class="variable">$B</span> grep -q <span class="string">&quot; <span class="variable">$1</span> &quot;</span> /proc/mounts 2&gt;/dev/null; &#125;</span><br><span class="line">mounted <span class="string">&quot;<span class="variable">$MNT</span>/dev&quot;</span>  || <span class="variable">$B</span> mount -o <span class="built_in">bind</span> /dev <span class="string">&quot;<span class="variable">$MNT</span>/dev&quot;</span>   2&gt;/dev/null</span><br><span class="line">mounted <span class="string">&quot;<span class="variable">$MNT</span>/proc&quot;</span> || <span class="variable">$B</span> mount -t proc proc <span class="string">&quot;<span class="variable">$MNT</span>/proc&quot;</span>  2&gt;/dev/null</span><br><span class="line">mounted <span class="string">&quot;<span class="variable">$MNT</span>/sys&quot;</span>  || <span class="variable">$B</span> mount -o <span class="built_in">bind</span> /sys <span class="string">&quot;<span class="variable">$MNT</span>/sys&quot;</span>   2&gt;/dev/null</span><br><span class="line"><span class="built_in">exec</span> <span class="variable">$B</span> <span class="built_in">chroot</span> <span class="string">&quot;<span class="variable">$MNT</span>&quot;</span> /bin/bash <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
 <hr />
 <h2 id="踩坑清单现象-根因-处理">6. 踩坑清单（现象 → 根因 → 处理）</h2>
 <table>
@@ -3122,6 +3736,102 @@ rootfs（ramdisk，ro，重启即失）</td>
 <td>该参数只禁止建新 master，仍连接已有 socket</td>
 <td>用 <code>-o ControlPath=none</code> 才完全绕过复用（§5.20.9）</td>
 </tr>
+<tr>
+<td>29</td>
+<td><code>busybox tar xzf xxx.tar.gz</code> 报
+<code>corrupted data</code></td>
+<td>精简 gzip 不支持 <code>-dc</code>；busybox 1.8.1 的 tar 内部调 gzip
+失败</td>
+<td>分两步：<code>gzip -d xxx.tar.gz</code> →
+<code>busybox tar xf xxx.tar</code>（§5.21.3）</td>
+</tr>
+<tr>
+<td>30</td>
+<td><code>gzip -dc</code> 报 <code>No such file or directory</code></td>
+<td>这台机器的 gzip 把 <code>-dc</code> 当文件名，只支持
+<code>gzip 文件</code> / <code>gzip -d 文件</code></td>
+<td>不用 <code>-c</code>，靠 <code>gzip -d</code>
+在同目录生成解压文件</td>
+</tr>
+<tr>
+<td>31</td>
+<td>3.5 G 镜像解压到 <code>/data</code> 把分区写到 98%</td>
+<td><code>gzip -d</code> 输出到源文件同目录，<code>/data</code> 只有 1.8
+G</td>
+<td>先把压缩包 mv 到 sdcard（10 G），在 sdcard 上解压（§5.21.3）</td>
+</tr>
+<tr>
+<td>32</td>
+<td><code>curl -C -</code> 断点续传不生效</td>
+<td><code>python -m http.server</code> 不支持 Range，返回 200 而非
+206</td>
+<td>自写支持 Range 的 HTTP 服务（返回 206 + Content-Range）</td>
+</tr>
+<tr>
+<td>33</td>
+<td>FAT32 上 <code>ls</code>/<code>stat</code> 报
+<code>Value too large for defined data type</code></td>
+<td>FAT32 单文件 32 位显示溢出（&gt;2 G），非文件损坏</td>
+<td>忽略，用 loop 挂载后 <code>df</code> 显示 3.4 G 即证明完整；镜像限
+3.5 G &lt; 4 G</td>
+</tr>
+<tr>
+<td>34</td>
+<td>vfat 上 <code>dd seek</code> 建稀疏镜像报
+<code>Invalid argument</code></td>
+<td>FAT32 不支持稀疏文件</td>
+<td>镜像在 Mac 上用 <code>dd seek</code>
+做（稀疏），压缩后传输，手机端解压为真实文件</td>
+</tr>
+<tr>
+<td>35</td>
+<td>ext4 镜像 pacman 报 <code>Input/output error</code>（sync
+目录写不了）</td>
+<td>异常重启 + busybox tar 解压致 inode/extent
+损坏，<code>/usr/share</code> 下无法建目录</td>
+<td>用 Arch 自带 <code>mkfs.ext4 1.47.4</code> 重做干净镜像
+<code>arch_new.img</code>，重新解压（§5.21.5）</td>
+</tr>
+<tr>
+<td>36</td>
+<td><code>pacman-key --init</code> 报
+<code>parseopts: command not found</code></td>
+<td>makepkg 脚本（message.sh/parseopts.sh）在 usr/share
+下没解出来，且该目录建不了</td>
+<td>直接 <code>SigLevel = Never</code> 关闭签名校验，跳过
+keyring（§5.21.6 前置）</td>
+</tr>
+<tr>
+<td>37</td>
+<td>pacman 报大量 <code>xxx exists in filesystem</code></td>
+<td>rootfs 自带 base 包文件但 pacman 库无记录</td>
+<td><code>pacman -S --overwrite '*' ...</code>，注意 <code>*</code>
+要用引号防 shell 展开</td>
+</tr>
+<tr>
+<td>38</td>
+<td>SSH 登录落在 Android sh 而非 Arch</td>
+<td>sshd 默认 <code>-shell /system/bin/sh</code>，或 guard
+用默认参数重启覆盖</td>
+<td>用 sshd <code>-shell</code> 参数指向 chroot-shell.sh（§5.21.6）</td>
+</tr>
+<tr>
+<td>39</td>
+<td>锁 CPU 最高频 + 4 核全开后设备重启</td>
+<td>停 mpdecision + performance 1512 MHz 超过这机器的稳定范围</td>
+<td>放弃锁频，恢复默认（不要重试）</td>
+</tr>
+<tr>
+<td>40</td>
+<td>ext4 分区每次 reboot 后 superblock 损坏，<code>mount -t ext4</code>
+报 Invalid argument</td>
+<td><code>/init.target.rc:63</code> 开机调
+<code>ext4check.sh mmcblk0p26 GROW</code>，其 GROW 分支用 fsck_msdos
+检查后 <code>newfs_msdos -F 32 -O android</code> 把分区重格成
+FAT32（卷标 android）</td>
+<td>修改 <code>/system/bin/ext4check.sh</code> 的 GROW 分支直接
+exit；注释 vold.fstab 的 sdcard2 行（§5.22.5）</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -3258,12 +3968,14 @@ memory/cpuset/pids</td>
 <tbody>
 <tr>
 <td>可执行目录</td>
-<td>只有 <code>/data</code>（ext4，2 GB）与 <code>/system</code>（768
-MB，已用约 411 MB）</td>
+<td><code>/data</code>（ext4，2 GB）、<code>/system</code>（768
+MB）、以及 ext4 化的 sdcard <code>/sdcard/arch</code>（10.5 GB，Arch
+根目录）</td>
 </tr>
 <tr>
 <td>sdcard</td>
-<td>vfat + <strong>noexec</strong>，只能存数据</td>
+<td>已格式化为 <strong>ext4</strong>（原厂 vfat+noexec
+的限制已消除），可直接执行程序、无单文件 2 G/4 G 限制（§5.22）</td>
 </tr>
 <tr>
 <td>文件系统</td>
@@ -3399,9 +4111,22 @@ adbd，或直接在路由器上隔离该设备。</li>
 <td>需要时再勾；或后续在 ConsoleHome 加开关</td>
 </tr>
 <tr>
-<td>工具链（git/gcc）</td>
-<td>未部署；chroot 三个前提均已实测通过（§5.18）</td>
-<td>要装就做 Debian 11 armhf 镜像，放在 sdcard0</td>
+<td>工具链（git/python/node/npm）</td>
+<td>✅ <strong>已完成</strong>：Arch Linux ARM armv7 运行在 ext4 整分区
+<code>/sdcard/arch</code>（§5.22），Python 3.14.10 / Node 26.13.1 / npm
+12.2.2 / Git 2.56.1 已装；SSH 直接进 chroot</td>
+<td>开机自动挂载 ext4 + <code>-shell</code> 进 chroot
+已固化（§0.2）；无待办</td>
+</tr>
+<tr>
+<td>gcc / build-essential</td>
+<td>未装（Python/Node/Git 已够用）</td>
+<td>需要编译时 <code>pacman -S base-devel</code></td>
+</tr>
+<tr>
+<td>CPU 锁频</td>
+<td>❌ 已放弃：锁 1512 MHz + 4 核致设备重启</td>
+<td>保持默认，不要再试</td>
 </tr>
 <tr>
 <td>监控脚本位置</td>
@@ -3490,6 +4215,22 @@ adbd，或直接在路由器上隔离该设备。</li>
 <td>✅ 0.69–0.90 s（首次 8 s）</td>
 </tr>
 <tr>
+<td>Arch rootfs 下载</td>
+<td>MD5 一致</td>
+<td>✅ <code>04b2f42c...</code>，手机/两端一致</td>
+</tr>
+<tr>
+<td>ext4 镜像 loop 挂载</td>
+<td>3.4 G 可用</td>
+<td>✅ <code>/dev/block/loop0</code> → <code>mnt_test</code>，3.2 G
+空闲</td>
+</tr>
+<tr>
+<td>手机解 tar.gz</td>
+<td>gzip -d + tar xf</td>
+<td>✅ 两步分开可用，<code>tar xzf</code> 不可用</td>
+</tr>
+<tr>
 <td><code>kill -9</code> sshd</td>
 <td>guard 拉起</td>
 <td>30 s 内恢复</td>
@@ -3537,7 +4278,7 @@ adbd，或直接在路由器上隔离该设备。</li>
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Android-ZTE-Grand-S-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95-sshd-ADB-Tailscale-ConsoleHome-%E7%B3%BB%E7%BB%9F%E7%B2%BE%E7%AE%80-%E4%BD%8E%E5%8A%9F%E8%80%97-%E5%B8%B8%E9%A9%BB%E4%B8%BB%E6%9C%BA/" rel="tag"><i class="fa fa-tag"></i> Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机</a>
+              <a href="/tags/Android-ZTE-Grand-S-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95-sshd-ADB-Tailscale-ConsoleHome-%E7%B3%BB%E7%BB%9F%E7%B2%BE%E7%AE%80-%E4%BD%8E%E5%8A%9F%E8%80%97-%E5%B8%B8%E9%A9%BB%E4%B8%BB%E6%9C%BA-Arch-Linux-chroot/" rel="tag"><i class="fa fa-tag"></i> Android, ZTE Grand S, 折腾记录, sshd, ADB, Tailscale, ConsoleHome, 系统精简, 低功耗, 常驻主机, Arch Linux, chroot</a>
           </div>
 
         
