@@ -34,9 +34,9 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/tvpn/07-smarttube-playing.png">
 <meta property="og:image" content="https://sunjunior.github.io/img/tvpn/08-smarttube-playing-2.png">
 <meta property="article:published_time" content="2026-11-11T02:30:00.000Z">
-<meta property="article:modified_time" content="2026-11-11T07:45:00.000Z">
+<meta property="article:modified_time" content="2026-11-17T09:45:00.000Z">
 <meta property="article:author" content="sunjunior">
-<meta property="article:tag" content="逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 调测工具, 折腾记录">
+<meta property="article:tag" content="逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 调测工具, 折腾记录, 网络排障, iptables, 策略路由, 音频调优, RTC">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://sunjunior.github.io/img/tvpn/04-advert-app-info.png">
 
@@ -170,7 +170,15 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E7%82%B9%E7%BD%91%E7%BB%9C%E4%B8%8D%E6%98%AF%E6%85%A2%E6%98%AF%E8%A2%AB%E9%80%89%E6%8B%A9%E6%80%A7%E8%BF%87%E6%BB%A4"><span class="nav-text">1.
 起点：网络不是「慢」，是被选择性过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E5%8F%B0%E8%AE%BE%E5%A4%87%E4%B8%A4%E5%A5%97%E6%9D%83%E9%99%90%E8%BE%B9%E7%95%8C"><span class="nav-text">2. 两台设备，两套权限边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7%E5%87%86%E5%A4%87"><span class="nav-text">3. 环境与工具准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6"><span class="nav-text">3.1 硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6android-%E8%B0%83%E6%B5%8B%E5%A5%97%E4%BB%B6"><span class="nav-text">3.2 软件：Android 调测套件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7"><span class="nav-text">3.3 软件：逆向与破解工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tvpn%E4%B8%80%E4%B8%AA-240kb-%E7%9A%84%E8%87%AA%E7%A0%94-vpn-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">4. TVPN：一个 240KB 的自研 VPN
 客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%A7%86%E7%AB%AF%E6%B2%BB%E7%90%86%E5%B9%BF%E5%91%8A%E5%8C%85%E4%B8%8E%E5%BC%80%E6%9C%BA%E5%AE%88%E5%8D%AB"><span class="nav-text">5. 电视端治理：广告包与开机守卫</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BC%B9%E4%B8%8E%E8%87%AA%E6%81%A2%E5%A4%8D%E9%93%BE"><span class="nav-text">5.1 反弹与自恢复链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E7%A6%81-receiver%E4%B8%8D%E6%95%B4%E5%8C%85%E7%A6%81%E7%94%A8"><span class="nav-text">5.2 只禁 receiver，不整包禁用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%BC%80%E6%9C%BA%E9%92%A9%E5%AD%90"><span class="nav-text">5.3 真正的开机钩子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%B4%B4%E7%89%87%E5%B9%BF%E5%91%8A%E4%BB%8E%E4%B8%8D%E5%8F%AF%E8%A1%8C%E5%88%B0%E8%BF%90%E8%A1%8C%E6%97%B6-hook"><span class="nav-text">6.
-前贴片广告：从「不可行」到运行时 hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E4%B8%8E%E5%86%85%E5%AD%98%E6%B2%BB%E7%90%86"><span class="nav-text">7. 桌面与内存治理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E9%80%82%E9%85%8D%E6%88%90%E6%9E%9C"><span class="nav-text">8. 影音适配成果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E7%AB%AF"><span class="nav-text">9. 车机端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E4%B8%8E%E9%81%97%E7%95%99"><span class="nav-text">10. 结论与遗留</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF"><span class="nav-text">11. 安全红线</span></a></li></ol></div>
+前贴片广告：从「不可行」到运行时 hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E4%B8%8E%E5%86%85%E5%AD%98%E6%B2%BB%E7%90%86"><span class="nav-text">7. 桌面与内存治理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E9%80%82%E9%85%8D%E6%88%90%E6%9E%9C"><span class="nav-text">8. 影音适配成果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E7%AB%AF"><span class="nav-text">9. 车机端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E5%AE%9E%E6%88%98%E4%B8%80tvpn-%E5%8F%8D%E5%A4%8D-502cpu-%E5%86%B2%E5%88%B0-174"><span class="nav-text">10. 车机实战（一）：TVPN
+反复 502，CPU 冲到 174%</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E8%B1%A1"><span class="nav-text">10.1 现象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%AB%8C%E7%96%91%E4%BA%BA%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%81%9C%E5%9C%A8-2007-%E5%B9%B4"><span class="nav-text">10.2 第一嫌疑人：系统时间停在
+2007 年</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%98%E5%9C%A8%E5%88%B7%E7%99%BD%E5%90%8D%E5%8D%95%E6%B2%A1%E7%94%9F%E6%95%88vpn-%E5%85%B6%E5%AE%9E%E6%98%AF%E5%85%A8%E5%B1%80-tun"><span class="nav-text">10.3 502
+还在刷：白名单没生效，VPN 其实是全局 TUN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91%E7%A1%AE%E8%AE%A4addallowedapplication-%E5%9C%A8%E8%BF%99%E5%8F%B0-rom-%E4%B8%8A%E6%B2%A1%E7%94%9F%E6%95%88"><span class="nav-text">10.4
+反编译确认：addAllowedApplication 在这台 ROM 上没生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D%E7%BB%99%E7%9B%AE%E6%A0%87%E5%9C%B0%E5%9D%80%E5%8A%A0%E4%B8%80%E6%9D%A1%E6%9B%B4%E9%AB%98%E4%BC%98%E5%85%88%E7%BA%A7%E7%9A%84%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1"><span class="nav-text">10.5
+修复：给目标地址加一条更高优先级的策略路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%8B%E9%97%A8%E7%8B%97%E9%98%B2%E6%AD%A2-vpn-%E9%87%8D%E5%90%AF%E6%8A%8A%E8%A7%84%E5%88%99%E6%B8%85%E6%8E%89"><span class="nav-text">10.6 看门狗：防止 VPN
+重启把规则清掉</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E4%B8%8E%E8%BE%B9%E7%95%8C"><span class="nav-text">10.7 结果与边界</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%A6%E6%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8Csmarttube-%E7%9A%84%E6%94%B6%E9%9F%B3%E6%9C%BA%E6%9D%82%E9%9F%B3"><span class="nav-text">11. 车机实战（二）：SmartTube
+的「收音机杂音」</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E8%B1%A1-1"><span class="nav-text">11.1 现象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%AB%E6%80%A5%E7%9D%80%E6%80%80%E7%96%91%E7%A1%AC%E4%BB%B6%E5%85%88%E7%9C%8B%E9%9F%B3%E9%A2%91%E5%9B%BE"><span class="nav-text">11.2 别急着怀疑硬件，先看音频图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91%E5%AE%9A%E4%BD%8D15.6-db-%E7%9A%84%E8%87%AA%E5%8A%A8%E5%A2%9E%E7%9B%8A"><span class="nav-text">11.3 反编译定位：+15.6 dB
+的自动增益</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D"><span class="nav-text">11.4 修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-text">11.5 结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E6%8E%92%E6%9F%A5%E5%91%BD%E4%BB%A4"><span class="nav-text">12. 可复用的排查命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E4%B8%8E%E9%81%97%E7%95%99"><span class="nav-text">13. 结论与遗留</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A2%E7%BA%BF"><span class="nav-text">14. 安全红线</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -265,9 +273,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-11-11 10:30:00 / 修改时间：15:45:00" itemprop="dateCreated datePublished" datetime="2026-11-11T10:30:00+08:00">2026-11-11</time>
+      <time title="创建时间：2026-11-11 10:30:00" itemprop="dateCreated datePublished" datetime="2026-11-11T10:30:00+08:00">2026-11-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-11-17 17:45:00" itemprop="dateModified" datetime="2026-11-17T17:45:00+08:00">2026-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -306,6 +320,13 @@
 90–120 秒前贴片广告的运行时拦截</strong>（frida hook 广告 SDK
 门函数）、<strong>桌面与内存治理</strong>，最终让一台 1GB
 内存的机顶盒流畅播放 YouTube。</p>
+<p>车机端上线后还遇到两个很典型的问题：TVPN 每 5 秒刷 502、把 CPU 顶到
+174%；以及 SmartTube 的「收音机杂音」。<br />
+两者都不是「配置写错」这么简单——一个是 RTC 停在 2007
+年叠加白名单失效，一个是播放器自带的 +15.6 dB 自动增益。<br />
+排查过程分别在 §10、§11。</p>
+</blockquote>
+<blockquote>
 <p><strong>本文定位</strong>：完整技术细节（含全部脚本、调用链取证、反汇编）见项目内部文档《TVPN
 全案技术报告》；本文按博客体量整理主线与踩坑，配图来自设备实测截图。</p>
 </blockquote>
@@ -315,7 +336,12 @@
 <li><a href="#起点网络不是慢是被选择性过滤">1.
 起点：网络不是「慢」，是被选择性过滤</a></li>
 <li><a href="#两台设备两套权限边界">2. 两台设备，两套权限边界</a></li>
-<li><a href="#环境与工具准备">3. 环境与工具准备</a></li>
+<li><a href="#环境与工具准备">3. 环境与工具准备</a>
+<ul>
+<li><a href="#硬件">3.1 硬件</a></li>
+<li><a href="#软件android-调测套件">3.2 软件：Android 调测套件</a></li>
+<li><a href="#软件逆向与破解工具">3.3 软件：逆向与破解工具</a></li>
+</ul></li>
 <li><a href="#tvpn一个-240kb-的自研-vpn-客户端">4. TVPN：一个 240KB
 的自研 VPN 客户端</a></li>
 <li><a href="#电视端治理广告包与开机守卫">5.
@@ -331,8 +357,37 @@ receiver，不整包禁用</a></li>
 <li><a href="#桌面与内存治理">7. 桌面与内存治理</a></li>
 <li><a href="#影音适配成果">8. 影音适配成果</a></li>
 <li><a href="#车机端">9. 车机端</a></li>
-<li><a href="#结论与遗留">10. 结论与遗留</a></li>
-<li><a href="#安全红线">11. 安全红线</a></li>
+<li><a href="#车机实战一tvpn-反复-502cpu-冲到-174">10.
+车机实战（一）：TVPN 反复 502，CPU 冲到 174%</a>
+<ul>
+<li><a href="#现象">10.1 现象</a></li>
+<li><a href="#第一嫌疑人系统时间停在-2007-年">10.2
+第一嫌疑人：系统时间停在 2007 年</a></li>
+<li><a href="#还在刷白名单没生效vpn-其实是全局-tun">10.3 502
+还在刷：白名单没生效，VPN 其实是全局 TUN</a></li>
+<li><a href="#反编译确认addallowedapplication-在这台-rom-上没生效">10.4
+反编译确认：<code>addAllowedApplication</code> 在这台 ROM
+上没生效</a></li>
+<li><a href="#修复给目标地址加一条更高优先级的策略路由">10.5
+修复：给目标地址加一条更高优先级的策略路由</a></li>
+<li><a href="#看门狗防止-vpn-重启把规则清掉">10.6 看门狗：防止 VPN
+重启把规则清掉</a></li>
+<li><a href="#结果与边界">10.7 结果与边界</a></li>
+</ul></li>
+<li><a href="#车机实战二smarttube-的收音机杂音">11.
+车机实战（二）：SmartTube 的「收音机杂音」</a>
+<ul>
+<li><a href="#现象-1">11.1 现象</a></li>
+<li><a href="#别急着怀疑硬件先看音频图">11.2
+别急着怀疑硬件，先看音频图</a></li>
+<li><a href="#反编译定位15.6-db-的自动增益">11.3 反编译定位：+15.6 dB
+的自动增益</a></li>
+<li><a href="#修复">11.4 修复</a></li>
+<li><a href="#结果">11.5 结果</a></li>
+</ul></li>
+<li><a href="#可复用的排查命令">12. 可复用的排查命令</a></li>
+<li><a href="#结论与遗留">13. 结论与遗留</a></li>
+<li><a href="#安全红线">14. 安全红线</a></li>
 </ul>
 <hr />
 <h2 id="起点网络不是慢是被选择性过滤">1.
@@ -506,6 +561,14 @@ rebinding，切换瞬间断流自动重连；</li>
 VPN</strong>——只能靠 <code>ip rule show | grep uidrange</code> 核对 UID
 是否注册。另外 UID 只在「启动代理」时注册，重装应用换了 UID
 后必须重启代理，否则分流悄悄失效。</p>
+<blockquote>
+<p>⚠️ <strong>实测修正</strong>：这套白名单在创维机顶盒（Android
+10）上可靠，但在 AC8317 车机（Android 6.0）上<strong>会退化成全局
+TUN</strong>——<br />
+<code>addAllowedApplication()</code> 里写了白名单，实机路由却仍是
+<code>0.0.0.0/0 → tun0</code>，未列入白名单的应用照样被卷进隧道。<br />
+这正是 §10 那场 502 事故的根源。</p>
+</blockquote>
 <h2 id="电视端治理广告包与开机守卫">5. 电视端治理：广告包与开机守卫</h2>
 <h3 id="反弹与自恢复链">5.1 反弹与自恢复链</h3>
 <p>首轮用 Binder 事务绕过厂商对 shell <code>pm disable</code>
@@ -701,11 +764,203 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 <li>车机 <code>adb root</code> 开箱即用，调测自由度比机顶盒高（可直接
 <code>ip rule add</code> 补注册 UID），但不改变客户端架构。</li>
 </ul>
-<h2 id="结论与遗留">10. 结论与遗留</h2>
+<blockquote>
+<p>车机端上线后遇到的两个典型故障单独记在 §10（TVPN 反复 502）与
+§11（SmartTube 底噪）。</p>
+</blockquote>
+<h2 id="车机实战一tvpn-反复-502cpu-冲到-174">10. 车机实战（一）：TVPN
+反复 502，CPU 冲到 174%</h2>
+<blockquote>
+<p>设备：<code>ac83xx_evb</code> 车机（Android 6.0，MT6735，kernel
+3.18.49 armv7l），ADB over WiFi + root shell。</p>
+</blockquote>
+<h3 id="现象">10.1 现象</h3>
+<p><code>dumpsys cpuinfo</code> 里 TVPN 进程短窗口 CPU 达到
+<strong>174%</strong>（接近两核），<code>load average</code> 长期在 20
+以上，日志每 5 秒刷一条：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I tvpn-relay: [relay] upstream refused: HTTP/1.1 502 Bad Gateway (47.92.44.196:8443)</span><br></pre></td></tr></table></figure>
+<h3 id="第一嫌疑人系统时间停在-2007-年">10.2 第一嫌疑人：系统时间停在
+2007 年</h3>
+<p>日志里大量重复：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">W tvpn: tls-up conn: javax.net.ssl.SSLHandshakeException:</span><br><span class="line">Could not validate certificate: Certificate not valid until</span><br><span class="line">Wed May 13 08:00:00 GMT+08:00 2026</span><br><span class="line">(compared to Sat Mar 31 10:12:04 GMT+08:00 2007)</span><br></pre></td></tr></table></figure>
+<p>查一下设备时间：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 date&quot;</span></span><br><span class="line"><span class="comment"># Sat Mar 31 10:12:20 CST 2007</span></span><br></pre></td></tr></table></figure>
+<p>这台车机的 RTC 不保存时间，断电开机后停在
+<strong>2007-03-31</strong>。于是<strong>所有 HTTPS / TLS
+证书校验必然失败</strong>，relay
+失败即刻重试，形成紧循环，代价是：线程数膨胀到 <strong>104
+个</strong>、累计 <strong>82 万次 minor page fault</strong>、短窗口 CPU
+冲到 <strong>174%</strong>。</p>
+<p>修正时间并写入 RTC：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 date 111410132026.08&quot;</span>   <span class="comment"># 2026-11-14 10:13:08</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 busybox hwclock -w&quot;</span></span><br></pre></td></tr></table></figure>
+<p>修正后最近 8000 行日志里 <code>SSLHandshakeException</code> 为
+<strong>0</strong>，CPU 降到约 <strong>8.6%</strong>（主进程 6.8% +
+relay 1.8%）。</p>
+<blockquote>
+<p><code>dumpsys cpuinfo</code> 是滞后窗口：改完时间它还会短暂显示
+38%，因为窗口里混着修正前的异常段，等窗口滚过去就正常了。</p>
+</blockquote>
+<p><strong>这条值得单独记住</strong>：任何「网络异常 + CPU
+飙高」的现场，先 <code>date</code> 一下，能省掉大半天。</p>
+<h3 id="还在刷白名单没生效vpn-其实是全局-tun">10.3 502
+还在刷：白名单没生效，VPN 其实是全局 TUN</h3>
+<p>时间只解决了 TLS，<code>502</code> 依旧每 5 秒一条。先看 relay
+的实际参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 cat /proc/&lt;relay_pid&gt;/cmdline&quot;</span></span><br><span class="line"><span class="comment"># libcarvpnrelay.so 8101 127.0.0.1 54744 &lt;uuid&gt; &lt;uuid&gt; 114.114.114.114,... &lt;handle&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>47.92.44.196:8443</code> 是某个客户端经 relay
+请求的目标地址。用 iptables 的 owner 日志把连接归到 UID：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 iptables -t mangle -I OUTPUT -p tcp --dport 8443 \</span></span><br><span class="line"><span class="string">  -j LOG --log-uid --log-prefix &#x27;VPN8443 &#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>等下一次请求，看 <code>dmesg</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VPN8443 IN= OUT=tun0 SRC=26.26.26.1 DST=47.92.44.196</span><br><span class="line">  PROTO=TCP SPT=56088 DPT=8443 ... UID=10023 GID=10023</span><br></pre></td></tr></table></figure>
+<p>UID <code>10023</code> 是车机自带的 TXZ 语音助手：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 grep &#x27; 10023 &#x27; /data/system/packages.list&quot;</span></span><br><span class="line"><span class="comment"># com.txznet.txz 10023 ...</span></span><br></pre></td></tr></table></figure>
+<h3 id="反编译确认addallowedapplication-在这台-rom-上没生效">10.4
+反编译确认：<code>addAllowedApplication</code> 在这台 ROM 上没生效</h3>
+<p>jadx 打开
+<code>com.tvpn.client</code>，<code>EsimVpnService.java</code>
+里明明写了白名单：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">VpnService.<span class="type">Builder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VpnService</span>.Builder(<span class="built_in">this</span>)</span><br><span class="line">        .setSession(<span class="string">&quot;car-esim-vpn&quot;</span>)</span><br><span class="line">        .addAddress(<span class="string">&quot;26.26.26.1&quot;</span>, <span class="number">32</span>)</span><br><span class="line">        .addDnsServer(<span class="string">&quot;26.26.26.2&quot;</span>)</span><br><span class="line">        .addRoute(<span class="string">&quot;0.0.0.0&quot;</span>, <span class="number">0</span>)</span><br><span class="line">        .setMtu(<span class="number">1400</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (String pkg : whitelist) &#123;</span><br><span class="line">    builder.addAllowedApplication(pkg);   <span class="comment">// 本意：只代理白名单 App</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>UI 文案也写着「至少填写一个要代理的包名」，语义确实是
+allowlist。但实机 <code>dumpsys connectivity</code> 显示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Routes: [0.0.0.0/0 -&gt; 0.0.0.0 tun0]</span><br></pre></td></tr></table></figure>
+<p>也就是 <strong>全局 TUN</strong>。于是不在白名单里的 TXZ
+语音助手也被卷进隧道：它连自己的国内服务器
+<code>47.92.44.196:8443</code>，流量被送到海外出口；海外出口回不来这个国内地址，就返回
+<code>502 Bad Gateway</code>，客户端每 5 秒重试一次。</p>
+<h3 id="修复给目标地址加一条更高优先级的策略路由">10.5
+修复：给目标地址加一条更高优先级的策略路由</h3>
+<p>不跟 ROM 的 VPN 行为较劲，直接让这个目标地址绕过 tun0、走
+<code>wlan0</code> 直连：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 ip rule add to 47.92.44.196/32 table wlan0 priority 9000&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 ip rule | grep 47.92&quot;</span></span><br><span class="line"><span class="comment"># 9000: from all to 47.92.44.196 lookup wlan0</span></span><br></pre></td></tr></table></figure>
+<p>优先级 <code>9000</code> 必须小于 VPN 自己用的
+<code>10000/12000</code>，否则不生效。规则只命中这一个
+<code>/32</code>，其他流量不受影响。</p>
+<h3 id="看门狗防止-vpn-重启把规则清掉">10.6 看门狗：防止 VPN
+重启把规则清掉</h3>
+<p>VPN 重连或设备重启后 <code>ip rule</code> 可能被清空，所以挂一个 30
+秒轮询的看门狗（<code>/data/local/tmp/tvpn_bypass_watchdog.sh</code>）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line">LOG=/data/local/tmp/tvpn_bypass.log</span><br><span class="line">LOCK=/data/local/tmp/tvpn_bypass.lock</span><br><span class="line">TARGET=47.92.44.196</span><br><span class="line">INTERVAL=<span class="variable">$&#123;TVPN_BYPASS_INTERVAL:-30&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">log</span></span>() &#123; <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date &#x27;+%F %T&#x27;)</span> tvpn-bypass: $*&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$LOG</span>&quot;</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 单实例锁</span></span><br><span class="line"><span class="keyword">if</span> ! <span class="built_in">mkdir</span> <span class="string">&quot;<span class="variable">$LOCK</span>&quot;</span> 2&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">    old=$(<span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$LOCK</span>/pid&quot;</span> 2&gt;/dev/null)</span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$old</span>&quot;</span> ] &amp;&amp; <span class="built_in">kill</span> -0 <span class="string">&quot;<span class="variable">$old</span>&quot;</span> 2&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;already running (pid <span class="variable">$old</span>)&quot;</span>; <span class="built_in">exit</span> 0</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">rm</span> -rf <span class="string">&quot;<span class="variable">$LOCK</span>&quot;</span>; <span class="built_in">mkdir</span> <span class="string">&quot;<span class="variable">$LOCK</span>&quot;</span> 2&gt;/dev/null || <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">echo</span> $$ &gt; <span class="string">&quot;<span class="variable">$LOCK</span>/pid&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span> <span class="string">&quot;start (pid $$, interval=<span class="variable">$&#123;INTERVAL&#125;</span>s, target=<span class="variable">$TARGET</span>)&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> ! ip rule 2&gt;/dev/null | grep -q <span class="string">&quot;<span class="variable">$TARGET</span>&quot;</span>; <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> ip rule add to <span class="string">&quot;<span class="variable">$TARGET</span>/32&quot;</span> table wlan0 priority 9000 2&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">            <span class="built_in">log</span> <span class="string">&quot;rule added&quot;</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">log</span> <span class="string">&quot;rule add failed&quot;</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">sleep</span> <span class="string">&quot;<span class="variable">$INTERVAL</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>部署与启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb push tvpn_bypass_watchdog.sh /data/local/tmp/</span><br><span class="line">adb shell <span class="string">&quot;su 0 chmod 755 /data/local/tmp/tvpn_bypass_watchdog.sh&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 nohup /system/bin/sh /data/local/tmp/tvpn_bypass_watchdog.sh &gt;/dev/null 2&gt;&amp;1 &amp;&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="结果与边界">10.7 结果与边界</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>指标</th>
+<th>修复前</th>
+<th>修复后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>502 Bad Gateway</code></td>
+<td>每 5 秒 1 条</td>
+<td>30 秒 0 条</td>
+</tr>
+<tr>
+<td><code>47.92.44.196</code> 出接口</td>
+<td><code>26.26.26.1 → 47.92.44.196</code>（tun0）</td>
+<td><code>10.73.250.186 → 47.92.44.196</code>（wlan0）</td>
+</tr>
+<tr>
+<td>TVPN 短窗口 CPU</td>
+<td>174%</td>
+<td>约 8.6%</td>
+</tr>
+<tr>
+<td>线程数</td>
+<td>104</td>
+<td>进程重启后回落</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>边界</strong>：这次修复的目标是<strong>消掉 502
+日志与异常重试</strong>。TXZ
+的服务器从车机网络直连仍可能超时（<code>SYN_SENT</code>）——那是它自己的服务器可达性问题，与
+VPN 无关。</p>
+</blockquote>
+<p>关于白名单：排查中一度把 <code>com.txznet.txz</code> 写进
+<code>whitelist_prefs.xml</code>，确认其语义是
+allowlist、且在本机不生效后已恢复原值：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;raw&quot;</span>&gt;</span>com.mmbox.xbrowser,org.smarttube.stable<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>备份留在 <code>/data/local/tmp/whitelist_prefs.xml.bak</code>。</p>
+<hr />
+<h2 id="车机实战二smarttube-的收音机杂音">11. 车机实战（二）：SmartTube
+的「收音机杂音」</h2>
+<h3 id="现象-1">11.1 现象</h3>
+<p>SmartTube（<code>org.smarttube.stable</code>
+v32.71）播放视频时持续有「吱吱」底噪，像收音机没台时的沙沙声；其他应用不明显。</p>
+<h3 id="别急着怀疑硬件先看音频图">11.2 别急着怀疑硬件，先看音频图</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 dumpsys media.audio_flinger&quot;</span></span><br></pre></td></tr></table></figure>
+<p>关键片段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Output thread ... (MIXER):</span><br><span class="line">  Sample rate: 48000 Hz</span><br><span class="line">  Output device: 0x8 (WIRED_HEADPHONE)</span><br><span class="line">  Tracks of which 1 are active</span><br><span class="line">    Client 1669  Fmt PCM16  SRate 44100</span><br><span class="line">  1 Effect Chains</span><br><span class="line">    Effect ID 51:</span><br><span class="line">      UUID: FA415329-2034-4BEA-B5DC-5B381C8D1E2C</span><br><span class="line">      name: Loudness Enhancer</span><br><span class="line">      Clients: Pid 1669</span><br></pre></td></tr></table></figure>
+<p>三条信息：</p>
+<ul>
+<li>SmartTube 输出 <strong>44.1 kHz</strong>，系统 HAL 是 48
+kHz（正常重采样）；</li>
+<li>没有 underrun（<code>partial=0 empty=0</code>），不是缓冲饿死；</li>
+<li>SmartTube <strong>自己挂了一个 Loudness Enhancer</strong>。</li>
+</ul>
+<h3 id="反编译定位15.6-db-的自动增益">11.3 反编译定位：+15.6 dB
+的自动增益</h3>
+<p>jadx 找到 <code>VolumeBooster</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// com.liskovsoft.smartyoutubetv2.common.exoplayer.other.VolumeBooster</span></span><br><span class="line"><span class="type">double</span> <span class="variable">gainMb</span> <span class="operator">=</span> <span class="number">20</span> * Math.log10(mVolume * <span class="number">3</span>) * <span class="number">100</span>;</span><br><span class="line">mBooster.setTargetGain((<span class="type">int</span>) gainMb);</span><br></pre></td></tr></table></figure>
+<p>再看调用处 <code>ExoPlayerInitializer.setupVolumeBoost()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> <span class="variable">volume</span> <span class="operator">=</span> mPlayerTweaksData.isPlayerAutoVolumeEnabled()</span><br><span class="line">        ? mPlayerData.getPlayerVolume() * <span class="number">2.0f</span></span><br><span class="line">        : mPlayerData.getPlayerVolume();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (volume &gt; <span class="number">1f</span> &amp;&amp; Build.VERSION.SDK_INT &gt;= <span class="number">19</span>) &#123;</span><br><span class="line">    mVolumeBooster = <span class="keyword">new</span> <span class="title class_">VolumeBooster</span>(<span class="literal">true</span>, volume, player);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而 <code>PlayerTweaksData</code> 里
+<code>Auto volume adjustment</code> 的默认值是 <code>true</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mIsPlayerAutoVolumeEnabled = Helpers.parseBoolean(split, <span class="number">40</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<p>按默认值算：<code>volume = 1.0 × 2.0 = 2.0</code>，<code>gain = 20·log10(2.0 × 3) ≈ +15.6 dB</code>。</p>
+<p>车机本身有功放，这 15.6 dB
+的额外增益把底噪和量化噪声一起放大——听感就是「收音机杂音」。<strong>不是喇叭，不是解码器，是音效链。</strong></p>
+<h3 id="修复">11.4 修复</h3>
+<p>界面路径（推荐）：<strong>SmartTube 设置 → Player tweaks → Auto
+volume adjustment → 关闭</strong>。<br />
+或者把播放器音量压到 <strong>50% 以下</strong>，因为触发条件是
+<code>volume × 2 &gt; 1</code>。</p>
+<p>本次直接改配置。目标文件
+<code>/data/data/org.smarttube.stable/files/app_prefs/video_player_tweaks_data</code>，是以
+<code>%OB%</code> 分隔的 63 字段文件，索引 40 即
+<code>player_auto_volume</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 sh -c &#x27;</span></span><br><span class="line"><span class="string">F=/data/data/org.smarttube.stable/files/app_prefs/video_player_tweaks_data</span></span><br><span class="line"><span class="string">am force-stop org.smarttube.stable</span></span><br><span class="line"><span class="string">cp -p \$F /data/local/tmp/video_player_tweaks_data.bak</span></span><br><span class="line"><span class="string">out=\$(busybox awk -F\&quot;%OB%\&quot; \&quot;BEGIN&#123;OFS=\\\&quot;%OB%\\\&quot;&#125;&#123;if(NF&gt;=41)\\\$41=\\\&quot;false\\\&quot;;print&#125;\&quot; \$F)</span></span><br><span class="line"><span class="string">printf \&quot;%s\&quot; \&quot;\$out\&quot; &gt; \$F</span></span><br><span class="line"><span class="string">chown u0_a69:u0_a69 \$F</span></span><br><span class="line"><span class="string">chmod 600 \$F</span></span><br><span class="line"><span class="string">&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>改完重启 SmartTube，验证音效链是否还在：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 dumpsys media.audio_flinger | grep -c &#x27;effects for session&#x27;&quot;</span></span><br><span class="line"><span class="comment"># 0</span></span><br></pre></td></tr></table></figure>
+<h3 id="结果">11.5 结果</h3>
+<ul>
+<li>音频图里 <strong>0 个 Effect
+Chain</strong>，<code>LoudnessEnhancer</code> 不再挂载；</li>
+<li>44.1 kHz 直接混音到 48 kHz 输出，无额外增益；</li>
+<li>主观听感：杂音从「明显」降到「很细微」。</li>
+</ul>
+<p>配置备份：<code>/data/local/tmp/video_player_tweaks_data.bak</code>。</p>
+<hr />
+<h2 id="可复用的排查命令">12. 可复用的排查命令</h2>
+<p><strong>CPU / 线程</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 dumpsys cpuinfo&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 top -t -n 2 -d 2 -m 25&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 cat /proc/&lt;pid&gt;/stat&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>定位某个端口的归属 UID</strong>（VPN / TProxy 场景比
+<code>netstat</code> 的 UID 字段更可靠）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 iptables -t mangle -I OUTPUT -p tcp --dport 8443 \</span></span><br><span class="line"><span class="string">  -j LOG --log-uid --log-prefix &#x27;VPN8443 &#x27;&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 dmesg | grep VPN8443&quot;</span></span><br><span class="line"><span class="comment"># 用完删掉，别长期挂着刷 dmesg</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 iptables -t mangle -D OUTPUT -p tcp --dport 8443 \</span></span><br><span class="line"><span class="string">  -j LOG --log-uid --log-prefix &#x27;VPN8443 &#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>分流是否真的生效</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 ip rule&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 ip route show table all&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 dumpsys connectivity | grep -i vpn&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>音频图</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell <span class="string">&quot;su 0 dumpsys media.audio_flinger&quot;</span></span><br><span class="line">adb shell <span class="string">&quot;su 0 dumpsys audio&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>反编译</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jadx -d out --no-res base.apk</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="结论与遗留">13. 结论与遗留</h2>
 <p>已经跑通的闭环：自研 240KB 客户端 + 按应用分流 + 节点接入 +
 开机自启/保活/UID
 重注册；广告包持久压制；前贴片运行时拦截；桌面/内存治理；SmartTube 与 IG
 适配；车机部署与上游切换。</p>
+<p>车机端的两个线上故障也已闭环：TVPN 502（RTC 校时 +
+目标地址策略路由例外 + 看门狗）与 SmartTube 底噪（关闭 Auto volume
+adjustment，拆掉 LoudnessEnhancer）。</p>
 <p>仍未覆盖：</p>
 <ul>
 <li>节点故障切换靠人工固定节点，未做自动降级；</li>
@@ -714,8 +969,13 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 <li><code>ottstatsv2</code> 判定不可压制，保持启用；</li>
 <li>厂商 OTA 可能重置 <code>homewhitelist</code>、覆盖
 <code>/system</code> 下的开机钩子符号链接，升级后需复查。</li>
+<li>车机 RTC 断电后极易回到 2007 年，需要每次开机校时（或加开机
+<code>ntpdate</code>），否则 TLS 全挂、CPU 再飙一次；</li>
+<li>车机上的 <code>addAllowedApplication</code> 不可靠，502
+修复本质是「按目标地址打补丁」——一旦语音助手换服务器地址，看门狗里的
+<code>TARGET</code> 要同步改。</li>
 </ul>
-<h2 id="安全红线">11. 安全红线</h2>
+<h2 id="安全红线">14. 安全红线</h2>
 <ul>
 <li>车机 <code>adb root</code> 开箱即用——<strong>任何能连上 adb
 的人直接就是 uid 0</strong>，不用的关掉 USB 调试；</li>
@@ -724,6 +984,8 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 <li><code>usrchan</code>
 口令可由序列号推导，等同厂商后门，不要把设备放到不可信网络；</li>
 <li>订阅地址、节点域名即等同凭据，一律不写入文档与仓库。</li>
+<li><code>iptables -j LOG --log-uid</code>
+调试规则用完必须删，否则持续刷 <code>dmesg</code> 并消耗存储。</li>
 </ul>
 <blockquote>
 <p>完整版技术报告（含全部脚本、usrchan 反汇编、广告链路抓包与 bootloader
@@ -755,7 +1017,7 @@ RX 513KB、<code>eth0</code> RX 0KB，确认全部走 WiFi；</li>
 </div>
 
           <div class="post-tags">
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-Android-%E6%9C%BA%E9%A1%B6%E7%9B%92-%E5%88%9B%E7%BB%B4Q6011-VpnService-TVPN-SmartTube-%E5%8E%BB%E5%B9%BF%E5%91%8A-frida-%E8%BD%A6%E6%9C%BA-%E8%B0%83%E6%B5%8B%E5%B7%A5%E5%85%B7-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 调测工具, 折腾记录</a>
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B-Android-%E6%9C%BA%E9%A1%B6%E7%9B%92-%E5%88%9B%E7%BB%B4Q6011-VpnService-TVPN-SmartTube-%E5%8E%BB%E5%B9%BF%E5%91%8A-frida-%E8%BD%A6%E6%9C%BA-%E8%B0%83%E6%B5%8B%E5%B7%A5%E5%85%B7-%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%95-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C-iptables-%E7%AD%96%E7%95%A5%E8%B7%AF%E7%94%B1-%E9%9F%B3%E9%A2%91%E8%B0%83%E4%BC%98-RTC/" rel="tag"><i class="fa fa-tag"></i> 逆向工程, Android, 机顶盒, 创维Q6011, VpnService, TVPN, SmartTube, 去广告, frida, 车机, 调测工具, 折腾记录, 网络排障, iptables, 策略路由, 音频调优, RTC</a>
           </div>
 
         
