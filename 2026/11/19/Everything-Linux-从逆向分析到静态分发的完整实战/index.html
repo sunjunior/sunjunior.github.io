@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Everything-Linux：从逆向分析到静态分发的完整实战">
+<meta property="og:url" content="https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-19T02:45:00.000Z">
+<meta property="article:modified_time" content="2026-11-19T15:31:10.540Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="Everything">
+<meta property="article:tag" content="GTK">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="inotify">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="静态链接">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/","path":"2026/11/19/Everything-Linux-从逆向分析到静态分发的完整实战/","title":"Everything-Linux：从逆向分析到静态分发的完整实战"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Everything-Linux：从逆向分析到静态分发的完整实战 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-text">动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E9%80%86%E5%90%91%E7%A0%94%E7%A9%B6everything-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C"><span class="nav-text">一、逆向研究：Everything
+到底怎么工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%A6%82%E8%A7%88"><span class="nav-text">1.1 二进制概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%9D%A5%E6%BA%90mft-usn"><span class="nav-text">1.2 索引来源：MFT + USN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BC%95%E6%93%8E%E5%8F%8D%E7%BC%96%E8%AF%91%E5%AE%9E%E9%94%A4"><span class="nav-text">1.3 查询引擎：反编译实锤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%88%A4%E6%96%AD"><span class="nav-text">二、可行性判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-text">三、技术选型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="nav-text">四、软件架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-text">4.1 工程结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-text">4.2 分层与数据流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">4.3 关键数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">五、核心实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BC%95%E6%93%8E"><span class="nav-text">5.1 查询引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inotify-%E5%AE%9E%E6%97%B6%E5%A2%9E%E9%87%8F%E6%9B%BF%E4%BB%A3-usn"><span class="nav-text">5.2 inotify 实时增量（替代 USN）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E9%87%8F%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-text">5.3 增量内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E4%B8%8E-statx"><span class="nav-text">5.4 属性过滤与 statx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipc-%E5%AE%88%E6%8A%A4-cli-gui"><span class="nav-text">5.5 IPC &#x2F; 守护 &#x2F; CLI &#x2F; GUI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95"><span class="nav-text">5.6 结果右键菜单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%88%90%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="nav-text">开发成果展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="nav-text">六、踩坑记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3"><span class="nav-text">七、部署文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA"><span class="nav-text">7.1 构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9"><span class="nav-text">7.2 产物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">7.3 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%8E%E6%9F%A5%E8%AF%A2"><span class="nav-text">7.4 运行与查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E6%80%A7%E8%83%BD%E9%AA%8C%E8%AF%81"><span class="nav-text">八、性能验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%E4%B8%8E%E5%90%8E%E7%BB%AD"><span class="nav-text">九、当前状态与后续</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-text">结语</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Everything-Linux：从逆向分析到静态分发的完整实战 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Everything-Linux：从逆向分析到静态分发的完整实战
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-11-19 10:45:00 / 修改时间：23:31:10" itemprop="dateCreated datePublished" datetime="2026-11-19T10:45:00+08:00">2026-11-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%8A%98%E8%85%BE/" itemprop="url" rel="index"><span itemprop="name">技术折腾</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="动机">动机</h2>
+<p>voidtools 的 Everything 是 Windows
+上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于<strong>直接读
+NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal
+做增量更新</strong>——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。</p>
+<p>Linux 上没有 MFT，也没有 USN Journal
+这种稳定、按卷、可持久读取的变更日志。能不能复刻？本文记录完整过程：<strong>逆向研究
+→ 可行性判断 → 技术选型 → 架构设计 → 分阶段实现 → 性能验证 → 静态分发 →
+部署文档</strong>。</p>
+<p>代码全部在
+<code>~/work/everything-research/everything-linux/</code>，研究过程文件在同目录，最终产物在
+<code>dist/</code>。</p>
+<h2 id="一逆向研究everything-到底怎么工作">一、逆向研究：Everything
+到底怎么工作</h2>
+<p>样本是 <code>Everything-1.4.1.1032.x64.zip</code>（x86-64 PE32+
+GUI，主程序 2.27 MB，SHA-256 <code>f191f756…512e36</code>），配一个 1 MB
+的 <code>Everything.lng</code>。用 Ghidra 12.1.2 做静态分析（REA
+工具链）。</p>
+<h3 id="二进制概览">1.1 二进制概览</h3>
+<ul>
+<li>6 个段，<code>.text</code> 约 1.77 MB；识别出 3070 个函数、4841
+个字符串；</li>
+<li>引用 <code>Everything.pdb</code>（GUID <code>d13f8d42-…</code>），但
+PDB 未附带，函数名被剥离；</li>
+<li>然而<strong>调试日志字符串泄漏了内部模块名</strong>：<code>.\src\db_query.c</code>、<code>.\src\ntfs.c</code>、<code>db_query_search</code>、<code>_db_query_term_parse_all</code>、<code>db_sort</code>、<code>_db_rebuild_thread_proc</code>
+等，信息量极大。</li>
+</ul>
+<p><code>Everything.lng</code> 也不是普通文本：开头 8 字节头之后是
+<strong>6 个 bzip2 流</strong>，解出来 400 KB 的多语言 UI
+文案，里面直接写着索引阶段的进度提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">扫描卷 → 为目录分配索引 → 按 FRN 排序目录索引 → 父 FRN 转目录指针</span><br><span class="line">→ 移除孤儿目录 → 排序目录名 → 分配文件索引 → FRN 转目录指针</span><br><span class="line">→ 移除孤儿文件 → 排序文件名</span><br></pre></td></tr></table></figure>
+<h3 id="索引来源mft-usn">1.2 索引来源：MFT + USN</h3>
+<p>字符串证据非常直白：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ntfs_enum_mft</span><br><span class="line">MFT USA Count / USA Offset / mapping_pairs_offset / lowest_vcn / highest_vcn</span><br><span class="line">FSCTL_QUERY_USN_JOURNAL / FSCTL_CREATE_USN_JOURNAL / FSCTL_DELETE_USN_JOURNAL</span><br><span class="line">FSCTL_READ_FILE_USN_DATA   (ReFS)</span><br><span class="line">USN_RECORD %I64u, FLAGS %08x, PARENT FRN %016I64x, FRN %016I64x, reason %s, filename %T</span><br><span class="line">_db_monitor_ntfs_process_usn_records_thread_proc</span><br></pre></td></tr></table></figure>
+<p>结论：<strong>自己解析 NTFS MFT</strong>，每个文件/目录对应一个
+FRN；后台线程持续读 USN 日志，按 CREATE/DELETE/RENAME 等 reason
+增量更新内存库；同时支持 ReFS（FRN 是 128 位）。内容不建索引，搜索时走
+Windows <code>IFilter</code> 按需读取。</p>
+<h3 id="查询引擎反编译实锤">1.3 查询引擎：反编译实锤</h3>
+<p>沿字符串 <code>term %p, flags: %04x, next: %p, notnext: %p</code>
+找到 xref，定位到 <code>FUN_1400175a0</code>（0x1400175a0，7129
+字节），反编译 1264
+行伪代码。它不是分词器，而是<strong>搜索计划编译器</strong>：</p>
+<ul>
+<li>真正的分词由 <code>FUN_140065870</code>
+完成，分别编译”搜索串”和”过滤串”；</li>
+<li>每个 term
+是一个结构体：<code>[0]=next</code>、<code>[1]=notnext</code>、<code>[3]=文件求值节点</code>、<code>[4]=目录求值节点</code>、<code>[5]=flags</code>；</li>
+<li>节点通过 <code>+8</code>（next，AND 链）和
+<code>+0x10</code>（notnext，NOT/OR
+分支）接线，形成<strong>线程化布尔表达式图</strong>；</li>
+<li>不同 flag（大小写/路径/变音/全词/正则/通配符）映射到不同的数值
+opcode，也就是”为每种匹配模式预编译专用求值器”；</li>
+<li>特殊函数前缀
+<code>root:</code>、<code>empty:</code>、<code>dupe:</code>、<code>sizedupe:</code>
+等各自对应 opcode。</li>
+</ul>
+<p>最关键的一条旁证来自帮助文案：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The search performance of Everything is reduced when sorting by size/date/attributes/path/extension.</span><br></pre></td></tr></table></figure>
+<p>说明默认按名称排序时<strong>不需要
+sort</strong>，结果就是预排序数组的一次线性过滤；按其他属性排序才要额外收集信息并排序。这就是”输入即出结果”的工程本质：<strong>用建索引时的
+O(n log n) 换查询时的 O(n) 顺序扫描</strong>。</p>
+<h2 id="二可行性判断">二、可行性判断</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Windows 机制</th>
+<th>Linux 现状</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MFT（固定 1024B 记录）</td>
+<td>ext4/XFS/Btrfs 元数据布局各异且不稳定</td>
+<td>无法等价，退化为并行目录树遍历</td>
+</tr>
+<tr>
+<td>USN Journal（持久、按卷）</td>
+<td>inotify 非持久、每目录一个 watch、队列可溢出</td>
+<td>用 inotify + 快照 + 周期对账组合替代</td>
+</tr>
+<tr>
+<td>FRN 稳定标识</td>
+<td><code>st_ino</code>+<code>st_dev</code>
+可用但不跨挂载/不保证持久</td>
+<td>自建 slot 作为身份</td>
+</tr>
+</tbody>
+</table>
+<p><strong>能复刻的是价值最高的部分</strong>：查询引擎、数据模型、搜索语法、持久化
+DB、IPC/HTTP
+接口——这些与操作系统无关。代价转移到首次全量扫描时间和事件可靠性上。</p>
+<h2 id="三技术选型">三、技术选型</h2>
+<p>选 <strong>Rust 1.99（edition 2024）</strong>，全部依赖离线缓存（本机
+711 个 crate）：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>领域</th>
+<th>选择</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>并行遍历/排序</td>
+<td><code>ignore</code>/<code>rayon</code></td>
+<td>8 核并行 <code>par_sort_unstable</code></td>
+</tr>
+<tr>
+<td>文件监听</td>
+<td><strong>裸 libc inotify 系统调用</strong></td>
+<td><code>inotify</code>/<code>notify</code> crate 未缓存；裸调用可控
+cookie/overflow/watch 管理</td>
+</tr>
+<tr>
+<td>无锁查询</td>
+<td><code>arc-swap</code> + <code>Arc&lt;IndexSnapshot&gt;</code></td>
+<td>查询线程全程不持锁</td>
+</tr>
+<tr>
+<td>并发映射</td>
+<td><code>dashmap</code> + <code>parking_lot</code></td>
+<td>增量更新查表</td>
+</tr>
+<tr>
+<td>正则/预过滤</td>
+<td><code>regex</code> + <code>aho-corasick</code></td>
+<td>预编译求值器</td>
+</tr>
+<tr>
+<td>持久化</td>
+<td>自定义二进制 + <code>zstd</code></td>
+<td>比 bzip2 快，<code>.tmp</code> 原子替换</td>
+</tr>
+<tr>
+<td>CLI</td>
+<td>手写参数解析</td>
+<td>clap derive 依赖的 <code>clap_derive</code>/<code>anstream</code>
+未缓存（踩坑见后）</td>
+</tr>
+<tr>
+<td>GUI</td>
+<td><strong>GTK3（<code>gtk</code> 0.18）</strong></td>
+<td>本机 gtk+-3.0=3.24.52 稳定；Qt crate 未缓存；Tauri/webkit 太重</td>
+</tr>
+</tbody>
+</table>
+<p>为什么不选
+Go（未安装）、Python（内存/性能不适合百万级常驻索引）、C++（开发效率与内存安全代价大）。</p>
+<h2 id="四软件架构">四、软件架构</h2>
+<h3 id="工程结构">4.1 工程结构</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">everything-linux/</span><br><span class="line">├── Cargo.toml                      workspace 统一依赖</span><br><span class="line">├── build-static.sh                 静态/分发构建</span><br><span class="line">├── crates/</span><br><span class="line">│   ├── everything_core/            纯引擎库（无 UI 依赖）</span><br><span class="line">│   │   └── src/</span><br><span class="line">│   │       ├── model.rs            SlotId / EntryMeta / QueryOptions</span><br><span class="line">│   │       ├── store.rs            SoA Store、字符串池、freelist、DashMap</span><br><span class="line">│   │       ├── index.rs            IndexSnapshot + 增量 apply_changes</span><br><span class="line">│   │       ├── walker.rs           并行全树遍历 + statx 时间</span><br><span class="line">│   │       ├── query/&#123;lexer,parser,eval,filters&#125;.rs</span><br><span class="line">│   │       ├── monitor.rs          裸 libc inotify + 事件通道</span><br><span class="line">│   │       ├── persist.rs          zstd 快照 + ArcSwap 发布</span><br><span class="line">│   │       ├── ipc.rs              Unix socket 协议 + 守护拉起</span><br><span class="line">│   │       ├── engine.rs           编排：扫描/重建/tick/事件应用</span><br><span class="line">│   │       └── config.rs           TOML 配置</span><br><span class="line">│   ├── everythingd/                守护进程：索引 + inotify + IPC server</span><br><span class="line">│   ├── everything/                 CLI 客户端</span><br><span class="line">│   └── everything-gtk/             GTK3 GUI（复用 core）</span><br><span class="line">├── docs/                           BENCHMARKS / INOTIFY_DESIGN / GUI_AND_BUILD</span><br><span class="line">└── dist/                           最终产物（static-pie + 小 GUI）</span><br></pre></td></tr></table></figure>
+<h3 id="分层与数据流">4.2 分层与数据流</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[walker 并行遍历] ─┐</span><br><span class="line">                   ├─→ [Store: SoA + 字符串池] ─→ [IndexSnapshot: 多排序数组] ─→ [ArcSwap 原子发布]</span><br><span class="line">[monitor inotify] ─┘                                        │</span><br><span class="line">      ▲                                                     ▼</span><br><span class="line">      │ 事件合并/溢出重扫                           [Query Engine: term 图 + 特化求值]</span><br><span class="line">      │                                                     │</span><br><span class="line">[zstd 快照] ←───────────────────────────────── [CLI / GTK GUI / IPC]</span><br></pre></td></tr></table></figure>
+<p>关键点：<strong>索引用 <code>ArcSwap</code>
+原子发布不可变快照</strong>，查询线程只持有
+<code>Arc&lt;IndexSnapshot&gt;</code>，零锁扫描——这正是 Everything
+速度的核心。</p>
+<h3 id="关键数据结构">4.3 关键数据结构</h3>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">SlotId</span> = <span class="type">u32</span>;</span><br><span class="line"><span class="comment">// 条目身份用 (父槽, 名字)，而不是 (dev,ino)：</span></span><br><span class="line"><span class="comment">// inotify 事件给的是 wd(=目录) + name；硬链接一个 inode 多名字需要多槽位。</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EntryKey</span> &#123; parent: SlotId, name_off: <span class="type">u32</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EntryMeta</span> &#123; ino, dev, kind, size, mtime, created, accessed, flags &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SoA 布局（缓存友好）</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Store</span> &#123;</span><br><span class="line">    name_pool: <span class="type">Vec</span>&lt;<span class="type">u8</span>&gt;, name_offs: <span class="type">Vec</span>&lt;<span class="type">u32</span>&gt;, parents: <span class="type">Vec</span>&lt;SlotId&gt;,</span><br><span class="line">    metas: <span class="type">Vec</span>&lt;EntryMeta&gt;, live: <span class="type">Vec</span>&lt;<span class="type">bool</span>&gt;, free: <span class="type">Vec</span>&lt;SlotId&gt;,</span><br><span class="line">    by_key: DashMap&lt;EntryKey, SlotId&gt;, children: HashMap&lt;SlotId, <span class="type">Vec</span>&lt;SlotId&gt;&gt;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>IndexSnapshot</code> 维护
+<code>by_name</code>（折叠名排序）、<code>by_name_cs</code>（原名排序）、<code>by_parent</code>。路径不常驻，查询时沿
+parent 链回溯 + 根路径前缀拼接并缓存——因此 <code>path:</code>
+查询明显更慢，与 Everything 的观察一致。</p>
+<h2 id="五核心实现">五、核心实现</h2>
+<h3 id="查询引擎">5.1 查询引擎</h3>
+<p>词法/语法分析把查询编译成
+<code>Expr::{Term, And, Or, Not}</code>：<code>空格 = AND</code>、<code>| = OR</code>、<code>! = NOT</code>、支持括号；前缀
+<code>startwith:</code> <code>endwith:</code> <code>regex:</code>
+<code>path:</code> <code>file:</code> <code>folder:</code>
+<code>case:</code> <code>wholeword:</code> 等。每个 term 编译为专用闭包
+<code>Fn(&amp;Ctx)-&gt;bool</code>（预编译 regex、通配符转
+regex、折叠名字节匹配），在 <code>by_name</code> 上单次顺序扫描 +
+early-out。默认结果沿用索引顺序，所以”按名称排序”是免费的。</p>
+<h3 id="inotify-实时增量替代-usn">5.2 inotify 实时增量（替代 USN）</h3>
+<p>事件路径：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">inotify fd (非阻塞) → reader 线程解析 inotify_event(wd/mask/cookie/name)</span><br><span class="line">   ├─ MOVED_FROM(cookie) → 暂存      ├─ MOVED_TO(cookie) → Rename&#123;from,to&#125;</span><br><span class="line">   ├─ CREATE/IS_DIR → CreateDir      ├─ DELETE/DELETE_SELF → Delete</span><br><span class="line">   ├─ MODIFY/CLOSE_WRITE/ATTRIB → Modify（重取 size/mtime）</span><br><span class="line">   ├─ IGNORED/MOVE_SELF → Rescan（重挂 watch + 子树对账）</span><br><span class="line">   └─ IN_Q_OVERFLOW/UNMOUNT → Overflow（全量重建）</span><br><span class="line">        ↓ crossbeam channel → Engine::tick() → 收集 changed slots → 防抖 → 增量发布</span><br></pre></td></tr></table></figure>
+<p>为什么是 inotify 而不是 fanotify：fanotify 需要
+<code>CAP_SYS_ADMIN</code>，语义是访问审计，拿不到可靠的目录项增删流；inotify
+直接给”父目录 + 名字 + cookie”，正好映射索引身份。但 inotify
+非持久、每目录一个 watch、队列可溢出，所以用<strong>快照（重启秒开）+
+溢出全量重建 + watch 失败子树对账 + 600s 周期对账</strong>兜底。</p>
+<h3 id="增量内存优化">5.3 增量内存优化</h3>
+<p>最初每次变更都全量重建：复制所有名字 + rayon 重排，10
+万条目要几十毫秒，百万级更慢。改成：</p>
+<ul>
+<li><code>IndexSnapshot</code> 的名字池/条目数组用
+<code>Arc&lt;Vec&lt;...&gt;&gt;</code> 在快照间共享；</li>
+<li>只保存<strong>变更条目的 <code>entry_overrides</code></strong>
+和追加的名字字节；</li>
+<li>二分定位旧位置、删除、按新 key 插入——不复制全量池。</li>
+</ul>
+<p>复杂度从 O(n log n) 降到 O(k·log n + 插入位移)，k 为变更条目数。用 4
+个测试对比”增量结果 ==
+全量重建结果”（插入/删除/改名/重名文件），保证正确性。</p>
+<h3 id="属性过滤与-statx">5.4 属性过滤与 statx</h3>
+<p>新增
+<code>size:</code>、<code>dm:</code>/<code>dc:</code>/<code>da:</code>、<code>ext:</code>：大小支持
+<code>b/kb/mb/gb</code> 单位和
+<code>&gt;</code>/<code>&lt;</code>/<code>..</code> 范围；日期支持
+<code>YYYY-MM-DD</code>、<code>today</code>、相对
+<code>3d/2w/1m/1y</code>；<code>created</code> 通过
+<code>libc::statx</code> 的 <code>stx_btime</code> 取得（不支持时回退
+ctime）。快照格式升到 v2，并兼容 v1 旧文件。</p>
+<h3 id="ipc-守护-cli-gui">5.5 IPC / 守护 / CLI / GUI</h3>
+<p>守护进程监听
+<code>$XDG_RUNTIME_DIR/everything-linux.sock</code>：客户端发一行 JSON
+请求，服务端回一行 JSON 头 +
+每行一个结果路径；<code>status</code>、<code>reindex</code>、<code>index add/remove</code>、<code>save</code>、<code>shutdown</code>
+都是 IPC 命令。CLI 在 socket 不存在时会从同级目录自动拉起
+<code>everythingd</code>。</p>
+<p>GTK3 GUI 通过同一个 IPC 复用核心引擎：80ms
+防抖的搜索框、结果列表、状态栏、双击用系统默认程序打开文件、结果右键菜单；搜索框在启动与窗口恢复时自动聚焦，并对缺失的输入法环境做自愈；GUI
+内嵌守护进程后单文件约 5.5 MB。</p>
+<h3 id="结果右键菜单">5.6 结果右键菜单</h3>
+<p>结果列表右键某项弹出三项菜单，对齐 Everything
+的常用操作：<strong>打开</strong>（默认程序打开，等同双击）、<strong>打开路径</strong>（打开父目录并选中该项）、<strong>复制完整路径和文件名</strong>（写入系统剪贴板）。通过
+<code>TreeView</code> 的 <code>button-press-event</code>
+命中行、选中该行后弹出 <code>GtkMenu</code>；<code>file://</code> URI
+对空格和特殊字符做百分号编码。</p>
+<h2 id="开发成果展示">开发成果展示</h2>
+<p>以下截图使用合成测试数据，不包含真实路径或个人信息；状态栏中的运行时统计信息已做马赛克处理。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">搜索结果（输入即出）</th>
+<th style="text-align: center;">属性过滤（<code>ext:md</code>）</th>
+<th style="text-align: center;">结果右键菜单</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img
+src="/images/everything-linux/01-search-results.png"
+alt="搜索结果" /></td>
+<td style="text-align: center;"><img
+src="/images/everything-linux/02-property-filter.png"
+alt="属性过滤" /></td>
+<td style="text-align: center;"><img
+src="/images/everything-linux/03-context-menu.png"
+alt="右键菜单" /></td>
+</tr>
+<tr>
+<td style="text-align: center;">文件名即时匹配</td>
+<td style="text-align: center;"><code>size:</code> / <code>dm:</code> /
+<code>ext:</code> 等过滤</td>
+<td style="text-align: center;">打开 / 打开路径 /
+复制完整路径和文件名</td>
+</tr>
+</tbody>
+</table>
+<h2 id="六踩坑记录">六、踩坑记录</h2>
+<ol type="1">
+<li><strong>clap 依赖缺失</strong>：离线环境
+<code>clap_derive</code>/<code>anstream</code>
+未缓存，改用手写参数解析，零依赖。</li>
+<li><strong>包名 <code>core</code> 冲突</strong>：crate 叫
+<code>core</code> 会遮蔽 Rust 标准库 <code>core</code>，doctest
+直接编译失败，改名为 <code>everything_core</code>。</li>
+<li><strong>防抖逻辑 bug</strong>：用”本次 tick
+是否收到事件”的局部变量判断重建，导致事件后的后续 tick
+永远不再重建。改用持久 <code>dirty</code> 标志。</li>
+<li><strong>RwLock
+自杀式死锁</strong>：<code>match slot_for_path(&amp;self.store.read(), …) { Some(s) =&gt; self.remove_subtree(s) }</code>
+中，scrutinee 的读锁在 arm 执行时仍存活，arm
+内再申请写锁直接死锁。改成先绑定变量再匹配。</li>
+<li><strong>静态链接 proc-macro</strong>：整个 workspace 设
+<code>crt-static</code> 会导致 proc-macro 无法构建；改为对最终二进制用
+<code>cargo rustc -- -C target-feature=+crt-static</code>，只对 bin
+生效。</li>
+<li><strong>GUI 移到新目录后报
+<code>IPC error: connect /tmp/...sock: 没有那个文件或目录</code></strong>：用户只拷贝了
+<code>everything-gtk</code>，同目录没有
+<code>everythingd</code>，自动拉起逻辑找不到守护进程，GUI
+随后仍继续查询、又叠了一条误导性的 connect 错误。修复：守护发现按”同目录
+→ PATH → 常见目录 →
+内嵌二进制”顺序查找；启动失败时只报一条明确错误并停止查询线程；进一步把守护进程<strong>内嵌进
+GUI</strong>，单文件即可运行。</li>
+<li><strong>大目录首次索引导致客户端启动超时</strong>：原流程先全量扫描、后绑定
+IPC socket；索引 <code>~/</code> 时扫描需要几十秒，GUI 等 socket
+超时就报错。修复：daemon <strong>先绑定 socket 并启动 server
+线程</strong>，扫描放到后台线程执行；客户端等待时间从 10s 放宽到
+30s。这样一启动就能连接，扫描在后台进行。</li>
+<li><strong>程序移动后默认索引根没跟着变</strong>：配置与快照都存在
+<code>~/.config</code>、<code>~/.cache</code>，与可执行文件位置无关，移动程序后仍索引旧目录。更隐蔽的是：GUI
+启动守护时传的是
+<code>--root &lt;GUI目录&gt;</code>，守护把它当成”用户手动指定”，于是
+<code>auto_root=false</code>，跟随规则此后永远失效；而且托盘常驻/已运行的守护不会因双击新程序而改变根。<br />
+修复：GUI/CLI 改用 <code>--frontend-exe &lt;自身路径&gt;</code>
+告诉守护”默认根跟随哪个程序”，由守护据<strong>启动程序所在目录</strong>设定默认根；程序移动到新目录后再启动会自动切换并重建索引；<strong>托盘常驻实例</strong>通过单实例
+socket 把新程序路径转发给旧实例，旧实例再让守护切根；配置记录
+<code>auto_root</code> / <code>exe_path</code>，显式 <code>roots</code>
+或 <code>index add/remove</code> 仍固定根目录。</li>
+<li><strong><code>--root</code> 被默认根覆盖</strong>：命令行显式传
+<code>--root</code> 时仍要优先于默认根。修复：守护收到命令行
+<code>--root</code> 后立即 <code>mark_manual_roots()</code>；独立运行
+<code>everythingd</code> 时默认索引其当前工作目录。</li>
+<li><strong>重复双击打开多个窗口</strong>：用专用 Unix
+socket（<code>daemon socket + ".gui"</code>）实现单实例，第二个进程发送
+<code>SHOW</code> 后以退出码 0 退出；已运行实例收到请求后
+<code>show_all()</code> +
+<code>present()</code>，隐藏到托盘的窗口也会恢复。</li>
+<li><strong>GTK3 任务栏图标</strong>：<code>gtk</code> crate 0.18 未包装
+<code>GtkStatusIcon</code>，改用 <code>gtk-sys</code> FFI 调用；GDK3 的
+<code>GdkEventButton</code> 没有 <code>click_count</code>，双击用”400ms
+内 + 位移 &lt;8px”自行判定；右键菜单含”打开界面/退出”，点窗口 X
+只隐藏到托盘，<code>app.hold()</code> 保证主循环不退出。</li>
+<li><strong>搜索框拿不到输入焦点</strong>：从托盘恢复、单实例唤起或双击启动时机不同，搜索框可能没有焦点，导致输入法不生效。修复：窗口
+show 后 <code>set_focus</code> + <code>grab_focus</code>，再用
+<code>idle_add_local_once</code>
+延迟补一次；窗口重新获得焦点（<code>focus-in-event</code>）时若搜索框未聚焦则重新抓取。</li>
+<li><strong>从 Thunar 双击启动后无法使用中文输入法</strong>：排查发现
+GUI 进程环境里完全没有 <code>GTK_IM_MODULE</code> /
+<code>XMODIFIERS</code>——启动它的 Thunar
+本身比输入法变量设置更早启动，子进程继承不到，GTK 因此不加载
+<code>im-fcitx5.so</code>（so
+库本身完好）。这不是缺库，而是启动链环境缺失，任何”老启动”的启动器都可能复现。<br />
+修复做成与文件管理器无关的两层自愈：① GTK 初始化前，若
+<code>GTK_IM_MODULE</code> 为空，扫描 <code>/proc</code> 探测运行中的
+<code>fcitx5</code>/<code>fcitx</code>/<code>ibus-daemon</code>
+并补全环境变量；② GTK 初始化后用 <code>GtkIMMulticontext</code>
+检查实际上下文，若仍是 <code>gtk-im-context-simple</code>
+说明模块未加载，则补全环境并<strong>重新 exec
+自身一次</strong>（<code>EVERYTHING_IM_REEXEC=1</code>
+防循环）。实测去掉全部 IM 环境变量、甚至故意设
+<code>gtk-im-context-simple</code>，重启后都能正常输入中文。</li>
+<li><strong>“打开路径”只打开目录、没有选中文件</strong>：最初只是用默认程序打开父目录，和
+Windows Everything 的“打开文件所在位置”不一致。修复：优先调用标准
+<code>org.freedesktop.FileManager1.ShowItems</code>（Nautilus/Dolphin/Nemo/Caja/Thunar
+4.18+ 支持），打开父目录并高亮目标；不支持时回退到
+<code>nautilus/dolphin/nemo/caja --select</code>，最后才仅打开目录。已用程序内同一调用路径验证
+Thunar 正确打开目标目录。</li>
+</ol>
+<h2 id="七部署文档">七、部署文档</h2>
+<h3 id="构建">7.1 构建</h3>
+<p>代码仓库：<code>https://github.com/sunjunior/Everything-Linux</code>（仅保留
+GitHub 默认分支
+<code>main</code>，<code>target/</code>、<code>dist/</code>
+等构建目录不入库）。</p>
+<p>GitHub Actions 在 <code>ubuntu-24.04</code> 上安装 GTK3
+开发库后自动构建 CLI / daemon / 内嵌守护的 GUI，打包上传
+<code>everything-linux-x86_64.tar.gz</code>；打 <code>v*</code>
+标签会发布到 Releases。<strong>v0.1beta 已发布</strong>（含打包交付件与
+SHA256）。</p>
+<p>本地构建：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/work/everything-research/everything-linux</span><br><span class="line">cargo <span class="built_in">test</span> --offline          <span class="comment"># 14/14 通过</span></span><br><span class="line">./build-static.sh             <span class="comment"># 产物在 dist/（CI 用 CARGO_FLAGS=&quot;--locked&quot;）</span></span><br></pre></td></tr></table></figure>
+<h3 id="产物">7.2 产物</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>文件</th>
+<th>链接</th>
+<th>大小</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dist/everything</code></td>
+<td>static-pie</td>
+<td>1.8 MB</td>
+<td>CLI，任意 x86-64 Linux 直接运行</td>
+</tr>
+<tr>
+<td><code>dist/everythingd</code></td>
+<td>static-pie</td>
+<td>4.7 MB</td>
+<td>守护进程，任意 x86-64 Linux 直接运行</td>
+</tr>
+<tr>
+<td><code>dist/everything-gtk</code></td>
+<td>动态 GTK3 + 内嵌 daemon</td>
+<td>5.5 MB</td>
+<td>GUI，单文件分发，需系统 <code>libgtk-3.so.0</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>GUI 无法现实地静态链接
+GTK（glib/gdk/pango/cairo/X11/图标主题/动态模块），所以选”静态核心 +
+复用系统 GTK”的方案。GUI 在构建时把静态 <code>everythingd</code>
+内嵌进自身，首次运行自动释放到
+<code>~/.cache/everything-linux/everythingd-&lt;hash&gt;</code> 并以 GUI
+所在目录为索引根启动：把 <code>everything-gtk</code>
+单独拷到另一台机器即可双击使用。没有 GTK3 的环境直接用 CLI。</p>
+</blockquote>
+<h3 id="配置">7.3 配置</h3>
+<p><code>~/.config/everything-linux/config.toml</code>：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">roots</span> = [<span class="string">&quot;~&quot;</span>]</span><br><span class="line"><span class="attr">exclude</span> = []</span><br><span class="line"><span class="attr">follow_symlinks</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">index_hidden</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">snapshot_path</span> = <span class="string">&quot;~/.cache/everything-linux/db.eldb&quot;</span></span><br><span class="line"><span class="attr">socket_path</span> = <span class="string">&quot;/tmp/everything-linux.sock&quot;</span></span><br><span class="line"><span class="attr">watch_enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">debounce_ms</span> = <span class="number">15</span></span><br><span class="line"><span class="attr">rescan_interval_secs</span> = <span class="number">600</span></span><br><span class="line"><span class="attr">snapshot_interval_secs</span> = <span class="number">5</span></span><br><span class="line"><span class="attr">threads</span> = <span class="number">8</span></span><br><span class="line"><span class="attr">max_results</span> = <span class="number">100000</span></span><br></pre></td></tr></table></figure>
+<h3 id="运行与查询">7.4 运行与查询</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">./dist/everythingd                       <span class="comment"># 首次全量扫描；之后从快照秒开</span></span><br><span class="line">./dist/everything status</span><br><span class="line">./dist/everything alpha</span><br><span class="line">./dist/everything <span class="string">&#x27;*.rs | *.md&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;*.tmp !keep&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;size:&gt;10mb&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;dm:&gt;2025-01-01&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;ext:rs|md&#x27;</span></span><br><span class="line">./dist/everything --path --json <span class="string">&#x27;src/main&#x27;</span> | jq .</span><br><span class="line">./dist/everything-gtk                    <span class="comment"># GUI</span></span><br></pre></td></tr></table></figure>
+<p>systemd user 服务示例：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Everything-Linux index daemon</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">ExecStart</span>=%h/opt/everything-linux/dist/everythingd</span><br><span class="line"><span class="attr">Restart</span>=<span class="literal">on</span>-failure</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=default.target</span><br></pre></td></tr></table></figure>
+<h2 id="八性能验证">八、性能验证</h2>
+<p>环境：Arch Linux x86-64，内核 7.2.9，8 核，31 GiB；数据集 100 个目录
+× 1000 文件 = 10 万文件。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子串查询 <code>file_050_0123</code></td>
+<td>引擎 3.3 ms</td>
+</tr>
+<tr>
+<td>通配符 <code>file_050_*</code></td>
+<td>引擎 8.1 ms</td>
+</tr>
+<tr>
+<td>正则 <code>file_0[0-9][0-9]_0999</code></td>
+<td>引擎 13.0 ms</td>
+</tr>
+<tr>
+<td>全路径 <code>path:dir_050</code></td>
+<td>引擎 53.3 ms</td>
+</tr>
+<tr>
+<td>按大小排序 10 万结果</td>
+<td>引擎 10.9 ms</td>
+</tr>
+<tr>
+<td>创建文件 → 查询可见（P50）</td>
+<td>约 40 ms（含 CLI 进程开销）</td>
+</tr>
+<tr>
+<td>快照加载 → socket 可用</td>
+<td>158 ms</td>
+</tr>
+<tr>
+<td>守护进程 RSS</td>
+<td>约 42 MB（约 400 B/条目）</td>
+</tr>
+</tbody>
+</table>
+<p>增量更新验证：连续创建 10 个文件，<code>full_rebuilds</code> 保持
+1（仅启动），<code>incremental_updates</code> 增加
+10——确认变更走的是增量路径。</p>
+<h2 id="九当前状态与后续">九、当前状态与后续</h2>
+<p>已完成：并行建索引、SoA
+内存索引、查询引擎（布尔/通配符/正则/大小写/全词/路径/排序）、属性过滤、zstd
+快照、inotify 实时增量 + 增量快照、IPC/守护/CLI、GTK3 GUI（托盘驻留 /
+单实例 / 结果右键菜单 / 搜索框自动聚焦 /
+输入法环境自愈）、默认索引根跟随启动程序、配置路径 <code>~</code>
+展开、单文件静态分发、GitHub Actions 自动构建、<code>v0.1beta</code>
+Release。</p>
+<p>未完成：内容搜索、HTTP/ETP
+接口、重复文件检测、<code>root:</code>/<code>empty:</code>
+特殊函数、变音符号折叠、EFU
+文件列表索引、百万级实测与进一步内存优化。</p>
+<h2 id="结语">结语</h2>
+<p>Everything
+的”魔法”其实是可以拆解的工程取舍：<strong>把慢活前置到索引阶段，查询阶段只做内存里的顺序扫描</strong>。Linux
+上虽然没有 MFT/USN，但用「并行遍历 + inotify + 快照 +
+周期对账」可以复刻出同数量级的体验。最终 CLI/daemon 做到 1.8 MB / 4.7 MB
+的静态单文件，GUI 把守护进程内嵌后约 5.5 MB
+单文件即可部署——算是一次比较舒服的”行为复刻”实践。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/" title="Everything-Linux：从逆向分析到静态分发的完整实战">https://sunjunior.github.io/2026/11/19/Everything-Linux-从逆向分析到静态分发的完整实战/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 逆向工程</a>
+              <a href="/tags/Rust/" rel="tag"><i class="fa fa-tag"></i> Rust</a>
+              <a href="/tags/Everything/" rel="tag"><i class="fa fa-tag"></i> Everything</a>
+              <a href="/tags/inotify/" rel="tag"><i class="fa fa-tag"></i> inotify</a>
+              <a href="/tags/GTK/" rel="tag"><i class="fa fa-tag"></i> GTK</a>
+              <a href="/tags/%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" rel="tag"><i class="fa fa-tag"></i> 静态链接</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/19/remote-ai-agent/" rel="prev" title="给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析">
+                  <i class="fa fa-angle-left"></i> 给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

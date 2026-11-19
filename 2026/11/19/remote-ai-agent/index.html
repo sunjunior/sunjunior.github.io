@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="动机 这台 ZTE Grand S 已经被改造成常驻的 Arch Linux ARM 小主机（详见另一篇《在旧手机 Arch Linux 上搭建 Hexo 静态博客》），通过 Tailscale 远程管理，充当家庭内网的远程网关：能扫局域网设备、看系统状态。 但每次运维都要 SSH 进去敲命令，能不能直接用自然语言下指令？比如输入「扫描一下局域网有哪些设备」「分析家里有没有异常」，让 AI 自己决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析">
+<meta property="og:url" content="https://sunjunior.github.io/2026/11/19/remote-ai-agent/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="动机 这台 ZTE Grand S 已经被改造成常驻的 Arch Linux ARM 小主机（详见另一篇《在旧手机 Arch Linux 上搭建 Hexo 静态博客》），通过 Tailscale 远程管理，充当家庭内网的远程网关：能扫局域网设备、看系统状态。 但每次运维都要 SSH 进去敲命令，能不能直接用自然语言下指令？比如输入「扫描一下局域网有哪些设备」「分析家里有没有异常」，让 AI 自己决">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-19T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-19T15:31:12.014Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Arch Linux ARM">
+<meta property="article:tag" content="DeepSeek">
+<meta property="article:tag" content="Function Calling">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/11/19/remote-ai-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/19/remote-ai-agent/","path":"2026/11/19/remote-ai-agent/","title":"给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-text">动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88%E9%80%89%E5%9E%8B"><span class="nav-text">技术栈选型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E4%B8%80%E5%B7%A5%E5%85%B7%E5%AE%9A%E4%B9%89function-calling"><span class="nav-text">核心一：工具定义（function
+calling）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E4%BA%8C%E7%BC%96%E6%8E%92-loop"><span class="nav-text">核心二：编排 loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="nav-text">踩坑记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C"><span class="nav-text">验证结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%B3%95"><span class="nav-text">用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E7%8A%B6%E4%B8%8E%E5%90%8E%E7%BB%AD"><span class="nav-text">现状与后续</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/11/19/remote-ai-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="动机 这台 ZTE Grand S 已经被改造成常驻的 Arch Linux ARM 小主机（详见另一篇《在旧手机 Arch Linux 上搭建 Hexo 静态博客》），通过 Tailscale 远程管理，充当家庭内网的远程网关：能扫局域网设备、看系统状态。 但每次运维都要 SSH 进去敲命令，能不能直接用自然语言下指令？比如输入「扫描一下局域网有哪些设备」「分析家里有没有异常」，让 AI 自己决...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-11-19 08:00:00 / 修改时间：23:31:12" itemprop="dateCreated datePublished" datetime="2026-11-19T08:00:00+08:00">2026-11-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%8A%98%E8%85%BE/" itemprop="url" rel="index"><span itemprop="name">技术折腾</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">动机 这台 ZTE Grand S 已经被改造成常驻的 Arch Linux ARM 小主机（详见另一篇《在旧手机 Arch Linux 上搭建 Hexo 静态博客》），通过 Tailscale 远程管理，充当家庭内网的远程网关：能扫局域网设备、看系统状态。 但每次运维都要 SSH 进去敲命令，能不能直接用自然语言下指令？比如输入「扫描一下局域网有哪些设备」「分析家里有没有异常」，让 AI 自己决...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="动机">动机</h2>
+<p>这台 ZTE Grand S 已经被改造成常驻的 Arch Linux ARM
+小主机（详见另一篇《在旧手机 Arch Linux 上搭建 Hexo 静态博客》），通过
+Tailscale
+远程管理，充当家庭内网的远程网关：能扫局域网设备、看系统状态。</p>
+<p>但每次运维都要 SSH
+进去敲命令，能不能<strong>直接用自然语言下指令</strong>？比如输入「扫描一下局域网有哪些设备」「分析家里有没有异常」，让
+AI 自己决定调什么工具、看图判断，再返回结果？</p>
+<p>这就是本文要做的：<strong>给手机装一个轻量级 AI agent
+服务端</strong>，客户端（curl / 手机 / 网页）经 Tailscale
+发指令，手机上的 agent 编排 DeepSeek
+调用工具，必要时把摄像头图像交给多模态模型分析，最后回传结论。</p>
+<h2 id="整体架构">整体架构</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">客户端(curl) ──Tailscale加密──&gt; 手机服务端 :8080</span><br><span class="line">                                  │ POST /api/chat &#123;prompt, session_id?&#125;</span><br><span class="line">                                  ↓  X-Token 鉴权</span><br><span class="line">                          ┌───────────────────┐</span><br><span class="line">                          │   Agent 编排层     │  自研 Python loop</span><br><span class="line">                          │   (DeepSeek)      │</span><br><span class="line">                          └───┬───────────┬───┘</span><br><span class="line">                    function  │           │  图片(base64)</span><br><span class="line">                    calling   ↓           ↓</span><br><span class="line">                    ┌──────────────────┐  ┌────────────────────┐</span><br><span class="line">                    │ 工具层            │  │ 多模态模型          │</span><br><span class="line">                    │ system_info      │  │ deepseek-flash     │</span><br><span class="line">                    │ scan_lan         │  │ 分析图像是否异常     │</span><br><span class="line">                    │ camera_image     │  └────────────────────┘</span><br><span class="line">                    └──────────────────┘</span><br><span class="line">                                  ↓</span><br><span class="line">                           汇总结论 → JSON 回传</span><br></pre></td></tr></table></figure>
+<p>数据流：<code>自然语言 → 编排层解析意图 → 调工具 → 图像回填 → 多模态推理 → 结论 → 回传</code>。</p>
+<h2 id="技术栈选型">技术栈选型</h2>
+<p>手机是 armv7l、可用内存约 1GB，所有选型以<strong>轻量、零 pip
+依赖</strong>为准：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>层</th>
+<th>选型</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接入</td>
+<td>Python <code>http.server</code> + token 鉴权</td>
+<td>零依赖、armv7 友好</td>
+</tr>
+<tr>
+<td>编排</td>
+<td>自研 Python loop（约 200 行）</td>
+<td>只有固定几个工具，比通用 agent 框架贴切可控</td>
+</tr>
+<tr>
+<td>工具调用</td>
+<td>DeepSeek function calling</td>
+<td>模型直接决定调哪个工具，比 MCP 轻</td>
+</tr>
+<tr>
+<td>模型</td>
+<td><code>deepseek-flash</code>（支持 text+image）</td>
+<td>复用已有 key；推理 + 图像分析一个模型搞定</td>
+</tr>
+<tr>
+<td>远程</td>
+<td>Tailscale <code>100.107.4.30:8080</code></td>
+<td>天然加密、无公网/端口映射</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>为什么不复用已装的 Pi agent？Pi 是通用 coding
+agent，工具集是读写文件/执行命令，跟”监控”场景不贴；HTTP
+接入也较绕。自研 loop 反而更可控。</p>
+</blockquote>
+<h2 id="文件结构">文件结构</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/root/agent-server/</span><br><span class="line">  config.py   常量 + 从 env.sh 读 API key（不硬编码）</span><br><span class="line">  tools.py    三个白名单工具函数 + function calling schema</span><br><span class="line">  agent.py    编排 loop：调 DeepSeek → 解析 tool_calls → 执行 → 回填 → 分析</span><br><span class="line">  server.py   HTTP 接入：POST /api/chat + /health + 鉴权 + session</span><br><span class="line">  token       鉴权 token（600）；tests/ 用 mock 测试编排逻辑</span><br></pre></td></tr></table></figure>
+<p>职责边界：config 只读配置；tools 只做纯数据采集、无网络推理；agent
+只做编排、不碰 HTTP；server
+只做接入、不碰业务逻辑。各部分可独立测试。</p>
+<h2 id="核心一工具定义function-calling">核心一：工具定义（function
+calling）</h2>
+<p>把能力包装成三个固定函数，用 JSON schema 描述给模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">TOOL_SCHEMAS = [</span><br><span class="line">  &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;function&quot;</span>, <span class="string">&quot;function&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;get_system_info&quot;</span>,</span><br><span class="line">      <span class="string">&quot;description&quot;</span>: <span class="string">&quot;获取手机的系统信息：内存、磁盘、负载、运行时间&quot;</span>,</span><br><span class="line">      <span class="string">&quot;parameters&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>, <span class="string">&quot;properties&quot;</span>: &#123;&#125;, <span class="string">&quot;required&quot;</span>: []&#125;&#125;&#125;,</span><br><span class="line">  &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;function&quot;</span>, <span class="string">&quot;function&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;scan_lan&quot;</span>,</span><br><span class="line">      <span class="string">&quot;description&quot;</span>: <span class="string">&quot;扫描局域网在线设备，返回 IP 和 MAC&quot;</span>,</span><br><span class="line">      <span class="string">&quot;parameters&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>, <span class="string">&quot;properties&quot;</span>: &#123;&#125;, <span class="string">&quot;required&quot;</span>: []&#125;&#125;&#125;,</span><br><span class="line">  &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;function&quot;</span>, <span class="string">&quot;function&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;get_camera_image&quot;</span>,</span><br><span class="line">      <span class="string">&quot;description&quot;</span>: <span class="string">&quot;抓取摄像头当前图像，用于分析环境是否异常。返回图片 base64&quot;</span>,</span><br><span class="line">      <span class="string">&quot;parameters&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>, <span class="string">&quot;properties&quot;</span>: &#123;&#125;, <span class="string">&quot;required&quot;</span>: []&#125;&#125;&#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p><code>scan_lan</code> 的实现很朴素：并发 ping 整个网段，再读 ARP
+缓存。在手机上实测能扫出网关 <code>192.168.3.1</code>。</p>
+<h2 id="核心二编排-loop">核心二：编排 loop</h2>
+<p>这是 agent 的大脑——一个最多 5 轮的循环：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">prompt, history=<span class="literal">None</span></span>):</span><br><span class="line">    messages = [&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>, <span class="string">&quot;content&quot;</span>: SYSTEM_PROMPT&#125;]</span><br><span class="line">    messages += history <span class="keyword">or</span> []</span><br><span class="line">    messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: prompt&#125;)</span><br><span class="line">    steps, images = [], <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(MAX_TOOL_ROUNDS):</span><br><span class="line">        resp = _call_llm(messages, use_tools=<span class="literal">True</span>)</span><br><span class="line">        msg = resp[<span class="string">&quot;choices&quot;</span>][<span class="number">0</span>][<span class="string">&quot;message&quot;</span>]</span><br><span class="line">        calls = parse_tool_calls(msg)          <span class="comment"># 解析模型返回的 tool_calls</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> calls:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&quot;answer&quot;</span>: msg[<span class="string">&quot;content&quot;</span>], <span class="string">&quot;steps&quot;</span>: steps, <span class="string">&quot;images_analyzed&quot;</span>: images&#125;</span><br><span class="line">        messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;assistant&quot;</span>, <span class="string">&quot;tool_calls&quot;</span>: msg[<span class="string">&quot;tool_calls&quot;</span>]&#125;)</span><br><span class="line">        pending_images = []</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> calls:</span><br><span class="line">            result = TOOL_DISPATCH[c[<span class="string">&quot;name&quot;</span>]](**c[<span class="string">&quot;args&quot;</span>])   <span class="comment"># 执行工具</span></span><br><span class="line">            content = json.dumps(result, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">            <span class="keyword">if</span> c[<span class="string">&quot;name&quot;</span>] == <span class="string">&quot;get_camera_image&quot;</span>:</span><br><span class="line">                images += <span class="number">1</span></span><br><span class="line">                pending_images.append(result)</span><br><span class="line">            steps.append(&#123;<span class="string">&quot;tool&quot;</span>: c[<span class="string">&quot;name&quot;</span>], <span class="string">&quot;result&quot;</span>: content[:<span class="number">500</span>]&#125;)</span><br><span class="line">            messages.append(build_tool_result_message(c[<span class="string">&quot;id&quot;</span>], content))</span><br><span class="line">        <span class="comment"># 关键：所有 tool 消息就位后，再追加图片（DeepSeek 的格式要求）</span></span><br><span class="line">        <span class="keyword">for</span> result <span class="keyword">in</span> pending_images:</span><br><span class="line">            messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: [</span><br><span class="line">                &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;这是摄像头抓取的图像，请分析是否有异常：&quot;</span>&#125;,</span><br><span class="line">                &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;image_url&quot;</span>, <span class="string">&quot;image_url&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;url&quot;</span>: <span class="string">f&quot;data:<span class="subst">&#123;result[<span class="string">&#x27;mime&#x27;</span>]&#125;</span>;base64,<span class="subst">&#123;result[<span class="string">&#x27;image_base64&#x27;</span>]&#125;</span>&quot;</span>&#125;&#125;]&#125;)</span><br><span class="line">    <span class="comment"># 达到上限，强制总结</span></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<h2 id="踩坑记录">踩坑记录</h2>
+<p><strong>坑 1：占位图被 DeepSeek 拒绝</strong>。一开始用 1x1 的最小
+JPEG 当占位图，DeepSeek 报
+<code>You have uploaded an unsupported image</code>。换成一张真实的
+banner.jpg（224KB）后正常。</p>
+<p><strong>坑 2：多模态链路报 400</strong>。报错
+<code>An assistant message with 'tool_calls' must be followed by tool messages</code>——根因是图片
+user 消息被插在 <code>assistant(tool_calls)</code> 和 <code>tool</code>
+消息之间，违反 DeepSeek 的格式约束。解法就是用上面的
+<code>pending_images</code>：先追加所有 tool
+结果消息，图片最后再加。</p>
+<p><strong>坑 3：API key 不硬编码</strong>。key 从
+<code>/root/.pi/agent/env.sh</code> 读取（就是之前配 DeepSeek
+的地方），代码里只留读取逻辑，不落明文。</p>
+<h2 id="验证结果">验证结果</h2>
+<p>用 mock 测通编排逻辑（不联网、不消耗 API），再接真实 API
+端到端验证：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>health 探活 / 无 token 访问</td>
+<td>200 / 401 ✅</td>
+</tr>
+<tr>
+<td>纯问答（不调工具）</td>
+<td>直接回答，<code>steps</code> 为空 ✅</td>
+</tr>
+<tr>
+<td>单工具（scan_lan）</td>
+<td>正确调工具，返回网关 192.168.3.1 ✅</td>
+</tr>
+<tr>
+<td><strong>多模态链路</strong></td>
+<td>抓图→回填→DeepSeek 识图，<code>images_analyzed=2</code> ✅</td>
+</tr>
+<tr>
+<td>多轮会话</td>
+<td>同 session_id 能引用上一轮结果 ✅</td>
+</tr>
+</tbody>
+</table>
+<p>最有趣的是多模态那次：我用的是一张占位图（从近地轨道俯瞰地球的壁纸），DeepSeek
+不仅准确描述了画面内容（大气层辉光、积云、星空），还敏锐地发现”两次抓图完全一样”、元数据里
+<code>source=placeholder</code>，判断出这是占位图而非真实摄像头画面，明确表示”不能据此说家里没异常”。<strong>模型没被骗过，推理质量让我放心。</strong></p>
+<h2 id="用法">用法</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TOKEN=$(ssh zte-grand-s <span class="string">&#x27;cat /root/agent-server/token&#x27;</span>)</span><br><span class="line">curl -H <span class="string">&quot;X-Token: <span class="variable">$TOKEN</span>&quot;</span> -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;&quot;prompt&quot;:&quot;扫描局域网设备&quot;,&quot;session_id&quot;:&quot;s1&quot;&#125;&#x27;</span> \</span><br><span class="line">  http://100.107.4.30:8080/api/chat</span><br></pre></td></tr></table></figure>
+<h2 id="现状与后续">现状与后续</h2>
+<p>框架全链路已跑通，系统信息、局域网扫描、多模态分析都真实可用。唯一的遗憾是<strong>摄像头抓帧</strong>：这台
+Android 4.1 + 高通 MSM 老设备的 camera HAL 不稳定，原厂相机和第三方相机
+App 一进取景就崩溃（详见 master 文档的摄像头探索记录），所以
+<code>get_camera_image</code> 目前仍返回占位图。后续可考虑 UVC
+外接摄像头绕开高通 HAL，或换一台硬件更现代的设备。</p>
+<blockquote>
+<p>这套架构的价值不在”摄像头”这一个工具，而在于<strong>自然语言 →
+工具调用 →
+多模态决策</strong>的通用范式：换成任何能拿到图像/数据的工具，同一套编排代码都不用改。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/11/19/remote-ai-agent/" title="给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析">https://sunjunior.github.io/2026/11/19/remote-ai-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Arch-Linux-ARM/" rel="tag"><i class="fa fa-tag"></i> Arch Linux ARM</a>
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"><i class="fa fa-tag"></i> 运维</a>
+              <a href="/tags/AI-Agent/" rel="tag"><i class="fa fa-tag"></i> AI Agent</a>
+              <a href="/tags/DeepSeek/" rel="tag"><i class="fa fa-tag"></i> DeepSeek</a>
+              <a href="/tags/Function-Calling/" rel="tag"><i class="fa fa-tag"></i> Function Calling</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/18/hexo-on-phone/" rel="prev" title="在旧手机 Arch Linux 上搭建 Hexo 静态博客">
+                  <i class="fa fa-angle-left"></i> 在旧手机 Arch Linux 上搭建 Hexo 静态博客
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/" rel="next" title="Everything-Linux：从逆向分析到静态分发的完整实战">
+                  Everything-Linux：从逆向分析到静态分发的完整实战 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

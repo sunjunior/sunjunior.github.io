@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景 手头有一台老手机（ZTE Grand S，ARMv7 四核，1.8GB 内存），已经折腾成常驻的 Arch Linux ARM 环境，通过 Tailscale 远程 SSH 管理。这次的目标：把原本跑在 PC 上的 Hexo 博客整套迁移到手机，让手机承担构建和本地预览，确认效果后再推送 GitHub Pages。 手机只做构建与预览的载体，全球访问交给 GitHub Pages，彻底甩掉手">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在旧手机 Arch Linux 上搭建 Hexo 静态博客">
+<meta property="og:url" content="https://sunjunior.github.io/2026/11/18/hexo-on-phone/index.html">
+<meta property="og:site_name" content="sunjunior的个人技术博客">
+<meta property="og:description" content="背景 手头有一台老手机（ZTE Grand S，ARMv7 四核，1.8GB 内存），已经折腾成常驻的 Arch Linux ARM 环境，通过 Tailscale 远程 SSH 管理。这次的目标：把原本跑在 PC 上的 Hexo 博客整套迁移到手机，让手机承担构建和本地预览，确认效果后再推送 GitHub Pages。 手机只做构建与预览的载体，全球访问交给 GitHub Pages，彻底甩掉手">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-17T22:15:00.000Z">
+<meta property="article:modified_time" content="2026-11-19T15:31:11.395Z">
+<meta property="article:author" content="sunjunior">
+<meta property="article:tag" content="Arch Linux ARM">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="静态博客">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sunjunior.github.io/2026/11/18/hexo-on-phone/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/18/hexo-on-phone/","path":"2026/11/18/hexo-on-phone/","title":"在旧手机 Arch Linux 上搭建 Hexo 静态博客"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在旧手机 Arch Linux 上搭建 Hexo 静态博客 | sunjunior的个人技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","display_overflow":"scroll","input":"TeX","output":"CHTML","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-mml-chtml.js","integrity":"sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+      <i class="fa fa-search fa-fw fa-lg"></i>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">sunjunior的个人技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">递归和自举是实现人工智能的两大法宝</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-layer-group fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  
+  <template id="search-popup-template"><div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div></template>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%E8%BF%81%E7%A7%BB%E7%8E%B0%E6%88%90%E5%B7%A5%E7%A8%8B"><span class="nav-text">步骤一：迁移现成工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%E8%B8%A9%E5%9D%91%E4%B8%80-git-%E5%9C%A8%E8%80%81%E5%86%85%E6%A0%B8%E4%B8%8A%E5%B4%A9%E6%BA%83"><span class="nav-text">步骤二：踩坑一 —— git
+在老内核上崩溃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%E8%B8%A9%E5%9D%91%E4%BA%8C-pandoc-%E5%9C%A8-armv7-%E4%B8%8A%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="nav-text">步骤三：踩坑二 —— pandoc
+在 armv7 上不可用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B%E8%B8%A9%E5%9D%91%E4%B8%89-%E7%BC%BA-date-%E5%AF%BC%E8%87%B4%E6%96%87%E7%AB%A0%E6%8E%92%E5%BA%8F%E9%94%99%E4%B9%B1"><span class="nav-text">步骤四：踩坑三 —— 缺 date
+导致文章排序错乱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%94%E6%9C%AC%E5%9C%B0%E9%A2%84%E8%A7%88"><span class="nav-text">步骤五：本地预览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E5%85%AD%E9%83%A8%E7%BD%B2%E5%88%B0-github-pages"><span class="nav-text">步骤六：部署到 GitHub Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D"><span class="nav-text">关于自定义域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="sunjunior"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">sunjunior</p>
+  <div class="site-description" itemprop="description">程序员，喜编程，爱折腾，技术控</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.github.com/sunjunior" title="GitHub → https:&#x2F;&#x2F;www.github.com&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:sunjunior@163.com" title="E-Mail → mailto:sunjunior@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=522985504&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;522985504&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i>QQ</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/sunjunior" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;sunjunior" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sunjunior.github.io/2026/11/18/hexo-on-phone/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="sunjunior">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sunjunior的个人技术博客">
+      <meta itemprop="description" content="程序员，喜编程，爱折腾，技术控">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在旧手机 Arch Linux 上搭建 Hexo 静态博客 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="背景 手头有一台老手机（ZTE Grand S，ARMv7 四核，1.8GB 内存），已经折腾成常驻的 Arch Linux ARM 环境，通过 Tailscale 远程 SSH 管理。这次的目标：把原本跑在 PC 上的 Hexo 博客整套迁移到手机，让手机承担构建和本地预览，确认效果后再推送 GitHub Pages。 手机只做构建与预览的载体，全球访问交给 GitHub Pages，彻底甩掉手...">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在旧手机 Arch Linux 上搭建 Hexo 静态博客
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-18 06:15:00" itemprop="dateCreated datePublished" datetime="2026-11-18T06:15:00+08:00">2026-11-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-11-19 23:31:11" itemprop="dateModified" datetime="2026-11-19T23:31:11+08:00">2026-11-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%8A%98%E8%85%BE/" itemprop="url" rel="index"><span itemprop="name">技术折腾</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">背景 手头有一台老手机（ZTE Grand S，ARMv7 四核，1.8GB 内存），已经折腾成常驻的 Arch Linux ARM 环境，通过 Tailscale 远程 SSH 管理。这次的目标：把原本跑在 PC 上的 Hexo 博客整套迁移到手机，让手机承担构建和本地预览，确认效果后再推送 GitHub Pages。 手机只做构建与预览的载体，全球访问交给 GitHub Pages，彻底甩掉手...</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="背景">背景</h2>
+<p>手头有一台老手机（ZTE Grand S，ARMv7 四核，1.8GB
+内存），已经折腾成常驻的 Arch Linux ARM 环境，通过 Tailscale 远程 SSH
+管理。这次的目标：<strong>把原本跑在 PC 上的 Hexo
+博客整套迁移到手机，让手机承担构建和本地预览，确认效果后再推送 GitHub
+Pages。</strong> 手机只做构建与预览的载体，全球访问交给 GitHub
+Pages，彻底甩掉手机网络高延迟的负担。</p>
+<h2 id="环境">环境</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构</td>
+<td>armv7l（32 位），内核 3.4</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>1.8GB（可用约 1GB）</td>
+</tr>
+<tr>
+<td>系统</td>
+<td>Arch Linux ARM（chroot 于 /sdcard/arch）</td>
+</tr>
+<tr>
+<td>Node</td>
+<td>v26.13.1 / npm 12.2.2</td>
+</tr>
+<tr>
+<td>Hexo</td>
+<td>8.1.2 / NexT 主题 8.29.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="步骤一迁移现成工程">步骤一：迁移现成工程</h2>
+<p>把 PC 上的整个 Hexo 工程（含
+<code>node_modules</code>、<code>themes/next</code>、44
+篇文章）打包拷到手机的 <code>/root/Blog</code>。因为是同一套 Node
+版本，且依赖几乎都是纯 JS（无原生 <code>.node</code>
+模块），拷过来就能直接跑。</p>
+<p>拷过来后文件属主是原机的 <code>alarm</code>，统一改成 root，顺带解决
+git 的 dubious ownership 问题：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> -R root:root /root/Blog</span><br></pre></td></tr></table></figure>
+<h2 id="步骤二踩坑一-git-在老内核上崩溃">步骤二：踩坑一 —— git
+在老内核上崩溃</h2>
+<p><code>hexo generate</code> / <code>hexo deploy</code> 内部会调用
+git，报：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: unable to get random bytes for temporary file: Function not implemented</span><br><span class="line">fatal: Unable to create temporary file</span><br></pre></td></tr></table></figure>
+<p><strong>根因</strong>：git 2.56 用 <code>getrandom</code>
+syscall（内核 3.17+ 才有）生成临时文件名，手机内核是 3.4。</p>
+<p><strong>解决</strong>：编译一个 <code>LD_PRELOAD</code> shim 把
+<code>getrandom</code> 重定向到
+<code>/dev/urandom</code>，并<strong>全局注入</strong>（不用每次
+export）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">getrandom</span><span class="params">(<span class="type">void</span> *buf, <span class="type">size_t</span> buflen, <span class="type">unsigned</span> <span class="type">int</span> flags)</span> &#123;</span><br><span class="line">    (<span class="type">void</span>)flags;</span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;/dev/urandom&quot;</span>, O_RDONLY);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123; errno = EIO; <span class="keyword">return</span> <span class="number">-1</span>; &#125;</span><br><span class="line">    <span class="type">ssize_t</span> n = read(fd, buf, buflen);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -shared -fPIC -O2 -o /usr/local/lib/getrandom_shim.so getrandom_shim.c</span><br><span class="line"><span class="built_in">echo</span> /usr/local/lib/getrandom_shim.so &gt; /etc/ld.so.preload</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>别写成 <code>/sbin/git</code> 的包装脚本：系统里有
+<code>git-receive-pack -&gt; git</code> 之类的软链，会引发
+<code>cannot handle real as a builtin</code>。全局 preload 最稳妥。</p>
+</blockquote>
+<h2 id="步骤三踩坑二-pandoc-在-armv7-上不可用">步骤三：踩坑二 —— pandoc
+在 armv7 上不可用</h2>
+<p><code>hexo clean</code> 后重新构建直接失败：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: spawnSync pandoc ENOENT</span><br></pre></td></tr></table></figure>
+<p>原工程用的是 <code>hexo-renderer-pandoc</code>，但 <strong>pandoc
+没有 armv7 二进制</strong>（官方 release 和新版 Alpine
+源都没有）。分析文章内容后发现：只有 5 篇用了 <code>$$</code>
+公式（主题已开 MathJax，marked 渲染后照样能解析），26 篇是标准 GFM
+表格（marked 原生支持），没有任何 LaTeX
+<code>\begin</code>/脚注/定义列表。</p>
+<p>所以直接<strong>换成 marked 渲染器</strong>，效果无损还省掉几十 MB
+依赖：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-renderer-marked --save --no-audit --no-fund</span><br><span class="line">npm uninstall hexo-renderer-pandoc --no-audit --no-fund</span><br></pre></td></tr></table></figure>
+<p>同时在 <code>_config.yml</code> 里删掉 <code>pandoc:</code>
+配置段。重新构建，350 个文件全部生成成功。</p>
+<h2 id="步骤四踩坑三-缺-date-导致文章排序错乱">步骤四：踩坑三 —— 缺 date
+导致文章排序错乱</h2>
+<p>发现一篇老文章「简单用GTest单元测试框架编写测试用例」被排到了首页第一位。根因是它的
+front-matter <strong>缺 <code>date</code> 字段</strong>——Hexo 对无 date
+的文章会拿文件时间推算，而博客迁移时文件 mtime
+被打乱，导致它被误判成最新。</p>
+<p>补上符合内容年代的日期即可：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">title:</span> <span class="string">简单用GTest单元测试框架编写测试用例</span></span><br><span class="line"><span class="attr">tags:</span> <span class="string">软件开发</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2017-09-06 00:00:00</span></span><br><span class="line"><span class="attr">categories:</span> <span class="string">软件工程</span></span><br></pre></td></tr></table></figure>
+<h2 id="步骤五本地预览">步骤五：本地预览</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/Blog</span><br><span class="line"><span class="built_in">nohup</span> ./node_modules/.bin/hexo server -p 4000 -i 0.0.0.0 &gt; server.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<p>通过 Tailscale 访问 <code>http://100.107.4.30:4000</code>
+即可看到效果（NexT 主题、中文界面、44
+篇文章）。预览确认无误后再部署。</p>
+<h2 id="步骤六部署到-github-pages">步骤六：部署到 GitHub Pages</h2>
+<p>把 <code>_config.yml</code> 的部署地址改成 HTTPS：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/sunjunior/sunjunior.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<p>用 GitHub Personal Access Token（PAT，需 <code>repo</code>
+权限）认证，存到 git 凭据文件：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.helper <span class="string">&#x27;store --file=/root/.git-credentials&#x27;</span></span><br><span class="line"><span class="comment"># /root/.git-credentials 内容：https://sunjunior:&lt;PAT&gt;@github.com （权限 600）</span></span><br></pre></td></tr></table></figure>
+<p>先只读验证 token 可用（不推送）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git ls-remote https://github.com/sunjunior/sunjunior.github.io.git HEAD</span><br></pre></td></tr></table></figure>
+<p>确认后一键部署：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d        <span class="comment"># = hexo deploy，内部调 git push</span></span><br></pre></td></tr></table></figure>
+<h2 id="关于自定义域名">关于自定义域名</h2>
+<p>用 <code>blog.sunjunior.com</code> 不需要额外付费（主域名
+sunjunior.com 已拥有，子域免费；GitHub Pages 托管和 SSL
+证书都免费）。配置两步：</p>
+<ol type="1">
+<li>GoDaddy DNS 加 <code>CNAME: blog → sunjunior.github.io</code></li>
+<li>仓库 Settings → Pages → Custom domain 填
+<code>blog.sunjunior.com</code>，勾 Enforce HTTPS</li>
+</ol>
+<h2 id="小结">小结</h2>
+<p>把现成的 Hexo 博客迁到旧手机上跑，真正费劲的不是 Hexo 本身（纯 JS
+依赖拷来即用），而是两个老环境问题：<strong>git 的 getrandom
+兼容</strong>（LD_PRELOAD shim 全局注入）和 <strong>pandoc 无 armv7
+二进制</strong>（换 marked
+渲染器）。解决之后，构建、预览、部署一条龙都能在手机上完成，生成静态页面对
+CPU/内存要求极低。</p>
+<blockquote>
+<p>顺带记录：若相机类操作导致系统 hang，多半是高通 camera HAL 与第三方
+App 不兼容，与 Hexo 无关。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>sunjunior
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://sunjunior.github.io/2026/11/18/hexo-on-phone/" title="在旧手机 Arch Linux 上搭建 Hexo 静态博客">https://sunjunior.github.io/2026/11/18/hexo-on-phone/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
+              <a href="/tags/Arch-Linux-ARM/" rel="tag"><i class="fa fa-tag"></i> Arch Linux ARM</a>
+              <a href="/tags/%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/" rel="tag"><i class="fa fa-tag"></i> 静态博客</a>
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"><i class="fa fa-tag"></i> 运维</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="prev" title="忍者神龟2（NES &#x2F; FC）主角攻击力翻倍 Hack 技术文档">
+                  <i class="fa fa-angle-left"></i> 忍者神龟2（NES / FC）主角攻击力翻倍 Hack 技术文档
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/19/remote-ai-agent/" rel="next" title="给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析">
+                  给老手机装一个 AI 运维 Agent：自然语言 → 工具调用 → 多模态分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">sunjunior</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <svg class="rocket" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="bt-rocket-flame" x1="0" y1="31" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffb347"/>
+          <stop offset="1" stop-color="#ff7a1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 1 C19.5 5 21.8 9.8 22.4 15 L9.6 15 C10.2 9.8 12.5 5 16 1 Z" fill="#ff8c33"/>
+      <path d="M9.6 15 H22.4 V28 H9.6 Z" fill="#f5f5f5"/>
+      <circle cx="16" cy="20.5" r="3.1" fill="#ffc385" stroke="#ff8c33" stroke-width="0.8"/>
+      <path d="M9.6 19 C7 22 5 25.5 4.5 29.5 L9.6 28 Z" fill="#ff7a1a"/>
+      <path d="M22.4 19 C25 22 27 25.5 27.5 29.5 L22.4 28 Z" fill="#ff7a1a"/>
+      <rect x="12.3" y="28" width="7.4" height="2.4" rx="0.8" fill="#1d3a63"/>
+      <g class="rocket-flame">
+        <path d="M12.6 31 C12.6 34.5 14.3 37.5 16 40 C17.7 37.5 19.4 34.5 19.4 31 Z" fill="url(#bt-rocket-flame)"/>
+        <path d="M14.2 31 C14.2 33.2 15 35.2 16 37 C17 35.2 17.8 33.2 17.8 31 Z" fill="#ffe3b3"/>
+      </g>
+    </svg>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<!-- 回顶部按钮进度环驱动 -->
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.querySelector('.back-to-top');
+  if (btn) {
+    var contentHeight = document.body.scrollHeight - window.innerHeight;
+    var percent = contentHeight > 0 ? Math.min(100 * window.scrollY / contentHeight, 100) : 0;
+    btn.style.setProperty('--progress', percent + '%');
+  }
+}, {passive: true});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
