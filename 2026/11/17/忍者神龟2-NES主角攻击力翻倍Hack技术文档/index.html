@@ -20,16 +20,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC） 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：伤害值不是一个单一的表，而是两类数据来源——普通攻击来自「攻击记录」里 7 字节">
+    <meta name="description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC）；文中第 11 节补充了初代《忍者神龟1》（1989，Mapper 1）的同主题破解。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心">
 <meta property="og:type" content="article">
-<meta property="og:title" content="忍者神龟2（NES &#x2F; FC）主角攻击力翻倍 Hack 技术文档">
+<meta property="og:title" content="忍者神龟系列主角攻击力翻倍Hack技术文档">
 <meta property="og:url" content="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC） 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：伤害值不是一个单一的表，而是两类数据来源——普通攻击来自「攻击记录」里 7 字节">
+<meta property="og:description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC）；文中第 11 节补充了初代《忍者神龟1》（1989，Mapper 1）的同主题破解。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/turtle.gif">
 <meta property="article:published_time" content="2026-11-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-17T00:22:29.810Z">
+<meta property="article:modified_time" content="2026-11-19T23:41:36.189Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, NES, 忍者神龟, Mesen2, Game Genie">
 <meta name="twitter:card" content="summary">
@@ -39,10 +39,10 @@
 <link rel="canonical" href="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/11/17/忍者神龟2-NES主角攻击力翻倍Hack技术文档/","title":"忍者神龟2（NES / FC）主角攻击力翻倍 Hack 技术文档"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/","path":"2026/11/17/忍者神龟2-NES主角攻击力翻倍Hack技术文档/","title":"忍者神龟系列主角攻击力翻倍Hack技术文档"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>忍者神龟2（NES / FC）主角攻击力翻倍 Hack 技术文档 | sunjunior的个人技术博客</title>
+<title>忍者神龟系列主角攻击力翻倍Hack技术文档 | sunjunior的个人技术博客</title>
   
 
 
@@ -172,7 +172,9 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
 实战取证：一次普通攻击击杀敌人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E4%BC%9A%E8%AF%AF%E4%BC%A4%E7%8E%A9%E5%AE%B6%E5%8F%97%E5%88%B0%E7%9A%84%E4%BC%A4%E5%AE%B3"><span class="nav-text">7.4 不会误伤”玩家受到的伤害”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95"><span class="nav-text">7.5 冒烟测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9"><span class="nav-text">8. 产物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF%E7%BB%93%E8%AE%BA"><span class="nav-text">9. 综合关键技术结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE-lua-%E8%84%9A%E6%9C%AC"><span class="nav-text">10. 附录：关键 Lua 脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a.1-%E5%86%99-hp-cpuexec-%E6%8A%93-pctmnt_hitpc.lua-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.1 写 HP + cpuExec
 抓 PC（tmnt_hitpc.lua 核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.2-%E8%AF%BB%E6%8C%87%E9%92%88%E4%B8%8E%E4%BC%A4%E5%AE%B3%E5%AD%97%E8%8A%82tmnt_ptr.lua-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.2
 读指针与伤害字节（tmnt_ptr.lua 核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a.3-game-genie-%E8%A7%A3%E7%A0%81decode_gg.py-%E6%A0%B8%E5%BF%83"><span class="nav-text">A.3 Game Genie
-解码（decode_gg.py 核心）</span></a></li></ol></li></ol></div>
+解码（decode_gg.py 核心）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E4%BB%A3%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F1%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8D%E5%8D%95%E8%A1%A8%E5%AE%9A%E4%B9%BE%E5%9D%A4"><span class="nav-text">11.
+初代《忍者神龟1》攻击力翻倍：单表定乾坤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF-1"><span class="nav-text">11.1 ROM 与游戏信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%B4%A2%E7%A4%BE%E5%8C%BA%E4%BC%A4%E5%AE%B3%E8%A1%A8"><span class="nav-text">11.2 线索：社区伤害表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%B8%A6%E6%AD%A5%E9%95%BF%E7%9A%84%E6%A8%A1%E5%BC%8F%E6%90%9C%E7%B4%A2-%E8%B7%A8%E7%89%88%E6%9C%AC%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="nav-text">11.3 定位：带步长的模式搜索
++ 跨版本交叉验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%8D%A2%E7%AE%97%E4%B8%8E%E5%94%AF%E4%B8%80%E5%BC%95%E7%94%A8%E7%82%B9"><span class="nav-text">11.4 地址换算与唯一引用点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E7%B4%A2%E5%BC%95-y-%E7%9A%84%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91"><span class="nav-text">11.5 伤害索引 Y 的生成逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%8116-%E5%AD%97%E8%8A%82%E5%85%A8%E9%83%A8-2"><span class="nav-text">11.6 打补丁：16 字节全部 ×2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">11.7 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%BA%8C%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E5%B7%AE%E5%BC%82%E5%B0%8F%E7%BB%93"><span class="nav-text">11.8 与二代的方法差异小结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -252,12 +254,12 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="忍者神龟2（NES &#x2F; FC）主角攻击力翻倍 Hack 技术文档 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC） 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：伤害值不是一个单一的表，而是两类数据来源——普通攻击来自「攻击记录」里 7 字节...">
+      <meta itemprop="name" content="忍者神龟系列主角攻击力翻倍Hack技术文档 | sunjunior的个人技术博客">
+      <meta itemprop="description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC）；文中第 11 节补充了初代《忍者神龟1》（1989，Mapper 1）的同主题破解。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          忍者神龟2（NES / FC）主角攻击力翻倍 Hack 技术文档
+          忍者神龟系列主角攻击力翻倍Hack技术文档
         </h1>
 
         <div class="post-meta-container">
@@ -267,9 +269,15 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-11-17 00:00:00 / 修改时间：08:22:29" itemprop="dateCreated datePublished" datetime="2026-11-17T00:00:00+08:00">2026-11-17</time>
+      <time title="创建时间：2026-11-17 00:00:00" itemprop="dateCreated datePublished" datetime="2026-11-17T00:00:00+08:00">2026-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-11-20 07:41:36" itemprop="dateModified" datetime="2026-11-20T07:41:36+08:00">2026-11-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -291,7 +299,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
     </span>
 </div>
 
-            <div class="post-description">目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES/FC） 目标：把四名可操作主角（Leo / Raph / Mike / Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：伤害值不是一个单一的表，而是两类数据来源——普通攻击来自「攻击记录」里 7 字节...</div>
+            <div class="post-description">目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES/FC）；文中第 11 节补充了初代《忍者神龟1》（1989，Mapper 1）的同主题破解。 目标：把四名可操作主角（Leo / Raph / Mike / Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心...</div>
         </div>
       </header>
 
@@ -300,20 +308,23 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
     
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>目标游戏：<strong>忍者神龟2（Teenage Mutant Ninja Turtles II: The
-Arcade Game，Konami 1990，NES/FC）</strong></p>
+Arcade Game，Konami 1990，NES/FC）</strong>；文中第 11
+节补充了<strong>初代《忍者神龟1》（1989，Mapper
+1）</strong>的同主题破解。</p>
 <p>目标：把<strong>四名可操作主角（Leo / Raph / Mike /
 Don）的攻击力在原版基础上 ×2</strong>，让打小兵、BOSS
 更快；敌我其它数据保持原版。</p>
-<p>核心结论：伤害值不是一个单一的表，而是<strong>两类数据来源</strong>——普通攻击来自「攻击记录」里
+<p>核心结论：二代的伤害值不是一个单一的表，而是<strong>两类数据来源</strong>——普通攻击来自「攻击记录」里
 7 字节结构偏移 6 的<strong>低 4 位</strong>，跳跃/踢/武器攻击来自固定
-bank 里的三条 <code>LDA #imm</code>
-常量。把这两类数据各翻一倍即可。<strong>难点不在改字节，而在「找到哪几个字节」</strong>：本作用了
-MMC3 bank 切换，<code>getState()</code> 在无头模式下拿不到 PC，最终靠
-<code>cpuExec</code> 回调抓到写敌人 HP 的那条指令，再用 Game Genie
-代码反解交叉验证，才把三处常量和记录表结构彻底坐实。</p>
+bank 里的三条 <code>LDA #imm</code> 常量；而初代只有<strong>一张 16
+字节的交错伤害表</strong>。两代都遵循同一条原则：<strong>难点不在改字节，而在「找到哪几个字节」</strong>——二代靠
+<code>cpuExec</code> 抓写敌人 HP 的指令 + Game Genie
+反解交叉验证；初代靠「带步长的模式搜索 + 美版原 ROM 交叉比对 + 全 ROM
+唯一引用点」定位。</p>
 <p>交付物：<code>忍者神龟2.nes</code>（已
-×2）、<code>忍者神龟2.nes.orig_backup</code>（原版回滚点）。</p>
-<p>日期：2026-11-17</p>
+×2）、<code>忍者神龟2.nes.orig_backup</code>（原版回滚点）；<code>073.動作：忍者神龜1.nes</code>（已
+×2）、<code>073.動作：忍者神龜1.nes.orig_backup</code>（原版回滚点）。</p>
+<p>日期：2026-11-17（初代部分补充于 2026-11-20）</p>
 </blockquote>
 <hr />
 <h2 id="背景与目标">1. 背景与目标</h2>
@@ -836,6 +847,205 @@ HP 掉双倍，才能排除”改反了”的低级错误。</li>
 <h3 id="a.3-game-genie-解码decode_gg.py-核心">A.3 Game Genie
 解码（<code>decode_gg.py</code> 核心）</h3>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CH = <span class="string">&quot;APZLGITYEOXUKSVN&quot;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dec</span>(<span class="params">code</span>):</span><br><span class="line">    n = [CH.index(c) <span class="keyword">for</span> c <span class="keyword">in</span> code]</span><br><span class="line">    n0,n1,n2,n3,n4,n5 = n[:<span class="number">6</span>]</span><br><span class="line">    addr = <span class="number">0x8000</span> | (((n3&amp;<span class="number">7</span>)&lt;&lt;<span class="number">12</span>)|((n5&amp;<span class="number">7</span>)&lt;&lt;<span class="number">8</span>)|((n4&amp;<span class="number">8</span>)&lt;&lt;<span class="number">8</span>)|</span><br><span class="line">                     ((n2&amp;<span class="number">7</span>)&lt;&lt;<span class="number">4</span>)|((n1&amp;<span class="number">8</span>)&lt;&lt;<span class="number">4</span>)|(n4&amp;<span class="number">7</span>)|(n3&amp;<span class="number">8</span>))</span><br><span class="line">    data = ((n1&amp;<span class="number">7</span>)&lt;&lt;<span class="number">4</span>)|((n0&amp;<span class="number">8</span>)&lt;&lt;<span class="number">4</span>)|(n0&amp;<span class="number">7</span>)|((n5&amp;<span class="number">8</span>) <span class="keyword">if</span> <span class="built_in">len</span>(n)==<span class="number">6</span> <span class="keyword">else</span> (n7&amp;<span class="number">8</span>))</span><br><span class="line">    <span class="keyword">return</span> addr, data</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="初代忍者神龟1攻击力翻倍单表定乾坤">11.
+初代《忍者神龟1》攻击力翻倍：单表定乾坤</h2>
+<p>前面 1–10 节讲的是二代（MMC3）：伤害来源分散在「7
+字节攻击记录」和三条立即数常量里。初代《忍者神龟1》（Teenage Mutant
+Ninja Turtles，Konami
+1989）则是完全不同的实现——<strong>四名主角、四种武器、以及各自的低血加成，全部挤在同一张
+16 字节表里</strong>。只要找到这张表，改动量比二代小得多。</p>
+<h3 id="rom-与游戏信息-1">11.1 ROM 与游戏信息</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件名</td>
+<td><code>073.動作：忍者神龜1.nes</code></td>
+</tr>
+<tr>
+<td>文件大小</td>
+<td>262,160 字节</td>
+</tr>
+<tr>
+<td>原版 MD5</td>
+<td><code>a6362cd9d8445ea65a8d3b65cf159237</code></td>
+</tr>
+<tr>
+<td>补丁 MD5</td>
+<td><code>18bb6c858d7f534ee6400e96078a13dd</code></td>
+</tr>
+<tr>
+<td>iNES Header</td>
+<td><code>4E 45 53 1A 08 10 10 00 …</code></td>
+</tr>
+<tr>
+<td>格式</td>
+<td>iNES，Mapper <strong>1（MMC1）</strong></td>
+</tr>
+<tr>
+<td>PRG ROM</td>
+<td>8 × 16KB = 128KB</td>
+</tr>
+<tr>
+<td>CHR ROM</td>
+<td>16 × 8KB = 128KB</td>
+</tr>
+</tbody>
+</table>
+<p>MMC1 的 PRG 银行切换与二代的 MMC3 不同：本作
+<code>mapper.prgMode=true</code>、<code>prgReg</code>
+会变化，但目标数据所在的第 6 个 16KB PRG bank
+内的代码与数据<strong>同页引用</strong>，改它的文件字节不受运行时切页影响。</p>
+<h3 id="线索社区伤害表">11.2 线索：社区伤害表</h3>
+<p>文档 5.1 节引用的初代伤害数据，这次正好派上用场：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>攻击</th>
+<th>普通</th>
+<th>低血加成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leo / Mike / Raph / Don</td>
+<td>7 / 9 / 7 / 15</td>
+<td>10 / 9 / 12 / 16</td>
+</tr>
+<tr>
+<td>手里剑 / 三叉 / 回旋镖 / 卷轴</td>
+<td>18 / 14 / 16 / 29</td>
+<td>20 / 17 / 16 / 32</td>
+</tr>
+</tbody>
+</table>
+<p>注意：这些数据在二代 ROM 里搜不到，但在初代 ROM
+里<strong>确实存在</strong>。教训反过来成立——<strong>跨作资料不能当结论，但可以当搜索模板</strong>。</p>
+<h3 id="定位带步长的模式搜索-跨版本交叉验证">11.3 定位：带步长的模式搜索
++ 跨版本交叉验证</h3>
+<p>不能搜连续字节：普通伤害和低血加成是<strong>交错存放</strong>的。用「允许步长
+2」的模式搜索，在文件 <code>0x19BDF</code> 命中唯一的 16 字节序列：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">07 0A 09 09 07 0C 0F 10 12 14 0E 11 10 10 1D 20</span><br></pre></td></tr></table></figure>
+<p>拆成 8 对 <code>(普通, 低血)</code> 后，正好就是上表的 8 种攻击：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(07,0A) (09,09) (07,0C) (0F,10)   ← 四只乌龟</span><br><span class="line">(12,14) (0E,11) (10,10) (1D,20)   ← 四种武器</span><br></pre></td></tr></table></figure>
+<p><strong>交叉验证</strong>：标准美版
+<code>Teenage Mutant Ninja Turtles (U) [!].nes</code> 在文件
+<code>0x19BDB</code> 处有<strong>逐字节完全相同</strong>的 16
+字节（仅整体偏移差 4 字节）。两个独立 ROM
+同时命中，基本排除「巧合数据」。</p>
+<h3 id="地址换算与唯一引用点">11.4 地址换算与唯一引用点</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件偏移 0x19BDF → 去掉 16 字节 iNES 头 = PRG 0x19BCF</span><br><span class="line">                 → 第 6 个 16KB bank（0x18000 起）内偏移 0x1BCF</span><br><span class="line">                 → CPU 地址 $8000 + 0x1BCF = $9BCF</span><br></pre></td></tr></table></figure>
+<p>全 ROM 搜索该地址的小端字节
+<code>CF 9B</code>，<strong>只命中一次</strong>（文件
+<code>0x199B7</code>），就在同 bank 的伤害例程里：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$99A2  LDA $0560,X       ; 敌人 HP（$FF = 未激活）</span><br><span class="line">$99A5  SEC</span><br><span class="line">$99A6  SBC $9BCF,Y       ; ★ 全 ROM 唯一引用：减去伤害表[Y]</span><br><span class="line">$99A9  BEQ $99B0</span><br><span class="line">$99AB  BCC $99B0</span><br><span class="line">$99AD  JMP $9A7F         ; 未死，继续处理</span><br><span class="line">$99B0  LDA #$00</span><br><span class="line">$99B2  STA $0560,X       ; 扣到 0，敌人死亡</span><br></pre></td></tr></table></figure>
+<p><code>$0560,X</code> 在别的例程里以 <code>$FF</code>
+做「未激活」判定，典型敌人 HP 槽；随后例程又处理敌人状态
+<code>$0440,X</code>（<code>$70-$7F</code>、<code>$73</code>、<code>$79</code>、<code>$75</code>
+等），铁证这是「攻击命中敌人」的扣血路径，而不是玩家受伤。</p>
+<h3 id="伤害索引-y-的生成逻辑">11.5 伤害索引 Y 的生成逻辑</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$9961  CMP #$2A          ; 玩家动作 = $2A？</span><br><span class="line">$9965  LDY #$12          ;   → 特例索引 18</span><br><span class="line">$9969  CMP #$29          ; 玩家动作 = $29？</span><br><span class="line">$996D  LDY #$13          ;   → 特例索引 19</span><br><span class="line">...</span><br><span class="line">$9986  LDA $0073,Y       ; 攻击类型</span><br><span class="line">$9989  CLC</span><br><span class="line">$998A  ADC #$03</span><br><span class="line">$998C  ASL               ; (类型+3)*2 → 偶数索引</span><br><span class="line">$998D  STA $03EF</span><br><span class="line">$9992  LDA $0077,Y       ; 玩家血量状态</span><br><span class="line">$9995  CMP #$40</span><br><span class="line">$9997  BCS $999F         ; 低血 → 用奇数索引（加成值）</span><br><span class="line">$9999  LDY $03EF</span><br><span class="line">$999C  INY</span><br><span class="line">$999F  LDY $03EF</span><br></pre></td></tr></table></figure>
+<p>即每个攻击类型占<strong>一对</strong>表项：偶数=普通伤害，奇数=低血加成；<code>$0077,Y &lt; $40</code>
+时取后者。特例 <code>Y=$12/$13</code> 读到的是表尾之后的
+<code>80/1C</code>（疑似即死/特殊技常量），<strong>不属于 16
+字节伤害表</strong>，刻意不改——尤其 <code>0x80×2</code> 会溢出归零。</p>
+<h3 id="打补丁16-字节全部-2">11.6 打补丁：16 字节全部 ×2</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>CPU 地址</th>
+<th>文件偏移</th>
+<th>原值</th>
+<th>新值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$9BCF-$9BDE</code></td>
+<td><code>0x19BDF-0x19BEE</code></td>
+<td><code>07 0A 09 09 07 0C 0F 10 12 14 0E 11 10 10 1D 20</code></td>
+<td><code>0E 14 12 12 0E 18 1E 20 24 28 1C 22 20 20 3A 40</code></td>
+</tr>
+</tbody>
+</table>
+<p>生成逻辑极简（两倍后最大值 <code>20×2=0x40</code>，无溢出）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">off = <span class="number">0x19BDF</span></span><br><span class="line">d[off:off+<span class="number">16</span>] = <span class="built_in">bytes</span>(b*<span class="number">2</span> <span class="keyword">for</span> b <span class="keyword">in</span> d[off:off+<span class="number">16</span>])</span><br></pre></td></tr></table></figure>
+<p>产物（与二代同目录风格）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/media/娱乐/game/RetroArch-Win64/roms/FC/</span><br><span class="line">  073.動作：忍者神龜1.nes              # 成品：四主角攻击力 ×2</span><br><span class="line">  073.動作：忍者神龜1.nes.orig_backup  # 原版回滚点</span><br></pre></td></tr></table></figure>
+<h3 id="验证-1">11.7 验证</h3>
+<ul>
+<li>与原版逐字节比对：<strong>仅 16
+字节不同</strong>，全部落在伤害表内。</li>
+<li>MD5：<code>a6362cd9…</code>（原版）→
+<code>18bb6c85…</code>（补丁版）。</li>
+<li>Mesen2 无头模式连续运行 <strong>3000
+帧无崩溃、无花屏</strong>。</li>
+<li>说明：无头演示流程难以稳定进入「可攻击战斗」状态，因此没有像二代那样做实战
+HP 差分；定位依据是<strong>全 ROM 唯一 xref + 美版原 ROM 同表交叉验证 +
+冒烟测试</strong>三重证据。</li>
+</ul>
+<h3 id="与二代的方法差异小结">11.8 与二代的方法差异小结</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>维度</th>
+<th>二代（1990，Mapper 4）</th>
+<th>初代（1989，Mapper 1）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>伤害来源</td>
+<td>7 字节攻击记录低 4 位 + 3 条立即数常量</td>
+<td><strong>单一 16 字节交错表</strong></td>
+</tr>
+<tr>
+<td>定位手段</td>
+<td>写 HP 回调 + <code>cpuExec</code> 抓 PC + Game Genie 反解</td>
+<td>带步长模式搜索 + 美版 ROM 交叉比对 + 唯一 xref 反汇编</td>
+</tr>
+<tr>
+<td>改动量</td>
+<td>15 字节</td>
+<td>16 字节</td>
+</tr>
+<tr>
+<td>无头 <code>getState()</code></td>
+<td>该环境版本返回 <code>nil</code>，需 <code>cpuExec</code> 兜底</td>
+<td>同版本可用，能读 <code>cpu.pc</code> / <code>mapper.*</code></td>
+</tr>
+<tr>
+<td>验证</td>
+<td>伤害读回 + HP 差分 + 实战截图</td>
+<td>字节比对 + MD5 + 3000 帧冒烟</td>
+</tr>
+</tbody>
+</table>
+<p><strong>系列结论</strong>：两代虽然 mapper
+不同、数据结构不同，但「先在 ROM
+里找到唯一引用点，再只动数据不动代码」这条原则通用。</p>
 
     </div>
 
@@ -853,7 +1063,7 @@ HP 掉双倍，才能排除”改反了”的低级错误。</li>
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="忍者神龟2（NES &#x2F; FC）主角攻击力翻倍 Hack 技术文档">https://sunjunior.github.io/2026/11/17/忍者神龟2-NES主角攻击力翻倍Hack技术文档/</a>
+      <a href="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F2-NES%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" title="忍者神龟系列主角攻击力翻倍Hack技术文档">https://sunjunior.github.io/2026/11/17/忍者神龟2-NES主角攻击力翻倍Hack技术文档/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
