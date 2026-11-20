@@ -27,13 +27,14 @@
 <meta property="og:site_name" content="sunjunior的个人技术博客">
 <meta property="og:description" content="目标游戏：忍者神龟2（Teenage Mutant Ninja Turtles II: The Arcade Game，Konami 1990，NES&#x2F;FC） 与 初代《忍者神龟1》（1989，Mapper 1）；全文按游戏分章组织，后续《忍者神龟3》《忍者神龟4》的破解也按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://sunjunior.github.io/img/turtle.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/turtle2.gif">
+<meta property="og:image" content="https://sunjunior.github.io/img/turtle1.gif">
 <meta property="article:published_time" content="2026-11-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-19T23:52:51.356Z">
+<meta property="article:modified_time" content="2026-11-20T00:00:08.091Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, NES, 忍者神龟, Mesen2, Game Genie">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://sunjunior.github.io/img/turtle.gif">
+<meta name="twitter:image" content="https://sunjunior.github.io/img/turtle2.gif">
 
 
 <link rel="canonical" href="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F%E7%B3%BB%E5%88%97%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
@@ -174,7 +175,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
 读指针与伤害字节（tmnt_ptr.lua 核心）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#game-genie-%E8%A7%A3%E7%A0%81decode_gg.py-%E6%A0%B8%E5%BF%83"><span class="nav-text">1.10.3 Game Genie
 解码（decode_gg.py 核心）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%88%9D%E4%BB%A3%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F1%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8D%E5%8D%95%E8%A1%A8%E5%AE%9A%E4%B9%BE%E5%9D%A4"><span class="nav-text">第二章
 初代《忍者神龟1》攻击力翻倍：单表定乾坤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87-1"><span class="nav-text">2.1 背景与目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF-1"><span class="nav-text">2.2 ROM 与游戏信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%B4%A2%E7%A4%BE%E5%8C%BA%E4%BC%A4%E5%AE%B3%E8%A1%A8"><span class="nav-text">2.3 线索：社区伤害表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%B8%A6%E6%AD%A5%E9%95%BF%E7%9A%84%E6%A8%A1%E5%BC%8F%E6%90%9C%E7%B4%A2-%E8%B7%A8%E7%89%88%E6%9C%AC%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="nav-text">2.4 定位：带步长的模式搜索
-+ 跨版本交叉验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%8D%A2%E7%AE%97%E4%B8%8E%E5%94%AF%E4%B8%80%E5%BC%95%E7%94%A8%E7%82%B9"><span class="nav-text">2.5 地址换算与唯一引用点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E7%B4%A2%E5%BC%95-y-%E7%9A%84%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91"><span class="nav-text">2.6 伤害索引 Y 的生成逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%8116-%E5%AD%97%E8%8A%82%E5%85%A8%E9%83%A8-2"><span class="nav-text">2.7 打补丁：16 字节全部 ×2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">2.8 验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%BA%8C%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E5%B7%AE%E5%BC%82%E5%B0%8F%E7%BB%93"><span class="nav-text">2.9 与二代的方法差异小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%91%BD%E4%BB%A4"><span class="nav-text">2.10 附录：关键脚本与命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E8%A1%A8%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A1%A5%E4%B8%81python"><span class="nav-text">2.10.1 伤害表定位与补丁（Python）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E5%A4%B4%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95lua-mesen2"><span class="nav-text">2.10.2 无头冒烟测试（Lua + Mesen2）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%84%9A%E6%9C%AC%E6%B8%85%E5%8D%95"><span class="nav-text">2.10.3 分析脚本清单</span></a></li></ol></li></ol></li></ol></div>
++ 跨版本交叉验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%8D%A2%E7%AE%97%E4%B8%8E%E5%94%AF%E4%B8%80%E5%BC%95%E7%94%A8%E7%82%B9"><span class="nav-text">2.5 地址换算与唯一引用点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E7%B4%A2%E5%BC%95-y-%E7%9A%84%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91"><span class="nav-text">2.6 伤害索引 Y 的生成逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%8116-%E5%AD%97%E8%8A%82%E5%85%A8%E9%83%A8-2"><span class="nav-text">2.7 打补丁：16 字节全部 ×2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">2.8 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E6%AF%94%E5%AF%B9%E4%B8%8E-md5"><span class="nav-text">2.8.1 字节比对与 MD5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%8F%96%E8%AF%81%E8%A1%A5%E4%B8%81%E7%89%88%E6%94%BB%E5%87%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">2.8.2 实战取证：补丁版攻击演示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%B1%80%E9%99%90%E8%AF%B4%E6%98%8E"><span class="nav-text">2.8.3 冒烟测试与局限说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%BA%8C%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E5%B7%AE%E5%BC%82%E5%B0%8F%E7%BB%93"><span class="nav-text">2.9 与二代的方法差异小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%91%BD%E4%BB%A4"><span class="nav-text">2.10 附录：关键脚本与命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E8%A1%A8%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A1%A5%E4%B8%81python"><span class="nav-text">2.10.1 伤害表定位与补丁（Python）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E5%A4%B4%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95lua-mesen2"><span class="nav-text">2.10.2 无头冒烟测试（Lua + Mesen2）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%84%9A%E6%9C%AC%E6%B8%85%E5%8D%95"><span class="nav-text">2.10.3 分析脚本清单</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -277,7 +278,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-20 07:52:51" itemprop="dateModified" datetime="2026-11-20T07:52:51+08:00">2026-11-20</time>
+      <time title="修改时间：2026-11-20 08:00:08" itemprop="dateModified" datetime="2026-11-20T08:00:08+08:00">2026-11-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -781,7 +782,7 @@ PC（关键突破）</h4>
 <p>下图是补丁版 ROM 在 Mesen2 中的实际运行录屏（角色为 Don /
 多纳泰罗，对手是 Foot Soldier）：</p>
 <figure>
-<img src="/img/turtle.gif" alt="补丁版实战：一次普通攻击击杀敌人" />
+<img src="/img/turtle2.gif" alt="补丁版实战：一次普通攻击击杀敌人" />
 <figcaption
 aria-hidden="true">补丁版实战：一次普通攻击击杀敌人</figcaption>
 </figure>
@@ -1002,14 +1003,29 @@ Ninja Turtles，Konami
 <p>产物（与二代同目录风格）：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/media/娱乐/game/RetroArch-Win64/roms/FC/</span><br><span class="line">  073.動作：忍者神龜1.nes              # 成品：四主角攻击力 ×2</span><br><span class="line">  073.動作：忍者神龜1.nes.orig_backup  # 原版回滚点</span><br></pre></td></tr></table></figure>
 <h3 id="验证-1">2.8 验证</h3>
+<h4 id="字节比对与-md5">2.8.1 字节比对与 MD5</h4>
 <ul>
 <li>与原版逐字节比对：<strong>仅 16
 字节不同</strong>，全部落在伤害表内。</li>
 <li>MD5：<code>a6362cd9…</code>（原版）→
 <code>18bb6c85…</code>（补丁版）。</li>
+</ul>
+<h4 id="实战取证补丁版攻击演示">2.8.2 实战取证：补丁版攻击演示</h4>
+<p>下图是初代补丁版 ROM 在 Mesen2 中的实际运行录屏：</p>
+<figure>
+<img src="/img/turtle1.gif" alt="初代补丁版实战：攻击力翻倍效果" />
+<figcaption
+aria-hidden="true">初代补丁版实战：攻击力翻倍效果</figcaption>
+</figure>
+<p>录屏中主角挥武器命中敌人后，敌人掉血速度明显快于原版，对应伤害表 16
+字节全部 ×2 的效果；而主角的生命
+HUD、受到的伤害等其它数据保持原版。两张录屏（<code>turtle1.gif</code>
+为初代、<code>turtle2.gif</code> 为二代）分别对应两章的实战取证。</p>
+<h4 id="冒烟测试与局限说明">2.8.3 冒烟测试与局限说明</h4>
+<ul>
 <li>Mesen2 无头模式连续运行 <strong>3000
 帧无崩溃、无花屏</strong>。</li>
-<li>说明：无头演示流程难以稳定进入「可攻击战斗」状态，因此没有像二代那样做实战
+<li>说明：无头演示流程难以稳定进入「可攻击战斗」状态，因此没有像二代那样做量化
 HP 差分；定位依据是<strong>全 ROM 唯一 xref + 美版原 ROM 同表交叉验证 +
 冒烟测试</strong>三重证据。</li>
 </ul>
@@ -1050,8 +1066,9 @@ HP 差分；定位依据是<strong>全 ROM 唯一 xref + 美版原 ROM 同表交
 </tr>
 <tr>
 <td>验证</td>
-<td>伤害读回 + HP 差分 + 实战截图</td>
-<td>字节比对 + MD5 + 3000 帧冒烟</td>
+<td>伤害读回 + HP 差分 + 实战截图（<code>turtle2.gif</code>）</td>
+<td>字节比对 + MD5 + 实战截图（<code>turtle1.gif</code>）+ 3000
+帧冒烟</td>
 </tr>
 </tbody>
 </table>
