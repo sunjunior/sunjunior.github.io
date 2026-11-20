@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可">
+    <meta name="description" content="2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI&#x2F;daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Everything-Linux：从逆向分析到静态分发的完整实战">
 <meta property="og:url" content="https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可">
+<meta property="og:description" content="2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI&#x2F;daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-11-19T02:45:00.000Z">
-<meta property="article:modified_time" content="2026-11-19T15:31:10.540Z">
+<meta property="article:modified_time" content="2026-11-20T14:35:00.000Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="Everything">
 <meta property="article:tag" content="GTK">
@@ -166,7 +166,8 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-text">动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E9%80%86%E5%90%91%E7%A0%94%E7%A9%B6everything-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C"><span class="nav-text">一、逆向研究：Everything
-到底怎么工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%A6%82%E8%A7%88"><span class="nav-text">1.1 二进制概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%9D%A5%E6%BA%90mft-usn"><span class="nav-text">1.2 索引来源：MFT + USN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BC%95%E6%93%8E%E5%8F%8D%E7%BC%96%E8%AF%91%E5%AE%9E%E9%94%A4"><span class="nav-text">1.3 查询引擎：反编译实锤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%88%A4%E6%96%AD"><span class="nav-text">二、可行性判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-text">三、技术选型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="nav-text">四、软件架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-text">4.1 工程结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-text">4.2 分层与数据流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">4.3 关键数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">五、核心实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BC%95%E6%93%8E"><span class="nav-text">5.1 查询引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inotify-%E5%AE%9E%E6%97%B6%E5%A2%9E%E9%87%8F%E6%9B%BF%E4%BB%A3-usn"><span class="nav-text">5.2 inotify 实时增量（替代 USN）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E9%87%8F%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-text">5.3 增量内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E4%B8%8E-statx"><span class="nav-text">5.4 属性过滤与 statx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipc-%E5%AE%88%E6%8A%A4-cli-gui"><span class="nav-text">5.5 IPC &#x2F; 守护 &#x2F; CLI &#x2F; GUI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95"><span class="nav-text">5.6 结果右键菜单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%88%90%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="nav-text">开发成果展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="nav-text">六、踩坑记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3"><span class="nav-text">七、部署文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA"><span class="nav-text">7.1 构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9"><span class="nav-text">7.2 产物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">7.3 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%8E%E6%9F%A5%E8%AF%A2"><span class="nav-text">7.4 运行与查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E6%80%A7%E8%83%BD%E9%AA%8C%E8%AF%81"><span class="nav-text">八、性能验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%E4%B8%8E%E5%90%8E%E7%BB%AD"><span class="nav-text">九、当前状态与后续</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-text">结语</span></a></li></ol></div>
+到底怎么工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%A6%82%E8%A7%88"><span class="nav-text">1.1 二进制概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%9D%A5%E6%BA%90mft-usn"><span class="nav-text">1.2 索引来源：MFT + USN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BC%95%E6%93%8E%E5%8F%8D%E7%BC%96%E8%AF%91%E5%AE%9E%E9%94%A4"><span class="nav-text">1.3 查询引擎：反编译实锤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%88%A4%E6%96%AD"><span class="nav-text">二、可行性判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-text">三、技术选型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="nav-text">四、软件架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-text">4.1 工程结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-text">4.2 分层与数据流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">4.3 关键数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">五、核心实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BC%95%E6%93%8E"><span class="nav-text">5.1 查询引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inotify-%E5%AE%9E%E6%97%B6%E5%A2%9E%E9%87%8F%E6%9B%BF%E4%BB%A3-usn"><span class="nav-text">5.2 inotify 实时增量（替代 USN）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E9%87%8F%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-text">5.3 增量内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E4%B8%8E-statx"><span class="nav-text">5.4 属性过滤与 statx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%9E%8D%E5%90%88-gui%E4%BB%8E-ipc-%E5%88%B0%E8%BF%9B%E7%A8%8B%E5%86%85-localengine"><span class="nav-text">5.5 融合 GUI：从 IPC
+到进程内 LocalEngine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95"><span class="nav-text">5.6 结果右键菜单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%88%90%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="nav-text">开发成果展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="nav-text">六、踩坑记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3"><span class="nav-text">七、部署文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA"><span class="nav-text">7.1 构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9"><span class="nav-text">7.2 产物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">7.3 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-text">7.4 运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E6%80%A7%E8%83%BD%E9%AA%8C%E8%AF%81"><span class="nav-text">八、性能验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%E4%B8%8E%E5%90%8E%E7%BB%AD"><span class="nav-text">九、当前状态与后续</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-text">结语</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -247,7 +248,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="Everything-Linux：从逆向分析到静态分发的完整实战 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可...">
+      <meta itemprop="description" content="2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI&#x2F;daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -261,9 +262,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-11-19 10:45:00 / 修改时间：23:31:10" itemprop="dateCreated datePublished" datetime="2026-11-19T10:45:00+08:00">2026-11-19</time>
+      <time title="创建时间：2026-11-19 10:45:00" itemprop="dateCreated datePublished" datetime="2026-11-19T10:45:00+08:00">2026-11-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-11-20 22:35:00" itemprop="dateModified" datetime="2026-11-20T22:35:00+08:00">2026-11-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -285,14 +292,21 @@
     </span>
 </div>
 
-            <div class="post-description">动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于直接读 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal 做增量更新——把慢活全放在建索引阶段，查询时只在内存里的预排序数组上做一次线性过滤。 Linux 上没有 MFT，也没有 USN Journal 这种稳定、按卷、可...</div>
+            <div class="post-description">2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI/daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输...</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="动机">动机</h2>
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p><strong>2026-11-20 更新（v0.3beta-fused）</strong>：GUI 已改为进程内
+<code>LocalEngine</code>，不再启动或内嵌
+<code>everythingd</code>，发布包只含一个约 3.6 MB 的
+<code>everything-gtk</code>。本文的架构、部署和性能章节已按融合版刷新；CLI/daemon
+作为可选接口保留。</p>
+</blockquote>
+<h2 id="动机">动机</h2>
 <p>voidtools 的 Everything 是 Windows
 上公认的”秒搜”神器：百万文件输入即出结果。它的秘密不在搜索算法多神，而在于<strong>直接读
 NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal
@@ -302,8 +316,10 @@ NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal
 → 可行性判断 → 技术选型 → 架构设计 → 分阶段实现 → 性能验证 → 静态分发 →
 部署文档</strong>。</p>
 <p>代码全部在
-<code>~/work/everything-research/everything-linux/</code>，研究过程文件在同目录，最终产物在
-<code>dist/</code>。</p>
+<code>~/work/everything-research/everything-linux/</code>，研究过程文件在同目录。当前融合版产物是
+<code>dist/everything-gtk</code>，Linux 三平台单文件包见 <a
+target="_blank" rel="noopener" href="https://github.com/sunjunior/Everything-Linux/releases/tag/v0.3beta-fused">GitHub
+Release</a>。</p>
 <h2 id="一逆向研究everything-到底怎么工作">一、逆向研究：Everything
 到底怎么工作</h2>
 <p>样本是 <code>Everything-1.4.1.1032.x64.zip</code>（x86-64 PE32+
@@ -455,13 +471,15 @@ cookie/overflow/watch 管理</td>
 Go（未安装）、Python（内存/性能不适合百万级常驻索引）、C++（开发效率与内存安全代价大）。</p>
 <h2 id="四软件架构">四、软件架构</h2>
 <h3 id="工程结构">4.1 工程结构</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">everything-linux/</span><br><span class="line">├── Cargo.toml                      workspace 统一依赖</span><br><span class="line">├── build-static.sh                 静态/分发构建</span><br><span class="line">├── crates/</span><br><span class="line">│   ├── everything_core/            纯引擎库（无 UI 依赖）</span><br><span class="line">│   │   └── src/</span><br><span class="line">│   │       ├── model.rs            SlotId / EntryMeta / QueryOptions</span><br><span class="line">│   │       ├── store.rs            SoA Store、字符串池、freelist、DashMap</span><br><span class="line">│   │       ├── index.rs            IndexSnapshot + 增量 apply_changes</span><br><span class="line">│   │       ├── walker.rs           并行全树遍历 + statx 时间</span><br><span class="line">│   │       ├── query/&#123;lexer,parser,eval,filters&#125;.rs</span><br><span class="line">│   │       ├── monitor.rs          裸 libc inotify + 事件通道</span><br><span class="line">│   │       ├── persist.rs          zstd 快照 + ArcSwap 发布</span><br><span class="line">│   │       ├── ipc.rs              Unix socket 协议 + 守护拉起</span><br><span class="line">│   │       ├── engine.rs           编排：扫描/重建/tick/事件应用</span><br><span class="line">│   │       └── config.rs           TOML 配置</span><br><span class="line">│   ├── everythingd/                守护进程：索引 + inotify + IPC server</span><br><span class="line">│   ├── everything/                 CLI 客户端</span><br><span class="line">│   └── everything-gtk/             GTK3 GUI（复用 core）</span><br><span class="line">├── docs/                           BENCHMARKS / INOTIFY_DESIGN / GUI_AND_BUILD</span><br><span class="line">└── dist/                           最终产物（static-pie + 小 GUI）</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">everything-linux/</span><br><span class="line">├── Cargo.toml</span><br><span class="line">├── build-static.sh                 CLI/daemon 静态构建（融合 GUI 不用）</span><br><span class="line">├── crates/</span><br><span class="line">│   ├── everything_core/            纯引擎库（无 UI 依赖）</span><br><span class="line">│   │   └── src/</span><br><span class="line">│   │       ├── model.rs            SlotId / EntryMeta / QueryOptions</span><br><span class="line">│   │       ├── store.rs            SoA Store、字符串池、freelist、DashMap</span><br><span class="line">│   │       ├── index.rs            IndexSnapshot + 增量 apply_changes</span><br><span class="line">│   │       ├── walker.rs           并行全树遍历 + statx 时间</span><br><span class="line">│   │       ├── query/&#123;lexer,parser,eval,filters&#125;.rs</span><br><span class="line">│   │       ├── monitor.rs          裸 libc inotify + 事件通道</span><br><span class="line">│   │       ├── persist.rs          zstd 快照 + ArcSwap 发布</span><br><span class="line">│   │       ├── ipc.rs              Unix socket 协议（可选 CLI/daemon）</span><br><span class="line">│   │       ├── sdk.rs              LocalEngine：进程内 tick / 换根 / generation</span><br><span class="line">│   │       ├── raw.rs              ELDR raw mmap 快照原型</span><br><span class="line">│   │       ├── view.rs             Store / Raw 统一查询视图</span><br><span class="line">│   │       ├── engine.rs           编排：扫描/重建/tick/事件应用</span><br><span class="line">│   │       └── config.rs           TOML 配置</span><br><span class="line">│   ├── everythingd/                可选守护进程（CLI 使用）</span><br><span class="line">│   ├── everything/                 可选 CLI 客户端</span><br><span class="line">│   └── everything-gtk/             融合 GTK3 GUI（build.rs 为空）</span><br><span class="line">├── .github/workflows/build-fused.yml  三平台单文件 GUI 发布</span><br><span class="line">├── docs/                           BENCHMARKS / INPROCESS_BENCH / INOTIFY_DESIGN</span><br><span class="line">└── dist/                           本地构建产物</span><br></pre></td></tr></table></figure>
 <h3 id="分层与数据流">4.2 分层与数据流</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[walker 并行遍历] ─┐</span><br><span class="line">                   ├─→ [Store: SoA + 字符串池] ─→ [IndexSnapshot: 多排序数组] ─→ [ArcSwap 原子发布]</span><br><span class="line">[monitor inotify] ─┘                                        │</span><br><span class="line">      ▲                                                     ▼</span><br><span class="line">      │ 事件合并/溢出重扫                           [Query Engine: term 图 + 特化求值]</span><br><span class="line">      │                                                     │</span><br><span class="line">[zstd 快照] ←───────────────────────────────── [CLI / GTK GUI / IPC]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[walker 并行遍历] ─┐</span><br><span class="line">                   ├─→ [Store: SoA + 字符串池] ─→ [IndexSnapshot: 多排序数组] ─→ [ArcSwap 原子发布]</span><br><span class="line">[monitor inotify] ─┘                                        │</span><br><span class="line">      ▲                                                     ▼</span><br><span class="line">      │ 事件合并/溢出重扫                           [Query Engine: term 图 + 特化求值]</span><br><span class="line">      │                                                     │</span><br><span class="line">[zstd 快照] ←───────────────────────────────── [GUI LocalEngine / CLI IPC]</span><br></pre></td></tr></table></figure>
 <p>关键点：<strong>索引用 <code>ArcSwap</code>
 原子发布不可变快照</strong>，查询线程只持有
 <code>Arc&lt;IndexSnapshot&gt;</code>，零锁扫描——这正是 Everything
-速度的核心。</p>
+速度的核心。融合 GUI 中，<code>LocalEngine</code> 在进程内持有
+<code>Engine</code>，后台 tick 线程与 GTK
+主线程通过轻量结果通道连接；CLI 仍可走可选的 daemon socket。</p>
 <h3 id="关键数据结构">4.3 关键数据结构</h3>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">SlotId</span> = <span class="type">u32</span>;</span><br><span class="line"><span class="comment">// 条目身份用 (父槽, 名字)，而不是 (dev,ino)：</span></span><br><span class="line"><span class="comment">// inotify 事件给的是 wd(=目录) + name；硬链接一个 inode 多名字需要多槽位。</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EntryKey</span> &#123; parent: SlotId, name_off: <span class="type">u32</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EntryMeta</span> &#123; ino, dev, kind, size, mtime, created, accessed, flags &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SoA 布局（缓存友好）</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Store</span> &#123;</span><br><span class="line">    name_pool: <span class="type">Vec</span>&lt;<span class="type">u8</span>&gt;, name_offs: <span class="type">Vec</span>&lt;<span class="type">u32</span>&gt;, parents: <span class="type">Vec</span>&lt;SlotId&gt;,</span><br><span class="line">    metas: <span class="type">Vec</span>&lt;EntryMeta&gt;, live: <span class="type">Vec</span>&lt;<span class="type">bool</span>&gt;, free: <span class="type">Vec</span>&lt;SlotId&gt;,</span><br><span class="line">    by_key: DashMap&lt;EntryKey, SlotId&gt;, children: HashMap&lt;SlotId, <span class="type">Vec</span>&lt;SlotId&gt;&gt;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>IndexSnapshot</code> 维护
@@ -508,16 +526,32 @@ early-out。默认结果沿用索引顺序，所以”按名称排序”是免�
 <code>3d/2w/1m/1y</code>；<code>created</code> 通过
 <code>libc::statx</code> 的 <code>stx_btime</code> 取得（不支持时回退
 ctime）。快照格式升到 v2，并兼容 v1 旧文件。</p>
-<h3 id="ipc-守护-cli-gui">5.5 IPC / 守护 / CLI / GUI</h3>
-<p>守护进程监听
-<code>$XDG_RUNTIME_DIR/everything-linux.sock</code>：客户端发一行 JSON
-请求，服务端回一行 JSON 头 +
-每行一个结果路径；<code>status</code>、<code>reindex</code>、<code>index add/remove</code>、<code>save</code>、<code>shutdown</code>
-都是 IPC 命令。CLI 在 socket 不存在时会从同级目录自动拉起
-<code>everythingd</code>。</p>
-<p>GTK3 GUI 通过同一个 IPC 复用核心引擎：80ms
-防抖的搜索框、结果列表、状态栏、双击用系统默认程序打开文件、结果右键菜单；搜索框在启动与窗口恢复时自动聚焦，并对缺失的输入法环境做自愈；GUI
-内嵌守护进程后单文件约 5.5 MB。</p>
+<h3 id="融合-gui从-ipc-到进程内-localengine">5.5 融合 GUI：从 IPC
+到进程内 LocalEngine</h3>
+<p>旧版是 daemon + CLI + GUI 三段式：GUI 通过 Unix socket
+查询，启动时还要释放/内嵌 <code>everythingd</code>。v0.3 把 GUI
+改成真正的融合进程：</p>
+<ul>
+<li>启动时直接构造 <code>LocalEngine</code>，内部 <code>Engine</code> 用
+<code>RwLock&lt;Arc&lt;Mutex&lt;Engine&gt;&gt;&gt;</code> 持有；后台
+tick 线程消费 inotify 事件并增量发布索引。</li>
+<li>搜索走 <code>search_slots</code>，只返回
+<code>(slot, generation)</code>；GTK 的 <code>ListStore</code> 只存
+<code>u32</code> + <code>u64</code>，完整路径在
+<code>cell data func</code> 里按<strong>可见行</strong>惰性渲染，5000
+行结果不再预先生成 5000 个字符串。</li>
+<li>换根时 <code>set_auto_root</code> 在后台
+<code>Engine::open + scan + start_monitor</code>，旧索引继续服务查询；新索引就绪后原子替换，generation
+递增使旧行自动失效，GUI 再重跑当前查询。</li>
+<li>不再释放/内嵌 <code>everythingd</code>，不需要
+<code>--frontend-exe</code>、socket 或 IPC；单文件约 3.6
+MB，运行时只有一个进程。</li>
+</ul>
+<p>CLI/daemon 仍保留为可选接口：<code>everything --local</code> 直接在
+CLI 进程内跑 <code>LocalEngine</code>（zstd 快照启动约 160
+ms）；<code>everything --local --raw &lt;file&gt;</code> 使用 70 MB 的
+mmap raw 快照原型，冷启动约 21 ms，但宽结果查询与 daemon
+热查询基本持平，小结果仍慢 3–6 ms。</p>
 <h3 id="结果右键菜单">5.6 结果右键菜单</h3>
 <p>结果列表右键某项弹出三项菜单，对齐 Everything
 的常用操作：<strong>打开</strong>（默认程序打开，等同双击）、<strong>打开路径</strong>（打开父目录并选中该项）、<strong>复制完整路径和文件名</strong>（写入系统剪贴板）。通过
@@ -586,7 +620,8 @@ alt="右键菜单" /></td>
 随后仍继续查询、又叠了一条误导性的 connect 错误。修复：守护发现按”同目录
 → PATH → 常见目录 →
 内嵌二进制”顺序查找；启动失败时只报一条明确错误并停止查询线程；进一步把守护进程<strong>内嵌进
-GUI</strong>，单文件即可运行。</li>
+GUI</strong>，单文件即可运行。（v0.3 融合版已彻底移除
+daemon，此修复只保留在旧版历史中。）</li>
 <li><strong>大目录首次索引导致客户端启动超时</strong>：原流程先全量扫描、后绑定
 IPC socket；索引 <code>~/</code> 时扫描需要几十秒，GUI 等 socket
 超时就报错。修复：daemon <strong>先绑定 socket 并启动 server
@@ -641,140 +676,185 @@ Windows Everything 的“打开文件所在位置”不一致。修复：优先�
 4.18+ 支持），打开父目录并高亮目标；不支持时回退到
 <code>nautilus/dolphin/nemo/caja --select</code>，最后才仅打开目录。已用程序内同一调用路径验证
 Thunar 正确打开目标目录。</li>
+<li><strong>换根持有引擎锁约 2.4 秒</strong>：<code>set_auto_root</code>
+最初在锁内
+<code>Engine::open + scan</code>，期间所有查询阻塞。修复：后台构建新
+Engine，旧索引继续服务，完成后原子 swap；重建期间暂停旧 tick，并做好
+monitor 交接和失败回滚。94 万文件实测重建 2378 ms，查询 P95 16.4
+ms。</li>
+<li><strong>换根后旧结果行仍可见</strong>：ListStore 里保存的是旧索引
+slot，新索引换入后这些 slot 可能指向别的文件。修复：每行带
+generation，单元格渲染时校验；换根后重新执行当前查询。</li>
+<li><strong>SDK
+测试污染用户配置</strong>：<code>LocalEngine::set_auto_root</code>
+最初会顺手保存全局配置，测试用临时根目录时把
+<code>~/.config/everything-linux/config.toml</code>
+覆盖成测试路径。修复：SDK 不再写配置，GUI 在换根成功后显式
+<code>save_config()</code>。</li>
+<li><strong>5000 行 ListStore 全存路径</strong>：旧实现每行一个
+String，搜索时先构造全部路径再显示。改成 slot + generation 后，ListStore
+只存 12 字节/行，路径按可见行生成，宽结果查询快约 30%。</li>
+<li><strong>融合版右键菜单突然消失</strong>：结果行最初存的是索引
+generation，而 inotify 每处理一次变化就递增 generation，右键时校验
+<code>row_gen == engine.generation()</code>
+几乎必然失败，菜单直接不弹。修复：行 generation 改为只在整体换根时递增的
+<code>root_generation</code>，普通增量不再使菜单失效；换根时旧行隐藏并自动重跑当前查询。</li>
 </ol>
 <h2 id="七部署文档">七、部署文档</h2>
 <h3 id="构建">7.1 构建</h3>
-<p>代码仓库：<code>https://github.com/sunjunior/Everything-Linux</code>（仅保留
-GitHub 默认分支
-<code>main</code>，<code>target/</code>、<code>dist/</code>
-等构建目录不入库）。</p>
-<p>GitHub Actions 在 <code>ubuntu-24.04</code> 上安装 GTK3
-开发库后自动构建 CLI / daemon / 内嵌守护的 GUI，打包上传
-<code>everything-linux-x86_64.tar.gz</code>；打 <code>v*</code>
-标签会发布到 Releases。<strong>v0.1beta 已发布</strong>（含打包交付件与
-SHA256）。</p>
+<p>仓库：<code>https://github.com/sunjunior/Everything-Linux</code>。融合版由
+<code>.github/workflows/build-fused.yml</code> 在 <code>v*-fused</code>
+标签上构建 Linux x86_64 / aarch64 / armv7：x86_64、aarch64 使用原生
+runner，armv7 使用 QEMU 容器；每个压缩包只放一个
+<code>everything-gtk</code>，不再构建或内嵌 daemon。</p>
+<p><strong>v0.3beta-fused 已发布</strong>：<a
+target="_blank" rel="noopener" href="https://github.com/sunjunior/Everything-Linux/releases/tag/v0.3beta-fused">Release
+页面</a>（含三个 Linux 资产与 SHA256）。</p>
 <p>本地构建：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/work/everything-research/everything-linux</span><br><span class="line">cargo <span class="built_in">test</span> --offline          <span class="comment"># 14/14 通过</span></span><br><span class="line">./build-static.sh             <span class="comment"># 产物在 dist/（CI 用 CARGO_FLAGS=&quot;--locked&quot;）</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/work/everything-research/everything-linux</span><br><span class="line">cargo <span class="built_in">test</span> --offline                         <span class="comment"># 12 个 suite、34 个测试通过</span></span><br><span class="line">cargo build --release --offline -p everything-gtk</span><br><span class="line"><span class="comment"># 产物：target/release/everything-gtk</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>融合 GUI 不走
+<code>build-static.sh</code>；该脚本仍可用于生成可选的静态
+CLI/daemon。</p>
+</blockquote>
 <h3 id="产物">7.2 产物</h3>
 <table>
 <colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
 </colgroup>
 <thead>
 <tr>
-<th>文件</th>
-<th>链接</th>
-<th>大小</th>
-<th>说明</th>
+<th>平台</th>
+<th>资产</th>
+<th>内容</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>dist/everything</code></td>
-<td>static-pie</td>
-<td>1.8 MB</td>
-<td>CLI，任意 x86-64 Linux 直接运行</td>
+<td>Linux x86_64</td>
+<td><code>everything-linux-x86_64.tar.gz</code></td>
+<td>单个 <code>everything-gtk</code>，约 3.6 MB</td>
 </tr>
 <tr>
-<td><code>dist/everythingd</code></td>
-<td>static-pie</td>
-<td>4.7 MB</td>
-<td>守护进程，任意 x86-64 Linux 直接运行</td>
+<td>Linux aarch64</td>
+<td><code>everything-linux-aarch64.tar.gz</code></td>
+<td>单个 <code>everything-gtk</code>，约 3.6 MB</td>
 </tr>
 <tr>
-<td><code>dist/everything-gtk</code></td>
-<td>动态 GTK3 + 内嵌 daemon</td>
-<td>5.5 MB</td>
-<td>GUI，单文件分发，需系统 <code>libgtk-3.so.0</code></td>
+<td>Linux armv7</td>
+<td><code>everything-linux-armv7.tar.gz</code></td>
+<td>单个 <code>everything-gtk</code>，约 3.6 MB</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>GUI 无法现实地静态链接
-GTK（glib/gdk/pango/cairo/X11/图标主题/动态模块），所以选”静态核心 +
-复用系统 GTK”的方案。GUI 在构建时把静态 <code>everythingd</code>
-内嵌进自身，首次运行自动释放到
-<code>~/.cache/everything-linux/everythingd-&lt;hash&gt;</code> 并以 GUI
-所在目录为索引根启动：把 <code>everything-gtk</code>
-单独拷到另一台机器即可双击使用。没有 GTK3 的环境直接用 CLI。</p>
-</blockquote>
+<p>运行要求：Linux + GTK3
+运行库（<code>libgtk-3.so.0</code>、<code>libglib-2.0.so.0</code>
+等）；不需要 daemon、CLI 或 socket 文件。GUI 无法现实地静态链接
+GTK（glib/gdk/pango/cairo/X11/图标主题/动态模块），因此核心索引静态编入
+GUI，GTK 复用系统库。</p>
 <h3 id="配置">7.3 配置</h3>
 <p><code>~/.config/everything-linux/config.toml</code>：</p>
 <figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">roots</span> = [<span class="string">&quot;~&quot;</span>]</span><br><span class="line"><span class="attr">exclude</span> = []</span><br><span class="line"><span class="attr">follow_symlinks</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">index_hidden</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">snapshot_path</span> = <span class="string">&quot;~/.cache/everything-linux/db.eldb&quot;</span></span><br><span class="line"><span class="attr">socket_path</span> = <span class="string">&quot;/tmp/everything-linux.sock&quot;</span></span><br><span class="line"><span class="attr">watch_enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">debounce_ms</span> = <span class="number">15</span></span><br><span class="line"><span class="attr">rescan_interval_secs</span> = <span class="number">600</span></span><br><span class="line"><span class="attr">snapshot_interval_secs</span> = <span class="number">5</span></span><br><span class="line"><span class="attr">threads</span> = <span class="number">8</span></span><br><span class="line"><span class="attr">max_results</span> = <span class="number">100000</span></span><br></pre></td></tr></table></figure>
-<h3 id="运行与查询">7.4 运行与查询</h3>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">./dist/everythingd                       <span class="comment"># 首次全量扫描；之后从快照秒开</span></span><br><span class="line">./dist/everything status</span><br><span class="line">./dist/everything alpha</span><br><span class="line">./dist/everything <span class="string">&#x27;*.rs | *.md&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;*.tmp !keep&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;size:&gt;10mb&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;dm:&gt;2025-01-01&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;ext:rs|md&#x27;</span></span><br><span class="line">./dist/everything --path --json <span class="string">&#x27;src/main&#x27;</span> | jq .</span><br><span class="line">./dist/everything-gtk                    <span class="comment"># GUI</span></span><br></pre></td></tr></table></figure>
-<p>systemd user 服务示例：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Everything-Linux index daemon</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">ExecStart</span>=%h/opt/everything-linux/dist/everythingd</span><br><span class="line"><span class="attr">Restart</span>=<span class="literal">on</span>-failure</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=default.target</span><br></pre></td></tr></table></figure>
+<h3 id="运行">7.4 运行</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf everything-linux-x86_64.tar.gz</span><br><span class="line">./everything-gtk</span><br></pre></td></tr></table></figure>
+<p>GUI
+行为：关闭窗口隐藏到任务栏，双击托盘图标恢复，右键托盘图标退出；重复启动会自动唤起已有窗口；结果右键可打开、打开所在目录或复制完整路径。索引、查询和
+inotify 都在这个进程内完成，首次启动会全量扫描并写 zstd
+快照，之后从快照恢复。</p>
+<p>可选 CLI/daemon（需要从源码构建，不在本轮发布包中）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./dist/everythingd                       <span class="comment"># 首次全量扫描；之后从快照秒开</span></span><br><span class="line">./dist/everything status</span><br><span class="line">./dist/everything alpha</span><br><span class="line">./dist/everything <span class="string">&#x27;*.rs | *.md&#x27;</span></span><br><span class="line">./dist/everything <span class="string">&#x27;size:&gt;10mb&#x27;</span></span><br><span class="line">./dist/everything --path --json <span class="string">&#x27;src/main&#x27;</span> | jq .</span><br></pre></td></tr></table></figure>
+<p>CLI 热查询仍走 Unix socket；融合 GUI 不依赖它，因此本轮不发布 systemd
+服务，也不需要在桌面环境里常驻 daemon。</p>
 <h2 id="八性能验证">八、性能验证</h2>
-<p>环境：Arch Linux x86-64，内核 7.2.9，8 核，31 GiB；数据集 100 个目录
-× 1000 文件 = 10 万文件。</p>
+<p>环境：Arch Linux x86-64，内核 7.2.9，8 核，31 GiB；数据集 106
+万条目（94 万文件 + 12 万目录）。</p>
 <table>
 <thead>
 <tr>
 <th>指标</th>
-<th>结果</th>
+<th style="text-align: right;">结果</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>子串查询 <code>file_050_0123</code></td>
-<td>引擎 3.3 ms</td>
+<td>单进程 GUI RSS / PSS</td>
+<td style="text-align: right;">186.3 MB / 125.7 MB</td>
 </tr>
 <tr>
-<td>通配符 <code>file_050_*</code></td>
-<td>引擎 8.1 ms</td>
+<td>旧 daemon + GUI RSS / PSS</td>
+<td style="text-align: right;">190.7 MB / 138.3 MB</td>
 </tr>
 <tr>
-<td>正则 <code>file_0[0-9][0-9]_0999</code></td>
-<td>引擎 13.0 ms</td>
+<td>GUI 可执行文件</td>
+<td style="text-align: right;">3.6 MB（旧版 5.5 MB）</td>
 </tr>
 <tr>
-<td>全路径 <code>path:dir_050</code></td>
-<td>引擎 53.3 ms</td>
+<td>zstd 快照</td>
+<td style="text-align: right;">约 25 MB</td>
 </tr>
 <tr>
-<td>按大小排序 10 万结果</td>
-<td>引擎 10.9 ms</td>
+<td>冷索引</td>
+<td style="text-align: right;">2.4–2.7 s</td>
 </tr>
 <tr>
-<td>创建文件 → 查询可见（P50）</td>
-<td>约 40 ms（含 CLI 进程开销）</td>
+<td>换根后台重建</td>
+<td style="text-align: right;">2378 ms，查询 P95 16.4 ms</td>
 </tr>
 <tr>
-<td>快照加载 → socket 可用</td>
-<td>158 ms</td>
+<td>子串 <code>*.rs</code></td>
+<td style="text-align: right;">8.9 ms（GUI 状态栏 10.6 ms）</td>
 </tr>
 <tr>
-<td>守护进程 RSS</td>
-<td>约 42 MB（约 400 B/条目）</td>
+<td>文件名 <code>main.rs</code></td>
+<td style="text-align: right;">8.6 ms</td>
+</tr>
+<tr>
+<td>按大小排序</td>
+<td style="text-align: right;">7.5 ms</td>
+</tr>
+<tr>
+<td>全路径 <code>path:</code></td>
+<td style="text-align: right;">51.1 ms</td>
+</tr>
+<tr>
+<td>无命中</td>
+<td style="text-align: right;">6.9 ms</td>
 </tr>
 </tbody>
 </table>
-<p>增量更新验证：连续创建 10 个文件，<code>full_rebuilds</code> 保持
-1（仅启动），<code>incremental_updates</code> 增加
-10——确认变更走的是增量路径。</p>
+<p>融合后省掉 daemon 进程和 IPC，单进程比旧 daemon + GUI 的 RSS / PSS
+分别低约 4 MB / 13 MB，窗口首次显示从 558 ms 降到 536
+ms。宽结果查询受益于 slot + 惰性路径渲染，<code>*.rs</code> 从 14.8 ms
+降到 8.9 ms，全路径从 58.9 ms 降到 51.1 ms。</p>
+<p>换根实测：旧索引为 <code>/home/sunjunior</code>（94
+万文件），后台重建同一根耗时 2378 ms；重建期间持续查询的中位数为 11.2
+ms、P95 为 16.4 ms、最大 21.6 ms。对比修改前，换根会持有引擎锁约 2.4
+s，期间查询全部阻塞。</p>
+<p>raw mmap 原型：70 MB 文件，冷启动约 21 ms（daemon 路径约 896
+ms），宽结果查询与热 daemon 基本持平；小结果/全路径仍慢 3–6
+ms。由于磁盘占用和保存流程尚未接入，本轮不随发布包提供 raw 快照。</p>
 <h2 id="九当前状态与后续">九、当前状态与后续</h2>
 <p>已完成：并行建索引、SoA
 内存索引、查询引擎（布尔/通配符/正则/大小写/全词/路径/排序）、属性过滤、zstd
-快照、inotify 实时增量 + 增量快照、IPC/守护/CLI、GTK3 GUI（托盘驻留 /
-单实例 / 结果右键菜单 / 搜索框自动聚焦 /
-输入法环境自愈）、默认索引根跟随启动程序、配置路径 <code>~</code>
-展开、单文件静态分发、GitHub Actions 自动构建、<code>v0.1beta</code>
-Release。</p>
-<p>未完成：内容搜索、HTTP/ETP
+快照、inotify 实时增量 + 增量快照、可选 IPC/守护/CLI、融合 GTK3
+GUI（进程内 LocalEngine / 托盘驻留 / 单实例 / 结果右键菜单 /
+输入法自愈）、后台换根与原子切换、slot 惰性渲染 + Top-N、raw mmap
+原型、Linux 三平台单文件发布、<code>v0.3beta-fused</code> Release。</p>
+<p>未完成：Windows 移植（文件监听、路径编码、单实例、GTK3 运行时）、raw
+快照接入正式保存流程、内容搜索、HTTP/ETP
 接口、重复文件检测、<code>root:</code>/<code>empty:</code>
-特殊函数、变音符号折叠、EFU
-文件列表索引、百万级实测与进一步内存优化。</p>
+特殊函数、变音符号折叠、EFU 文件列表索引。融合 CLI
+也还没有在所有场景追平 daemon 热查询。</p>
 <h2 id="结语">结语</h2>
 <p>Everything
 的”魔法”其实是可以拆解的工程取舍：<strong>把慢活前置到索引阶段，查询阶段只做内存里的顺序扫描</strong>。Linux
-上虽然没有 MFT/USN，但用「并行遍历 + inotify + 快照 +
-周期对账」可以复刻出同数量级的体验。最终 CLI/daemon 做到 1.8 MB / 4.7 MB
-的静态单文件，GUI 把守护进程内嵌后约 5.5 MB
-单文件即可部署——算是一次比较舒服的”行为复刻”实践。</p>
+上没有 MFT/USN，但用「并行遍历 + inotify + 快照 +
+周期对账」可以复刻出同数量级的体验。最终 GUI
+把索引器、查询和界面收进一个约 3.6 MB
+的进程，换根也不再阻塞查询——对”一个文件启动、升级只替换文件”这个目标来说，融合架构比
+daemon + IPC 更简单，也更好维护。</p>
 
     </div>
 
