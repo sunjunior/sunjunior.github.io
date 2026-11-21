@@ -20,17 +20,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="目标游戏：忍者神龟2（1990，Mapper 4） 与 初代《忍者神龟1》（1989，Mapper 1）；全文按游戏分章组织，后续《忍者神龟3》《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：两代的伤害实现各不相同——二代是「">
+    <meta name="description" content="目标游戏：忍者神龟2（1990，Mapper 4）、初代《忍者神龟1》（1989，Mapper 1） 与 《忍者神龟3》中文版（MSTR 2003，非 Konami 原版）；全文按游戏分章组织，后续《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保">
 <meta property="og:type" content="article">
 <meta property="og:title" content="忍者神龟系列主角攻击力翻倍Hack技术文档">
 <meta property="og:url" content="https://sunjunior.github.io/2026/11/17/%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F%E7%B3%BB%E5%88%97%E4%B8%BB%E8%A7%92%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8DHack%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="目标游戏：忍者神龟2（1990，Mapper 4） 与 初代《忍者神龟1》（1989，Mapper 1）；全文按游戏分章组织，后续《忍者神龟3》《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：两代的伤害实现各不相同——二代是「">
+<meta property="og:description" content="目标游戏：忍者神龟2（1990，Mapper 4）、初代《忍者神龟1》（1989，Mapper 1） 与 《忍者神龟3》中文版（MSTR 2003，非 Konami 原版）；全文按游戏分章组织，后续《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://sunjunior.github.io/img/turtle2.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/turtle1.gif">
 <meta property="article:published_time" content="2026-11-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-20T15:39:25.079Z">
+<meta property="article:modified_time" content="2026-11-21T15:59:50.684Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, NES, 忍者神龟, Mesen2, Game Genie">
 <meta name="twitter:card" content="summary">
@@ -175,7 +175,13 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
 读指针与伤害字节（tmnt_ptr.lua 核心）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#game-genie-%E8%A7%A3%E7%A0%81decode_gg.py-%E6%A0%B8%E5%BF%83"><span class="nav-text">1.10.3 Game Genie
 解码（decode_gg.py 核心）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%88%9D%E4%BB%A3%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F1%E6%94%BB%E5%87%BB%E5%8A%9B%E7%BF%BB%E5%80%8D%E5%8D%95%E8%A1%A8%E5%AE%9A%E4%B9%BE%E5%9D%A4"><span class="nav-text">第二章
 初代《忍者神龟1》攻击力翻倍：单表定乾坤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87-1"><span class="nav-text">2.1 背景与目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF-1"><span class="nav-text">2.2 ROM 与游戏信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%B4%A2%E7%A4%BE%E5%8C%BA%E4%BC%A4%E5%AE%B3%E8%A1%A8"><span class="nav-text">2.3 线索：社区伤害表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%B8%A6%E6%AD%A5%E9%95%BF%E7%9A%84%E6%A8%A1%E5%BC%8F%E6%90%9C%E7%B4%A2-%E8%B7%A8%E7%89%88%E6%9C%AC%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="nav-text">2.4 定位：带步长的模式搜索
-+ 跨版本交叉验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%8D%A2%E7%AE%97%E4%B8%8E%E5%94%AF%E4%B8%80%E5%BC%95%E7%94%A8%E7%82%B9"><span class="nav-text">2.5 地址换算与唯一引用点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E7%B4%A2%E5%BC%95-y-%E7%9A%84%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91"><span class="nav-text">2.6 伤害索引 Y 的生成逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%8116-%E5%AD%97%E8%8A%82%E5%85%A8%E9%83%A8-2"><span class="nav-text">2.7 打补丁：16 字节全部 ×2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">2.8 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E6%AF%94%E5%AF%B9%E4%B8%8E-md5"><span class="nav-text">2.8.1 字节比对与 MD5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%8F%96%E8%AF%81%E8%A1%A5%E4%B8%81%E7%89%88%E6%94%BB%E5%87%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">2.8.2 实战取证：补丁版攻击演示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%B1%80%E9%99%90%E8%AF%B4%E6%98%8E"><span class="nav-text">2.8.3 冒烟测试与局限说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%BA%8C%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E5%B7%AE%E5%BC%82%E5%B0%8F%E7%BB%93"><span class="nav-text">2.9 与二代的方法差异小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%91%BD%E4%BB%A4"><span class="nav-text">2.10 附录：关键脚本与命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E8%A1%A8%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A1%A5%E4%B8%81python"><span class="nav-text">2.10.1 伤害表定位与补丁（Python）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E5%A4%B4%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95lua-mesen2"><span class="nav-text">2.10.2 无头冒烟测试（Lua + Mesen2）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%84%9A%E6%9C%AC%E6%B8%85%E5%8D%95"><span class="nav-text">2.10.3 分析脚本清单</span></a></li></ol></li></ol></li></ol></div>
++ 跨版本交叉验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%8D%A2%E7%AE%97%E4%B8%8E%E5%94%AF%E4%B8%80%E5%BC%95%E7%94%A8%E7%82%B9"><span class="nav-text">2.5 地址换算与唯一引用点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E7%B4%A2%E5%BC%95-y-%E7%9A%84%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91"><span class="nav-text">2.6 伤害索引 Y 的生成逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%8116-%E5%AD%97%E8%8A%82%E5%85%A8%E9%83%A8-2"><span class="nav-text">2.7 打补丁：16 字节全部 ×2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-1"><span class="nav-text">2.8 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E6%AF%94%E5%AF%B9%E4%B8%8E-md5"><span class="nav-text">2.8.1 字节比对与 MD5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%8F%96%E8%AF%81%E8%A1%A5%E4%B8%81%E7%89%88%E6%94%BB%E5%87%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">2.8.2 实战取证：补丁版攻击演示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%B1%80%E9%99%90%E8%AF%B4%E6%98%8E"><span class="nav-text">2.8.3 冒烟测试与局限说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%BA%8C%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E5%B7%AE%E5%BC%82%E5%B0%8F%E7%BB%93"><span class="nav-text">2.9 与二代的方法差异小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%91%BD%E4%BB%A4"><span class="nav-text">2.10 附录：关键脚本与命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E8%A1%A8%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A1%A5%E4%B8%81python"><span class="nav-text">2.10.1 伤害表定位与补丁（Python）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E5%A4%B4%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95lua-mesen2"><span class="nav-text">2.10.2 无头冒烟测试（Lua + Mesen2）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%84%9A%E6%9C%AC%E6%B8%85%E5%8D%95"><span class="nav-text">2.10.3 分析脚本清单</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%BF%8D%E8%80%85%E7%A5%9E%E9%BE%9F3mstr-2003-%E4%B8%AD%E6%96%87%E7%89%88%E6%94%BB%E5%87%BB%E5%8A%9B-40024-%E5%AD%97%E8%8A%82%E4%BC%A4%E5%AE%B3%E8%A1%A8"><span class="nav-text">第三章
+忍者神龟3（MSTR 2003 中文版）攻击力 400%：24 字节伤害表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E7%9B%AE%E6%A0%87-2"><span class="nav-text">3.1 背景与目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rom-%E4%B8%8E%E6%B8%B8%E6%88%8F%E4%BF%A1%E6%81%AF-2"><span class="nav-text">3.2 ROM 与游戏信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%B7%A5%E5%85%B7-1"><span class="nav-text">3.3 分析环境与工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF-1"><span class="nav-text">3.4 破解总体思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B-1"><span class="nav-text">3.5 详细分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E7%A1%AE%E8%AE%A4%E6%B8%B8%E6%88%8F%E8%BA%AB%E4%BB%BD"><span class="nav-text">3.5.1 先确认游戏身份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E5%AE%9A%E7%8E%A9%E5%AE%B6-hp04f1"><span class="nav-text">3.5.2 锁定玩家 HP：$04F1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E5%AE%9A%E6%95%8C%E4%BA%BA-hp0621x"><span class="nav-text">3.5.3 锁定敌人 HP：$0621,X</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%93%E4%BC%A4%E5%AE%B3%E5%80%BC%E5%86%99%E5%85%A50619x"><span class="nav-text">3.5.4
+抓「伤害值」写入：$0619,X</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E6%B1%87%E7%BC%96%E6%89%A3%E8%A1%80%E4%BE%8B%E7%A8%8Bpage3-b140"><span class="nav-text">3.5.5 反汇编扣血例程：page3
+$B140</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E6%9F%A5%E4%BC%A4%E5%AE%B3%E6%9D%A5%E6%BA%90page14-ca80-%E4%B8%8E%E4%BC%A4%E5%AE%B3%E8%A1%A8-af6f"><span class="nav-text">3.5.6
+反查伤害来源：page14 $CA80 与伤害表 $AF6F</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E7%B4%A2%E5%BC%95-y4-%E4%B8%AA%E8%A7%92%E8%89%B2-4-%E4%B8%AA%E5%8A%A8%E4%BD%9C"><span class="nav-text">3.5.7 解密索引 Y：4 个角色 × 4
+个动作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E8%A1%A5%E4%B8%8124-%E5%AD%97%E8%8A%82%E8%A1%A8%E9%A1%B9-4400"><span class="nav-text">3.6 打补丁：24 字节表项 ×4（400%）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-2"><span class="nav-text">3.7 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%80%BC%E8%AF%BB%E5%9B%9E"><span class="nav-text">3.7.1 伤害值读回</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%8C%E4%BA%BA-hp-%E5%B7%AE%E5%88%86%E4%B8%8E%E5%87%BB%E6%9D%80%E6%97%B6%E9%97%B4"><span class="nav-text">3.7.2 敌人 HP 差分与击杀时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%A9%E5%AE%B6%E5%8F%97%E5%87%BB%E4%BC%A4%E5%AE%B3%E4%B8%8D%E5%8F%98"><span class="nav-text">3.7.3 玩家受击伤害不变</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E5%B7%AE%E5%BC%82%E4%B8%8E%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95"><span class="nav-text">3.7.4 字节差异与冒烟测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E7%89%A9-1"><span class="nav-text">3.8 产物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%BB%93%E8%AE%BA%E4%B8%8E%E8%B8%A9%E5%9D%91"><span class="nav-text">3.9 关键结论与踩坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%84%E5%BD%95%E5%85%B3%E9%94%AE%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%91%BD%E4%BB%A4-1"><span class="nav-text">3.10 附录：关键脚本与命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E6%95%8C%E4%BA%BA%E4%BC%A4%E5%AE%B3%E5%AD%97%E8%8A%82%E4%B8%8E-hplua"><span class="nav-text">3.10.1 记录敌人伤害字节与
+HP（Lua）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%90%E5%B8%A7-dump-2kb-ramlua"><span class="nav-text">3.10.2 逐帧 dump 2KB RAM（Lua）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E4%B8%81%E4%B8%8E%E6%A0%A1%E9%AA%8Cpython"><span class="nav-text">3.10.3 补丁与校验（Python）</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -256,7 +262,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="忍者神龟系列主角攻击力翻倍Hack技术文档 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="目标游戏：忍者神龟2（1990，Mapper 4） 与 初代《忍者神龟1》（1989，Mapper 1）；全文按游戏分章组织，后续《忍者神龟3》《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：两代的伤害实现各不相同——二代是「...">
+      <meta itemprop="description" content="目标游戏：忍者神龟2（1990，Mapper 4）、初代《忍者神龟1》（1989，Mapper 1） 与 《忍者神龟3》中文版（MSTR 2003，非 Konami 原版）；全文按游戏分章组织，后续《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo &#x2F; Raph &#x2F; Mike &#x2F; Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -278,7 +284,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-20 23:39:25" itemprop="dateModified" datetime="2026-11-20T23:39:25+08:00">2026-11-20</time>
+      <time title="修改时间：2026-11-21 23:59:50" itemprop="dateModified" datetime="2026-11-21T23:59:50+08:00">2026-11-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -300,7 +306,7 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
     </span>
 </div>
 
-            <div class="post-description">目标游戏：忍者神龟2（1990，Mapper 4） 与 初代《忍者神龟1》（1989，Mapper 1）；全文按游戏分章组织，后续《忍者神龟3》《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo / Raph / Mike / Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保持原版。 核心结论：两代的伤害实现各不相同——二代是「...</div>
+            <div class="post-description">目标游戏：忍者神龟2（1990，Mapper 4）、初代《忍者神龟1》（1989，Mapper 1） 与 《忍者神龟3》中文版（MSTR 2003，非 Konami 原版）；全文按游戏分章组织，后续《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。 目标：把四名可操作主角（Leo / Raph / Mike / Don）的攻击力在原版基础上 ×2，让打小兵、BOSS 更快；敌我其它数据保...</div>
         </div>
       </header>
 
@@ -308,9 +314,10 @@ $AA&#x2F;$AB：7 字节攻击记录表</span></a></li><li class="nav-item nav-le
     
     
     <div class="post-body" itemprop="articleBody"><blockquote>
-<p>目标游戏：<strong>忍者神龟2（1990，Mapper 4）</strong> 与
-<strong>初代《忍者神龟1》（1989，Mapper
-1）</strong>；全文按游戏分章组织，后续《忍者神龟3》《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。</p>
+<p>目标游戏：<strong>忍者神龟2（1990，Mapper
+4）</strong>、<strong>初代《忍者神龟1》（1989，Mapper 1）</strong> 与
+<strong>《忍者神龟3》中文版（MSTR 2003，非 Konami
+原版）</strong>；全文按游戏分章组织，后续《忍者神龟4》的破解在验证通过后按同样方式作为独立大章追加。</p>
 <p>目标：把<strong>四名可操作主角（Leo / Raph / Mike /
 Don）的攻击力在原版基础上 ×2</strong>，让打小兵、BOSS
 更快；敌我其它数据保持原版。</p>
@@ -1087,6 +1094,567 @@ HP 差分；定位依据是<strong>全 ROM 唯一 xref + 美版原 ROM 同表交
 <li>Mesen 无头脚本：<code>/home/sunjunior/work/tmnt1_*.lua</code>（屏幕
 dump、OAM/内存回调、伤害表读监控）</li>
 </ul>
+<hr />
+<h2 id="第三章-忍者神龟3mstr-2003-中文版攻击力-40024-字节伤害表">第三章
+忍者神龟3（MSTR 2003 中文版）攻击力 400%：24 字节伤害表</h2>
+<h3 id="背景与目标-2">3.1 背景与目标</h3>
+<p>《忍者神龟3》在中文 ROM 合集里很容易和 Konami 的《Teenage Mutant
+Ninja Turtles III: The Manhattan Project》混淆。但本次目标 ROM
+启动后，标题画面写的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">新大冶汉化</span><br><span class="line">乐天工作室献心制作</span><br><span class="line">忍者神龟 3</span><br><span class="line">MSTR 2003</span><br></pre></td></tr></table></figure>
+<p>角色选择画面列出四只乌龟：<strong>拉菲 / 爱因 / 米开 /
+达劳</strong>。它不是 Konami 原版，而是国内作者在 FC
+上制作的横版清版动作游戏，画面、引擎、数据结构都与前两章的 Konami
+作品完全不同。</p>
+<p>目标：把四名可操作主角的攻击力提升到原版的
+<strong>400%（×4）</strong>，也就是在 200% 版本的基础上再翻 1
+倍；敌我其它数据保持原版。</p>
+<p>这次的难点有三层：</p>
+<ol type="1">
+<li><strong>没有现成资料可抄</strong>：Konami 二代的「7 字节攻击记录 +
+三条立即数」、初代的「16
+字节交错表」在本作里都不存在，社区金手指也不能直接套用。</li>
+<li><strong>敌人没有可见血条</strong>：伤害值只有 1~4，满 ROM
+搜索噪声极大，必须靠逐帧 RAM 差分定位。</li>
+<li><strong>256KB PRG 页切换</strong>：同一 CPU 地址在不同时刻对应不同
+ROM 页，必须先确认运行时页映射，才能把 CPU 地址换算成文件偏移。</li>
+</ol>
+<p>最终补丁只改了 <strong>20 个字节</strong>（24 项伤害表里 4
+个零项不变），四名角色的所有攻击动作伤害全部提升到原版 400%。</p>
+<h3 id="rom-与游戏信息-2">3.2 ROM 与游戏信息</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件名</td>
+<td><code>[180]  角色类 - 忍者神龟3.NES</code></td>
+</tr>
+<tr>
+<td>文件大小</td>
+<td>524,304 字节</td>
+</tr>
+<tr>
+<td>原版 MD5</td>
+<td><code>9f7e11b6de7c9be9b3954eab69dc68a2</code></td>
+</tr>
+<tr>
+<td>补丁 MD5</td>
+<td><code>f557e4eb91dcc23048c45d11968b3050</code></td>
+</tr>
+<tr>
+<td>iNES Header</td>
+<td><code>4E 45 53 1A 10 20 90 10</code></td>
+</tr>
+<tr>
+<td>PRG ROM</td>
+<td>16 × 16KB = 256KB</td>
+</tr>
+<tr>
+<td>CHR ROM</td>
+<td>32 × 8KB = 256KB</td>
+</tr>
+<tr>
+<td>运行时 PRG 映射</td>
+<td><code>$8000</code> 固定页 30，<code>$E000</code> 固定页
+31；<code>$A000</code> = <code>prgReg1</code>，<code>$C000</code> =
+<code>prgReg0</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意：文件头里的 mapper 位与 Mesen2
+运行时的实际映射并不完全一致，不能按 Konami
+原版资料硬套。本文所有补丁地址都按「PRG 页 14、CPU 地址
+<code>$AF6F</code>」换算：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件偏移 = 0x10 + 14 × 0x2000 + (CPU地址 − 0xA000)</span><br></pre></td></tr></table></figure>
+<p>例如 <code>$AF6F</code> →
+<code>0x10 + 0x1C000 + 0xF6F = 0x1CF7F</code>。</p>
+</blockquote>
+<p>本作与前两章的关键差异：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>忍者神龟1/2（Konami）</th>
+<th>忍者神龟3（MSTR 2003）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>游戏性质</td>
+<td>官方 Konami 作品</td>
+<td>国内作者原创/盗版清版动作</td>
+</tr>
+<tr>
+<td>敌人 HP</td>
+<td>有独立 HP 槽，部分版本可见</td>
+<td>无可见血条，HP 很小</td>
+</tr>
+<tr>
+<td>伤害来源</td>
+<td>攻击记录表 / 交错表 / 立即数</td>
+<td><strong>一张 24 字节伤害表</strong></td>
+</tr>
+<tr>
+<td>角色</td>
+<td>四只乌龟共用/可选</td>
+<td>四只乌龟按关卡轮流上场，共用同一张表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="分析环境与工具-1">3.3 分析环境与工具</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>用途</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟器</td>
+<td><strong>Mesen 2.1.1（Linux）</strong>，无头测试模式
+<code>--testRunner</code></td>
+</tr>
+<tr>
+<td>内存/执行跟踪</td>
+<td>Mesen Lua API：<code>addMemoryCallback</code>（write /
+cpuExec）、<code>addEventCallback</code>（inputPolled /
+endFrame）、<code>emu.getState()</code></td>
+</tr>
+<tr>
+<td>屏幕取证</td>
+<td><code>emu.getScreenBuffer()</code> dump ARGB → Python PIL 转
+PNG</td>
+</tr>
+<tr>
+<td>反汇编</td>
+<td>Python + <code>capstone</code>（<code>CS_ARCH_MOS65XX</code> /
+<code>CS_MODE_MOS65XX_6502</code>）</td>
+</tr>
+<tr>
+<td>RAM 差分</td>
+<td>Lua 逐帧 dump 2KB 内部 RAM，Python 逐字节比对</td>
+</tr>
+<tr>
+<td>补丁与校验</td>
+<td>Python 直接读写 NES 镜像、<code>md5sum</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>本作 <code>emu.getState()</code> 可用，能读到
+<code>cpu.x / cpu.y / cpu.a</code> 以及
+<code>mapper.prgReg0 / prgReg1</code>。但内存写回调里拿到的 PC
+在部分情况下会滞后，最终定位主要靠「逐帧 RAM 差分 + 初值/扣血差分 +
+反汇编交叉验证」，没有依赖回调 PC。</p>
+</blockquote>
+<h3 id="破解总体思路-1">3.4 破解总体思路</h3>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">确认游戏身份（MSTR 2003 原创，不是 Konami 原版）</span><br><span class="line">    ↓</span><br><span class="line">Mesen 无头进入第 1 关，逐帧 dump 2KB RAM + 屏幕</span><br><span class="line">    ↓</span><br><span class="line">用 HUD 血条/受击事件锁定玩家 HP $04F1</span><br><span class="line">    ↓</span><br><span class="line">观察敌人刷新初值与逐次扣血，锁定敌人 HP $0621,X</span><br><span class="line">    ↓</span><br><span class="line">命中帧记录伤害字节 $0619,X 的写入值（1 / 4）</span><br><span class="line">    ↓</span><br><span class="line">反汇编扣血例程 page3 $B140，确认 HP -= ($0619,X &amp; $7F)</span><br><span class="line">    ↓</span><br><span class="line">反查 $0619,X 写入点 page14 $CA80，找到伤害表 $AF6F</span><br><span class="line">    ↓</span><br><span class="line">解出索引公式与「4 角色 × 4 动作」表结构</span><br><span class="line">    ↓</span><br><span class="line">24 项表值 ×4（400%），逐帧验证伤害/击杀时间，且玩家受击伤害不变</span><br></pre></td></tr></table></figure>
+<p>核心思路：<strong>先找到敌人
+HP，再顺着「谁写了伤害」反查到伤害表；只改数据表，不改代码。</strong>
+这样既覆盖四名角色的所有攻击动作，又不会碰到敌方 AI 和玩家受伤逻辑。</p>
+<h3 id="详细分析过程-1">3.5 详细分析过程</h3>
+<h4 id="先确认游戏身份">3.5.1 先确认游戏身份</h4>
+<p>标题画面和角色选择画面直接说明问题：</p>
+<ul>
+<li>标题不是 Konami 的版权信息，而是「新大冶汉化 / 乐天工作室 / MSTR
+2003」；</li>
+<li>选人画面列出四只乌龟：拉菲、爱因、米开、达劳；</li>
+<li>单打流程中 HUD 角色名会从第 1
+关的「拉菲」变为后续关卡的「爱因」，说明四只乌龟会轮流上场。</li>
+</ul>
+<p>因此不能套用前两章 Konami 作品的「攻击记录表」「16
+字节交错表」等结论，必须在本作 ROM 上重新定位。</p>
+<h4 id="锁定玩家-hp04f1">3.5.2 锁定玩家 HP：<code>$04F1</code></h4>
+<p>HUD 左下角有一条 16 段的粉色血条，旁边是「剩余
+3」。让玩家站着不动、被小兵打，逐帧数血条段数，可以看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">16 → 15 → 14 → 13</span><br></pre></td></tr></table></figure>
+<p>同时在逐帧 RAM 里搜索「每次固定减少 8」的字节，唯一稳定命中的是：</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>含义</th>
+<th>初值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$04F1,X</code></td>
+<td>玩家当前 HP（X=0/1，单打只看 X=0）</td>
+<td><code>0x7F</code>（127）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>初始化时 X=0/1 都会写 <code>0x7F</code>，所以 <code>$04F2</code> 是
+2P 的 HP，不是「最大 HP」；本作没有单独的最大 HP 变量，血条上限直接由
+127 换算。</p>
+</blockquote>
+<p>实测受击序列：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127 → 119 → 111 → 103</span><br></pre></td></tr></table></figure>
+<p>每次减少 8，正好对应血条掉 1 段（127 / 16 ≈
+8）。继续反汇编敌方攻击例程，可以看到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">; page6 $A442 附近的通用扣血</span><br><span class="line">$A442  BD F1 04    LDA $04F1,X     ; 玩家 HP</span><br><span class="line">$A445  38          SEC</span><br><span class="line">$A446  FD EF 04    SBC $04EF,X     ; 减去待结算伤害</span><br><span class="line">$A449  9D F1 04    STA $04F1,X</span><br></pre></td></tr></table></figure>
+<p>敌方近战伤害常量在 page10 <code>$AA80</code> /
+<code>$AC7A</code>（<code>LDA #$08</code>），重击在 page11
+<code>$A19C</code>（<code>LDA #$10</code>）。这与实测的 8 / 16
+点伤害一致。</p>
+<h4 id="锁定敌人-hp0621x">3.5.3 锁定敌人 HP：<code>$0621,X</code></h4>
+<p>敌人没有血条，但它们在刷新时会在 RAM 里写入一组初值。逐帧对比「刷新前
+/ 刷新后」可以抓到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$05E5-$05E7 = 08 08 08    ; 敌人状态（bit3 = 可命中）</span><br><span class="line">$05ED-$05EF = 05 05 05    ; 敌人动作/脚本参数</span><br><span class="line">$0625-$0627 = 04 04 04    ; ★ 三个敌人槽的 HP</span><br></pre></td></tr></table></figure>
+<p>三个敌人槽的索引是 <code>X = 4 / 5 / 6</code>，所以敌人 HP
+数组的基址是 <strong><code>$0621,X</code></strong>：</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$0621,X</code></td>
+<td>敌人当前 HP（第 1 关小兵 = 4）</td>
+</tr>
+<tr>
+<td><code>$0619,X</code></td>
+<td>本次伤害 + 方向标志（低 7 位 = 伤害值）</td>
+</tr>
+<tr>
+<td><code>$05E1,X</code></td>
+<td>敌人状态/可命中标志（bit3）</td>
+</tr>
+<tr>
+<td><code>$04F1,X</code></td>
+<td>玩家 HP（X = 0/1）</td>
+</tr>
+</tbody>
+</table>
+<p>继续逐帧观察 <code>$0625-$0627</code>，可以看到每次命中扣 1：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">原版：4 → 3 → 2 → 0</span><br></pre></td></tr></table></figure>
+<p>HP 归零后不会立刻消失，而是播放一段死亡动画，约 60
+帧后才清除状态并给分。</p>
+<h4 id="抓伤害值写入0619x">3.5.4
+抓「伤害值」写入：<code>$0619,X</code></h4>
+<p>在命中帧监听 <code>$0619-$0623</code>（即 <code>$0619,X</code>，X =
+4..6）的写入，能得到非常干净的记录：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f=1926  $061E  00→01  X=05  A=01  Y=0A</span><br><span class="line">f=2042  $061F  00→01  X=06  A=01  Y=0A</span><br><span class="line">f=2270  $061F  00→04  X=06  A=04  Y=0B</span><br><span class="line">f=2464  $061D  00→04  X=04  A=04  Y=0B</span><br></pre></td></tr></table></figure>
+<p>这里有两个关键信息：</p>
+<ol type="1">
+<li>伤害值先写入 <code>$0619,X</code>，随后由扣血例程消费，再清零；</li>
+<li><code>Y</code>
+寄存器不是敌人槽，而是<strong>伤害表的索引</strong>：<code>0x0A</code>
+对应伤害 1，<code>0x0B</code> 对应伤害 4。</li>
+</ol>
+<h4 id="反汇编扣血例程page3-b140">3.5.5 反汇编扣血例程：page3
+<code>$B140</code></h4>
+<p>顺着 <code>$0621,X</code> 的读取点反汇编，找到扣血主逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">; CPU $B140（PRG 页 3）</span><br><span class="line">$B140  BD 19 06    LDA $0619,X     ; 本次伤害 + 方向标志</span><br><span class="line">$B143  29 7F       AND #$7F        ; 取低 7 位 = 伤害值</span><br><span class="line">$B145  85 10       STA $10</span><br><span class="line">$B147  BD 21 06    LDA $0621,X     ; 敌人 HP</span><br><span class="line">$B14A  38          SEC</span><br><span class="line">$B14B  E5 10       SBC $10         ; HP -= 伤害</span><br><span class="line">$B14D  90 4B       BCC $B19A       ; 不够扣 → 归零</span><br><span class="line">$B14F  F0 49       BEQ $B19A       ; 正好扣完 → 归零</span><br><span class="line">$B151  9D 21 06    STA $0621,X     ; 写回 HP</span><br><span class="line">...</span><br><span class="line">$B19A  A9 00       LDA #$00</span><br><span class="line">$B19C  9D 21 06    STA $0621,X     ; HP = 0</span><br></pre></td></tr></table></figure>
+<p>这一段彻底坐实了 <code>$0621,X</code> 就是敌人 HP，且伤害值来自
+<code>$0619,X</code> 的低 7 位。</p>
+<h4 id="反查伤害来源page14-ca80-与伤害表-af6f">3.5.6
+反查伤害来源：page14 <code>$CA80</code> 与伤害表 <code>$AF6F</code></h4>
+<p>继续反查「谁写了 <code>$0619,X</code>」，定位到 page14
+的命中结算例程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">; CPU $CA80（PRG 页 14）</span><br><span class="line">$CA80  BD 29 05    LDA $0529,X     ; 目标动作</span><br><span class="line">$CA83  C9 FC       CMP #$FC</span><br><span class="line">...</span><br><span class="line">$CA87  5E 02 04    LSR $0402,X     ; 朝向</span><br><span class="line">$CA8A  BD 7A 04    LDA $047A,X</span><br><span class="line">$CA8D  D9 78 04    CMP $0478,Y     ; 攻击者/目标位置判定</span><br><span class="line">$CA90  3E 02 04    ROL $0402,X</span><br><span class="line">...</span><br><span class="line">$CAB4  B9 EB 04    LDA $04EB,Y     ; ★ 攻击者的动作 ID</span><br><span class="line">$CAB7  29 03       AND #$03</span><br><span class="line">$CAB9  85 07       STA $07</span><br><span class="line">$CABB  B9 EB 04    LDA $04EB,Y</span><br><span class="line">$CABE  29 70       AND #$70</span><br><span class="line">$CAC0  4A          LSR A</span><br><span class="line">$CAC1  4A          LSR A</span><br><span class="line">$CAC2  05 07       ORA $07</span><br><span class="line">$CAC4  A8          TAY             ; ★ 表索引 = (v &amp; 3) | ((v &amp; 0x70) &gt;&gt; 2)</span><br><span class="line">$CAC5  A5 3D       LDA $3D</span><br><span class="line">$CAC7  05 5C       ORA $5C</span><br><span class="line">$CAC9  4A          LSR A           ; 某全局标志 → 进位</span><br><span class="line">$CACA  B9 6F AF    LDA $AF6F,Y     ; ★ 伤害表</span><br><span class="line">$CACD  90 01       BCC $CAD0</span><br><span class="line">$CACF  4A          LSR A           ; 条件满足时伤害减半</span><br><span class="line">$CAD0  05 06       ORA $06         ; 叠加方向位</span><br><span class="line">$CAD2  9D 19 06    STA $0619,X     ; 写入目标伤害字节</span><br></pre></td></tr></table></figure>
+<p>结论：</p>
+<ul>
+<li><code>X</code> = 被击中的敌人；</li>
+<li><code>Y</code> = 攻击者（玩家）的动作 ID 索引；</li>
+<li>伤害值来自 <strong><code>$AF6F,Y</code></strong>；</li>
+<li>若 <code>($3D | $5C)</code> 的 bit0 为 1，还会再执行一次
+<code>LSR A</code>，把表值减半。</li>
+</ul>
+<h4 id="解密索引-y4-个角色-4-个动作">3.5.7 解密索引 Y：4 个角色 × 4
+个动作</h4>
+<p>伤害表 <code>$AF6F</code> 共 24 项（<code>$AF6F-$AF86</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>原值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–7</td>
+<td><code>16 0E 16 0E 16 0E 16 0E</code></td>
+<td>特殊/双人动作的 16/14 交替值</td>
+</tr>
+<tr>
+<td>8–11</td>
+<td><code>03 00 02 08</code></td>
+<td>角色 1 的 4 个动作</td>
+</tr>
+<tr>
+<td>12–15</td>
+<td><code>03 00 02 07</code></td>
+<td>角色 2 的 4 个动作</td>
+</tr>
+<tr>
+<td>16–19</td>
+<td><code>03 00 02 0B</code></td>
+<td>角色 3 的 4 个动作</td>
+</tr>
+<tr>
+<td>20–23</td>
+<td><code>03 00 02 09</code></td>
+<td>角色 4 的 4 个动作</td>
+</tr>
+</tbody>
+</table>
+<p>每组 4 项里，最后一项是该角色的<strong>主武器攻击力</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">角色 1：08 → 减半后 4</span><br><span class="line">角色 2：07 → 减半后 3</span><br><span class="line">角色 3：0B → 减半后 5</span><br><span class="line">角色 4：09 → 减半后 4</span><br></pre></td></tr></table></figure>
+<p>实测第 1 关拉菲命中时使用 <code>Y=0B</code>，正好命中「角色 1」组的第
+4 项 <code>08</code>，减半后为 4；轻攻击 <code>Y=0A</code> 对应同组第 3
+项 <code>02</code>，减半后为 1。这与逐帧记录完全吻合。</p>
+<blockquote>
+<p>注意：索引 24 及以上会落到相邻的 <code>$AF87</code>
+表（敌方打玩家的伤害 6）。因此补丁只改
+<code>0–23</code>，避免把敌人伤害也一起提升。</p>
+</blockquote>
+<h3 id="打补丁24-字节表项-4400">3.6 打补丁：24 字节表项 ×4（400%）</h3>
+<p>只改 PRG 页 14 的伤害表，代码一行不动：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU 地址</td>
+<td><code>$AF6F-$AF86</code></td>
+</tr>
+<tr>
+<td>文件偏移</td>
+<td><code>0x1CF7F-0x1CF96</code></td>
+</tr>
+<tr>
+<td>表长度</td>
+<td>24 字节</td>
+</tr>
+<tr>
+<td>差异字节</td>
+<td>20（4 个 <code>00</code> 乘 4 后仍是 <code>00</code>）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原表：16 0E 16 0E 16 0E 16 0E 03 00 02 08 03 00 02 07 03 00 02 0B 03 00 02 09</span><br><span class="line">新表：58 38 58 38 58 38 58 38 0C 00 08 20 0C 00 08 1C 0C 00 08 2C 0C 00 08 24</span><br></pre></td></tr></table></figure>
+<p>为什么整体 ×4 可行：</p>
+<ul>
+<li>不减半时：伤害 = 表值，补丁后表值 ×4 → 伤害 ×4；</li>
+<li>减半时：原版伤害 = <code>floor(表值/2)</code>，补丁后 =
+<code>floor(表值×4/2) = 2×表值</code>；</li>
+<li>偶数项（<code>02/08/16/14</code>）减半后正好是 4
+倍；奇数项（<code>03/07/0B/09</code>）减半后是
+<code>4×floor(表值/2)+2</code>，即「4 倍 +2」，只会更强不会更弱；</li>
+<li>实际清兵最常用的普通攻击 <code>02</code> 和拉菲主武器
+<code>08</code> 都是偶数项，最终伤害严格为原版 400%。</li>
+</ul>
+<blockquote>
+<p><strong>溢出/反转防护（关键）</strong>：伤害字节 <code>$0619,X</code>
+在扣血例程里会执行 <code>AND #$7F</code>，也就是说只有低 7
+位有效；如果表值乘 4 后超过 <code>0x7F</code>，会被按 128
+取模，出现「伤害反而变小」的反转。因此脚本对所有表项执行
+<code>min(0x7F, 原值 × 4)</code> 钳制，宁可封顶到 127
+也绝不回绕。当前原表最大项为
+<code>0x16</code>，<code>0x16 × 4 = 0x58</code>，远低于
+<code>0x7F</code>，不会触发钳制；但保留钳制是为了以后提高倍率或修改表项时的安全。</p>
+</blockquote>
+<p>生成逻辑（完整脚本见
+<code>/home/sunjunior/work/make_tmnt3.py</code>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">ROM = <span class="string">&quot;/media/娱乐/game/RetroArch-Win64/roms/FC/NES中文游戏全集/[180]  角色类 - 忍者神龟3.NES&quot;</span></span><br><span class="line">BAK = ROM + <span class="string">&quot;.orig_backup&quot;</span></span><br><span class="line">TABLE_OFF = <span class="number">0x1CF7F</span></span><br><span class="line">TABLE_LEN = <span class="number">24</span></span><br><span class="line">MULT = <span class="number">4</span></span><br><span class="line">MAX_DAMAGE = <span class="number">0x7F</span>          <span class="comment"># $0619,X 在扣血例程里 AND #$7F</span></span><br><span class="line">ORIG = <span class="built_in">bytes</span>([</span><br><span class="line">    <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x08</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0B</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x09</span>,</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">src = <span class="built_in">open</span>(BAK, <span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line">d = <span class="built_in">bytearray</span>(src)</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">bytes</span>(d[TABLE_OFF:TABLE_OFF + TABLE_LEN]) == ORIG, <span class="string">&quot;原表不匹配，停止打补丁&quot;</span></span><br><span class="line"><span class="comment"># 钳制到 0x7F，防止伤害字节溢出后按 128 取模（反转）</span></span><br><span class="line">d[TABLE_OFF:TABLE_OFF + TABLE_LEN] = <span class="built_in">bytes</span>(</span><br><span class="line">    <span class="built_in">min</span>(MAX_DAMAGE, b * MULT) <span class="keyword">for</span> b <span class="keyword">in</span> ORIG</span><br><span class="line">)</span><br><span class="line"><span class="built_in">open</span>(ROM, <span class="string">&quot;wb&quot;</span>).write(d)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;原始 MD5 :&quot;</span>, hashlib.md5(src).hexdigest())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;补丁 MD5 :&quot;</span>, hashlib.md5(<span class="built_in">bytes</span>(d)).hexdigest())</span><br></pre></td></tr></table></figure>
+<h3 id="验证-2">3.7 验证</h3>
+<h4 id="伤害值读回">3.7.1 伤害值读回</h4>
+<p>在命中帧读取 <code>$0619,X</code> 的写入值：</p>
+<table>
+<thead>
+<tr>
+<th>动作索引</th>
+<th>原版伤害</th>
+<th>补丁伤害</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Y=0A</code>（普通/轻攻击）</td>
+<td>1</td>
+<td><strong>4</strong></td>
+</tr>
+<tr>
+<td><code>Y=0B</code>（主武器）</td>
+<td>4</td>
+<td><strong>16</strong></td>
+</tr>
+<tr>
+<td><code>Y=08</code>（另一动作，奇数项）</td>
+<td>1</td>
+<td><strong>6</strong>（4 倍 +2）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="敌人-hp-差分与击杀时间">3.7.2 敌人 HP 差分与击杀时间</h4>
+<p>同一套输入、同一条第 1 关路线：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>观察项</th>
+<th>原版</th>
+<th>补丁版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单次普通命中敌人 HP</td>
+<td><code>4 → 3</code>（伤害 1）</td>
+<td><strong><code>4 → 0</code>（伤害 4，一次击杀）</strong></td>
+</tr>
+<tr>
+<td>主武器命中</td>
+<td>伤害 4</td>
+<td><strong>伤害 16</strong></td>
+</tr>
+<tr>
+<td>三只小兵死亡帧</td>
+<td>2342 / 2534 / 2536</td>
+<td><strong>1998 / 2206 / 2342</strong></td>
+</tr>
+<tr>
+<td>敌人 HP 归零</td>
+<td><code>4→3→2→0</code></td>
+<td><strong>普通攻击 <code>4→0</code>；奇数项攻击
+<code>4→2→0</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>原版普通攻击要 4 下才能清掉 4 点 HP 的小兵；200% 版本仍需 2 下；400%
+版本普通攻击一次就能清掉，符合「原版
+400%」的目标。击杀计分（<code>$006D</code>）的跳变时间也同步提前。</p>
+<h4 id="玩家受击伤害不变">3.7.3 玩家受击伤害不变</h4>
+<p>补丁只动玩家→敌人的伤害表，敌方→玩家的伤害例程（page10
+<code>$AA80</code> / <code>$AC7A</code> 的 <code>LDA #$08</code>、page11
+<code>$A19C</code> 的 <code>LDA #$10</code>）原样保留。实测玩家 HP
+序列：</p>
+<table>
+<thead>
+<tr>
+<th>ROM</th>
+<th>玩家 HP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原版</td>
+<td><code>127 → 119 → 111 → 103</code></td>
+</tr>
+<tr>
+<td>补丁版</td>
+<td><code>127 → 119 → 111 → 103</code></td>
+</tr>
+</tbody>
+</table>
+<p>每次仍然掉 8
+点，说明提升的确实是「主角打出去的伤害」，不是「玩家受到的伤害」。</p>
+<h4 id="字节差异与冒烟测试">3.7.4 字节差异与冒烟测试</h4>
+<ul>
+<li>与原版逐字节比对：<strong>仅 20 字节不同</strong>，全部落在
+<code>0x1CF7F-0x1CF96</code> 的伤害表内；</li>
+<li>补丁版在 Mesen2 无头模式连续运行 4200+ 帧，无崩溃、无花屏；</li>
+<li>关卡、敌人、得分、对话等其它行为与原版一致。</li>
+</ul>
+<h3 id="产物-1">3.8 产物</h3>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/media/娱乐/game/RetroArch-Win64/roms/FC/NES中文游戏全集/</span><br><span class="line">  [180]  角色类 - 忍者神龟3.NES                 # 成品：四主角攻击力 400%（×4）</span><br><span class="line">  [180]  角色类 - 忍者神龟3.NES.orig_backup     # 官方原版（唯一回滚点）</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>MD5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原版</td>
+<td><code>9f7e11b6de7c9be9b3954eab69dc68a2</code></td>
+</tr>
+<tr>
+<td>补丁版</td>
+<td><code>f557e4eb91dcc23048c45d11968b3050</code></td>
+</tr>
+</tbody>
+</table>
+<p>补丁脚本：<code>/home/sunjunior/work/make_tmnt3.py</code></p>
+<h3 id="关键结论与踩坑">3.9 关键结论与踩坑</h3>
+<ol type="1">
+<li><strong>先确认游戏身份</strong>：文件名叫「忍者神龟3」，实际是 MSTR
+2003 的国内原创/盗版清版动作游戏，Konami
+二代的「攻击记录表」和初代的「16 字节交错表」在这里都不存在。</li>
+<li><strong>敌人没有血条时，用「刷新初值 + 逐帧差分」找
+HP</strong>：三个敌人槽在刷新时写入
+<code>04 04 04</code>，之后每次命中稳定减
+1，很容易和动画/计时器区分开。</li>
+<li><strong>伤害值先写临时字节，再由扣血例程消费</strong>：<code>$0619,X</code>
+是「伤害 + 方向」的临时缓冲，真正的 HP 在 <code>$0621,X</code>；只看 HP
+会漏掉伤害来源。</li>
+<li><strong>数据驱动表优先改表，不改代码</strong>：本作伤害完全由
+<code>$AF6F</code> 的 24
+项表决定，改表可以一次覆盖四名角色的所有攻击动作，风险远小于改指令。</li>
+<li><strong>注意相邻表共享内存</strong>：<code>$AF6F</code> 的索引 24
+及以上会落到 <code>$AF87</code>（敌方打玩家的伤害 6），所以只改
+<code>0–23</code>，避免误伤敌方伤害。</li>
+<li><strong>表值可能被 <code>LSR</code> 减半</strong>：整体 ×4
+后，不减半时严格 4 倍；减半时偶数项严格 4 倍、奇数项是「4 倍
++2」；不要只盯着「表值等于最终伤害」。</li>
+<li><strong>验证要同时看「打出」和「承受」</strong>：敌人 HP 从
+<code>4→3</code> 变成 <code>4→0</code>，而玩家受击仍是
+<code>127→119→111→103</code>，才能排除「改反了」。</li>
+<li><strong>页切换游戏必须先确认运行时映射</strong>：本作
+<code>$8000</code> 固定页 30、<code>$E000</code> 固定页
+31，<code>$A000/$C000</code> 随 <code>prgReg1/prgReg0</code>
+切换；补丁所在的页 14 必须按运行时映射换算文件偏移。</li>
+<li><strong>高倍率必须防溢出</strong>：伤害字节只有低 7 位有效（扣血例程
+<code>AND #$7F</code>），表值乘 4 后若超过 <code>0x7F</code> 会按 128
+取模，出现「伤害反而变小」的反转；脚本用
+<code>min(0x7F, 原值 × 4)</code> 钳制。当前最大项
+<code>0x16 × 4 = 0x58</code>
+不触发，但这是继续提高倍率时的必备保护。</li>
+</ol>
+<h3 id="附录关键脚本与命令-1">3.10 附录：关键脚本与命令</h3>
+<h4 id="记录敌人伤害字节与-hplua">3.10.1 记录敌人伤害字节与
+HP（Lua）</h4>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> f = <span class="number">0</span></span><br><span class="line">emu.addMemoryCallback(<span class="function"><span class="keyword">function</span><span class="params">(addr, val)</span></span></span><br><span class="line">    <span class="keyword">local</span> old = emu.<span class="built_in">read</span>(addr, emu.memType.nesInternalRam)</span><br><span class="line">    <span class="keyword">if</span> old ~= val <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">local</span> st = emu.getState()</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">&quot;f=%d $%03X %02X-&gt;%02X X=%02X A=%02X Y=%02X&quot;</span>,</span><br><span class="line">            f, addr, old, val,</span><br><span class="line">            st[<span class="string">&quot;cpu.x&quot;</span>], st[<span class="string">&quot;cpu.a&quot;</span>], st[<span class="string">&quot;cpu.y&quot;</span>]))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.callbackType.<span class="built_in">write</span>, <span class="number">0x0619</span>, <span class="number">0x0623</span>,</span><br><span class="line">    emu.cpuType.nes, emu.memType.nesInternalRam)</span><br><span class="line"></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span> f = f + <span class="number">1</span> <span class="keyword">end</span>, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mesen --testRunner <span class="string">&quot;[180]  角色类 - 忍者神龟3.NES&quot;</span> --lua tmnt3_dmg.lua</span><br></pre></td></tr></table></figure>
+<h4 id="逐帧-dump-2kb-ramlua">3.10.2 逐帧 dump 2KB RAM（Lua）</h4>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> f = <span class="number">0</span></span><br><span class="line"><span class="keyword">local</span> fh = <span class="literal">nil</span></span><br><span class="line">emu.addEventCallback(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">    f = f + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> f == <span class="number">1500</span> <span class="keyword">then</span> fh = <span class="built_in">io</span>.<span class="built_in">open</span>(<span class="string">&quot;ram.bin&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> fh <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">local</span> t = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> a = <span class="number">0</span>, <span class="number">0x7FF</span> <span class="keyword">do</span></span><br><span class="line">            t[#t + <span class="number">1</span>] = <span class="built_in">string</span>.<span class="built_in">char</span>(emu.<span class="built_in">read</span>(a, emu.memType.nesInternalRam))</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        fh:<span class="built_in">write</span>(<span class="built_in">table</span>.<span class="built_in">concat</span>(t))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">if</span> f &gt;= <span class="number">2900</span> <span class="keyword">then</span> fh:<span class="built_in">close</span>(); emu.stop(<span class="number">0</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>, emu.eventType.endFrame)</span><br></pre></td></tr></table></figure>
+<p>Python 侧按 <code>2048</code> 字节一帧切分，逐地址比对：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">D = <span class="built_in">open</span>(<span class="string">&quot;ram.bin&quot;</span>, <span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line">N = <span class="built_in">len</span>(D) // <span class="number">2048</span></span><br><span class="line">ram = [D[i * <span class="number">2048</span>:(i + <span class="number">1</span>) * <span class="number">2048</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N)]</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x800</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, N):</span><br><span class="line">        <span class="keyword">if</span> ram[i][a] != ram[i - <span class="number">1</span>][a]:</span><br><span class="line">            <span class="built_in">print</span>(i, <span class="built_in">hex</span>(a), ram[i - <span class="number">1</span>][a], <span class="string">&quot;-&gt;&quot;</span>, ram[i][a])</span><br></pre></td></tr></table></figure>
+<h4 id="补丁与校验python">3.10.3 补丁与校验（Python）</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">ROM = <span class="string">&quot;/media/娱乐/game/RetroArch-Win64/roms/FC/NES中文游戏全集/[180]  角色类 - 忍者神龟3.NES&quot;</span></span><br><span class="line">BAK = ROM + <span class="string">&quot;.orig_backup&quot;</span></span><br><span class="line">ORIG = <span class="built_in">bytes</span>([</span><br><span class="line">    <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x08</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0B</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x09</span>,</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">d = <span class="built_in">bytearray</span>(<span class="built_in">open</span>(BAK, <span class="string">&quot;rb&quot;</span>).read())</span><br><span class="line">off = <span class="number">0x1CF7F</span></span><br><span class="line">MULT = <span class="number">4</span></span><br><span class="line">MAX_DAMAGE = <span class="number">0x7F</span></span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">bytes</span>(d[off:off + <span class="number">24</span>]) == ORIG</span><br><span class="line">d[off:off + <span class="number">24</span>] = <span class="built_in">bytes</span>(<span class="built_in">min</span>(MAX_DAMAGE, b * MULT) <span class="keyword">for</span> b <span class="keyword">in</span> ORIG)</span><br><span class="line"><span class="built_in">open</span>(ROM, <span class="string">&quot;wb&quot;</span>).write(d)</span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(<span class="built_in">bytes</span>(d)).hexdigest())</span><br></pre></td></tr></table></figure>
+<p>对照结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">原版 MD5 : 9f7e11b6de7c9be9b3954eab69dc68a2</span><br><span class="line">补丁 MD5 : f557e4eb91dcc23048c45d11968b3050</span><br><span class="line">差异字节 : 20</span><br></pre></td></tr></table></figure>
 <hr />
 
     </div>
