@@ -558,8 +558,8 @@ rename”的原子保存会拿到新 slot，不会再把匹配文件留在列表
 <p>结果右键菜单在“打开 / 打开路径 /
 复制完整路径和文件名”之后新增“删除”：弹窗二次确认且默认“否”，只允许删除文件和空目录，非空目录直接提示拒绝；运行中的程序及其索引根目录受保护。删除是永久删除，成功后立即刷新当前查询。</p>
 <h3 id="结果右键菜单">5.6 结果右键菜单</h3>
-<p>结果列表右键某项弹出三项菜单，对齐 Everything
-的常用操作：<strong>打开</strong>（默认程序打开，等同双击）、<strong>打开路径</strong>（打开父目录并选中该项）、<strong>复制完整路径和文件名</strong>（写入系统剪贴板）。通过
+<p>结果列表右键某项弹出四项菜单，对齐 Everything
+的常用操作：<strong>打开</strong>（默认程序打开，等同双击）、<strong>打开路径</strong>（打开父目录并选中该项）、<strong>复制完整路径和文件名</strong>（写入系统剪贴板）、<strong>删除</strong>（文件/空目录，二次确认，默认否）。通过
 <code>TreeView</code> 的 <code>button-press-event</code>
 命中行、选中该行后弹出 <code>GtkMenu</code>；<code>file://</code> URI
 对空格和特殊字符做百分号编码。</p>
@@ -594,8 +594,8 @@ alt="右键菜单" /></td>
 <td style="text-align: center;">文件名即时匹配</td>
 <td style="text-align: center;"><code>size:</code> / <code>dm:</code> /
 <code>ext:</code> 等过滤</td>
-<td style="text-align: center;">打开 / 打开路径 /
-复制完整路径和文件名</td>
+<td style="text-align: center;">打开 / 打开路径 / 复制完整路径和文件名 /
+删除</td>
 </tr>
 </tbody>
 </table>
