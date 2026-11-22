@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://sunjunior.github.io/img/turtle2.gif">
 <meta property="og:image" content="https://sunjunior.github.io/img/turtle1.gif">
 <meta property="article:published_time" content="2026-11-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-22T00:28:13.613Z">
+<meta property="article:modified_time" content="2026-11-22T02:04:59.347Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="逆向工程, NES, 忍者神龟, Mesen2, Game Genie">
 <meta name="twitter:card" content="summary">
@@ -286,7 +286,7 @@ HP（Lua）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" 
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-22 08:28:13" itemprop="dateModified" datetime="2026-11-22T08:28:13+08:00">2026-11-22</time>
+      <time title="修改时间：2026-11-22 10:04:59" itemprop="dateModified" datetime="2026-11-22T10:04:59+08:00">2026-11-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1126,8 +1126,9 @@ ROM 页，必须先确认运行时页映射，才能把 CPU 地址换算成文�
 </ol>
 <p>攻击表部分只改 <strong>20 个字节</strong>（24 项伤害表里 4
 个零项不变），四名角色的所有攻击动作伤害全部提升到原版 400%；再加 14
-字节的「不掉血」补丁和 3 字节的「最终 BOSS
-正常死亡」补丁，最终成品相对原版共 <strong>37 字节</strong>差异。</p>
+字节的「不掉血」补丁、3 字节的「正常死亡分支」补丁和 6 字节的「BOSS
+血量循环修复」补丁，最终成品相对原版共 <strong>43
+字节</strong>差异。</p>
 <h3 id="rom-与游戏信息-2">3.2 ROM 与游戏信息</h3>
 <table>
 <colgroup>
@@ -1155,7 +1156,7 @@ ROM 页，必须先确认运行时页映射，才能把 CPU 地址换算成文�
 </tr>
 <tr>
 <td>补丁 MD5</td>
-<td><code>74c4728faf968a4739a05c369ef996f6</code></td>
+<td><code>96e0de42646a6285c17c65b1c66f725a</code></td>
 </tr>
 <tr>
 <td>iNES Header</td>
@@ -1590,7 +1591,7 @@ HP，再顺着「谁写了伤害」反查到伤害表；只改数据表，不改
 <ul>
 <li>攻击表部分与原版逐字节比对：<strong>20 字节不同</strong>，全部落在
 <code>0x1CF7F-0x1CF96</code> 的伤害表内；合并「不掉血」与「最终 BOSS
-修复」后，最终成品共 37 字节差异（见 3.8、3.9）；</li>
+修复」后，最终成品共 43 字节差异（见 3.8、3.9）；</li>
 <li>补丁版在 Mesen2 无头模式连续运行 4200+ 帧，无崩溃、无花屏；</li>
 <li>关卡、敌人、得分、对话等其它行为与原版一致。</li>
 </ul>
@@ -1729,32 +1730,32 @@ HP</strong>。</p>
 </blockquote>
 <h3 id="最后一关-boss-不死修复">3.9 最后一关 BOSS 不死修复</h3>
 <h4 id="用户线索与核实">3.9.1 用户线索与核实</h4>
-<p>用户提供的线索是：中文改版可能在标题画面检查 <code>@KONAMI</code>
-字符串，一旦发现被篡改，就把最后一关施莱德的初始 HP 设为 0，并让 HP 在
-0-255 之间循环，导致永远打不死。</p>
+<p>用户线索：中文改版可能在标题画面检查
+<code>@KONAMI</code>，失败后把施莱德 HP 置 0，并在 0-255 之间循环。</p>
 <p>核实结果：</p>
 <ul>
 <li>全 ROM 搜索 ASCII <code>KONAMI</code> / <code>@KONAMI</code> /
 <code>Konami</code>：<strong>未找到任何匹配</strong>。本作是 MSTR 2003
 的国内原创/盗版清版动作游戏，不是 Konami 原版 ROM
 加汉化补丁，因此「检查标题字符串」的具体说法在本 ROM 上不成立。</li>
-<li>但「最后一关 BOSS 被强制设为 0
-HP、正常死亡分支被跳过」这个<strong>现象是真实的</strong>。用 Mesen2 的
-CDL（代码覆盖日志）分析用户此前运行记录，可以发现 page2 的 BOSS 结算例程
-<code>$A3E0</code> 确实执行，其中：
+<li>但「血量 0-255 循环、打不死」是<strong>真实现象</strong>。用 Mesen2
+Lua 对运行中的游戏做写入扫描，记录到 <code>$0628</code>（施莱德 HP，对象
+X=7）的完整序列：<br />
+<code>95 → 8F → ... → 05 → FF → 00 → 01 → FB → F5 → ...</code><br />
+也就是最后一击时：
 <ul>
-<li><code>$A434-$A43B</code> 的「HP=0 惩罚分支」被标记为已执行；</li>
-<li><code>$A43E</code> 起的「正常死亡分支」代码覆盖为
-<code>0x00</code>，即从未执行。</li>
+<li>page5 <code>$D29C</code> 的 <code>SBC</code> 把 <code>05 - 06</code>
+算成 <code>FF</code> 并 <code>STA $0628</code>（先写入 0xFF）；</li>
+<li>随后 clamp 分支把 <code>$0628</code> 置 0；</li>
+<li>page5 <code>$C1A5</code> 的 <code>INC $0621,X</code>（X=7）又把 0
+加回 1；</li>
+<li>下一次命中 <code>01 - 06 = FB</code>，再次写入 0xFB，循环开始。</li>
 </ul></li>
-<li>也就是说，BOSS 结算时 <code>$37 == 0x3F</code>
-的条件从未成立，程序每次都走「把 <code>$0621,X</code> 置
-0」的惩罚分支，正常的死亡/通关路径永远不执行。这与用户描述的「血量被归零/循环、打不死」一致，只是触发条件不是
-ASCII 标题字符串，而是 <code>$37</code> 这个运行时值。</li>
+<li>因此不是标题校验，也不是快照损坏；真正的循环点是 <strong>page5
+的「写入回绕值 + INC 复活」</strong>。</li>
 </ul>
 <h4 id="修复">3.9.2 修复</h4>
-<p>把 <code>$A432</code> 的条件分支改成无条件跳到正常死亡路径
-<code>$A43E</code>：</p>
+<p>在保留 <code>$A432</code> 分支修复的基础上，再补两处：</p>
 <table>
 <colgroup>
 <col style="width: 25%" />
@@ -1772,26 +1773,41 @@ ASCII 标题字符串，而是 <code>$37</code> 这个运行时值。</li>
 </thead>
 <tbody>
 <tr>
+<td><code>0xA1B5</code></td>
+<td><code>FE 21 06</code>（<code>INC $0621,X</code>）</td>
+<td><code>EA EA EA</code>（NOP）</td>
+<td>去掉 0→1 的复活</td>
+</tr>
+<tr>
+<td><code>0xB2AF</code></td>
+<td><code>8D 28 06</code>（<code>STA $0628</code>）</td>
+<td><code>EA EA EA</code>（NOP）</td>
+<td>不写入 <code>05-06=FF</code> 的回绕值</td>
+</tr>
+<tr>
 <td><code>0x4442</code></td>
 <td><code>F0 0A A9</code>（<code>BEQ $A43E</code> +
 <code>LDA #$00</code>）</td>
 <td><code>4C 3E A4</code>（<code>JMP $A43E</code>）</td>
-<td>跳过 <code>$37</code> 检查和 HP=0 惩罚</td>
+<td>强制走正常死亡分支</td>
 </tr>
 </tbody>
 </table>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">off = <span class="number">0x4442</span></span><br><span class="line"><span class="keyword">assert</span> d[off:off + <span class="number">3</span>] == <span class="string">b&quot;\xF0\x0A\xA9&quot;</span></span><br><span class="line">d[off:off + <span class="number">3</span>] = <span class="string">b&quot;\x4C\x3E\xA4&quot;</span></span><br></pre></td></tr></table></figure>
-<p>这样 BOSS 结算时不再把 HP 归零，而是直接进入正常死亡/通关分支
-<code>$A43E</code>（<code>LDA #$79; JMP $A4F6</code>）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> off, old, new <span class="keyword">in</span> [</span><br><span class="line">    (<span class="number">0xA1B5</span>, <span class="string">b&quot;\xFE\x21\x06&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xB2AF</span>, <span class="string">b&quot;\x8D\x28\x06&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0x4442</span>, <span class="string">b&quot;\xF0\x0A\xA9&quot;</span>, <span class="string">b&quot;\x4C\x3E\xA4&quot;</span>),</span><br><span class="line">]:</span><br><span class="line">    <span class="keyword">assert</span> d[off:off + <span class="built_in">len</span>(old)] == old</span><br><span class="line">    d[off:off + <span class="built_in">len</span>(new)] = new</span><br></pre></td></tr></table></figure>
+<p>修完后，最后一击时 HP 不再写入 0xFF，也不会从 0 被加回 1；clamp
+分支把 <code>$0628</code> 置 0 后，page2 的死亡检查就能看到
+0，进入正常死亡/通关。</p>
 <h4 id="验证与局限">3.9.3 验证与局限</h4>
 <ul>
-<li>CDL
-证据：用户运行记录中惩罚分支已执行、正常分支从未执行；补丁正是把流程强制切回正常分支。</li>
-<li>补丁后普通流程连续运行 6000
-帧无崩溃，关卡切换、敌人、得分等行为正常。</li>
-<li>局限：正常流程较长，headless 自动跑关未能稳定到达最后一关
-BOSS，因此没有做「实机一击击杀施莱德」的最终截图验证；修复依据是 CDL
-覆盖日志 + 静态反汇编 + 普通流程冒烟测试。</li>
+<li>运行中写入 trace 已完整记录循环序列
+<code>05→FF→00→01→FB</code>，并定位到
+<code>$D29C</code>/<code>$C1A5</code>
+两条指令；补丁正是切断这两步。</li>
+<li>补丁后普通流程连续运行 6000 帧无崩溃。</li>
+<li>局限：headless 自动跑关未能稳定跑到最后一关做实机击杀截图；请在打
+BOSS 前重新加载补丁 ROM，再读取闪光前/后的状态验证。如果 HP 仍回到
+1，请再跑一次 <code>tmnt3_boss_scan.lua</code>，把 <code>$0628</code>
+的写入序列发我。</li>
 </ul>
 <h3 id="产物-1">3.10 产物</h3>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/media/娱乐/game/RetroArch-Win64/roms/FC/NES中文游戏全集/</span><br><span class="line">  [180]  角色类 - 忍者神龟3.NES      # 唯一成品：攻击 400% + 主角不掉血 + 最终 BOSS 正常死亡</span><br></pre></td></tr></table></figure>
@@ -1809,7 +1825,7 @@ BOSS，因此没有做「实机一击击杀施莱德」的最终截图验证；�
 </tr>
 <tr>
 <td>成品</td>
-<td><code>74c4728faf968a4739a05c369ef996f6</code></td>
+<td><code>96e0de42646a6285c17c65b1c66f725a</code></td>
 </tr>
 </tbody>
 </table>
@@ -1875,9 +1891,9 @@ HP（Lua）</h4>
 <p>Python 侧按 <code>2048</code> 字节一帧切分，逐地址比对：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">D = <span class="built_in">open</span>(<span class="string">&quot;ram.bin&quot;</span>, <span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line">N = <span class="built_in">len</span>(D) // <span class="number">2048</span></span><br><span class="line">ram = [D[i * <span class="number">2048</span>:(i + <span class="number">1</span>) * <span class="number">2048</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N)]</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x800</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, N):</span><br><span class="line">        <span class="keyword">if</span> ram[i][a] != ram[i - <span class="number">1</span>][a]:</span><br><span class="line">            <span class="built_in">print</span>(i, <span class="built_in">hex</span>(a), ram[i - <span class="number">1</span>][a], <span class="string">&quot;-&gt;&quot;</span>, ram[i][a])</span><br></pre></td></tr></table></figure>
 <h4 id="补丁与校验python">3.12.3 补丁与校验（Python）</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">ROM = <span class="string">&quot;/media/娱乐/game/RetroArch-Win64/roms/FC/NES中文游戏全集/[180]  角色类 - 忍者神龟3.NES&quot;</span></span><br><span class="line">BAK = ROM + <span class="string">&quot;.orig_backup&quot;</span></span><br><span class="line">ORIG = <span class="built_in">bytes</span>([</span><br><span class="line">    <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x08</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0B</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x09</span>,</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">d = <span class="built_in">bytearray</span>(<span class="built_in">open</span>(BAK, <span class="string">&quot;rb&quot;</span>).read())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1) 攻击 400%</span></span><br><span class="line">off = <span class="number">0x1CF7F</span></span><br><span class="line">MULT = <span class="number">4</span></span><br><span class="line">MAX_DAMAGE = <span class="number">0x7F</span></span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">bytes</span>(d[off:off + <span class="number">24</span>]) == ORIG</span><br><span class="line">d[off:off + <span class="number">24</span>] = <span class="built_in">bytes</span>(<span class="built_in">min</span>(MAX_DAMAGE, b * MULT) <span class="keyword">for</span> b <span class="keyword">in</span> ORIG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 主角不掉血</span></span><br><span class="line">NO_DAMAGE = [</span><br><span class="line">    (<span class="number">0xC456</span>, <span class="string">b&quot;\xFD\xEF\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xCA51</span>, <span class="string">b&quot;\xFD\xEF\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xF21F</span>, <span class="string">b&quot;\x08&quot;</span>,         <span class="string">b&quot;\x00&quot;</span>),</span><br><span class="line">    (<span class="number">0xF870</span>, <span class="string">b&quot;\x10&quot;</span>,         <span class="string">b&quot;\x00&quot;</span>),</span><br><span class="line">    (<span class="number">0xCD1C</span>, <span class="string">b&quot;\xDE\xF1\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xD23E</span>, <span class="string">b&quot;\xDE\xF1\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">]</span><br><span class="line"><span class="keyword">for</span> p, old, new <span class="keyword">in</span> NO_DAMAGE:</span><br><span class="line">    <span class="keyword">assert</span> d[p:p + <span class="built_in">len</span>(old)] == old</span><br><span class="line">    d[p:p + <span class="built_in">len</span>(new)] = new</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 最终 BOSS 正常死亡</span></span><br><span class="line">p = <span class="number">0x4442</span></span><br><span class="line"><span class="keyword">assert</span> d[p:p + <span class="number">3</span>] == <span class="string">b&quot;\xF0\x0A\xA9&quot;</span></span><br><span class="line">d[p:p + <span class="number">3</span>] = <span class="string">b&quot;\x4C\x3E\xA4&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">open</span>(ROM, <span class="string">&quot;wb&quot;</span>).write(d)</span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(<span class="built_in">bytes</span>(d)).hexdigest())</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">ROM = <span class="string">&quot;/media/娱乐/game/RetroArch-Win64/roms/FC/NES中文游戏全集/[180]  角色类 - 忍者神龟3.NES&quot;</span></span><br><span class="line">BAK = ROM + <span class="string">&quot;.orig_backup&quot;</span></span><br><span class="line">ORIG = <span class="built_in">bytes</span>([</span><br><span class="line">    <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>, <span class="number">0x16</span>, <span class="number">0x0E</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x08</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x07</span>,</span><br><span class="line">    <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x0B</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x09</span>,</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">d = <span class="built_in">bytearray</span>(<span class="built_in">open</span>(BAK, <span class="string">&quot;rb&quot;</span>).read())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1) 攻击 400%</span></span><br><span class="line">off = <span class="number">0x1CF7F</span></span><br><span class="line">MULT = <span class="number">4</span></span><br><span class="line">MAX_DAMAGE = <span class="number">0x7F</span></span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">bytes</span>(d[off:off + <span class="number">24</span>]) == ORIG</span><br><span class="line">d[off:off + <span class="number">24</span>] = <span class="built_in">bytes</span>(<span class="built_in">min</span>(MAX_DAMAGE, b * MULT) <span class="keyword">for</span> b <span class="keyword">in</span> ORIG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 主角不掉血</span></span><br><span class="line">NO_DAMAGE = [</span><br><span class="line">    (<span class="number">0xC456</span>, <span class="string">b&quot;\xFD\xEF\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xCA51</span>, <span class="string">b&quot;\xFD\xEF\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xF21F</span>, <span class="string">b&quot;\x08&quot;</span>,         <span class="string">b&quot;\x00&quot;</span>),</span><br><span class="line">    (<span class="number">0xF870</span>, <span class="string">b&quot;\x10&quot;</span>,         <span class="string">b&quot;\x00&quot;</span>),</span><br><span class="line">    (<span class="number">0xCD1C</span>, <span class="string">b&quot;\xDE\xF1\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xD23E</span>, <span class="string">b&quot;\xDE\xF1\x04&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">]</span><br><span class="line"><span class="keyword">for</span> p, old, new <span class="keyword">in</span> NO_DAMAGE:</span><br><span class="line">    <span class="keyword">assert</span> d[p:p + <span class="built_in">len</span>(old)] == old</span><br><span class="line">    d[p:p + <span class="built_in">len</span>(new)] = new</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 最终 BOSS 正常死亡分支</span></span><br><span class="line">p = <span class="number">0x4442</span></span><br><span class="line"><span class="keyword">assert</span> d[p:p + <span class="number">3</span>] == <span class="string">b&quot;\xF0\x0A\xA9&quot;</span></span><br><span class="line">d[p:p + <span class="number">3</span>] = <span class="string">b&quot;\x4C\x3E\xA4&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4) BOSS 血量循环修复：去掉回绕写入与 0-&gt;1 复活</span></span><br><span class="line"><span class="keyword">for</span> p, old, new <span class="keyword">in</span> [</span><br><span class="line">    (<span class="number">0xA1B5</span>, <span class="string">b&quot;\xFE\x21\x06&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">    (<span class="number">0xB2AF</span>, <span class="string">b&quot;\x8D\x28\x06&quot;</span>, <span class="string">b&quot;\xEA\xEA\xEA&quot;</span>),</span><br><span class="line">]:</span><br><span class="line">    <span class="keyword">assert</span> d[p:p + <span class="built_in">len</span>(old)] == old</span><br><span class="line">    d[p:p + <span class="built_in">len</span>(new)] = new</span><br><span class="line"></span><br><span class="line"><span class="built_in">open</span>(ROM, <span class="string">&quot;wb&quot;</span>).write(d)</span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(<span class="built_in">bytes</span>(d)).hexdigest())</span><br></pre></td></tr></table></figure>
 <p>对照结果：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">原版 MD5 : 9f7e11b6de7c9be9b3954eab69dc68a2</span><br><span class="line">补丁 MD5 : 74c4728faf968a4739a05c369ef996f6</span><br><span class="line">差异字节 : 37</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">原版 MD5 : 9f7e11b6de7c9be9b3954eab69dc68a2</span><br><span class="line">补丁 MD5 : 96e0de42646a6285c17c65b1c66f725a</span><br><span class="line">差异字节 : 43</span><br></pre></td></tr></table></figure>
 <hr />
 
     </div>
