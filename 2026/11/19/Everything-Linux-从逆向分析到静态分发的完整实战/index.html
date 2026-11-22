@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sunjunior.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":280,"display":"post","padding":18,"offset":12,"b2t":true,"scrollpercent":true},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"a11y-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI&#x2F;daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输">
+    <meta name="description" content="2026-11-22 更新（v0.3.1beta-fused）：GUI 已改为进程内 LocalEngine，发布包只含一个约 3.6 MB 的 everything-gtk；并新增结果实时刷新：索引变化后 250ms 防抖重跑当前关键词，文件新增、删除、原子替换都会自动反映到列表。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Everything-Linux：从逆向分析到静态分发的完整实战">
 <meta property="og:url" content="https://sunjunior.github.io/2026/11/19/Everything-Linux-%E4%BB%8E%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%88%B0%E9%9D%99%E6%80%81%E5%88%86%E5%8F%91%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="sunjunior的个人技术博客">
-<meta property="og:description" content="2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI&#x2F;daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输">
+<meta property="og:description" content="2026-11-22 更新（v0.3.1beta-fused）：GUI 已改为进程内 LocalEngine，发布包只含一个约 3.6 MB 的 everything-gtk；并新增结果实时刷新：索引变化后 250ms 防抖重跑当前关键词，文件新增、删除、原子替换都会自动反映到列表。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-11-19T02:45:00.000Z">
-<meta property="article:modified_time" content="2026-11-20T14:35:00.000Z">
+<meta property="article:modified_time" content="2026-11-22T03:15:00.000Z">
 <meta property="article:author" content="sunjunior">
 <meta property="article:tag" content="Everything">
 <meta property="article:tag" content="GTK">
@@ -248,7 +248,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="Everything-Linux：从逆向分析到静态分发的完整实战 | sunjunior的个人技术博客">
-      <meta itemprop="description" content="2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI&#x2F;daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输...">
+      <meta itemprop="description" content="2026-11-22 更新（v0.3.1beta-fused）：GUI 已改为进程内 LocalEngine，发布包只含一个约 3.6 MB 的 everything-gtk；并新增结果实时刷新：索引变化后 250ms 防抖重跑当前关键词，文件新增、删除、原子替换都会自动反映到列表。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果...">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -270,7 +270,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-20 22:35:00" itemprop="dateModified" datetime="2026-11-20T22:35:00+08:00">2026-11-20</time>
+      <time title="修改时间：2026-11-22 11:15:00" itemprop="dateModified" datetime="2026-11-22T11:15:00+08:00">2026-11-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -292,7 +292,7 @@
     </span>
 </div>
 
-            <div class="post-description">2026-11-20 更新（v0.3beta-fused）：GUI 已改为进程内 LocalEngine，不再启动或内嵌 everythingd，发布包只含一个约 3.6 MB 的 everything-gtk。本文的架构、部署和性能章节已按融合版刷新；CLI/daemon 作为可选接口保留。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输...</div>
+            <div class="post-description">2026-11-22 更新（v0.3.1beta-fused）：GUI 已改为进程内 LocalEngine，发布包只含一个约 3.6 MB 的 everything-gtk；并新增结果实时刷新：索引变化后 250ms 防抖重跑当前关键词，文件新增、删除、原子替换都会自动反映到列表。 动机 voidtools 的 Everything 是 Windows 上公认的”秒搜”神器：百万文件输入即出结果...</div>
         </div>
       </header>
 
@@ -300,11 +300,10 @@
     
     
     <div class="post-body" itemprop="articleBody"><blockquote>
-<p><strong>2026-11-20 更新（v0.3beta-fused）</strong>：GUI 已改为进程内
-<code>LocalEngine</code>，不再启动或内嵌
-<code>everythingd</code>，发布包只含一个约 3.6 MB 的
-<code>everything-gtk</code>。本文的架构、部署和性能章节已按融合版刷新；CLI/daemon
-作为可选接口保留。</p>
+<p><strong>2026-11-22 更新（v0.3.1beta-fused）</strong>：GUI
+已改为进程内 <code>LocalEngine</code>，发布包只含一个约 3.6 MB 的
+<code>everything-gtk</code>；并新增结果实时刷新：索引变化后 250ms
+防抖重跑当前关键词，文件新增、删除、原子替换都会自动反映到列表。</p>
 </blockquote>
 <h2 id="动机">动机</h2>
 <p>voidtools 的 Everything 是 Windows
@@ -318,7 +317,7 @@ NTFS 的 MFT 拿全卷文件名，再用 USN Change Journal
 <p>代码全部在
 <code>~/work/everything-research/everything-linux/</code>，研究过程文件在同目录。当前融合版产物是
 <code>dist/everything-gtk</code>，Linux 三平台单文件包见 <a
-target="_blank" rel="noopener" href="https://github.com/sunjunior/Everything-Linux/releases/tag/v0.3beta-fused">GitHub
+target="_blank" rel="noopener" href="https://github.com/sunjunior/Everything-Linux/releases/tag/v0.3.1beta-fused">GitHub
 Release</a>。</p>
 <h2 id="一逆向研究everything-到底怎么工作">一、逆向研究：Everything
 到底怎么工作</h2>
@@ -552,6 +551,11 @@ CLI 进程内跑 <code>LocalEngine</code>（zstd 快照启动约 160
 ms）；<code>everything --local --raw &lt;file&gt;</code> 使用 70 MB 的
 mmap raw 快照原型，冷启动约 21 ms，但宽结果查询与 daemon
 热查询基本持平，小结果仍慢 3–6 ms。</p>
+<p>结果列表现在会跟随索引刷新：GUI 每 250ms 检查一次索引
+generation，只有关键词非空、窗口可见且右键菜单未打开时才重跑当前查询；新结果先比较
+slot
+序列，未变化时只重绘，变化时保留选中行和滚动位置后重建。编辑器“写临时文件再
+rename”的原子保存会拿到新 slot，不会再把匹配文件留在列表里变成空行。</p>
 <h3 id="结果右键菜单">5.6 结果右键菜单</h3>
 <p>结果列表右键某项弹出三项菜单，对齐 Everything
 的常用操作：<strong>打开</strong>（默认程序打开，等同双击）、<strong>打开路径</strong>（打开父目录并选中该项）、<strong>复制完整路径和文件名</strong>（写入系统剪贴板）。通过
@@ -699,6 +703,11 @@ generation，而 inotify 每处理一次变化就递增 generation，右键时�
 <code>row_gen == engine.generation()</code>
 几乎必然失败，菜单直接不弹。修复：行 generation 改为只在整体换根时递增的
 <code>root_generation</code>，普通增量不再使菜单失效；换根时旧行隐藏并自动重跑当前查询。</li>
+<li><strong>搜索后列表一直静止，编辑器保存后文件消失</strong>：GUI
+最初只在输入框变化时查询，inotify
+虽然更新了索引，但结果列表不重新查询；原子保存删除旧 slot
+后，惰性渲染拿不到路径，行就变空了。修复：监听索引 generation，250ms
+防抖重跑当前关键词；词不变时保留选中行和滚动位置，菜单打开或窗口隐藏时暂停，恢复后补刷新。</li>
 </ol>
 <h2 id="七部署文档">七、部署文档</h2>
 <h3 id="构建">7.1 构建</h3>
@@ -707,8 +716,8 @@ generation，而 inotify 每处理一次变化就递增 generation，右键时�
 标签上构建 Linux x86_64 / aarch64 / armv7：x86_64、aarch64 使用原生
 runner，armv7 使用 QEMU 容器；每个压缩包只放一个
 <code>everything-gtk</code>，不再构建或内嵌 daemon。</p>
-<p><strong>v0.3beta-fused 已发布</strong>：<a
-target="_blank" rel="noopener" href="https://github.com/sunjunior/Everything-Linux/releases/tag/v0.3beta-fused">Release
+<p><strong>v0.3.1beta-fused 已发布</strong>：<a
+target="_blank" rel="noopener" href="https://github.com/sunjunior/Everything-Linux/releases/tag/v0.3.1beta-fused">Release
 页面</a>（含三个 Linux 资产与 SHA256）。</p>
 <p>本地构建：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/work/everything-research/everything-linux</span><br><span class="line">cargo <span class="built_in">test</span> --offline                         <span class="comment"># 12 个 suite、34 个测试通过</span></span><br><span class="line">cargo build --release --offline -p everything-gtk</span><br><span class="line"><span class="comment"># 产物：target/release/everything-gtk</span></span><br></pre></td></tr></table></figure>
@@ -841,7 +850,9 @@ ms。由于磁盘占用和保存流程尚未接入，本轮不随发布包提供
 快照、inotify 实时增量 + 增量快照、可选 IPC/守护/CLI、融合 GTK3
 GUI（进程内 LocalEngine / 托盘驻留 / 单实例 / 结果右键菜单 /
 输入法自愈）、后台换根与原子切换、slot 惰性渲染 + Top-N、raw mmap
-原型、Linux 三平台单文件发布、<code>v0.3beta-fused</code> Release。</p>
+原型、Linux
+三平台单文件发布、结果实时刷新、<code>v0.3.1beta-fused</code>
+Release。</p>
 <p>未完成：Windows 移植（文件监听、路径编码、单实例、GTK3 运行时）、raw
 快照接入正式保存流程、内容搜索、HTTP/ETP
 接口、重复文件检测、<code>root:</code>/<code>empty:</code>
