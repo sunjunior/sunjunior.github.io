@@ -757,13 +757,33 @@ CLI/daemon。</p>
 <td><code>everything-linux-armv7.tar.gz</code></td>
 <td>单个 <code>everything-gtk</code>，约 3.6 MB</td>
 </tr>
+<tr>
+<td>Linux x86_64 CLI</td>
+<td><code>everything-cli-linux-x86_64.tar.gz</code></td>
+<td>静态 <code>everything</code></td>
+</tr>
+<tr>
+<td>Linux aarch64 CLI</td>
+<td><code>everything-cli-linux-aarch64.tar.gz</code></td>
+<td>静态 <code>everything</code></td>
+</tr>
+<tr>
+<td>Linux armv7 CLI</td>
+<td><code>everything-cli-linux-armv7.tar.gz</code></td>
+<td>静态 <code>everything</code></td>
+</tr>
 </tbody>
 </table>
-<p>运行要求：Linux + GTK3
+<p>GUI 运行要求：Linux + GTK3
 运行库（<code>libgtk-3.so.0</code>、<code>libglib-2.0.so.0</code>
 等）；不需要 daemon、CLI 或 socket 文件。GUI 无法现实地静态链接
 GTK（glib/gdk/pango/cairo/X11/图标主题/动态模块），因此核心索引静态编入
 GUI，GTK 复用系统库。</p>
+<p>CLI 运行要求：静态二进制，不需要 GTK；使用
+<code>everything --local '查询'</code> 在进程内查询，不需要 daemon。默认
+socket 模式需要额外的
+<code>everythingd</code>，发布包未包含，脚本场景请显式加
+<code>--local</code>。</p>
 <h3 id="配置">7.3 配置</h3>
 <p><code>~/.config/everything-linux/config.toml</code>：</p>
 <figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">roots</span> = [<span class="string">&quot;~&quot;</span>]</span><br><span class="line"><span class="attr">exclude</span> = []</span><br><span class="line"><span class="attr">follow_symlinks</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">index_hidden</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">snapshot_path</span> = <span class="string">&quot;~/.cache/everything-linux/db.eldb&quot;</span></span><br><span class="line"><span class="attr">socket_path</span> = <span class="string">&quot;/tmp/everything-linux.sock&quot;</span></span><br><span class="line"><span class="attr">watch_enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">debounce_ms</span> = <span class="number">15</span></span><br><span class="line"><span class="attr">rescan_interval_secs</span> = <span class="number">600</span></span><br><span class="line"><span class="attr">snapshot_interval_secs</span> = <span class="number">5</span></span><br><span class="line"><span class="attr">threads</span> = <span class="number">8</span></span><br><span class="line"><span class="attr">max_results</span> = <span class="number">100000</span></span><br></pre></td></tr></table></figure>
